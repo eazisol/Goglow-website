@@ -10,7 +10,7 @@
                             <ul class="navbar-nav mr-auto" id="menu">
                                 <li class="nav-item submenu"><a class="nav-link" href="{{ url('/') }}">Home</a>
                                     <ul>
-                                        <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Home - Main</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Home - Main1</a></li>
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/home-image') }}">Home - Image</a></li>
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/home-video') }}">Home - Video</a></li>
                                     </ul>
