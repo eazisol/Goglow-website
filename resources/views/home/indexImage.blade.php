@@ -57,7 +57,7 @@
 
                             <!-- Hero Button Start -->
                             <div class="wow fadeInUp" data-wow-delay="0.4s">
-                                <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">Book An Appointment</a>
+                                <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">Book Appointment</a>
                                 <a href="{{ url('/services') }}" class="btn-default border-btn">Our Services</a>
                             </div>
                             <!-- Hero Button End -->

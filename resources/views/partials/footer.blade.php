@@ -59,7 +59,7 @@
                     <div class="footer-copyright">
                         <div class="footer-links">
                             <ul>
-                                <li><a href="{{ url('/home-image') }}">Home</a></li>
+                                <li><a href="{{ url('/') }}">Home</a></li>
                                 <li><a href="{{ url('/about') }}">About us</a></li>
                                 <li><a href="{{ url('/services') }}">services</a></li>
                                 {{-- <li><a href="{{ url('/blogs') }}">blogs</a></li> --}}

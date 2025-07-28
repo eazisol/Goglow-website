@@ -103,7 +103,7 @@
                                 </div>
     
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn-default"><span>Book an appointment</span></button>
+                                    <button type="submit" class="btn-default"><span>Get a quote</span></button>
                                     <div id="msgSubmit" class="h3 hidden"></div>
                                 </div>
                             </div>

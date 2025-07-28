@@ -2,14 +2,14 @@
 		<div class="header-sticky">
 			<nav class="navbar navbar-expand-lg">
 				<div class="container-fluid">
-					<a class="navbar-brand" href="{{ url('/home-image') }}">
+					<a class="navbar-brand" href="{{ url('/') }}">
 						{{-- <img src="images/logo.svg" alt="Logo"> --}}
                         <h1 class="text-anime-style-2" data-cursor="-opaque" style="color: white;">Go<span>Glow</span></h1>
 					</a>
 					<div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
                             <ul class="navbar-nav mr-auto" id="menu">
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/home-image') }}">Home</a>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Home</a>
                                     {{-- <ul>
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Home - Main1</a></li>
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/home-image') }}">Home - Image</a></li>
@@ -40,7 +40,7 @@
                             </ul>
                         </div>
                         <div class="header-btn">
-                            <a href="{{ url('/beauty-professional') }}" class="btn-default border-btn" style="text-transform: initial;">I am a beauty professional</a>
+                            <a href="{{ url('/beauty-professional') }}" class="btn-default border-btn">beauty professionals</a>
                             <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">book appointment</a>            
                         </div>
 					</div>

@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 // home
-Route::get('/', function () {return view('home.index');});
-Route::get('/home-image', function () {return view('home.indexImage');});
+Route::get('/', function () {return view('home.indexImage');});
+// Route::get('/home-image', function () {return view('home.indexImage');});
 Route::get('/home-video', function () {return view('home.indexVideo');});
 
 // about
