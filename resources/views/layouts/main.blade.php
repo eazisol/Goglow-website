@@ -25,6 +25,16 @@
 
 </head>
 <body>
+  <style>
+    :root {
+        --primary-bg: {{ $theme_bg_color }};
+    }
+
+    body {
+        background-color: var(--primary-bg);
+    }
+</style>
+
     <div class="preloader">
 		<div class="loading-container">
 			<div class="loading"></div>
