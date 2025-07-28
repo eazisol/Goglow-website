@@ -4,25 +4,8 @@
 
 {{-- Style Files --}}
 @section('styles')
-<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-	<meta name="description" content="">
-	<meta name="keywords" content="">
-	<meta name="author" content="Awaiken">
-    <title>Spawell - Spa & Wellness HTML Template</title>
-	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
-	<link rel="preconnect" href="https://fonts.googleapis.com/">
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet">
-<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
-<link href="{{ asset('css/slicknav.min.css') }}" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css') }}">
-<link href="{{ asset('css/all.min.css') }}" rel="stylesheet" media="screen">
-<link href="{{ asset('css/animate.css') }}" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-<link rel="stylesheet" href="{{ asset('css/mousecursor.css') }}">
-<link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="screen">
+<link rel="stylesheet" href="{{ asset('css/search.css') }}">
+
 @endsection
 
 {{-- Content --}}
@@ -57,6 +40,33 @@
             </div>
         </div>
     </div>
+    <div class="search-bar">
+    <form action="#" method="GET" class="search-form">
+        <div class="search-inputs">
+            <div class="search-item">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="All care and facilities">
+            </div>
+            
+            <div class="search-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <input type="text" placeholder="Current position">
+            </div>
+            
+            <div class="search-item">
+                <i class="far fa-calendar"></i>
+                <input type="text" placeholder="Any date">
+            </div>
+            
+            <div class="search-item">
+                <i class="far fa-clock"></i>
+                <input type="text" placeholder="Any time">
+            </div>
+            
+            <button type="submit" class="search-button">To research</button>
+        </div>
+    </form>
+</div>
     <!-- Hero Section End -->
 
     <!-- About Us Section Start -->
