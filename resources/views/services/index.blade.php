@@ -18,12 +18,12 @@
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
                         <h1 class="text-anime-style-2" data-cursor="-opaque">Our <span>services</span></h1>
-                        <nav class="wow fadeInUp">
+                        {{-- <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Our services</li>
                             </ol>
-                        </nav>
+                        </nav> --}}
                     </div>
                     <!-- Page Header Box End -->
                 </div>
@@ -225,7 +225,7 @@
     <!-- Page Services End -->
 
     <!-- Our Testimonial Section Start -->
-    <div class="our-testimonials bg-section dark-section">
+    {{-- <div class="our-testimonials bg-section dark-section">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-6">
@@ -422,7 +422,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Testimonial Section End -->
 
     <!-- Why Choose Us Section Start -->

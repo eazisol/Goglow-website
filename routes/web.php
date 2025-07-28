@@ -57,3 +57,6 @@ Route::get('/404', function () {return view('errors.404');});
 
 // book appointment
 Route::get('/book-appointment', function () {return view('bookAppointment.index');});
+
+// i am a beauty professional
+Route::get('/beauty-professional', function () {return view('iamProfessional.index');});

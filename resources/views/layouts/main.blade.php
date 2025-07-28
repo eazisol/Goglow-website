@@ -23,6 +23,10 @@
 <link rel="stylesheet" href="{{ asset('css/mousecursor.css') }}">
 <link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="screen">
 
+{{-- datepicker --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 </head>
 <body>
   <style>
@@ -69,6 +73,7 @@
   <script src="{{ asset('js/jquery.mb.YTPlayer.min.js') }}"></script>
   <script src="{{ asset('js/wow.min.js') }}"></script>
   <script src="{{ asset('js/function.js') }}"></script>
+  <script src="{{ asset('js/datepicker.js') }}"></script>
   @yield('scripts')
 
 </body>

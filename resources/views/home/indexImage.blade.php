@@ -16,19 +16,47 @@
         <div class="hero-section">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col" style="text-align: center;justify-content: center;display: flex;">
                         <!-- Hero Content Start -->
-                        <div class="hero-content">
+                        <div class="hero-content" style="width: 80%;">
                             <!-- Section Title Start -->
                             <div class="section-title">
-                                <h3 class="wow fadeInUp">Step into a world of calm and care</h3>
-                                <h1 class="text-anime-style-2" data-cursor="-opaque">Experience the ultimate escape into <span>relaxation and expert care</span></h1>
-                                <p class="wow fadeInUp" data-wow-delay="0.2s">Every detail is thoughtfully designed to help you unwind—from the tranquil ambiance to our skilled therapists and holistic treatments. Whether you seek deep relaxation, skin rejuvenation, or stress relief, we offer a personalized experience.</p>
+                                <h3 class="wow fadeInUp">Simple • Immediate • 24/7</h3>
+                                <h1 class="text-anime-style-2" data-cursor="-opaque">Book In <span>Style</span></h1>
+                                <div class="search-bar">
+                                    <form action="#" method="GET" class="search-form">
+                                        <div class="search-inputs">
+                                            <div class="search-item">
+                                                <i class="fas fa-search"></i>
+                                                <input type="text" placeholder="All care and facilities">
+                                            </div>
+                                            
+                                            <div class="search-item">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                <input type="text" placeholder="Current position">
+                                            </div>
+                                            
+                                            <div class="search-item">
+                                                <i class="far fa-calendar"></i>
+                                                <input type="text" placeholder="Any date">
+                                                  {{-- <input type="text" id="datePicker" placeholder="Any date" class="datepicker-input"> --}}
+                                            </div>
+                                            
+                                            <div class="search-item">
+                                                <i class="far fa-clock"></i>
+                                                <input type="text" placeholder="Any time">
+                                            </div>
+                                            
+                                            <button type="submit" class="search-button">To research</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                {{-- <p class="wow fadeInUp" data-wow-delay="0.2s">Every detail is thoughtfully designed to help you unwind—from the tranquil ambiance to our skilled therapists and holistic treatments. Whether you seek deep relaxation, skin rejuvenation, or stress relief, we offer a personalized experience.</p> --}}
                             </div>
                             <!-- Section Title End -->
 
                             <!-- Hero Button Start -->
-                            <div class="hero-btn wow fadeInUp" data-wow-delay="0.4s">
+                            <div class="wow fadeInUp" data-wow-delay="0.4s">
                                 <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">Book An Appointment</a>
                                 <a href="{{ url('/services') }}" class="btn-default border-btn">Our Services</a>
                             </div>
@@ -40,33 +68,7 @@
             </div>
         </div>
     </div>
-    <div class="search-bar">
-    <form action="#" method="GET" class="search-form">
-        <div class="search-inputs">
-            <div class="search-item">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="All care and facilities">
-            </div>
-            
-            <div class="search-item">
-                <i class="fas fa-map-marker-alt"></i>
-                <input type="text" placeholder="Current position">
-            </div>
-            
-            <div class="search-item">
-                <i class="far fa-calendar"></i>
-                <input type="text" placeholder="Any date">
-            </div>
-            
-            <div class="search-item">
-                <i class="far fa-clock"></i>
-                <input type="text" placeholder="Any time">
-            </div>
-            
-            <button type="submit" class="search-button">To research</button>
-        </div>
-    </form>
-</div>
+    
     <!-- Hero Section End -->
 
     <!-- About Us Section Start -->
@@ -93,7 +95,7 @@
                 </div>
             </div>
             
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-4 col-md-6">
                     <!-- About Us Item Start -->
                     <div class="about-us-item about-box-1 wow fadeInUp">
@@ -141,13 +143,13 @@
                     </div>
                     <!-- About Us Item End -->
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
     <!-- About Us Section End -->
 
     <!-- Our Services Section Start -->
-    <div class="our-services bg-section dark-section">
+    {{-- <div class="our-services bg-section dark-section">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-12">
@@ -262,11 +264,11 @@
                 </div>
             </div>            
         </div>
-    </div>
+    </div> --}}
     <!-- Our Services Section End -->
 
     <!-- Our Feature Section Start -->
-    <div class="our-feature">
+    {{-- <div class="our-feature">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-12">
@@ -365,7 +367,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Feature Section End -->
 
     <!-- What We Do Section Start -->
@@ -532,7 +534,7 @@
                     <!-- Why Choose Images Start -->
                     <div class="why-choose-image">
                         <figure class="image-anime">
-                            <img src="images/why-choose-image.jpg" alt="">
+                            <img src="images/kimia-kazemi-u93nTfWqR9w-unsplash.jpg" alt="">
                         </figure>
 
                         <!-- Contact Us Circle Start -->
@@ -551,7 +553,7 @@
     <!-- Why Choose Us Section End -->
 
     <!-- Our Pricing Section Start -->
-    <div class="our-pricing bg-section dark-section">
+    {{-- <div class="our-pricing bg-section dark-section">
         <div class="container">
             <div class="row section-row">
                 <div class="col-lg-12">
@@ -683,8 +685,209 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Pricing Section End -->
+
+    <!-- Our Testimonial Section Start -->
+    <div class="our-testimonials bg-section dark-section">
+        <div class="container">
+            <div class="row section-row align-items-center">
+                <div class="col-lg-6">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">Testimonials</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">Where every look tells a <span>story</span></h2>
+                    </div>
+                    <!-- Section Title End -->
+                </div>
+
+                <div class="col-lg-6">
+                    <!-- Satisfy Client Box Start -->
+                    <div class="satisfy-client-box wow fadeInUp" data-wow-delay="0.2s">
+                        <!-- Satisfy Client Images Start -->
+                        <div class="satisfy-client-images">
+                            <div class="satisfy-client-image">
+                                <figure class="image-anime">
+                                    <img src="images/satisfy-client-img-1.jpg" alt="">
+                                </figure>
+                            </div>
+                            <div class="satisfy-client-image">
+                                <figure class="image-anime">
+                                    <img src="images/satisfy-client-img-2.jpg" alt="">
+                                </figure>
+                            </div>
+                            <div class="satisfy-client-image">
+                                <figure class="image-anime">
+                                    <img src="images/satisfy-client-img-3.jpg" alt="">
+                                </figure>
+                            </div>
+                            <div class="satisfy-client-image">
+                                <figure class="image-anime">
+                                    <img src="images/satisfy-client-img-4.jpg" alt="">
+                                </figure>
+                            </div>
+                            <div class="satisfy-client-image">
+                                <figure class="image-anime">
+                                    <img src="images/satisfy-client-img-5.jpg" alt="">
+                                </figure>
+                            </div>
+                        </div>
+                        <!-- Satisfy Client Images End -->
+                        
+                        <!-- Google Rating Content Start -->
+                        <div class="goolge-rating-content">
+                            <div class="icon-rating">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <p>4.9 (29K Reviews)</p>
+                        </div>
+                        <!-- Google Rating Content End -->
+                    </div>
+                    <!-- Satisfy Client Box End -->
+                </div>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-lg-5">
+                    <!-- Our Testimonial Image Start -->
+                    <div class="testimonial-image">
+                        <figure class="image-anime reveal">
+                            <img src="images/shari-sirotnak-oM5YoMhTf8E-unsplash.jpg" alt="">
+                        </figure>
+
+                        <!-- Google Rating Box Start -->
+                        <div class="goolge-rating-box">
+                            <div class="icon-box">
+                                <img src="images/icon-google.svg" alt="">
+                            </div>
+                            
+                            <!-- Google Rating Content Start -->
+                            <div class="goolge-rating-content">
+                                <div class="icon-rating">
+                                    <p>4.5</p>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                                <p>4.9 (29K Reviews)</p>
+                            </div>
+                            <!-- Google Rating Content End -->
+                        </div>
+                        <!-- Google Rating Box End -->
+                    </div>
+                    <!-- Our Testimonial Image End -->
+                </div>
+
+                <div class="col-lg-7">
+                    <!-- Testimonial Slider Start -->
+                    <div class="testimonial-slider">
+                        <div class="swiper">
+                            <div class="swiper-wrapper" data-cursor-text="Drag">
+                                <!-- Testimonial Slide Start -->
+                                <div class="swiper-slide">
+                                    <div class="testimonial-item">
+                                        <div class="testimonial-header">
+                                            <div class="testimonial-company-logo">
+                                                <img src="images/company-logo-white-1.svg" alt="">
+                                            </div>
+                                            <div class="testimonial-quote">
+                                                <img src="images/testimonial-quote.svg" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="testimonial-content">
+                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
+                                        </div>
+                                        <div class="testimonial-author">       
+                                            <div class="author-image">
+                                                <figure class="image-anime">
+                                                    <img src="images/author-1.jpg" alt="">
+                                                </figure>
+                                            </div>
+                                            <div class="author-content">
+                                                <h3>Jenny Wilson</h3>
+                                                <p>Senior Esthetician</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Testimonial Slide End -->
+                                
+                                <!-- Testimonial Slide Start -->
+                                <div class="swiper-slide">
+                                    <div class="testimonial-item">
+                                        <div class="testimonial-header">
+                                            <div class="testimonial-company-logo">
+                                                <img src="images/company-logo-white-1.svg" alt="">
+                                            </div>
+                                            <div class="testimonial-quote">
+                                                <img src="images/testimonial-quote.svg" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="testimonial-content">
+                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
+                                        </div>
+                                        <div class="testimonial-author">       
+                                            <div class="author-image">
+                                                <figure class="image-anime">
+                                                    <img src="images/author-2.jpg" alt="">
+                                                </figure>
+                                            </div>
+                                            <div class="author-content">
+                                                <h3>Juliana Silva</h3>
+                                                <p>Wellness Coach</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Testimonial Slide End -->
+                                
+                                <!-- Testimonial Slide Start -->
+                                <div class="swiper-slide">
+                                    <div class="testimonial-item">
+                                        <div class="testimonial-header">
+                                            <div class="testimonial-company-logo">
+                                                <img src="images/company-logo-white-1.svg" alt="">
+                                            </div>
+                                            <div class="testimonial-quote">
+                                                <img src="images/testimonial-quote.svg" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="testimonial-content">
+                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
+                                        </div>
+                                        <div class="testimonial-author">       
+                                            <div class="author-image">
+                                                <figure class="image-anime">
+                                                    <img src="images/author-3.jpg" alt="">
+                                                </figure>
+                                            </div>
+                                            <div class="author-content">
+                                                <h3>Nicky Waode</h3>
+                                                <p>Facial Expert</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Testimonial Slide End -->
+                            </div>
+                            <div class="testimonial-btn">
+                                <div class="testimonial-button-prev"></div>
+                                <div class="testimonial-button-next"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial Slider End -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Our Testimonial Section End -->
 
     <!-- Book Appointment Section Start -->
     <div class="book-appointment">
@@ -705,7 +908,7 @@
                     <!-- Appointment image Start -->
                     <div class="appointment-image">
                         <figure class="image-anime reveal">
-                            <img src="images/appointment-image.jpg" alt="">
+                            <img src="images/anastasiia-chepinska-_VtWHnrYm4k-unsplash.jpg" alt="">
                         </figure>
                         
                         <!-- Appointment Info List Start -->
@@ -834,117 +1037,8 @@
         </div>
     </div>
     <!-- Book Appointment Section End -->
-
-    <!-- Our Faqs Section Start -->
-    <div class="our-faqs bg-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Faqs Content Start -->
-                    <div class="faqs-content">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">Frequently asked question</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Helpful answer for first-time & <span>returning guests</span></h2>
-                        </div>
-                        <!-- Section Title End -->
-
-                        <!-- FAQ Accordion Start -->
-                        <div class="faq-accordion" id="faqaccordion">
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp">
-                                <h2 class="accordion-header" id="heading1">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                                        Q1. What should I wear to my spa appointment?
-                                    </button>
-                                </h2>
-                                <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->
-
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp" data-wow-delay="0.2s">
-                                <h2 class="accordion-header" id="heading2">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                                        Q2. Do I need to book in advance?
-                                    </button>
-                                </h2>
-                                <div id="collapse2" class="accordion-collapse collapse show" aria-labelledby="heading2" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->
-
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp" data-wow-delay="0.4s">
-                                <h2 class="accordion-header" id="heading3">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                                        Q3. What is your cancellation policy?
-                                    </button>
-                                </h2>
-                                <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->    
-
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp" data-wow-delay="0.6s">
-                                <h2 class="accordion-header" id="heading4">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                                        Q4. Are your products safe for sensitive skin?
-                                    </button>
-                                </h2>
-                                <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->
-                        </div>
-                        <!-- FAQ Accordion End -->
-                    </div>
-                    <!-- Faqs Content End -->
-                </div>
-                
-                <div class="col-lg-6">
-                    <!-- Faqs Image Box Start -->
-                    <div class="faqs-image-box">
-                        <div class="faq-image">
-                            <figure class="image-anime reveal">
-                                <img src="images/faq-image.jpg" alt="">
-                            </figure>
-                        </div>
-
-                        <!-- Faqs CTA Box Start -->
-                        <div class="faqs-cta-box">
-                            <div class="icon-box">
-                                <img src="images/icon-faqs-cta.svg" alt="">
-                            </div>
-                            <div class="faqs-cta-box-content">
-                                <h3>Relax, We've Got the Answers</h3>
-                            </div>
-                        </div>
-                        <!-- Faqs CTA Box End -->
-                    </div>
-                    <!-- Faqs Image Box End -->
-                </div>               
-            </div>
-        </div>
-    </div>
-    <!-- Our Faqs Section End -->
-
     <!-- Our Team Section Start -->
-    <div class="our-team">
+    {{-- <div class="our-team">
         <div class="container">
             <div class="row section-row">
                 <div class="col-lg-12">
@@ -1087,11 +1181,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Team Section End -->
 
     <!-- Our Partners Section Start -->
-    <div class="our-partners bg-section">
+    {{-- <div class="our-partners bg-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -1163,11 +1257,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Partners Section End -->
 
     <!-- Join Us Section Start -->
-    <div class="join-us">
+    {{-- <div class="join-us">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 order-lg-1 order-2">
@@ -1228,212 +1322,13 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Join Us Section End -->
 
-    <!-- Our Testimonial Section Start -->
-    <div class="our-testimonials bg-section dark-section">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">Testimonials</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">The spa experiences they can't stop <span>talking about</span></h2>
-                    </div>
-                    <!-- Section Title End -->
-                </div>
-
-                <div class="col-lg-6">
-                    <!-- Satisfy Client Box Start -->
-                    <div class="satisfy-client-box wow fadeInUp" data-wow-delay="0.2s">
-                        <!-- Satisfy Client Images Start -->
-                        <div class="satisfy-client-images">
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-1.jpg" alt="">
-                                </figure>
-                            </div>
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-2.jpg" alt="">
-                                </figure>
-                            </div>
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-3.jpg" alt="">
-                                </figure>
-                            </div>
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-4.jpg" alt="">
-                                </figure>
-                            </div>
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-5.jpg" alt="">
-                                </figure>
-                            </div>
-                        </div>
-                        <!-- Satisfy Client Images End -->
-                        
-                        <!-- Google Rating Content Start -->
-                        <div class="goolge-rating-content">
-                            <div class="icon-rating">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                            </div>
-                            <p>4.9 (29K Reviews)</p>
-                        </div>
-                        <!-- Google Rating Content End -->
-                    </div>
-                    <!-- Satisfy Client Box End -->
-                </div>
-            </div>
-
-            <div class="row align-items-center">
-                <div class="col-lg-5">
-                    <!-- Our Testimonial Image Start -->
-                    <div class="testimonial-image">
-                        <figure class="image-anime reveal">
-                            <img src="images/testimonial-image.jpg" alt="">
-                        </figure>
-
-                        <!-- Google Rating Box Start -->
-                        <div class="goolge-rating-box">
-                            <div class="icon-box">
-                                <img src="images/icon-google.svg" alt="">
-                            </div>
-                            
-                            <!-- Google Rating Content Start -->
-                            <div class="goolge-rating-content">
-                                <div class="icon-rating">
-                                    <p>4.5</p>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                                <p>4.9 (29K Reviews)</p>
-                            </div>
-                            <!-- Google Rating Content End -->
-                        </div>
-                        <!-- Google Rating Box End -->
-                    </div>
-                    <!-- Our Testimonial Image End -->
-                </div>
-
-                <div class="col-lg-7">
-                    <!-- Testimonial Slider Start -->
-                    <div class="testimonial-slider">
-                        <div class="swiper">
-                            <div class="swiper-wrapper" data-cursor-text="Drag">
-                                <!-- Testimonial Slide Start -->
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-header">
-                                            <div class="testimonial-company-logo">
-                                                <img src="images/company-logo-white-1.svg" alt="">
-                                            </div>
-                                            <div class="testimonial-quote">
-                                                <img src="images/testimonial-quote.svg" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="testimonial-content">
-                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
-                                        </div>
-                                        <div class="testimonial-author">       
-                                            <div class="author-image">
-                                                <figure class="image-anime">
-                                                    <img src="images/author-1.jpg" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="author-content">
-                                                <h3>Jenny Wilson</h3>
-                                                <p>Senior Esthetician</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Testimonial Slide End -->
-                                
-                                <!-- Testimonial Slide Start -->
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-header">
-                                            <div class="testimonial-company-logo">
-                                                <img src="images/company-logo-white-1.svg" alt="">
-                                            </div>
-                                            <div class="testimonial-quote">
-                                                <img src="images/testimonial-quote.svg" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="testimonial-content">
-                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
-                                        </div>
-                                        <div class="testimonial-author">       
-                                            <div class="author-image">
-                                                <figure class="image-anime">
-                                                    <img src="images/author-2.jpg" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="author-content">
-                                                <h3>Juliana Silva</h3>
-                                                <p>Wellness Coach</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Testimonial Slide End -->
-                                
-                                <!-- Testimonial Slide Start -->
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-header">
-                                            <div class="testimonial-company-logo">
-                                                <img src="images/company-logo-white-1.svg" alt="">
-                                            </div>
-                                            <div class="testimonial-quote">
-                                                <img src="images/testimonial-quote.svg" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="testimonial-content">
-                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
-                                        </div>
-                                        <div class="testimonial-author">       
-                                            <div class="author-image">
-                                                <figure class="image-anime">
-                                                    <img src="images/author-3.jpg" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="author-content">
-                                                <h3>Nicky Waode</h3>
-                                                <p>Facial Expert</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Testimonial Slide End -->
-                            </div>
-                            <div class="testimonial-btn">
-                                <div class="testimonial-button-prev"></div>
-                                <div class="testimonial-button-next"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Testimonial Slider End -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Our Testimonial Section End -->
+    
 
     <!-- Our Blog Section Start -->
-    <div class="our-blog">
+    {{-- <div class="our-blog">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-6">
@@ -1552,112 +1447,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Our Blog Section End -->
-        <div class="hero-section">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="hero-content">
-                            <div class="section-title">
-                                <h3 class="wow fadeInUp">Step into a world of calm and care</h3>
-                                <h1 class="text-anime-style-2" data-cursor="-opaque">Experience the ultimate escape into <span>relaxation and expert care</span></h1>
-                                <p class="wow fadeInUp" data-wow-delay="0.2s">Every detail is thoughtfully designed to help you unwind—from the tranquil ambiance to our skilled therapists and holistic treatments. Whether you seek deep relaxation, skin rejuvenation, or stress relief, we offer a personalized experience.</p>
-                            </div>
-                            <div class="hero-btn wow fadeInUp" data-wow-delay="0.4s">
-                                <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">Book An Appointment</a>
-                                <a href="{{ url('/services') }}" class="btn-default border-btn">Our Services</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="hero-img">
-                            <figure>
-                                <img src="images/hero-image.png" alt="">
-                            </figure>
-                            <div class="hero-rating-box">
-                                <div class="hero-rating-header">
-                                    <img src="images/icon-google.svg" alt="">
-                                    <p>Google Rating</p>
-                                </div>
-                                <div class="hero-rating-body">
-                                    <div class="hero-rating-star">
-                                        <i class="fa-solid fa-star"></i>
-                                        <i class="fa-solid fa-star"></i>
-                                        <i class="fa-solid fa-star"></i>
-                                        <i class="fa-solid fa-star"></i>
-                                        <i class="fa-solid fa-star"></i>
-                                    </div>
-                                    <div class="hero-rating-counter">
-                                        <p><span class="counter">4.9</span> (29K Reviews)</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="about-us">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-12">
-                    <div class="about-title-box">
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">About us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Born from a love for natural beauty and inner peace, our spa is a sanctuary designed to restore balance, one <span>personalized experience at a time.</span></h2>
-                        </div>
-                        <div class="about-us-btn wow fadeInUp" data-wow-delay="0.4s">
-                            <a href="{{ url('/about') }}" class="btn-default">Discover More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="about-us-item about-box-1 wow fadeInUp">
-                        <div class="about-us-image">
-                            <figure class="image-anime">
-                                <img src="images/about-us-img-1.jpg" alt="">
-                            </figure>
-                        </div>
-                        <div class="about-item-content">
-                            <h3>Personalized Holistic Care</h3>
-                            <p>We take a thoughtful, individual approach to every guest. From your first.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="about-us-item about-box-2 wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="about-us-image">
-                            <figure class="image-anime">
-                                <img src="images/about-us-img-2.jpg" alt="">
-                            </figure>
-                        </div>
-                        <div class="about-item-content">
-                            <h3>Tailored Wellness Experience</h3>
-                            <p>We take a thoughtful, individual approach to every guest. From your first.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="about-us-item about-box-3 wow fadeInUp" data-wow-delay="0.4s">
-                        <div class="about-us-image">
-                            <figure class="image-anime">
-                                <img src="images/about-us-img-3.jpg" alt="">
-                            </figure>
-                        </div>
-                        <div class="about-item-content">
-                            <h3>Soul-Aligned Wellness</h3>
-                            <p>We take a thoughtful, individual approach to every guest. From your first.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="our-services bg-section dark-section">
+    </div> --}}
+    
+    
+    {{-- <div class="our-services bg-section dark-section">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-12">
@@ -1755,8 +1548,8 @@
                 </div>
             </div>            
         </div>
-    </div>
-    <div class="our-feature">
+    </div> --}}
+    {{-- <div class="our-feature">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-12">
@@ -1838,139 +1631,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="what-we-do bg-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="what-we-do-content">
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">What we do</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Thoughtfully designed for your <span>ultimate comfort</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">We've crafted every element of our spa to enhance your relaxation and deliver care. From soothing ambiance.</p>
-                        </div>
-                        <div class="what-we-do-btn wow fadeInUp" data-wow-delay="0.4s">
-                            <a href="{{ url('/contact-us') }}" class="btn-default">contact us</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="what-we-do-item-list">
-                        <div class="what-we-do-item wow fadeInUp">
-                            <div class="icon-box">
-                                <img src="images/icon-what-we-do-1.svg" alt="">
-                            </div>
-                            <div class="what-do-item-content">
-                                <h3>Tranquil Ambience</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
-                            </div>
-                        </div>
-                        <div class="what-we-do-item wow fadeInUp" data-wow-delay="0.2s">
-                            <div class="icon-box">
-                                <img src="images/icon-what-we-do-2.svg" alt="">
-                            </div>
-                            <div class="what-do-item-content">
-                                <h3>Skilled Therapists</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
-                            </div>
-                        </div>
-                        <div class="what-we-do-item wow fadeInUp" data-wow-delay="0.4s">
-                            <div class="icon-box">
-                                <img src="images/icon-what-we-do-3.svg" alt="">
-                            </div>
-                            <div class="what-do-item-content">
-                                <h3>Natural Products</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
-                            </div>
-                        </div>
-                        <div class="what-we-do-item wow fadeInUp" data-wow-delay="0.6s">
-                            <div class="icon-box">
-                                <img src="images/icon-what-we-do-4.svg" alt="">
-                            </div>
-                            <div class="what-do-item-content">
-                                <h3>Customized Treatme</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
-                            </div>
-                        </div>
-                        <div class="what-we-do-item wow fadeInUp" data-wow-delay="0.8s">
-                            <div class="icon-box">
-                                <img src="images/icon-what-we-do-5.svg" alt="">
-                            </div>
-                            <div class="what-do-item-content">
-                                <h3>Hygienic Facilities</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
-                            </div>
-                        </div>
-                        <div class="what-we-do-item wow fadeInUp" data-wow-delay="1s">
-                            <div class="icon-box">
-                                <img src="images/icon-what-we-do-6.svg" alt="">
-                            </div>
-                            <div class="what-do-item-content">
-                                <h3>Easy Online Booking</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>    
-    <div class="why-choose-us">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="why-choose-content">
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">Why choose us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>wellness and care</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">Trust is built through our unwavering commitment to your health and well-being. We combine expert knowledge with personalized care.</p>
-                        </div>
-                        <div class="why-choose-item-list">
-                            <div class="why-choose-item wow fadeInUp" data-wow-delay="0.4s">
-                                <div class="why-choose-item-header">
-                                    <div class="icon-box">
-                                        <img src="images/icon-why-choose-1.svg" alt="">
-                                    </div>
-                                    <div class="why-choose-item-title">
-                                        <h3>Holistic Approach to Wellness</h3>
-                                    </div>
-                                </div>
-                                <div class="why-choose-item-content">
-                                    <p>We treat the whole you—mind, body, and spirit—through sessions.</p>
-                                </div>
-                            </div>
-                            <div class="why-choose-item wow fadeInUp" data-wow-delay="0.6s">
-                                <div class="why-choose-item-header">
-                                    <div class="icon-box">
-                                        <img src="images/icon-why-choose-2.svg" alt="">
-                                    </div>
-                                    <div class="why-choose-item-title">
-                                        <h3>Experienced & Caring Team</h3>
-                                    </div>
-                                </div>
-                                <div class="why-choose-item-content">
-                                    <p>Our certified therapists are not only skilled but genuinely committed.</p>
-                                </div>
-                            </div>    
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="why-choose-image">
-                        <figure class="image-anime">
-                            <img src="images/why-choose-image.jpg" alt="">
-                        </figure>
-                        <div class="contact-us-circle">
-                            <a href="{{ url('/contact-us') }}">
-                                <img src="images/contact-us-circle.svg" alt="">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="our-pricing bg-section dark-section">
+    </div> --}}
+     
+   
+    {{-- <div class="our-pricing bg-section dark-section">
         <div class="container">
             <div class="row section-row">
                 <div class="col-lg-12">
@@ -2055,122 +1719,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="book-appointment">
-        <div class="container">
-            <div class="row section-row">
-                <div class="col-lg-12">
-                    <div class="section-title section-title-center">
-                        <h3 class="wow fadeInUp">Book appointment</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Book appointment now for wellness, peace and <span>rejuvenation</span></h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="appointment-image">
-                        <figure class="image-anime reveal">
-                            <img src="images/appointment-image.jpg" alt="">
-                        </figure>
-                        <div class="appointment-timing-box">
-                            <h3>Opening Hours:</h3>
-                            <ul>
-                                <li>Mon - Fri ( 09:00 - 21:00 )</li>
-                                <li>Saturday ( 09:00 - 14:00 )</li>
-                                <li>Sunday ( Closed )</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
-                        <form id="appointmentForm" action="#" method="POST" data-toggle="validator">
-                            <div class="row">                                
-                                <div class="form-group col-md-6 mb-4">
-                                    <input type="text" name="fname" class="form-control" id="fname" placeholder="First Name" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                <div class="form-group col-md-6 mb-4">
-                                    <input type="text" name="lname" class="form-control" id="lname" placeholder="Last Name" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                <div class="form-group col-md-12 mb-4">
-                                    <input type="email" name ="email" class="form-control" id="email" placeholder="Email Address" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                <div class="form-group col-md-12 mb-4">
-                                    <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                <div class="form-group col-md-6 mb-4">
-                                    <select name="services" class="form-control form-select" id="services" required>
-                                        <option value="" disabled selected>Select Category</option>
-                                        <option value="signature_facials">Signature Facials</option>
-                                        <option value="therapeutic_massages">Therapeutic Massages</option>
-                                        <option value="body_scrubs">Body Scrubs</option>
-                                        <option value="reflexology">reflexology</option>
-                                        <option value="healing_therapy">healing therapy</option>
-                                        <option value="rejuvenation_ritual">rejuvenation ritual</option>
-                                        <option value="revitalizing_facial">revitalizing facial</option>
-                                        <option value="aromatherapy_session">aromatherapy session</option>
-                                    </select>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                <div class="form-group col-md-6 mb-5">
-                                    <input type="date" name="date" class="form-control" id="date" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn-default"><span>Book an appointment</span></button>
-                                    <div id="msgSubmit" class="h3 hidden"></div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="benefit-counter-list">
-                        <div class="benefit-counter-item">
-                            <div class="icon-box">
-                                <img src="images/icon-benefit-counter-1.svg" alt="">
-                            </div>
-                            <div class="benefit-counter-content">
-                                <h2><span class="counter">15</span>+</h2>
-                                <p>Years of Experience</p>
-                            </div>
-                        </div>
-                        <div class="benefit-counter-item">
-                            <div class="icon-box">
-                                <img src="images/icon-benefit-counter-2.svg" alt="">
-                            </div>
-                            <div class="benefit-counter-content">
-                                <h2><span class="counter">500</span>+</h2>
-                                <p>Happy Clients Served</p>
-                            </div>
-                        </div>
-                        <div class="benefit-counter-item">
-                            <div class="icon-box">
-                                <img src="images/icon-benefit-counter-3.svg" alt="">
-                            </div>
-                            <div class="benefit-counter-content">
-                                <h2><span class="counter">98</span>%</h2>
-                                <p>Client Satisfaction Rate</p>
-                            </div>
-                        </div>
-                        <div class="benefit-counter-item">
-                            <div class="icon-box">
-                                <img src="images/icon-benefit-counter-4.svg" alt="">
-                            </div>
-                            <div class="benefit-counter-content">
-                                <h2><span class="counter">50</span>+</h2>
-                                <p>Expert Therapists</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </div> --}}
+   
     <div class="our-faqs bg-section">
         <div class="container">
             <div class="row align-items-center">
@@ -2236,7 +1786,7 @@
                     <div class="faqs-image-box">
                         <div class="faq-image">
                             <figure class="image-anime reveal">
-                                <img src="images/faq-image.jpg" alt="">
+                                <img src="images/hayley-kim-studios-sRSRuxkOuzI-unsplash.jpg" alt="">
                             </figure>
                         </div>
                         <div class="faqs-cta-box">
@@ -2252,7 +1802,7 @@
             </div>
         </div>
     </div>
-    <div class="our-team">
+    {{-- <div class="our-team">
         <div class="container">
             <div class="row section-row">
                 <div class="col-lg-12">
@@ -2349,8 +1899,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="our-partners bg-section">
+    </div> --}}
+    {{-- <div class="our-partners bg-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -2392,7 +1942,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="join-us">
         <div class="container">
             <div class="row">
@@ -2437,175 +1987,8 @@
             </div>
         </div>
     </div>
-    <div class="our-testimonials bg-section dark-section">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-6">
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">Testimonials</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">The spa experiences they can't stop <span>talking about</span></h2>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="satisfy-client-box wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="satisfy-client-images">
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-1.jpg" alt="">
-                                </figure>
-                            </div>
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-2.jpg" alt="">
-                                </figure>
-                            </div>
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-3.jpg" alt="">
-                                </figure>
-                            </div>
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-4.jpg" alt="">
-                                </figure>
-                            </div>
-                            <div class="satisfy-client-image">
-                                <figure class="image-anime">
-                                    <img src="images/satisfy-client-img-5.jpg" alt="">
-                                </figure>
-                            </div>
-                        </div>
-                        <div class="goolge-rating-content">
-                            <div class="icon-rating">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                            </div>
-                            <p>4.9 (29K Reviews)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row align-items-center">
-                <div class="col-lg-5">
-                    <div class="testimonial-image">
-                        <figure class="image-anime reveal">
-                            <img src="images/testimonial-image.jpg" alt="">
-                        </figure>
-                        <div class="goolge-rating-box">
-                            <div class="icon-box">
-                                <img src="images/icon-google.svg" alt="">
-                            </div>
-                            <div class="goolge-rating-content">
-                                <div class="icon-rating">
-                                    <p>4.5</p>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                                <p>4.9 (29K Reviews)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-7">
-                    <div class="testimonial-slider">
-                        <div class="swiper">
-                            <div class="swiper-wrapper" data-cursor-text="Drag">
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-header">
-                                            <div class="testimonial-company-logo">
-                                                <img src="images/company-logo-white-1.svg" alt="">
-                                            </div>
-                                            <div class="testimonial-quote">
-                                                <img src="images/testimonial-quote.svg" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="testimonial-content">
-                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
-                                        </div>
-                                        <div class="testimonial-author">       
-                                            <div class="author-image">
-                                                <figure class="image-anime">
-                                                    <img src="images/author-1.jpg" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="author-content">
-                                                <h3>Jenny Wilson</h3>
-                                                <p>Senior Esthetician</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-header">
-                                            <div class="testimonial-company-logo">
-                                                <img src="images/company-logo-white-1.svg" alt="">
-                                            </div>
-                                            <div class="testimonial-quote">
-                                                <img src="images/testimonial-quote.svg" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="testimonial-content">
-                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
-                                        </div>
-                                        <div class="testimonial-author">       
-                                            <div class="author-image">
-                                                <figure class="image-anime">
-                                                    <img src="images/author-2.jpg" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="author-content">
-                                                <h3>Juliana Silva</h3>
-                                                <p>Wellness Coach</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="testimonial-item">
-                                        <div class="testimonial-header">
-                                            <div class="testimonial-company-logo">
-                                                <img src="images/company-logo-white-1.svg" alt="">
-                                            </div>
-                                            <div class="testimonial-quote">
-                                                <img src="images/testimonial-quote.svg" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="testimonial-content">
-                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
-                                        </div>
-                                        <div class="testimonial-author">       
-                                            <div class="author-image">
-                                                <figure class="image-anime">
-                                                    <img src="images/author-3.jpg" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="author-content">
-                                                <h3>Nicky Waode</h3>
-                                                <p>Facial Expert</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="testimonial-btn">
-                                <div class="testimonial-button-prev"></div>
-                                <div class="testimonial-button-next"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="our-blog">
+    
+    {{-- <div class="our-blog">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-6">
@@ -2680,7 +2063,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @endsection
 

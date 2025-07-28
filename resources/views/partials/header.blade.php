@@ -2,23 +2,24 @@
 		<div class="header-sticky">
 			<nav class="navbar navbar-expand-lg">
 				<div class="container-fluid">
-					<a class="navbar-brand" href="{{ url('/') }}">
-						<img src="images/logo.svg" alt="Logo">
+					<a class="navbar-brand" href="{{ url('/home-image') }}">
+						{{-- <img src="images/logo.svg" alt="Logo"> --}}
+                        <h1 class="text-anime-style-2" data-cursor="-opaque" style="color: white;">Go<span>Glow</span></h1>
 					</a>
 					<div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
                             <ul class="navbar-nav mr-auto" id="menu">
-                                <li class="nav-item submenu"><a class="nav-link" href="{{ url('/') }}">Home</a>
-                                    <ul>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/home-image') }}">Home</a>
+                                    {{-- <ul>
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Home - Main1</a></li>
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/home-image') }}">Home - Image</a></li>
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/home-video') }}">Home - Video</a></li>
-                                    </ul>
+                                    </ul> --}}
                                 </li>                                
                                 <li class="nav-item"><a class="nav-link" href="{{ url('/about') }}">About Us</a>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('/services') }}">Services</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/blogs') }}">Blog</a></li>
-                                <li class="nav-item submenu"><a class="nav-link" href="#">Pages</a>
+                                {{-- <li class="nav-item"><a class="nav-link" href="{{ url('/blogs') }}">Blog</a></li> --}}
+                                {{-- <li class="nav-item submenu"><a class="nav-link" href="#">Pages</a> --}}
                                     <ul>                                        
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/service-detail') }}">Service Details</a></li>
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/blog-single') }}">Blog Details</a></li>
@@ -39,7 +40,8 @@
                             </ul>
                         </div>
                         <div class="header-btn">
-                            <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">book appointment</a>
+                            <a href="{{ url('/beauty-professional') }}" class="btn-default border-btn" style="text-transform: initial;">I am a beauty professional</a>
+                            <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">book appointment</a>            
                         </div>
 					</div>
 					<div class="navbar-toggle"></div>

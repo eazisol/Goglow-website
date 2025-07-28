@@ -18,12 +18,12 @@
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
                         <h1 class="text-anime-style-2" data-cursor="-opaque">About <span>us</span></h1>
-                        <nav class="wow fadeInUp">
+                        {{-- <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ url('/') }}">home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">About us</li>
                             </ol>
-                        </nav>
+                        </nav> --}}
                     </div>
                     <!-- Page Header Box End -->
                 </div>
@@ -294,7 +294,7 @@
     <!-- Intro Video Section End -->
 
     <!-- Our Philosophy Section Start -->
-    <div class="our-philosophy bg-section dark-section">
+    {{-- <div class="our-philosophy bg-section dark-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -365,7 +365,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Philosophy Section End -->
     
     <!-- Why Choose Us Section Start -->
@@ -445,7 +445,7 @@
     <!-- Why Choose Us Section End -->
 
     <!-- What We Do Section Start -->
-    <div class="what-we-do bg-section">
+    {{-- <div class="what-we-do bg-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
@@ -547,7 +547,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- What We Do Section End --> 
 
     <!-- Our Team Section Start -->
@@ -806,7 +806,7 @@
     <!-- Our Faqs Section End -->
 
     <!-- Join Us Section Start -->
-    <div class="join-us">
+    {{-- <div class="join-us">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 order-lg-1 order-2">
@@ -867,11 +867,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Join Us Section End -->
 
     <!-- Our Testimonial Section Start -->
-    <div class="our-testimonials bg-section dark-section">
+    {{-- <div class="our-testimonials bg-section dark-section">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-6">
@@ -1068,11 +1068,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Testimonial Section End -->
 
     <!-- Book Appointment Section Start -->
-    <div class="book-appointment">
+    {{-- <div class="book-appointment">
         <div class="container">
             <div class="row section-row">
                 <div class="col-lg-12">
@@ -1217,7 +1217,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Book Appointment Section End -->
 @endsection
 

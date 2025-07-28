@@ -18,12 +18,12 @@
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
                         <h1 class="text-anime-style-2" data-cursor="-opaque">Book <span>appointment</span></h1>
-                        <nav class="wow fadeInUp">
+                        {{-- <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Book appointment</li>
                             </ol>
-                        </nav>
+                        </nav> --}}
                     </div>
                     <!-- Page Header Box End -->
                 </div>
@@ -40,7 +40,7 @@
                     <!-- Appointment image Start -->
                     <div class="appointment-image">
                         <figure class="image-anime reveal">
-                            <img src="images/appointment-image.jpg" alt="">
+                            <img src="images/anastasiia-chepinska-_VtWHnrYm4k-unsplash.jpg" alt="">
                         </figure>
                         
                         <!-- Appointment Info List Start -->
@@ -202,7 +202,7 @@
                     <div class="faqs-image-box">
                         <div class="faq-image">
                             <figure class="image-anime reveal">
-                                <img src="images/faq-image.jpg" alt="">
+                                <img src="images/hayley-kim-studios-sRSRuxkOuzI-unsplash.jpg" alt="">
                             </figure>
                         </div>
 

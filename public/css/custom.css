@@ -812,7 +812,7 @@ header.main-header .container-fluid{
 
 .hero.hero-bg-image{
 	position: relative;
-	background: url('../images/hero-bg.jpg') no-repeat;
+	background: url('../images/5.webp') no-repeat;
 	background-position: center center;
 	background-size: cover;
 	overflow: hidden;
@@ -1752,7 +1752,7 @@ header.main-header .container-fluid{
 
 .appointment-timing-box h3{
 	font-size: 20px;
-	color: var(--secondary-color);
+	color: var(--accent-color);
 	margin-bottom: 15px;
 }
 
@@ -1764,7 +1764,7 @@ header.main-header .container-fluid{
 
 .appointment-timing-box ul li{
 	line-height: 1.5em;
-	color: var(--secondary-color);
+	color: var(--accent-color);
 	margin-bottom: 4px;
 }
 

@@ -4,10 +4,11 @@
                 <div class="col-lg-6">
                     <div class="about-footer">
                         <div class="footer-logo">
-                            <img src="images/footer-logo.svg" alt="">
+                            {{-- <img src="images/footer-logo.svg" alt=""> --}}
+                            <h1 class="text-anime-style-2" data-cursor="-opaque" style="color: white;">Go<span>Glow</span></h1>
                         </div>
                         <div class="about-footer-content">
-                            <p>Relax, rejuvenate, and restore your mind and body with our luxurious spa and wellness experiences tailored just for you.</p>
+                            <p>Enhance, empower, and elevate your look with our personalized beauty salon services designed to bring out your true radiance.</p>
                         </div>           
                         <div class="footer-contact-details">
                             <div class="footer-contact-item">
@@ -58,10 +59,10 @@
                     <div class="footer-copyright">
                         <div class="footer-links">
                             <ul>
-                                <li><a href="{{ url('/') }}">Home</a></li>
+                                <li><a href="{{ url('/home-image') }}">Home</a></li>
                                 <li><a href="{{ url('/about') }}">About us</a></li>
                                 <li><a href="{{ url('/services') }}">services</a></li>
-                                <li><a href="{{ url('/blogs') }}">blogs</a></li>
+                                {{-- <li><a href="{{ url('/blogs') }}">blogs</a></li> --}}
                                 <li><a href="{{ url('/contact-us') }}">contact us</a></li>
                             </ul>
                         </div>
