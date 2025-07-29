@@ -85,14 +85,10 @@
                                 <div class="form-group col-md-6 mb-4">
                                     <select name="services" class="form-control form-select" id="services" required>
                                         <option value="" disabled selected>Select Category</option>
-                                        <option value="signature_facials">Signature Facials</option>
-                                        <option value="therapeutic_massages">Therapeutic Massages</option>
-                                        <option value="body_scrubs">Body Scrubs</option>
-                                        <option value="reflexology">reflexology</option>
-                                        <option value="healing_therapy">healing therapy</option>
-                                        <option value="rejuvenation_ritual">rejuvenation ritual</option>
-                                        <option value="revitalizing_facial">revitalizing facial</option>
-                                        <option value="aromatherapy_session">aromatherapy session</option>
+                                        <option value="signature_facials">Hair</option>
+                                        <option value="therapeutic_massages">Nails</option>
+                                        <option value="body_scrubs">Skin</option>
+                                        <option value="manicures_and_pedicures">Waxing</option>
                                     </select>
                                     <div class="help-block with-errors"></div>
                                 </div>

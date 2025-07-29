@@ -103,6 +103,12 @@
   <script src="{{ asset('js/wow.min.js') }}"></script>
   <script src="{{ asset('js/function.js') }}"></script>
   <script src="{{ asset('js/datepicker.js') }}"></script>
+  <!-- Add in the head section -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+<!-- Add before closing body tag -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('js/professional-form.js') }}"></script>
   @yield('scripts')
 
 </body>

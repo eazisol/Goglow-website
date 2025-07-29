@@ -52,7 +52,9 @@
                                 <li><a href="#"><i class="fa-brands fa-dribbble"></i></a></li>
                                 <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
                             </ul>
+                            <p><a href="{{ url('/terms-conditions') }}" style="color: white;">Term & Conditions</a></p>
                         </div>
+                        
                     </div>                        
                 </div>
                 <div class="col-lg-12">

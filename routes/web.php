@@ -60,3 +60,6 @@ Route::get('/book-appointment', function () {return view('bookAppointment.index'
 
 // i am a beauty professional
 Route::get('/beauty-professional', function () {return view('iamProfessional.index');});
+
+// term & conditions
+Route::get('/terms-conditions', function () {return view('termsConditions.index');});
