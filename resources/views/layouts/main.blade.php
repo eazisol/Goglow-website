@@ -37,6 +37,35 @@
     body {
         background-color: var(--primary-bg);
     }
+    .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #666;
+    font-size: 14px;
+}
+
+.feature-list li i {
+    width: 20px;
+    margin-right: 10px;
+    color: #666;
+}
+
+.feature-list li span {
+    font-weight: 400;
+}
+.app-description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #ccc;
+}
 </style>
 
     <div class="preloader">

@@ -21,8 +21,8 @@
                         <div class="hero-content" style="width: 80%;">
                             <!-- Section Title Start -->
                             <div class="section-title">
-                                <h3 class="wow fadeInUp">Simple • Immediate • 24/7</h3>
-                                <h1 class="text-anime-style-2" data-cursor="-opaque">Book In <span>Style</span></h1>
+                                <h3 class="wow fadeInUp">Glow Up On the Go</h3>
+                                <h1 class="text-anime-style-2" data-cursor="-opaque">Find & Book Top <span>Beauty Services</span> Near You</h1>
                                 <div class="search-bar">
                                     <form action="#" method="GET" class="search-form">
                                         <div class="search-inputs">
@@ -70,6 +70,57 @@
     </div>
     
     <!-- Hero Section End -->
+
+
+    {{-- app --}}
+    <section style="background-color: #0d0d0d; padding: 60px 0; color: #fff; font-family: 'Poppins', sans-serif;">
+  <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;">
+    
+    <!-- Left: Mobile App Image -->
+    <div style="flex: 1; text-align: center; ">
+      <img src="images/app3.png" alt="GoGlow App">
+    </div>
+    
+    <!-- Right: Content -->
+    <div style="flex: 1; max-width: 550px;">
+        <div class="section-title app-title">
+            <h2 class="text-anime-style-2" data-cursor="-opaque">Get the <span>GoGlow</span> App</h2>
+        </div>
+      <p class="app-description wow fadeInUp" data-wow-delay="0.2s">
+        Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone.
+    </p>
+
+      <!-- Buttons -->
+      <div style="display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;">
+        <a href="#">
+          <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on App Store" style="height: 50px;">
+        </a>
+        <a href="#">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" style="height: 50px;">
+        </a>
+      </div>
+
+      <!-- Feature List -->
+      <ul class="feature-list">
+    <li>
+        <i class="fas fa-map-marker-alt"></i>
+        <span>Find salons near you</span>
+    </li>
+    <li>
+        <i class="far fa-calendar"></i>
+        <span>Schedule in seconds</span>
+    </li>
+    <li>
+        <i class="fas fa-star"></i>
+        <span>4.8 / 5 rating from 5,000+ users</span>
+    </li>
+</ul>
+    </div>
+
+  </div>
+</section>
+
+    {{-- app end --}}
 
     <!-- About Us Section Start -->
     <div class="about-us">
@@ -268,7 +319,7 @@
     <!-- Our Services Section End -->
 
     <!-- Our Feature Section Start -->
-    {{-- <div class="our-feature">
+    <div class="our-feature">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-12">
@@ -367,7 +418,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     <!-- Our Feature Section End -->
 
     <!-- What We Do Section Start -->
