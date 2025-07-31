@@ -72,7 +72,7 @@
     <!-- Hero Section End -->
 
     <!-- About Us Section Start -->
-    <div class="about-us">
+    {{-- <div class="about-us">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-12">
@@ -93,7 +93,7 @@
                     </div>
                     <!-- About Title Box End -->
                 </div>
-            </div>
+            </div> --}}
             
             {{-- <div class="row">
                 <div class="col-lg-4 col-md-6">
@@ -144,8 +144,8 @@
                     <!-- About Us Item End -->
                 </div>
             </div> --}}
-        </div>
-    </div>
+        {{-- </div>
+    </div> --}}
     <!-- About Us Section End -->
 
     <!-- Our Services Section Start -->
@@ -268,7 +268,7 @@
     <!-- Our Services Section End -->
 
     <!-- Our Feature Section Start -->
-    <div class="our-feature">
+    {{-- <div class="our-feature">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-12">
@@ -367,8 +367,87 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Feature Section End -->
+
+        <!-- Why Choose Us Section Start -->
+<div class="why-choose-us">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <!-- Why Choose Content Start -->
+                <div class="why-choose-content">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">Why choose us</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>salon experiences</span></h2>
+                        <p class="wow fadeInUp" data-wow-delay="0.2s">
+                            We bring all your beauty and grooming needs under one roof. Our trusted network of professional salons, transparent booking system, and quality-focused service help us deliver consistent satisfaction to every client.
+                        </p>
+                    </div>
+                    <!-- Section Title End -->
+                    
+                    <!-- Why Choose Item List Start -->
+                    <div class="why-choose-item-list">
+                        <!-- Why Choose Item Start -->
+                        <div class="why-choose-item wow fadeInUp" data-wow-delay="0.4s">
+                            <div class="why-choose-item-header">
+                                <div class="icon-box">
+                                    <img src="images/icon-why-choose-1.svg" alt="">
+                                </div>
+                                <div class="why-choose-item-title">
+                                    <h3>All-in-One Salon Platform</h3>
+                                </div>
+                            </div>
+                            <div class="why-choose-item-content">
+                                <p>From Hair to Nails, Skin to Waxing—book any service at top-rated salons near you, all in one place.</p>
+                            </div>
+                        </div>
+                        <!-- Why Choose Item End -->
+                        
+                        <!-- Why Choose Item Start -->
+                        <div class="why-choose-item wow fadeInUp" data-wow-delay="0.6s">
+                            <div class="why-choose-item-header">
+                                <div class="icon-box">
+                                    <img src="images/icon-why-choose-2.svg" alt="">
+                                </div>
+                                <div class="why-choose-item-title">
+                                    <h3>Trusted Salon Partners</h3>
+                                </div>
+                            </div>
+                            <div class="why-choose-item-content">
+                                <p>We partner only with licensed, well-reviewed salons to ensure you get quality care from skilled professionals.</p>
+                            </div>
+                        </div>
+                        <!-- Why Choose Item End -->    
+                    </div>
+                    <!-- Why Choose Item List End -->
+                </div>
+                <!-- Why Choose Content End -->
+            </div>
+
+            <div class="col-lg-6">
+                <!-- Why Choose Images Start -->
+                <div class="why-choose-image">
+                    <figure class="image-anime">
+                        <img src="images/kimia-kazemi-u93nTfWqR9w-unsplash.jpg" alt="">
+                    </figure>
+
+                    <!-- Contact Us Circle Start -->
+                    <div class="contact-us-circle">
+                        <a href="{{ url('/contact-us') }}">
+                            <img src="images/contact-us-circle.svg" alt="">
+                        </a>
+                    </div>
+                    <!-- Contact Us Circle End -->
+                </div>
+                <!-- Why Choose Images End -->
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Why Choose Us Section End -->
 
     <!-- What We Do Section Start -->
     <div class="what-we-do bg-section">
@@ -379,9 +458,9 @@
                     <div class="what-we-do-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">What we do</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Thoughtfully designed for your <span>ultimate comfort</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">We've crafted every element of our spa to enhance your relaxation and deliver care. From soothing ambiance.</p>
+                            <h3 class="wow fadeInUp">How it works</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">A simple way to <span>look and feel your best</span></h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">From finding top-rated salons to booking with ease, our platform helps you glow effortlessly in just 3 simple steps.</p>
                         </div>
                         <!-- Section Title End -->
                         
@@ -403,8 +482,8 @@
                                 <img src="images/icon-what-we-do-1.svg" alt="">
                             </div>
                             <div class="what-do-item-content">
-                                <h3>Tranquil Ambience</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
+                                <h3>Find</h3>
+                                <p>Explore a variety of trusted salons near you offering hair, nails, skin, and more beauty services.</p>
                             </div>
                         </div>
                         <!-- What We Do Item End -->
@@ -415,8 +494,8 @@
                                 <img src="images/icon-what-we-do-2.svg" alt="">
                             </div>
                             <div class="what-do-item-content">
-                                <h3>Skilled Therapists</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
+                                <h3>Book</h3>
+                                <p>Select your preferred time, service, and salon, then book instantly through our platform.</p>
                             </div>
                         </div>
                         <!-- What We Do Item End -->
@@ -427,47 +506,12 @@
                                 <img src="images/icon-what-we-do-3.svg" alt="">
                             </div>
                             <div class="what-do-item-content">
-                                <h3>Natural Products</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
+                                <h3>Glow</h3>
+                                <p>Show up at your appointment, enjoy expert care, and walk out glowing with confidence.</p>
                             </div>
                         </div>
                         <!-- What We Do Item End -->
                         
-                        <!-- What We Do Item Start -->
-                        <div class="what-we-do-item wow fadeInUp" data-wow-delay="0.6s">
-                            <div class="icon-box">
-                                <img src="images/icon-what-we-do-4.svg" alt="">
-                            </div>
-                            <div class="what-do-item-content">
-                                <h3>Customized Treatme</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
-                            </div>
-                        </div>
-                        <!-- What We Do Item End -->
-                        
-                        <!-- What We Do Item Start -->
-                        <div class="what-we-do-item wow fadeInUp" data-wow-delay="0.8s">
-                            <div class="icon-box">
-                                <img src="images/icon-what-we-do-5.svg" alt="">
-                            </div>
-                            <div class="what-do-item-content">
-                                <h3>Hygienic Facilities</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
-                            </div>
-                        </div>
-                        <!-- What We Do Item End -->
-                          
-                        <!-- What We Do Item Start -->
-                        <div class="what-we-do-item wow fadeInUp" data-wow-delay="1s">
-                            <div class="icon-box">
-                                <img src="images/icon-what-we-do-6.svg" alt="">
-                            </div>
-                            <div class="what-do-item-content">
-                                <h3>Easy Online Booking</h3>
-                                <p>Clean, sanitized spaces that meet the highest standards of spa hygiene.</p>
-                            </div>
-                        </div>
-                        <!-- What We Do Item End -->
                     </div>
                     <!-- What We Do Item List End -->
                 </div>
@@ -476,81 +520,7 @@
     </div>
     <!-- What We Do Section End -->    
 
-    <!-- Why Choose Us Section Start -->
-    <div class="why-choose-us">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Why Choose Content Start -->
-                    <div class="why-choose-content">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">Why choose us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>wellness and care</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">Trust is built through our unwavering commitment to your health and well-being. We combine expert knowledge with personalized care.</p>
-                        </div>
-                        <!-- Section Title End -->
-                        
-                        <!-- Why Choose Item List Start -->
-                        <div class="why-choose-item-list">
-                            <!-- Why Choose Item Start -->
-                            <div class="why-choose-item wow fadeInUp" data-wow-delay="0.4s">
-                                <div class="why-choose-item-header">
-                                    <div class="icon-box">
-                                        <img src="images/icon-why-choose-1.svg" alt="">
-                                    </div>
-                                    <div class="why-choose-item-title">
-                                        <h3>Holistic Approach to Wellness</h3>
-                                    </div>
-                                </div>
-                                <div class="why-choose-item-content">
-                                    <p>We treat the whole you—mind, body, and spirit—through sessions.</p>
-                                </div>
-                            </div>
-                            <!-- Why Choose Item End -->
-                            
-                            <!-- Why Choose Item Start -->
-                            <div class="why-choose-item wow fadeInUp" data-wow-delay="0.6s">
-                                <div class="why-choose-item-header">
-                                    <div class="icon-box">
-                                        <img src="images/icon-why-choose-2.svg" alt="">
-                                    </div>
-                                    <div class="why-choose-item-title">
-                                        <h3>Experienced & Caring Team</h3>
-                                    </div>
-                                </div>
-                                <div class="why-choose-item-content">
-                                    <p>Our certified therapists are not only skilled but genuinely committed.</p>
-                                </div>
-                            </div>
-                            <!-- Why Choose Item End -->    
-                        </div>
-                        <!-- Why Choose Item List End -->
-                    </div>
-                    <!-- Why Choose Content End -->
-                </div>
 
-                <div class="col-lg-6">
-                    <!-- Why Choose Images Start -->
-                    <div class="why-choose-image">
-                        <figure class="image-anime">
-                            <img src="images/kimia-kazemi-u93nTfWqR9w-unsplash.jpg" alt="">
-                        </figure>
-
-                        <!-- Contact Us Circle Start -->
-                        <div class="contact-us-circle">
-                            <a href="{{ url('/contact-us') }}">
-                                <img src="images/contact-us-circle.svg" alt="">
-                            </a>
-                        </div>
-                        <!-- Contact Us Circle ENd -->
-                    </div>
-                    <!-- Why Choose Images End -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Why Choose Us Section End -->
 
     <!-- Our Pricing Section Start -->
     {{-- <div class="our-pricing bg-section dark-section">
@@ -801,8 +771,11 @@
                                             </div>
                                         </div>
                                         <div class="testimonial-content">
-                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
+                                            <p>
+                                                Booking through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+                                            </p>
                                         </div>
+
                                         <div class="testimonial-author">       
                                             <div class="author-image">
                                                 <figure class="image-anime">
@@ -830,8 +803,11 @@
                                             </div>
                                         </div>
                                         <div class="testimonial-content">
-                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
+                                            <p>
+                                                Booking through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+                                            </p>
                                         </div>
+
                                         <div class="testimonial-author">       
                                             <div class="author-image">
                                                 <figure class="image-anime">
@@ -859,8 +835,11 @@
                                             </div>
                                         </div>
                                         <div class="testimonial-content">
-                                            <p>My experience at Logoipsum was nothing short of incredible. From the moment I walked through the doors, I was greeted with warmth and professionalism. The atmosphere was serene and calming, making me feel relaxed even before my treatments began. I booked a full spa day, including a massage, facial, and body wrap.</p>
+                                            <p>
+                                                Booking through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+                                            </p>
                                         </div>
+
                                         <div class="testimonial-author">       
                                             <div class="author-image">
                                                 <figure class="image-anime">
@@ -888,155 +867,6 @@
         </div>
     </div>
     <!-- Our Testimonial Section End -->
-
-    <!-- Book Appointment Section Start -->
-    <div class="book-appointment">
-        <div class="container">
-            <div class="row section-row">
-                <div class="col-lg-12">
-                    <!-- Section Title Start -->
-                    <div class="section-title section-title-center">
-                        <h3 class="wow fadeInUp">Book appointment</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Book appointment now for wellness, peace and <span>rejuvenation</span></h2>
-                    </div>
-                    <!-- Section Title End -->
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <!-- Appointment image Start -->
-                    <div class="appointment-image">
-                        <figure class="image-anime reveal">
-                            <img src="images/anastasiia-chepinska-_VtWHnrYm4k-unsplash.jpg" alt="">
-                        </figure>
-                        
-                        <!-- Appointment Info List Start -->
-                        <div class="appointment-timing-box">
-                            <h3>Opening Hours:</h3>
-                            <ul>
-                                <li>Mon - Fri ( 09:00 - 21:00 )</li>
-                                <li>Saturday ( 09:00 - 14:00 )</li>
-                                <li>Sunday ( Closed )</li>
-                            </ul>
-                        </div>
-                        <!-- Appointment Info List End -->
-                    </div>
-                    <!-- Appointment image End -->
-                </div>
-
-                <div class="col-lg-6">
-                    <!-- Book Appointment Form Start -->
-                    <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
-                        <form id="appointmentForm" action="#" method="POST" data-toggle="validator">
-                            <div class="row">                                
-                                <div class="form-group col-md-6 mb-4">
-                                    <input type="text" name="fname" class="form-control" id="fname" placeholder="First Name" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                
-                                <div class="form-group col-md-6 mb-4">
-                                    <input type="text" name="lname" class="form-control" id="lname" placeholder="Last Name" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                
-                                <div class="form-group col-md-12 mb-4">
-                                    <input type="email" name ="email" class="form-control" id="email" placeholder="Email Address" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-    
-                                <div class="form-group col-md-12 mb-4">
-                                    <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                
-                                <div class="form-group col-md-6 mb-4">
-                                    <select name="services" class="form-control form-select" id="services" required>
-                                        <option value="" disabled selected>Select Category</option>
-                                        <option value="signature_facials">Signature Facials</option>
-                                        <option value="therapeutic_massages">Therapeutic Massages</option>
-                                        <option value="body_scrubs">Body Scrubs</option>
-                                        <option value="reflexology">reflexology</option>
-                                        <option value="healing_therapy">healing therapy</option>
-                                        <option value="rejuvenation_ritual">rejuvenation ritual</option>
-                                        <option value="revitalizing_facial">revitalizing facial</option>
-                                        <option value="aromatherapy_session">aromatherapy session</option>
-                                    </select>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-    
-                                <div class="form-group col-md-6 mb-5">
-                                    <input type="date" name="date" class="form-control" id="date" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-    
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn-default"><span>Book an appointment</span></button>
-                                    <div id="msgSubmit" class="h3 hidden"></div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- Book Appointment Form End -->
-                </div>
-
-                <div class="col-lg-12">
-                    <!-- Benefit Counter List Start -->
-                    <div class="benefit-counter-list">
-                        <!-- Benefit Counter Item Start -->
-                        <div class="benefit-counter-item">
-                            <div class="icon-box">
-                                <img src="images/icon-benefit-counter-1.svg" alt="">
-                            </div>
-                            <div class="benefit-counter-content">
-                                <h2><span class="counter">15</span>+</h2>
-                                <p>Years of Experience</p>
-                            </div>
-                        </div>
-                        <!-- Benefit Counter Item End -->
-
-                        <!-- Benefit Counter Item Start -->
-                        <div class="benefit-counter-item">
-                            <div class="icon-box">
-                                <img src="images/icon-benefit-counter-2.svg" alt="">
-                            </div>
-                            <div class="benefit-counter-content">
-                                <h2><span class="counter">500</span>+</h2>
-                                <p>Happy Clients Served</p>
-                            </div>
-                        </div>
-                        <!-- Benefit Counter Item End -->
-
-                        <!-- Benefit Counter Item Start -->
-                        <div class="benefit-counter-item">
-                            <div class="icon-box">
-                                <img src="images/icon-benefit-counter-3.svg" alt="">
-                            </div>
-                            <div class="benefit-counter-content">
-                                <h2><span class="counter">98</span>%</h2>
-                                <p>Client Satisfaction Rate</p>
-                            </div>
-                        </div>
-                        <!-- Benefit Counter Item End -->
-
-                        <!-- Benefit Counter Item Start -->
-                        <div class="benefit-counter-item">
-                            <div class="icon-box">
-                                <img src="images/icon-benefit-counter-4.svg" alt="">
-                            </div>
-                            <div class="benefit-counter-content">
-                                <h2><span class="counter">50</span>+</h2>
-                                <p>Expert Therapists</p>
-                            </div>
-                        </div>
-                        <!-- Benefit Counter Item End -->
-                    </div>
-                    <!-- Benefit Counter List End -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Book Appointment Section End -->
     <!-- Our Team Section Start -->
     {{-- <div class="our-team">
         <div class="container">
@@ -1722,51 +1552,50 @@
     </div> --}}
     {{-- app --}}
     <section style="background-color: #0d0d0d; padding: 60px 0;">
-  <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;">
-    
-    <!-- Left: Mobile App Image -->
-        <div style="flex: 1; text-align: center; ">
-        <img src="images/app5.png" alt="GoGlow App">
-        </div>
-    
-    <!-- Right: Content -->
-    <div style="flex: 1; max-width: 550px;">
-            <div class="section-title app-title">
-                <h2 class="text-anime-style-2" data-cursor="-opaque">Get the <span>GoGlow</span> App</h2>
+        <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;">
+            
+            <!-- Left: Mobile App Image -->
+                <div style="flex: 1; text-align: center; ">
+                <img src="images/app5.png" alt="GoGlow App">
+                </div>
+            
+            <!-- Right: Content -->
+            <div style="flex: 1; max-width: 550px;">
+                        <div class="section-title">
+                            <h3 class="wow fadeInUp">Join us</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">Get the <span>GoGlow</span> App</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone.</p>
+                        </div>
+
+            <!-- Buttons -->
+            <div style="display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;">
+                <a href="#">
+                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on App Store" style="height: 50px;">
+                </a>
+                <a href="#">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" style="height: 50px;">
+                </a>
             </div>
-            <p class="app-description wow fadeInUp" data-wow-delay="0.2s">
-                Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone.
-            </p>
 
-      <!-- Buttons -->
-      <div style="display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;">
-        <a href="#">
-          <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on App Store" style="height: 50px;">
-        </a>
-        <a href="#">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" style="height: 50px;">
-        </a>
-      </div>
+            <!-- Feature List -->
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Find salons near you</span>
+                        </li>
+                        <li>
+                            <i class="far fa-calendar"></i>
+                            <span>Schedule in seconds</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-star"></i>
+                            <span>4.8 / 5 rating from 5,000+ users</span>
+                        </li>
+                    </ul>
+            </div>
 
-      <!-- Feature List -->
-            <ul class="feature-list">
-                <li>
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Find salons near you</span>
-                </li>
-                <li>
-                    <i class="far fa-calendar"></i>
-                    <span>Schedule in seconds</span>
-                </li>
-                <li>
-                    <i class="fas fa-star"></i>
-                    <span>4.8 / 5 rating from 5,000+ users</span>
-                </li>
-            </ul>
-    </div>
-
-  </div>
-</section>
+        </div>
+    </section>
 
     {{-- app end --}}
 
@@ -1775,7 +1604,7 @@
 
 
    
-    <div class="our-faqs bg-section">
+    {{-- <div class="our-faqs bg-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -1855,7 +1684,7 @@
                 </div>               
             </div>
         </div>
-    </div>
+    </div> --}}
     {{-- <div class="our-team">
         <div class="container">
             <div class="row section-row">
@@ -2002,7 +1831,7 @@
 
 
 
-    <div class="join-us">
+    {{-- <div class="join-us">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 order-lg-1 order-2">
@@ -2046,7 +1875,7 @@
             </div>
         </div>
     </div>
-    
+     --}}
     {{-- <div class="our-blog">
         <div class="container">
             <div class="row section-row align-items-center">

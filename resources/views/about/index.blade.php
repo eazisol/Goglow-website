@@ -34,166 +34,172 @@
 
     <!-- About Us Section Start -->
     <div class="about-us">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-12">
-                    <!-- About Title Box Start -->
-                    <div class="about-title-box">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">About us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Born from a love for natural beauty and inner peace, our spa is a sanctuary designed to restore balance, one <span>personalized experience at a time.</span></h2>
-                        </div>
-                        <!-- Section Title End -->
-                        
-                        <!-- About Us Button Start -->
-                        <div class="about-us-btn wow fadeInUp" data-wow-delay="0.4s">
-                            <a href="{{ url('/contact-us') }}" class="btn-default">contact us</a>
-                        </div>
-                        <!-- About Us Button End -->
+    <div class="container">
+        <div class="row section-row align-items-center">
+            <div class="col-lg-12">
+                <!-- About Title Box Start -->
+                <div class="about-title-box">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">About us</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">
+                            A modern solution for effortless beauty — connecting you to trusted salons for a seamless <span>self-care experience</span>
+                        </h2>
                     </div>
-                    <!-- About Title Box End -->
+                    <!-- Section Title End -->
+
+                    <!-- About Us Button Start -->
+                    <div class="about-us-btn wow fadeInUp" data-wow-delay="0.4s">
+                        <a href="{{ url('/contact-us') }}" class="btn-default">contact us</a>
+                    </div>
+                    <!-- About Us Button End -->
                 </div>
+                <!-- About Title Box End -->
             </div>
-            
-            <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <!-- About Us Item Start -->
-                    <div class="about-us-item about-box-1 wow fadeInUp">
-                        <div class="about-us-image">
-                            <figure class="image-anime">
-                                <img src="images/about-us-img-1.jpg" alt="">
-                            </figure>
-                        </div>
-                        <div class="about-item-content">
-                            <h3>Personalized Holistic Care</h3>
-                            <p>We take a thoughtful, individual approach to every guest. From your first.</p>
-                        </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <!-- About Us Item Start -->
+                <div class="about-us-item about-box-1 wow fadeInUp">
+                    <div class="about-us-image">
+                        <figure class="image-anime">
+                            <img src="images/about-us-img-1.jpg" alt="">
+                        </figure>
                     </div>
-                    <!-- About Us Item End -->
-                </div>
-                
-                <div class="col-lg-4 col-md-6">
-                    <!-- About Us Item Start -->
-                    <div class="about-us-item about-box-2 wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="about-us-image">
-                            <figure class="image-anime">
-                                <img src="images/about-us-img-2.jpg" alt="">
-                            </figure>
-                        </div>
-                        <div class="about-item-content">
-                            <h3>Tailored Wellness Experience</h3>
-                            <p>We take a thoughtful, individual approach to every guest. From your first.</p>
-                        </div>
+                    <div class="about-item-content">
+                        <h3>Personalized Service Selection</h3>
+                        <p>Whether it’s hair, nails, skin, or waxing—we help you find exactly what you need from top salons nearby.</p>
                     </div>
-                    <!-- About Us Item End -->
                 </div>
-                
-                <div class="col-lg-4 col-md-6">
-                    <!-- About Us Item Start -->
-                    <div class="about-us-item about-box-3 wow fadeInUp" data-wow-delay="0.4s">
-                        <div class="about-us-image">
-                            <figure class="image-anime">
-                                <img src="images/about-us-img-3.jpg" alt="">
-                            </figure>
-                        </div>
-                        <div class="about-item-content">
-                            <h3>Soul-Aligned Wellness</h3>
-                            <p>We take a thoughtful, individual approach to every guest. From your first.</p>
-                        </div>
+                <!-- About Us Item End -->
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <!-- About Us Item Start -->
+                <div class="about-us-item about-box-2 wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="about-us-image">
+                        <figure class="image-anime">
+                            <img src="images/about-us-img-2.jpg" alt="">
+                        </figure>
                     </div>
-                    <!-- About Us Item End -->
+                    <div class="about-item-content">
+                        <h3>Effortless Booking</h3>
+                        <p>Book appointments online in just a few clicks—no calls, no hassle, just beauty on your schedule.</p>
+                    </div>
                 </div>
+                <!-- About Us Item End -->
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <!-- About Us Item Start -->
+                <div class="about-us-item about-box-3 wow fadeInUp" data-wow-delay="0.4s">
+                    <div class="about-us-image">
+                        <figure class="image-anime">
+                            <img src="images/about-us-img-3.jpg" alt="">
+                        </figure>
+                    </div>
+                    <div class="about-item-content">
+                        <h3>Trusted Beauty Partners</h3>
+                        <p>We work only with verified, quality-focused salons to ensure every appointment exceeds expectations.</p>
+                    </div>
+                </div>
+                <!-- About Us Item End -->
             </div>
         </div>
     </div>
+</div>
+
     <!-- About Us Section End -->
     
     <!-- Our Approach Section Start -->
-    <div class="our-approach bg-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <!-- Approach Content Start -->
-                    <div class="approach-content">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">Our approach</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Inspiring wellness, shaping a  <span>healthier tomorrow</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">Trust is built through our unwavering commitment to your health and well-being. We combine expert knowledge with personalized care to deliver treatments that are not only effective but also deeply relaxing.</p>
-                        </div>
-                        <!-- Section Title End -->
-
-                        <!-- Approach Image Start -->
-                        <div class="approach-image">
-                            <figure class="image-anime reveal">
-                                <img src="images/approach-image-1.jpg" alt="">
-                            </figure>
-                        </div>
-                        <!-- Approach Image End -->
+<div class="our-approach bg-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <!-- Approach Content Start -->
+                <div class="approach-content">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">Our approach</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">
+                            Simplifying beauty with smart access to <span>trusted salons</span>
+                        </h2>
+                        <p class="wow fadeInUp" data-wow-delay="0.2s">
+                            We believe self-care should be simple, accessible, and enjoyable. That’s why we connect clients with professional salons through a seamless online experience—making booking beauty and grooming services easier than ever.
+                        </p>
                     </div>
-                    <!-- Approach Content End -->
-                </div>
-                
-                <div class="col-lg-6">
-                    <!-- Approach List Box Start -->
-                    <div class="approach-list-box">
-                        <!-- Approach Image Start -->
-                        <div class="approach-image">
-                            <figure class="image-anime reveal">
-                                <img src="images/approach-image-2.jpg" alt="">
-                            </figure>
-                        </div>
-                        <!-- Approach Image End -->
+                    <!-- Section Title End -->
 
-                        <!-- Approach List Start -->
-                        <div class="approach-list">
-                            <!-- Approach List Item Start -->
-                            <div class="approach-list-item wow fadeInUp">
-                                <div class="icon-box">
-                                    <img src="images/icon-approach-1.svg" alt="">
-                                </div>
-                                <div class="approach-list-content">
-                                    <h3>Our mission</h3>
-                                    <p>To provide a sanctuary where holistic wellness meets mindful relaxation. Through personalized care, natural therapies, and a tranquil.</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Approach List Item Start -->
-                            <div class="approach-list-item wow fadeInUp" data-wow-delay="0.2s">
-                                <div class="icon-box">
-                                    <img src="images/icon-approach-2.svg" alt="">
-                                </div>
-                                <div class="approach-list-content">
-                                    <h3>Our vision</h3>
-                                    <p>To provide a sanctuary where holistic wellness meets mindful relaxation. Through personalized care, natural therapies, and a tranquil.</p>
-                                </div>
-                            </div>
-                            <!-- Approach List Item End -->
-                            
-                            <!-- Approach List Item Start -->
-                            <div class="approach-list-item wow fadeInUp" data-wow-delay="0.4s">
-                                <div class="icon-box">
-                                    <img src="images/icon-approach-3.svg" alt="">
-                                </div>
-                                <div class="approach-list-content">
-                                    <h3>Our goal</h3>
-                                    <p>To provide a sanctuary where holistic wellness meets mindful relaxation. Through personalized care, natural therapies, and a tranquil.</p>
-                                </div>
-                            </div>
-                            <!-- Approach List Item End -->
-                        </div>
-                        <!-- Approach List End -->
+                    <!-- Approach Image Start -->
+                    <div class="approach-image">
+                        <figure class="image-anime reveal">
+                            <img src="images/prahant-designing-studio-USdbU5h4B-c-unsplash.jpg" alt="">
+                        </figure>
                     </div>
-                    <!-- Approach List Box End -->
+                    <!-- Approach Image End -->
                 </div>
+                <!-- Approach Content End -->
+            </div>
+
+            <div class="col-lg-6">
+                <!-- Approach List Box Start -->
+                <div class="approach-list-box">
+                    <!-- Approach Image Start -->
+                    <div class="approach-image">
+                        <figure class="image-anime reveal">
+                            <img src="images/sunny-ng-KVIlNRoGwxk-unsplash.jpg" alt="">
+                        </figure>
+                    </div>
+                    <!-- Approach Image End -->
+
+                    <!-- Approach List Start -->
+                    <div class="approach-list">
+                        <!-- Mission -->
+                        <div class="approach-list-item wow fadeInUp">
+                            <div class="icon-box">
+                                <img src="images/icon-approach-1.svg" alt="">
+                            </div>
+                            <div class="approach-list-content">
+                                <h3>Our mission</h3>
+                                <p>To make salon services more accessible, convenient, and transparent by bridging the gap between clients and trusted beauty professionals.</p>
+                            </div>
+                        </div>
+
+                        <!-- Vision -->
+                        <div class="approach-list-item wow fadeInUp" data-wow-delay="0.2s">
+                            <div class="icon-box">
+                                <img src="images/icon-approach-2.svg" alt="">
+                            </div>
+                            <div class="approach-list-content">
+                                <h3>Our vision</h3>
+                                <p>To become the go-to platform for effortless self-care by empowering users to discover, book, and enjoy top salon services in just a few taps.</p>
+                            </div>
+                        </div>
+
+                        <!-- Goal -->
+                        <div class="approach-list-item wow fadeInUp" data-wow-delay="0.4s">
+                            <div class="icon-box">
+                                <img src="images/icon-approach-3.svg" alt="">
+                            </div>
+                            <div class="approach-list-content">
+                                <h3>Our goal</h3>
+                                <p>To help every individual feel confident and cared for—whether it’s a quick touch-up or a full beauty transformation.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Approach List End -->
+                </div>
+                <!-- Approach List Box End -->
             </div>
         </div>
     </div>
+</div>
+
     <!-- Our Approach Section End -->
 
     <!-- Intro Video Section Start -->
-    <div class="intro-video dark-section">
+    {{-- <div class="intro-video dark-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-12">
@@ -290,7 +296,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Intro Video Section End -->
 
     <!-- Our Philosophy Section Start -->
@@ -369,79 +375,81 @@
     <!-- Our Philosophy Section End -->
     
     <!-- Why Choose Us Section Start -->
-    <div class="why-choose-us">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Why Choose Content Start -->
-                    <div class="why-choose-content">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">Why choose us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>wellness and care</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">Trust is built through our unwavering commitment to your health and well-being. We combine expert knowledge with personalized care.</p>
+<div class="why-choose-us">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <!-- Why Choose Content Start -->
+                <div class="why-choose-content">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">Why choose us</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>salon experiences</span></h2>
+                        <p class="wow fadeInUp" data-wow-delay="0.2s">
+                            We bring all your beauty and grooming needs under one roof. Our trusted network of professional salons, transparent booking system, and quality-focused service help us deliver consistent satisfaction to every client.
+                        </p>
+                    </div>
+                    <!-- Section Title End -->
+                    
+                    <!-- Why Choose Item List Start -->
+                    <div class="why-choose-item-list">
+                        <!-- Why Choose Item Start -->
+                        <div class="why-choose-item wow fadeInUp" data-wow-delay="0.4s">
+                            <div class="why-choose-item-header">
+                                <div class="icon-box">
+                                    <img src="images/icon-why-choose-1.svg" alt="">
+                                </div>
+                                <div class="why-choose-item-title">
+                                    <h3>All-in-One Salon Platform</h3>
+                                </div>
+                            </div>
+                            <div class="why-choose-item-content">
+                                <p>From Hair to Nails, Skin to Waxing—book any service at top-rated salons near you, all in one place.</p>
+                            </div>
                         </div>
-                        <!-- Section Title End -->
+                        <!-- Why Choose Item End -->
                         
-                        <!-- Why Choose Item List Start -->
-                        <div class="why-choose-item-list">
-                            <!-- Why Choose Item Start -->
-                            <div class="why-choose-item wow fadeInUp" data-wow-delay="0.4s">
-                                <div class="why-choose-item-header">
-                                    <div class="icon-box">
-                                        <img src="images/icon-why-choose-1.svg" alt="">
-                                    </div>
-                                    <div class="why-choose-item-title">
-                                        <h3>Holistic Approach to Wellness</h3>
-                                    </div>
+                        <!-- Why Choose Item Start -->
+                        <div class="why-choose-item wow fadeInUp" data-wow-delay="0.6s">
+                            <div class="why-choose-item-header">
+                                <div class="icon-box">
+                                    <img src="images/icon-why-choose-2.svg" alt="">
                                 </div>
-                                <div class="why-choose-item-content">
-                                    <p>We treat the whole you—mind, body, and spirit—through sessions.</p>
+                                <div class="why-choose-item-title">
+                                    <h3>Trusted Salon Partners</h3>
                                 </div>
                             </div>
-                            <!-- Why Choose Item End -->
-                            
-                            <!-- Why Choose Item Start -->
-                            <div class="why-choose-item wow fadeInUp" data-wow-delay="0.6s">
-                                <div class="why-choose-item-header">
-                                    <div class="icon-box">
-                                        <img src="images/icon-why-choose-2.svg" alt="">
-                                    </div>
-                                    <div class="why-choose-item-title">
-                                        <h3>Experienced & Caring Team</h3>
-                                    </div>
-                                </div>
-                                <div class="why-choose-item-content">
-                                    <p>Our certified therapists are not only skilled but genuinely committed.</p>
-                                </div>
+                            <div class="why-choose-item-content">
+                                <p>We partner only with licensed, well-reviewed salons to ensure you get quality care from skilled professionals.</p>
                             </div>
-                            <!-- Why Choose Item End -->    
                         </div>
-                        <!-- Why Choose Item List End -->
+                        <!-- Why Choose Item End -->    
                     </div>
-                    <!-- Why Choose Content End -->
+                    <!-- Why Choose Item List End -->
                 </div>
+                <!-- Why Choose Content End -->
+            </div>
 
-                <div class="col-lg-6">
-                    <!-- Why Choose Images Start -->
-                    <div class="why-choose-image">
-                        <figure class="image-anime">
-                            <img src="images/why-choose-image.jpg" alt="">
-                        </figure>
+            <div class="col-lg-6">
+                <!-- Why Choose Images Start -->
+                <div class="why-choose-image">
+                    <figure class="image-anime">
+                        <img src="images/kimia-kazemi-u93nTfWqR9w-unsplash.jpg" alt="">
+                    </figure>
 
-                        <!-- Contact Us Circle Start -->
-                        <div class="contact-us-circle">
-                            <a href="{{ url('/contact-us') }}">
-                                <img src="images/contact-us-circle.svg" alt="">
-                            </a>
-                        </div>
-                        <!-- Contact Us Circle ENd -->
+                    <!-- Contact Us Circle Start -->
+                    <div class="contact-us-circle">
+                        <a href="{{ url('/contact-us') }}">
+                            <img src="images/contact-us-circle.svg" alt="">
+                        </a>
                     </div>
-                    <!-- Why Choose Images End -->
+                    <!-- Contact Us Circle End -->
                 </div>
+                <!-- Why Choose Images End -->
             </div>
         </div>
     </div>
+</div>
     <!-- Why Choose Us Section End -->
 
     <!-- What We Do Section Start -->
@@ -551,7 +559,7 @@
     <!-- What We Do Section End --> 
 
     <!-- Our Team Section Start -->
-    <div class="our-team">
+    {{-- <div class="our-team">
         <div class="container">
             <div class="row section-row">
                 <div class="col-lg-12">
@@ -694,11 +702,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Team Section End -->
 
     <!-- Our Faqs Section Start -->
-    <div class="our-faqs bg-section">
+    {{-- <div class="our-faqs bg-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -802,7 +810,7 @@
                 </div>               
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Our Faqs Section End -->
 
     <!-- Join Us Section Start -->

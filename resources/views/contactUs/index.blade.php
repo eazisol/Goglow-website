@@ -43,8 +43,11 @@
                         <div class="section-title">
                             <h3 class="wow fadeInUp">contact us</h3>
                             <h2 class="text-anime-style-2" data-cursor="-opaque">Get in touch <span>with us</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">We're here to support your journey to better health and well-being. Reach out today to ask questions, schedule a consultation.</p>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                Have questions or need help booking your next salon service? We're here to assist you—reach out anytime and let’s make beauty simple.
+                            </p>
                         </div>
+
                         <!-- Section Title End -->
 
                         <!-- Contact Info Box Start -->

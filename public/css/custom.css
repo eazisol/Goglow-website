@@ -1363,12 +1363,12 @@ header.main-header .container-fluid{
 
 .what-we-do-item-list{
 	display: flex;
-	flex-wrap: wrap;
-	gap: 50px 30px;
+    flex-direction: column; /* Makes items stack vertically */
+    gap: 50px;
 }
 
 .what-we-do-item{
-	width: calc(50% - 15px);
+	width: calc(100% - 15px);
 	display: flex;
 	flex-wrap: wrap;
 }
@@ -2856,7 +2856,7 @@ header.main-header .container-fluid{
 	background: url('../images/page-header-bg.png') no-repeat;
 	background-position: center center;
 	background-size: cover;
-	padding: 245px 0 130px;
+	padding: 180px 0 50px;
 	margin-top: 20px;
 }
 
@@ -3349,6 +3349,7 @@ header.main-header .container-fluid{
 	background: var(--secondary-color);
 	text-align: center;
 	border-radius: 20px;
+	margin-bottom: 60px;
 	padding: 30px;
 }
 

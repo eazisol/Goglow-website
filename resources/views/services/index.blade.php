@@ -43,7 +43,7 @@
                             <img src="images/icon-service-1.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Signature Facials</a></h3>
+                            <h3><a href="{{ url('/service-provider') }}">Signature Facials</a></h3>
                             <p>This all-in-one treatment begins with a thorough skin.</p>
                         </div>
                         <div class="service-item-list">
@@ -53,7 +53,7 @@
                             </ul>
                         </div>
                         <div class="service-btn">
-                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
+                            <a href="{{ url('/service-provider') }}" class="readmore-btn">view more</a>
                         </div>                      
                     </div>
                     <!-- Service Item End -->
@@ -66,7 +66,7 @@
                             <img src="images/icon-service-2.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Therapeutic Massage</a></h3>
+                            <h3><a href="{{ url('/service-provider') }}">Therapeutic Massage</a></h3>
                             <p>This all-in-one treatment begins with a thorough skin.</p>
                         </div>
                         <div class="service-item-list">
@@ -76,7 +76,7 @@
                             </ul>
                         </div>
                         <div class="service-btn">
-                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
+                            <a href="{{ url('/service-provider') }}" class="readmore-btn">view more</a>
                         </div>                      
                     </div>
                     <!-- Service Item End -->
@@ -89,7 +89,7 @@
                             <img src="images/icon-service-3.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Body Scrubs </a></h3>
+                            <h3><a href="{{ url('/service-provider') }}">Body Scrubs </a></h3>
                             <p>This all-in-one treatment begins with a thorough skin.</p>
                         </div>
                         <div class="service-item-list">
@@ -99,7 +99,7 @@
                             </ul>
                         </div>
                         <div class="service-btn">
-                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
+                            <a href="{{ url('/service-provider') }}" class="readmore-btn">view more</a>
                         </div>                      
                     </div>
                     <!-- Service Item End -->
@@ -112,7 +112,7 @@
                             <img src="images/icon-service-4.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Reflexology</a></h3>
+                            <h3><a href="{{ url('/service-provider') }}">Reflexology</a></h3>
                             <p>This all-in-one treatment begins with a thorough skin.</p>
                         </div>
                         <div class="service-item-list">
@@ -122,99 +122,7 @@
                             </ul>
                         </div>
                         <div class="service-btn">
-                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
-                        </div>                      
-                    </div>
-                    <!-- Service Item End -->
-                </div>
-                
-                <div class="col-lg-3 col-md-6">
-                    <!-- Service Item Start -->
-                    <div class="service-item wow fadeInUp" data-wow-delay="0.8s">
-                        <div class="icon-box">
-                            <img src="images/icon-service-5.svg" alt="">
-                        </div>                        
-                        <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Healing Therapy</a></h3>
-                            <p>This all-in-one treatment begins with a thorough skin.</p>
-                        </div>
-                        <div class="service-item-list">
-                            <ul>
-                                <li>Skin Soul Shine</li>
-                                <li>Your skin, only better.</li>
-                            </ul>
-                        </div>
-                        <div class="service-btn">
-                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
-                        </div>                      
-                    </div>
-                    <!-- Service Item End -->
-                </div>
-                
-                <div class="col-lg-3 col-md-6">
-                    <!-- Service Item Start -->
-                    <div class="service-item wow fadeInUp" data-wow-delay="1s">
-                        <div class="icon-box">
-                            <img src="images/icon-service-6.svg" alt="">
-                        </div>                        
-                        <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Rejuvenation Ritual</a></h3>
-                            <p>This all-in-one treatment begins with a thorough skin.</p>
-                        </div>
-                        <div class="service-item-list">
-                            <ul>
-                                <li>Skin Soul Shine</li>
-                                <li>Your skin, only better.</li>
-                            </ul>
-                        </div>
-                        <div class="service-btn">
-                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
-                        </div>                      
-                    </div>
-                    <!-- Service Item End -->
-                </div>
-                
-                <div class="col-lg-3 col-md-6">
-                    <!-- Service Item Start -->
-                    <div class="service-item wow fadeInUp" data-wow-delay="1.2s">
-                        <div class="icon-box">
-                            <img src="images/icon-service-7.svg" alt="">
-                        </div>                        
-                        <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Revitalizing Facial</a></h3>
-                            <p>This all-in-one treatment begins with a thorough skin.</p>
-                        </div>
-                        <div class="service-item-list">
-                            <ul>
-                                <li>Skin Soul Shine</li>
-                                <li>Your skin, only better.</li>
-                            </ul>
-                        </div>
-                        <div class="service-btn">
-                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
-                        </div>                      
-                    </div>
-                    <!-- Service Item End -->
-                </div>
-                
-                <div class="col-lg-3 col-md-6">
-                    <!-- Service Item Start -->
-                    <div class="service-item wow fadeInUp" data-wow-delay="1.4s">
-                        <div class="icon-box">
-                            <img src="images/icon-service-8.svg" alt="">
-                        </div>                        
-                        <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Bliss Therapy</a></h3>
-                            <p>This all-in-one treatment begins with a thorough skin.</p>
-                        </div>
-                        <div class="service-item-list">
-                            <ul>
-                                <li>Skin Soul Shine</li>
-                                <li>Your skin, only better.</li>
-                            </ul>
-                        </div>
-                        <div class="service-btn">
-                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
+                            <a href="{{ url('/service-provider') }}" class="readmore-btn">view more</a>
                         </div>                      
                     </div>
                     <!-- Service Item End -->
@@ -501,216 +409,6 @@
     </div>
     <!-- Why Choose Us Section End -->
 
-    <!-- Our Faqs Section Start -->
-    <div class="our-faqs bg-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Faqs Content Start -->
-                    <div class="faqs-content">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">Frequently asked question</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Helpful answer for first-time & <span>returning guests</span></h2>
-                        </div>
-                        <!-- Section Title End -->
-
-                        <!-- FAQ Accordion Start -->
-                        <div class="faq-accordion" id="faqaccordion">
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp">
-                                <h2 class="accordion-header" id="heading1">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                                        Q1. What should I wear to my spa appointment?
-                                    </button>
-                                </h2>
-                                <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->
-
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp" data-wow-delay="0.2s">
-                                <h2 class="accordion-header" id="heading2">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                                        Q2. Do I need to book in advance?
-                                    </button>
-                                </h2>
-                                <div id="collapse2" class="accordion-collapse collapse show" aria-labelledby="heading2" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->
-
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp" data-wow-delay="0.4s">
-                                <h2 class="accordion-header" id="heading3">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                                        Q3. What is your cancellation policy?
-                                    </button>
-                                </h2>
-                                <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->    
-
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp" data-wow-delay="0.6s">
-                                <h2 class="accordion-header" id="heading4">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                                        Q4. Are your products safe for sensitive skin?
-                                    </button>
-                                </h2>
-                                <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->
-                        </div>
-                        <!-- FAQ Accordion End -->
-                    </div>
-                    <!-- Faqs Content End -->
-                </div>
-                
-                <div class="col-lg-6">
-                    <!-- Faqs Image Box Start -->
-                    <div class="faqs-image-box">
-                        <div class="faq-image">
-                            <figure class="image-anime reveal">
-                                <img src="images/faq-image.jpg" alt="">
-                            </figure>
-                        </div>
-
-                        <!-- Faqs CTA Box Start -->
-                        <div class="faqs-cta-box">
-                            <div class="icon-box">
-                                <img src="images/icon-faqs-cta.svg" alt="">
-                            </div>
-                            <div class="faqs-cta-box-content">
-                                <h3>Relax, We've Got the Answers</h3>
-                            </div>
-                        </div>
-                        <!-- Faqs CTA Box End -->
-                    </div>
-                    <!-- Faqs Image Box End -->
-                </div>               
-            </div>
-        </div>
-    </div>
-    <!-- Our Faqs Section End -->
-
-    <!-- Our Feature Section Start -->
-    <div class="our-feature">
-        <div class="container">
-            <div class="row section-row align-items-center">
-                <div class="col-lg-12">
-                    <!-- Section Title Start -->
-                    <div class="section-title section-title-center">
-                        <h3 class="wow fadeInUp">Our feature</h3>
-                        <h2 class="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Discover the unique features <img src="images/feature-title-img.jpg" alt=""> that set our spa experience apart and elevate <span>your path to wellness</span></h2>
-                    </div>
-                    <!-- Section Title End -->
-                </div>
-            </div>
-
-            <div class="row feature-item-box">
-                <div class="col-lg-3 col-md-6">
-                    <!-- Feature Item Start -->
-                    <div class="feature-item wow fadeInUp">
-                        <div class="icon-box">
-                            <img src="images/icon-feature-1.svg" alt="">
-                        </div>
-                        <div class="feature-item-header">
-                            <h3>Modern Interiors</h3>
-                        </div>
-                        <div class="feature-item-body">
-                            <p>This all-in-one treatment begins with a thorough skin analysis, followed by deep cleansing.</p>
-                            <h3>Elegant Trust Building</h3>
-                        </div>
-                    </div>
-                    <!-- Feature Item End -->
-                </div>
-                
-                <div class="col-lg-3 col-md-6">
-                    <!-- Feature Item Start -->
-                    <div class="feature-item active wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="icon-box">
-                            <img src="images/icon-feature-2.svg" alt="">
-                        </div>
-                        <div class="feature-item-header">
-                            <h3>Complimentary</h3>
-                        </div>
-                        <div class="feature-item-body">
-                            <p>This all-in-one treatment begins with a thorough skin analysis, followed by deep cleansing.</p>
-                            <h3>Experience Focused</h3>
-                        </div>
-                    </div>
-                    <!-- Feature Item End -->
-                </div>
-                
-                <div class="col-lg-3 col-md-6">
-                    <!-- Feature Item Start -->
-                    <div class="feature-item wow fadeInUp" data-wow-delay="0.4s">
-                        <div class="icon-box">
-                            <img src="images/icon-feature-3.svg" alt="">
-                        </div>
-                        <div class="feature-item-header">
-                            <h3>Strict hygiene</h3>
-                        </div>
-                        <div class="feature-item-body">
-                            <p>This all-in-one treatment begins with a thorough skin analysis, followed by deep cleansing.</p>
-                            <h3>Holistic & Natural</h3>
-                        </div>
-                    </div>
-                    <!-- Feature Item End -->
-                </div>
-                
-                <div class="col-lg-3 col-md-6">
-                    <!-- Feature Item Start -->
-                    <div class="feature-item wow fadeInUp" data-wow-delay="0.6s">
-                        <div class="icon-box">
-                            <img src="images/icon-feature-4.svg" alt="">
-                        </div>
-                        <div class="feature-item-header">
-                            <h3>Safety standards</h3>
-                        </div>
-                        <div class="feature-item-body">
-                            <p>This all-in-one treatment begins with a thorough skin analysis, followed by deep cleansing.</p>
-                            <h3>Private Treatment</h3>
-                        </div>
-                    </div>
-                    <!-- Feature Item End -->
-                </div>
-
-                <div class="col-lg-12">
-                    <!-- Feature List Start -->
-                    <div class="feature-list wow fadeInUp" data-wow-delay="0.8s">
-                        <ul>
-                            <li>10+ year of holistic spa</li>
-                            <li>5000+ happy client</li>
-                            <li>98% satisfaction rate</li>
-                            <li>30+ treatment tailored</li>
-                            <li>7 Days a week open</li>
-                            <li>100% natural product</li>
-                            <li>500+ customized wellness plan</li>
-                        </ul>
-                    </div>
-                    <!-- Feature List End -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Our Feature Section End -->
 @endsection
 
 {{-- Scripts --}}

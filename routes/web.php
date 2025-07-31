@@ -24,6 +24,7 @@ Route::get('/about', function () {return view('about.index');});
 // services
 Route::get('/services', function () {return view('services.index');});
 Route::get('/service-detail', function () {return view('services.servicedetail');});
+Route::get('/service-provider', function () {return view('services.serviceprovider');});
 
 // blog
 Route::get('/blogs', function () {return view('blogs.index');});

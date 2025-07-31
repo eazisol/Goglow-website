@@ -8,8 +8,9 @@
                             <h1 class="text-anime-style-2" data-cursor="-opaque" style="color: white;">Go<span>Glow</span></h1>
                         </div>
                         <div class="about-footer-content">
-                            <p>Enhance, empower, and elevate your look with our personalized beauty salon services designed to bring out your true radiance.</p>
-                        </div>           
+                            <p>Discover and book trusted salon services with ease. From hair to skin, we connect you with professionals who help you look and feel your best.</p>
+                        </div>
+   
                         <div class="footer-contact-details">
                             <div class="footer-contact-item">
                                 <div class="icon-box">
@@ -34,8 +35,8 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="footer-newsletter-box">
-                        <h3>Subscribe Our Newsletter</h3>
-                        <p>Stay updated with the latest wellness tips, spa offers, and exclusive deals by subscribing to our relaxing monthly newsletter today.</p>
+                        {{-- <h3>Subscribe Our Newsletter</h3>
+                        <p>Stay updated with the latest wellness tips, spa offers, and exclusive deals by subscribing to our relaxing monthly newsletter today.</p> --}}
                         <div class="footer-newsletter-form">
                             <form id="newslettersForm" action="#" method="POST">
                                 <div class="form-group">

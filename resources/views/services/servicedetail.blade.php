@@ -18,13 +18,13 @@
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
                         <h1 class="text-anime-style-2" data-cursor="-opaque">Signature <span>facials</span></h1>
-                        <nav class="wow fadeInUp">
+                        {{-- <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ url('/services') }}">services</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Signature facials</li>
                             </ol>
-                        </nav>
+                        </nav> --}}
                     </div>
                     <!-- Page Header Box End -->
                 </div>
@@ -40,6 +40,19 @@
                 <div class="col-lg-4">
                     <!-- Page Single Sidebar Start -->
                     <div class="page-single-sidebar">
+                        <!-- Sidebar CTA Box Start -->
+                        <div class="sidebar-cta-box wow fadeInUp" data-wow-delay="0.25s">
+                            <div class="sidebar-cta-content">
+                                <h3>Ready to Begin Your Beauty & Wellness Journey?</h3>
+                                <a href="{{ url('/book-appointment') }}" class="btn-default">Book an Appointment</a>
+                            </div>
+                            <div class="sidebar-cta-image">
+                                <figure class="image-anime">
+                                    <img src="images/adam-winger-FkAZqQJTbXM-unsplash.jpg" alt="">
+                                </figure>
+                            </div>
+                        </div>
+                        <!-- Sidebar CTA Box End -->
                         <!-- Page Category List Start -->
                         <div class="page-catagery-list wow fadeInUp">
                             <h3>Service category</h3>
@@ -52,20 +65,6 @@
                             </ul>
                         </div>
                         <!-- Page Category List End -->
-
-                        <!-- Sidebar CTA Box Start -->
-                        <div class="sidebar-cta-box wow fadeInUp" data-wow-delay="0.25s">
-                            <div class="sidebar-cta-content">
-                                <h3>Connect with Us to Begin Your Mindful Wellness Journey</h3>
-                                <a href="tel:+246333085" class="btn-default"><img src="images/icon-phone.svg" alt=""> +1 (246) 333-085</a>
-                            </div>
-                            <div class="sidebar-cta-image">
-                                <figure class="image-anime">
-                                    <img src="images/sidebar-cta-image.jpg" alt="">
-                                </figure>
-                            </div>
-                        </div>
-                        <!-- Sidebar CTA Box End -->
                     </div>
                     <!-- Page Single Sidebar End -->
                 </div>
@@ -76,20 +75,28 @@
                         <!-- Service Featured Image Start -->
                         <div class="page-single-image">
                             <figure class="image-anime reveal">
-                                <img src="images/service-featured-image.jpg" alt="">
+                                <img src="images/benyamin-bohlouli-LGXN4OSQSa4-unsplash.jpg" alt="">
                             </figure>
                         </div>
                         <!-- Service Featured Image End -->
                         
                         <!-- Service Entry Start -->
                         <div class="service-entry">
-                            <p class="wow fadeInUp">Rediscover your natural glow with our Signature Facials, expertly designed to cleanse, hydrate, and rejuvenate your skin. Each facial is tailored to your unique skin type and concerns, combining high-performance skincare with gentle, therapeutic techniques. From deep pore cleansing to collagen-boosting serums, we bring out your skin's healthiest, most radiant version.</p>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">Our experienced estheticians use only premium, skin-friendly products, ensuring a soothing and effective treatment with visible results. Whether you're seeking age-defying care, hydration, or a calming reset, our Signature Facials offer a deeply relaxing experience</p>
+                            <p class="wow fadeInUp">
+                                Refresh your skin with our Signature Facials—available at top-rated partner salons near you. Each session is tailored to your unique skin type, focusing on cleansing, hydration, and rejuvenation through advanced yet gentle techniques.
+                            </p>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                Performed by experienced estheticians using premium skincare products, these facials deliver visible results—whether you're looking for deep cleansing, anti-aging, or a calming glow-up. Book your facial today and reveal your most radiant skin.
+                            </p>
+
 
                             <!-- Service Experience Box Start -->
                             <div class="service-experience-box">
-                                <h2 class="text-anime-style-2">What to expect your <span>facial experience</span></h2>
-                                <p class="wow fadeInUp" data-wow-delay="0.4s">Rediscover your natural glow with our Signature Facials, expertly designed to cleanse, hydrate, and rejuvenate your skin. Each facial is tailored to your unique skin type and concerns, combining high-performance skincare gentle, therapeutic techniques from deep pore cleansing to collagen-boosting serums.</p>
+                                <h2 class="text-anime-style-2">What to expect from your <span>facial experience</span></h2>
+                                <p class="wow fadeInUp" data-wow-delay="0.4s">
+                                    Rediscover your natural glow with our Signature Facials—available through expert salons near you. Each facial is personalized to your skin type and concerns, using high-performance skincare and gentle techniques. From deep pore cleansing to collagen-boosting serums, enjoy a treatment designed to refresh, hydrate, and renew your skin.
+                                </p>
+
                                 
                                 <!-- Service Experience Info Start -->
                                 <div class="service-experience-info">
@@ -106,8 +113,9 @@
                                                 </div>
                                             </div>
                                             <div class="why-choose-item-content">
-                                                <p>We treat the whole you—mind, body, and spirit—through.</p>
+                                                <p>We connect you with salons that prioritize both your beauty and comfort.</p>
                                             </div>
+
                                         </div>
                                         <!-- Why Choose Item End -->
                                         
@@ -122,7 +130,7 @@
                                                 </div>
                                             </div>
                                             <div class="why-choose-item-content">
-                                                <p>We treat the whole you—mind, body, and spirit—through.</p>
+                                                <p>We connect you with salons that prioritize both your beauty and comfort.</p>
                                             </div>
                                         </div>
                                         <!-- Why Choose Item End -->    
@@ -138,7 +146,7 @@
                                                 </div>
                                             </div>
                                             <div class="why-choose-item-content">
-                                                <p>We treat the whole you—mind, body, and spirit—through.</p>
+                                                <p>We connect you with salons that prioritize both your beauty and comfort.</p>
                                             </div>
                                         </div>
                                         <!-- Why Choose Item End -->    
@@ -214,7 +222,7 @@
                                     <!-- Service Intro Video Image Start -->
                                     <div class="service-intro-video-image">
                                         <figure class="image-anime reveal">
-                                            <img src="images/service-intro-video-image.jpg" alt="">
+                                            <img src="images/vinicius-amnx-amano-lK8oXGycy88-unsplash.jpg" alt="">
                                         </figure>
                                     </div>
                                     <!-- Service Intro Video Image End -->
@@ -280,79 +288,7 @@
                         </div>
                         <!-- Service Entry End -->
                             
-                        <!-- Page Single FAQs Start -->
-                        <div class="page-single-faqs">
-                            <!-- Section Title Start -->
-                            <div class="section-title">
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">Frequently asked <span>questions</span></h2>
-                            </div>
-                            <!-- Section Title End -->
-
-                            <!-- FAQ Accordion Start -->
-                            <div class="faq-accordion" id="faqaccordion">
-                                <!-- FAQ Item Start -->
-                                <div class="accordion-item wow fadeInUp">
-                                    <h2 class="accordion-header" id="faqheading1">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqcollapse1" aria-expanded="true" aria-controls="faqcollapse1">
-                                            Q1. What should I wear to my spa appointment?
-                                        </button>
-                                    </h2>
-                                    <div id="faqcollapse1" class="accordion-collapse collapse" aria-labelledby="faqheading1" data-bs-parent="#faqaccordion">
-                                        <div class="accordion-body">
-                                            <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of. For massage or body treatments, you'll typically be draped with a towel.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- FAQ Item End -->
-
-                                <!-- FAQ Item Start -->
-                                <div class="accordion-item wow fadeInUp" data-wow-delay="0.2s">
-                                    <h2 class="accordion-header" id="faqheading2">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqcollapse2" aria-expanded="false" aria-controls="faqcollapse2">
-                                            Q2. Do I need to book in advance?
-                                        </button>
-                                    </h2>
-                                    <div id="faqcollapse2" class="accordion-collapse collapse show" aria-labelledby="faqheading2" data-bs-parent="#faqaccordion">
-                                        <div class="accordion-body">
-                                            <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of. For massage or body treatments, you'll typically be draped with a towel.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- FAQ Item End -->
-
-                                <!-- FAQ Item Start -->
-                                <div class="accordion-item wow fadeInUp" data-wow-delay="0.4s">
-                                    <h2 class="accordion-header" id="faqheading3">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqcollapse3" aria-expanded="false" aria-controls="faqcollapse3">
-                                            Q3. What is your cancellation policy?
-                                        </button>
-                                    </h2>
-                                    <div id="faqcollapse3" class="accordion-collapse collapse" aria-labelledby="faqheading3" data-bs-parent="#faqaccordion">
-                                        <div class="accordion-body">
-                                            <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of. For massage or body treatments, you'll typically be draped with a towel.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- FAQ Item End -->    
-
-                                <!-- FAQ Item Start -->
-                                <div class="accordion-item wow fadeInUp" data-wow-delay="0.6s">
-                                    <h2 class="accordion-header" id="faqheading4">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqfaqcollapse1" aria-expanded="false" aria-controls="faqfaqcollapse1">
-                                            Q4. Are your products safe for sensitive skin?
-                                        </button>
-                                    </h2>
-                                    <div id="faqfaqcollapse1" class="accordion-collapse collapse" aria-labelledby="faqheading4" data-bs-parent="#faqaccordion">
-                                        <div class="accordion-body">
-                                            <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of. For massage or body treatments, you'll typically be draped with a towel.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- FAQ Item End -->
-                            </div>
-                            <!-- FAQ Accordion End -->
-                        </div>
-                        <!-- Page Single FAQs End -->
+                        
                     </div>
                     <!-- Service Single Content End -->
                 </div>
