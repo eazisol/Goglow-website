@@ -17,11 +17,11 @@
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
-                        <h1 class="text-anime-style-2" data-cursor="-opaque">Case <span>study</span></h1>
+                        <h1 class="text-anime-style-2" data-cursor="-opaque">Saloons <span></span></h1>
                         <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Case study</li>
+                                {{-- <li class="breadcrumb-item"><a href="index-2.html">home</a></li> --}}
+                                {{-- <li class="breadcrumb-item active" aria-current="page">Case study</li> --}}
                             </ol>
                         </nav>
                     </div>
@@ -41,9 +41,9 @@
                     <div class="case-study-item wow fadeInUp">
                         <!-- Case Study Image Start -->
                         <div class="case-study-image">
-                            <a href="{{ url('/case-study-single') }}" data-cursor-text="View">
+                            <a href="{{ url('/services') }}" data-cursor-text="View">
                                 <figure class="image-anime">
-                                    <img src="images/case-study-1.jpg" alt="">
+                                    <img src="images/velvetyparis-saloon.png" alt="">
                                 </figure>
                             </a>
                         </div>
@@ -53,13 +53,13 @@
                         <div class="case-study-body">
                             <!-- Case Study Content Start -->
                             <div class="case-study-item-content">
-                                <h3><a href="{{ url('/case-study-single') }}">Luxurious Relaxation Ritual</a></h3>
+                                <h3><a href="{{ url('/services') }}">Velvety Paris</a></h3>
                             </div>
                             <!-- Case Study Content End -->
                 
                             <!-- Case Study Readmore Button Start -->
                             <div class="case-study-readmore-btn">
-                                <a href="{{ url('/case-study-single') }}"><img src="images/arrow-secondary.svg" alt=""></a>
+                                <a href="{{ url('/services') }}"><img src="images/arrow-secondary.svg" alt=""></a>
                             </div>
                             <!-- Case Study Readmore Button End -->
                         </div>
@@ -73,9 +73,9 @@
                     <div class="case-study-item wow fadeInUp" data-wow-delay="0.2s">
                         <!-- Case Study Image Start -->
                         <div class="case-study-image">
-                            <a href="{{ url('/case-study-single') }}" data-cursor-text="View">
+                            <a href="{{ url('/services') }}" data-cursor-text="View">
                                 <figure class="image-anime">
-                                    <img src="images/case-study-2.jpg" alt="">
+                                    <img src="images/WoodySaeïé-saloon.png" alt="">
                                 </figure>
                             </a>
                         </div>
@@ -85,13 +85,13 @@
                         <div class="case-study-body">
                             <!-- Case Study Content Start -->
                             <div class="case-study-item-content">
-                                <h3><a href="{{ url('/case-study-single') }}">Harmonized Beauty Energy</a></h3>
+                                <h3><a href="{{ url('/services') }}">Woody Saeïé</a></h3>
                             </div>
                             <!-- Case Study Content End -->
                 
                             <!-- Case Study Readmore Button Start -->
                             <div class="case-study-readmore-btn">
-                                <a href="{{ url('/case-study-single') }}"><img src="images/arrow-secondary.svg" alt=""></a>
+                                <a href="{{ url('/services') }}"><img src="images/arrow-secondary.svg" alt=""></a>
                             </div>
                             <!-- Case Study Readmore Button End -->
                         </div>
@@ -105,9 +105,9 @@
                     <div class="case-study-item wow fadeInUp" data-wow-delay="0.4s">
                         <!-- Case Study Image Start -->
                         <div class="case-study-image">
-                            <a href="{{ url('/case-study-single') }}" data-cursor-text="View">
+                            <a href="{{ url('/services') }}" data-cursor-text="View">
                                 <figure class="image-anime">
-                                    <img src="images/case-study-3.jpg" alt="">
+                                    <img src="images/Yhairdressing-saloon.png" alt="">
                                 </figure>
                             </a>
                         </div>
@@ -117,13 +117,13 @@
                         <div class="case-study-body">
                             <!-- Case Study Content Start -->
                             <div class="case-study-item-content">
-                                <h3><a href="{{ url('/case-study-single') }}">Smooth Balanced Energy</a></h3>
+                                <h3><a href="{{ url('/services') }}">Y Hairdressing</a></h3>
                             </div>
                             <!-- Case Study Content End -->
                 
                             <!-- Case Study Readmore Button Start -->
                             <div class="case-study-readmore-btn">
-                                <a href="{{ url('/case-study-single') }}"><img src="images/arrow-secondary.svg" alt=""></a>
+                                <a href="{{ url('/services') }}"><img src="images/arrow-secondary.svg" alt=""></a>
                             </div>
                             <!-- Case Study Readmore Button End -->
                         </div>
@@ -137,9 +137,9 @@
                     <div class="case-study-item wow fadeInUp" data-wow-delay="0.6s">
                         <!-- Case Study Image Start -->
                         <div class="case-study-image">
-                            <a href="{{ url('/case-study-single') }}" data-cursor-text="View">
+                            <a href="{{ url('/services') }}" data-cursor-text="View">
                                 <figure class="image-anime">
-                                    <img src="images/case-study-4.jpg" alt="">
+                                    <img src="images/Jean-MarcJoubert-saloon.png" alt="">
                                 </figure>
                             </a>
                         </div>
@@ -149,13 +149,13 @@
                         <div class="case-study-body">
                             <!-- Case Study Content Start -->
                             <div class="case-study-item-content">
-                                <h3><a href="{{ url('/case-study-single') }}">Holistic Wellness Journey</a></h3>
+                                <h3><a href="{{ url('/services') }}">Jean-Marc Joubert</a></h3>
                             </div>
                             <!-- Case Study Content End -->
                 
                             <!-- Case Study Readmore Button Start -->
                             <div class="case-study-readmore-btn">
-                                <a href="{{ url('/case-study-single') }}"><img src="images/arrow-secondary.svg" alt=""></a>
+                                <a href="{{ url('/services') }}"><img src="images/arrow-secondary.svg" alt=""></a>
                             </div>
                             <!-- Case Study Readmore Button End -->
                         </div>
@@ -169,9 +169,9 @@
                     <div class="case-study-item wow fadeInUp" data-wow-delay="0.8s">
                         <!-- Case Study Image Start -->
                         <div class="case-study-image">
-                            <a href="{{ url('/case-study-single') }}" data-cursor-text="View">
+                            <a href="{{ url('/services') }}" data-cursor-text="View">
                                 <figure class="image-anime">
-                                    <img src="images/case-study-5.jpg" alt="">
+                                    <img src="images/IrisAdonia-saloon.png" alt="">
                                 </figure>
                             </a>
                         </div>
@@ -181,13 +181,13 @@
                         <div class="case-study-body">
                             <!-- Case Study Content Start -->
                             <div class="case-study-item-content">
-                                <h3><a href="{{ url('/case-study-single') }}">Tranquil Restorative Escape</a></h3>
+                                <h3><a href="{{ url('/services') }}">Iris Adonia</a></h3>
                             </div>
                             <!-- Case Study Content End -->
                 
                             <!-- Case Study Readmore Button Start -->
                             <div class="case-study-readmore-btn">
-                                <a href="{{ url('/case-study-single') }}"><img src="images/arrow-secondary.svg" alt=""></a>
+                                <a href="{{ url('/services') }}"><img src="images/arrow-secondary.svg" alt=""></a>
                             </div>
                             <!-- Case Study Readmore Button End -->
                         </div>
@@ -201,9 +201,9 @@
                     <div class="case-study-item wow fadeInUp" data-wow-delay="1s">
                         <!-- Case Study Image Start -->
                         <div class="case-study-image">
-                            <a href="{{ url('/case-study-single') }}" data-cursor-text="View">
+                            <a href="{{ url('/services') }}" data-cursor-text="View">
                                 <figure class="image-anime">
-                                    <img src="images/case-study-6.jpg" alt="">
+                                    <img src="images/EVEN-saloon.png" alt="">
                                 </figure>
                             </a>
                         </div>
@@ -213,13 +213,13 @@
                         <div class="case-study-body">
                             <!-- Case Study Content Start -->
                             <div class="case-study-item-content">
-                                <h3><a href="{{ url('/case-study-single') }}">Radiant Rejuvenating Rituals</a></h3>
+                                <h3><a href="{{ url('/services') }}">EVEN</a></h3>
                             </div>
                             <!-- Case Study Content End -->
                 
                             <!-- Case Study Readmore Button Start -->
                             <div class="case-study-readmore-btn">
-                                <a href="{{ url('/case-study-single') }}"><img src="images/arrow-secondary.svg" alt=""></a>
+                                <a href="{{ url('/services') }}"><img src="images/arrow-secondary.svg" alt=""></a>
                             </div>
                             <!-- Case Study Readmore Button End -->
                         </div>
@@ -227,7 +227,7 @@
                     </div>
                     <!-- Case Study Item End -->
                 </div>
-
+{{-- 
                 <div class="col-lg-4 col-md-6">
                     <!-- Case Study Item Start -->
                     <div class="case-study-item wow fadeInUp" data-wow-delay="1.2s">
@@ -322,7 +322,7 @@
                         <!-- Case Study Body End -->                 
                     </div>
                     <!-- Case Study Item End -->
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

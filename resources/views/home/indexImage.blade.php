@@ -24,7 +24,7 @@
                                 <h3 class="wow fadeInUp">Glow Up On the Go</h3>
                                 <h1 class="text-anime-style-2" data-cursor="-opaque">Find & Book Top <span>Beauty Services</span> Near You</h1>
                                 <div class="search-bar">
-                                    <form action="#" method="GET" class="search-form">
+                                    <form action="saloons" method="GET" class="search-form">
                                         <div class="search-inputs">
                                             <div class="search-item">
                                                 <i class="fas fa-search"></i>
@@ -503,7 +503,7 @@
                         <!-- What We Do Item Start -->
                         <div class="what-we-do-item wow fadeInUp" data-wow-delay="0.4s">
                             <div class="icon-box">
-                                <img src="images/icon-what-we-do-3.svg" alt="">
+                                <img src="images/icon-service-1.svg" alt="">
                             </div>
                             <div class="what-do-item-content">
                                 <h3>Glow</h3>

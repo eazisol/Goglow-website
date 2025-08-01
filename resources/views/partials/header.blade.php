@@ -16,7 +16,7 @@
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/home-video') }}">Home - Video</a></li>
                                     </ul> --}}
                                 </li>   
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/book-appointment') }}">Book a Service</a></li>                             
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/book-appointment') }}">Book Service</a></li>                             
                                 <li class="nav-item"><a class="nav-link" href="{{ url('/about') }}">About Us</a>
                                 
                                 {{-- <li class="nav-item"><a class="nav-link" href="{{ url('/blogs') }}">Blog</a></li> --}}
@@ -41,7 +41,7 @@
                             </ul>
                         </div>
                         <div class="header-btn">
-                            <a href="{{ url('/beauty-professional') }}" class="btn-default border-btn">I'm a Professional</a>
+                            <a href="{{ url('/beauty-professional') }}" class="btn-default border-btn">I'm Professional</a>
                             {{-- <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">book appointment</a>             --}}
                         </div>
 					</div>

@@ -34,8 +34,8 @@ Route::get('/blog-single', function () {return view('blogs.singleblog');});
 Route::get('/contact-us', function () {return view('contactUs.index');});
 
 // case study
-Route::get('/case-study', function () {return view('caseStudy.index');});
-Route::get('/case-study-single', function () {return view('caseStudy.single');});
+Route::get('/saloons', function () {return view('caseStudy.index');});
+Route::get('/saloons-single', function () {return view('caseStudy.single');});
 
 // team
 Route::get('/team', function () {return view('ourTeam.index');});

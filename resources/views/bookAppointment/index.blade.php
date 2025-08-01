@@ -40,7 +40,7 @@
                     <!-- Appointment image Start -->
                     <div class="appointment-image">
                         <figure class="image-anime reveal">
-                            <img src="images/brian-lawson-qgsXSIy1fd0-unsplash.jpg" alt="">
+                            <img src="images/appointment-image.jpg" alt="">
                         </figure>
                         
                         <!-- Appointment Info List Start -->
