@@ -61,7 +61,7 @@
                                     </div>
                                     <div class="contact-item-content">
                                         <h3>Contact</h3>
-                                        <p><a href="tel:246333085">+1 (246) 333-085</a></p>
+                                        <p><a href="tel:246333085">+33 (607) 424-151</a></p>
                                     </div>
                                 </div>
                                 <!-- Contact Info Item End -->
@@ -72,8 +72,8 @@
                                         <img src="images/icon-location-accent.svg" alt="">
                                     </div>
                                     <div class="contact-item-content">
-                                        <h3>location</h3>
-                                        <p>Lorem ipsum - USA</p>
+                                        <h3>Location</h3>
+                                        <p>23 boulevard de sebastopol, 75001 Paris</p>
                                     </div>
                                 </div>
                                 <!-- Contact Info Item End -->
@@ -85,7 +85,7 @@
                                     </div>
                                     <div class="contact-item-content">
                                         <h3>Email</h3>
-                                        <p><a href="mailto:support@domain.com">support@domain.com</a></p>
+                                        <p><a href="mailto:support@domain.com">contact@goglow.com</a></p>
                                     </div>
                                 </div>
                                 <!-- Contact Info Item End -->
@@ -96,8 +96,8 @@
                                         <img src="images/icon-clock-accent.svg" alt="">
                                     </div>
                                     <div class="contact-item-content">
-                                        <h3>location</h3>
-                                        <p>2972 Illinois, USA</p>
+                                        <h3>Working Hours</h3>
+                                        <p>24/7</p>
                                     </div>
                                 </div>
                                 <!-- Contact Info Item End -->
