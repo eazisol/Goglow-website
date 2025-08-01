@@ -63,7 +63,7 @@ Route::get('/book-appointment', function () {return view('bookAppointment.index'
 Route::get('/beauty-professional', function () {return view('iamProfessional.index');});
 
 // term & conditions
-Route::get('/terms-conditions', function () {return view('termsConditions.index');});
+Route::get('/terms_condition', function () {return view('termsConditions.index');});
 
 // privacy policy
-Route::get('/privacy-policy', function () {return view('privacyPolicy.index');});
+Route::get('/privacy_policy', function () {return view('privacyPolicy.index');});

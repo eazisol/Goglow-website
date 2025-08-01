@@ -18,7 +18,7 @@
                                 </div>
                                 <div class="footer-contact-item-content">
                                     <h3>Urgent Support?</h3>
-                                    <p><a href="tel:+246333085">+1 (246) 333-085</a></p>
+                                    <p><a href="tel:+33607426151">+33 (607) 426-151</a></p>
                                 </div>
                             </div>
                             <div class="footer-contact-item">
@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="footer-contact-item-content">
                                     <h3>E-mail Us</h3>
-                                    <p><a href="mailto:info@domain.com">info@domain.com</a></p>
+                                    <p><a href="mailto:info@goglow.fr">info@goglow.fr</a></p>
                                 </div>
                             </div>
                         </div>
@@ -66,8 +66,8 @@
                                 <li><a href="{{ url('/services') }}">services</a></li>
                                 {{-- <li><a href="{{ url('/blogs') }}">blogs</a></li> --}}
                                 <li><a href="{{ url('/contact-us') }}">contact us</a></li>
-                                <li><a href="{{ url('/terms-conditions') }}">Terms & Conditions</a></li>
-                                <li><a href="{{ url('/privacy-policy') }}">Privacy Policy</a></li>
+                                <li><a href="{{ url('/terms_condition') }}">Terms & Conditions</a></li>
+                                <li><a href="{{ url('/privacy_policy') }}">Privacy Policy</a></li>
                             </ul>
                         </div>
                         <div class="footer-copyright-text">
