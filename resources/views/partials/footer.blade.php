@@ -53,7 +53,6 @@
                                 <li><a href="#"><i class="fa-brands fa-dribbble"></i></a></li>
                                 <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
                             </ul>
-                            <p><a href="{{ url('/terms-conditions') }}" style="color: white;">Term & Conditions</a></p>
                         </div>
                         
                     </div>                        
@@ -67,6 +66,8 @@
                                 <li><a href="{{ url('/services') }}">services</a></li>
                                 {{-- <li><a href="{{ url('/blogs') }}">blogs</a></li> --}}
                                 <li><a href="{{ url('/contact-us') }}">contact us</a></li>
+                                <li><a href="{{ url('/terms-conditions') }}">Terms & Conditions</a></li>
+                                <li><a href="{{ url('/privacy-policy') }}">Privacy Policy</a></li>
                             </ul>
                         </div>
                         <div class="footer-copyright-text">

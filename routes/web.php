@@ -64,3 +64,6 @@ Route::get('/beauty-professional', function () {return view('iamProfessional.ind
 
 // term & conditions
 Route::get('/terms-conditions', function () {return view('termsConditions.index');});
+
+// privacy policy
+Route::get('/privacy-policy', function () {return view('privacyPolicy.index');});

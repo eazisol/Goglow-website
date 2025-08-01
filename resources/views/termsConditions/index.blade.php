@@ -33,113 +33,83 @@
     <!-- Page Header End -->
 	
 
-    <!-- Our Faqs Section Start -->
-    <div class="our-faqs bg-section">
+    <!-- Terms and Conditions Section Start -->
+    <div class="terms-conditions bg-section">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <!-- Faqs Content Start -->
-                    <div class="faqs-content">
-                        <!-- Section Title Start -->
-                        <div class="section-title">
-                            <h3 class="wow fadeInUp">Frequently asked question</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Helpful answer for first-time & <span>returning guests</span></h2>
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Terms Content Start -->
+                    <div class="terms-content">
+                        <div class="terms-text">
+                            {{-- <h2>GoGlow - Conditions Générales d'Utilisation</h2> --}}
+                            <p class="text-end">Dernière mise à jour : 24 juillet 2025</p>
+                            
+                            <h3>1. Introduction</h3>
+                            <p>Les présentes Conditions Générales d'Utilisation régissent l'utilisation de l'application mobile GoGlow, exploitée par GoGlow, reliant les clients (Glowees) et les prestataires (Glowers) pour la réservation et la gestion de services de beauté. L'application est destinée aux utilisateurs en France, à Paris et dans l'UE et respecte le RGPD et la législation française sous la supervision de la CNIL.</p>
+                            
+                            <h3>2. Rôles des Utilisateurs</h3>
+                            <br>
+                            <ul>
+                                <li>Clients (Glowees) : Parcourir, réserver et évaluer des services.</li>
+                                <li>Prestataires (Glowers) : Enregistrer, proposer et gérer leurs services et réservations.</li>
+                            </ul>
+                            <br>
+                            
+                            <h3>3. Inscription et Compte</h3>
+                            <p>Les utilisateurs peuvent s'inscrire via Google ou Apple (OAuth 2.0) ou manuellement avec prénom, nom, email, téléphone, adresse et mot de passe. Les utilisateurs doivent avoir 16 ans minimum. Les moins de 16 ans doivent fournir un consentement parental explicite à dpo@goglow.com. Les utilisateurs sont responsables de la confidentialité de leurs identifiants et de toute activité de leur compte.</p>
+                            
+                            <h3>4. Objet et Utilisation du Service</h3>
+                            <p>L'application facilite la découverte, la réservation et la communication entre salons et clients. Elle n'est pas destinée à la promotion non sollicitée ni à un annuaire public sans consentement. GoGlow agit uniquement comme intermédiaire technique et n'est pas responsable de l'exécution ou de la qualité des services.</p>
+                            
+                            <h3>5. Paiements et Acompte</h3>
+                            <p>Un acompte de 15 % est facturé lors de la réservation via Stripe (conforme PCI-DSS). Les informations de carte ne sont pas stockées. Les remboursements sont gérés entre le client et le prestataire selon la politique de ce dernier. GoGlow peut percevoir une commission pour les services de la plateforme.</p>
+                            
+                            <h3>6. Accès à la Localisation</h3>
+                            <p>GoGlow demande l'accès à la localisation uniquement pour afficher les salons à proximité via l'API Google Maps. Les prestataires peuvent épingler l'adresse de leur salon. Les données de localisation ne sont pas conservées au-delà de cet usage et sont retenues 2 mois maximum.</p>
+                            
+                            <h3>7. Communication</h3>
+                            <p>L'application permet une messagerie chiffrée entre clients et prestataires après réservation. Les numéros de téléphone ne sont partagés qu'après confirmation de réservation ou consentement explicite.</p>
+                            
+                            <h3>8. Notifications</h3>
+                            <p>Des notifications push sont utilisées pour les réservations, les messages et les mises à jour. Les utilisateurs peuvent désactiver ces notifications dans les paramètres de leur appareil.</p>
+                            
+                            <h3>9. Utilisation Acceptable</h3>
+                            <p>Les utilisateurs ne doivent pas :</p>
+                            <ul>
+                                <li>Se livrer à des activités abusives, harcelantes ou illégales</li>
+                                <li>Publier du contenu offensant ou discriminatoire</li>
+                                <li>Tenter d'accéder ou de modifier les services de l'application sans autorisation</li>
+                                <li>Télécharger du contenu malveillant ou enfreindre la propriété intellectuelle</li>
+                            </ul>
+                            
+                            <h3>10. Contenu et Propriété Intellectuelle</h3>
+                            <p>Les utilisateurs peuvent publier des avis ou des photos et accordent à GoGlow une licence non exclusive et mondiale pour les afficher. Tous les éléments de l'application (textes, codes, marques) sont protégés par la propriété intellectuelle.</p>
+                            
+                            <h3>11. Suspension et Suppression de Compte</h3>
+                            <p>GoGlow peut suspendre ou résilier des comptes en cas de violation des règles ou de comportement inapproprié. Les sanctions peuvent inclure avertissement, suspension temporaire ou suppression définitive. Les utilisateurs peuvent supprimer leur compte à tout moment ; toutes les données sont définitivement supprimées sous 30 jours.</p>
+                            
+                            <h3>12. Obligations des Prestataires</h3>
+                            <p>Les Glowers doivent fournir des informations exactes et à jour, honorer les réservations acceptées et respecter la législation sur la protection des consommateurs.</p>
+                            
+                            <h3>13. Responsabilité</h3>
+                            <p>GoGlow décline toute responsabilité concernant l'exécution des prestations, le contenu généré par les utilisateurs ou les liens externes. L'application est fournie « en l'état » sans garantie.</p>
+                            
+                            <h3>14. Liens Externes</h3>
+                            <p>Des liens externes peuvent être présents à titre informatif. GoGlow n'est pas responsable de leur contenu ni de leurs pratiques.</p>
+                            
+                            <h3>15. Droit Applicable</h3>
+                            <p>Les présentes CGU sont régies par le droit français. Tout litige relève de la compétence exclusive des tribunaux de Paris.</p>
+                            
+                            <h3>16. Contact</h3>
+                            <p>Pour toute question : <a href="mailto:contact@goglow.com">contact@goglow.com</a></p>
                         </div>
-                        <!-- Section Title End -->
-
-                        <!-- FAQ Accordion Start -->
-                        <div class="faq-accordion" id="faqaccordion">
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp">
-                                <h2 class="accordion-header" id="heading1">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                                        Q1. What should I wear to my spa appointment?
-                                    </button>
-                                </h2>
-                                <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->
-
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp" data-wow-delay="0.2s">
-                                <h2 class="accordion-header" id="heading2">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                                        Q2. Do I need to book in advance?
-                                    </button>
-                                </h2>
-                                <div id="collapse2" class="accordion-collapse collapse show" aria-labelledby="heading2" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->
-
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp" data-wow-delay="0.4s">
-                                <h2 class="accordion-header" id="heading3">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                                        Q3. What is your cancellation policy?
-                                    </button>
-                                </h2>
-                                <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->    
-
-                            <!-- FAQ Item Start -->
-                            <div class="accordion-item wow fadeInUp" data-wow-delay="0.6s">
-                                <h2 class="accordion-header" id="heading4">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                                        Q4. Are your products safe for sensitive skin?
-                                    </button>
-                                </h2>
-                                <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#faqaccordion">
-                                    <div class="accordion-body">
-                                        <p>For your comfort and relaxation, we recommend wearing loose, comfortable clothing that you can easily change out of for massage or body treatments you'll typically be draped with a towel.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- FAQ Item End -->
-                        </div>
-                        <!-- FAQ Accordion End -->
                     </div>
-                    <!-- Faqs Content End -->
-                </div>
-                
-                <div class="col-lg-6">
-                    <!-- Faqs Image Box Start -->
-                    <div class="faqs-image-box">
-                        <div class="faq-image">
-                            <figure class="image-anime reveal">
-                                <img src="images/hayley-kim-studios-sRSRuxkOuzI-unsplash.jpg" alt="">
-                            </figure>
-                        </div>
-
-                        <!-- Faqs CTA Box Start -->
-                        <div class="faqs-cta-box">
-                            <div class="icon-box">
-                                <img src="images/icon-faqs-cta.svg" alt="">
-                            </div>
-                            <div class="faqs-cta-box-content">
-                                <h3>Relax, We've Got the Answers</h3>
-                            </div>
-                        </div>
-                        <!-- Faqs CTA Box End -->
-                    </div>
-                    <!-- Faqs Image Box End -->
+                    <!-- Terms Content End -->
                 </div>               
             </div>
         </div>
     </div>
-    <!-- Our Faqs Section End -->
+    <!-- Terms and Conditions Section End -->
 
 @endsection
 
