@@ -4,7 +4,18 @@
 
 {{-- Style Files --}}
 @section('styles')
+    <style>
+        .privacy-text ul li {
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
 
+        .privacy-text ul li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+    </style>
 @endsection
 
 

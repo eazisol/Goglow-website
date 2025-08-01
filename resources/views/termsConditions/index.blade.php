@@ -4,9 +4,19 @@
 
 {{-- Style Files --}}
 @section('styles')
+    <style>
+        .terms-text ul li {
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
 
+        .terms-text ul li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+    </style>
 @endsection
-
 
 {{-- Content --}}
 @section('content')
@@ -48,7 +58,6 @@
                             <p>Les présentes Conditions Générales d'Utilisation régissent l'utilisation de l'application mobile GoGlow, exploitée par GoGlow, reliant les clients (Glowees) et les prestataires (Glowers) pour la réservation et la gestion de services de beauté. L'application est destinée aux utilisateurs en France, à Paris et dans l'UE et respecte le RGPD et la législation française sous la supervision de la CNIL.</p>
                             
                             <h3>2. Rôles des Utilisateurs</h3>
-                            <br>
                             <ul>
                                 <li>Clients (Glowees) : Parcourir, réserver et évaluer des services.</li>
                                 <li>Prestataires (Glowers) : Enregistrer, proposer et gérer leurs services et réservations.</li>
