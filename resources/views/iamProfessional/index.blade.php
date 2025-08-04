@@ -120,6 +120,58 @@
 
 {{-- Scripts --}}
 @section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('appointmentForm');
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
 
+        // Gather form data
+        const name = form.brand_name.value.trim();
+        const email = form.email.value.trim();
+        const whatsapp = form.whatsapp.value.trim();
+        const instagram = form.instagram.value.trim();
+        const tiktok = form.tiktok.value.trim();
+        const platform = form.current_platform.value.trim();
+        const termsAccepted = form.terms.checked;
 
+        // Simple validation: if any field is empty or terms not checked, do not submit or show alert
+        if (!name || !email || !whatsapp || !instagram || !tiktok || !platform || !termsAccepted) {
+            // Do nothing, let UI validation handle feedback
+            return;
+        }
+
+        const payload = {
+            name,
+            email,
+            whatsapp,
+            instagram,
+            tiktok,
+            platform,
+            termsAccepted,
+            type: 'professionalQuery'
+        };
+
+        try {
+            const response = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/submitQuery', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                // alert('Your query has been submitted successfully!');
+                form.reset();
+            } else {
+                const errorData = await response.json();
+                alert('Submission failed: ' + (errorData.message || 'Unknown error'));
+            }
+        } catch (error) {
+            alert('An error occurred: ' + error.message);
+        }
+    });
+});
+</script>
 @endsection
