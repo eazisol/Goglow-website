@@ -21,8 +21,8 @@
                         <div class="hero-content" style="width: 80%;">
                             <!-- Section Title Start -->
                             <div class="section-title">
-                                <h3 class="wow fadeInUp">Glow Up On the Go</h3>
-                                <h1 class="text-anime-style-2" data-cursor="-opaque">Find & Book Top <span>Beauty Services</span> Near You</h1>
+                                <h1 class="text-anime-style-2" data-cursor="-opaque">Discover  <span> Book </span> Glow </h1>
+                                <h3 class="wow fadeInUp"> From trending beauty content to trusted local pros — your next glow-up is just a scroll away</h3>
                                 <div class="search-bar">
                                     <form action="saloons" method="GET" class="search-form">
                                         <div class="search-inputs">
@@ -36,16 +36,16 @@
                                                 <input type="text" placeholder="Current position">
                                             </div>
                                             
-                                            <div class="search-item">
+                                            {{-- <div class="search-item">
                                                 <i class="far fa-calendar"></i>
-                                                <input type="text" placeholder="Any date">
+                                                <input type="text" placeholder="Any date"> --}}
                                                   {{-- <input type="text" id="datePicker" placeholder="Any date" class="datepicker-input"> --}}
-                                            </div>
+                                            {{-- </div> --}}
                                             
-                                            <div class="search-item">
+                                            {{-- <div class="search-item">
                                                 <i class="far fa-clock"></i>
                                                 <input type="text" placeholder="Any time">
-                                            </div>
+                                            </div> --}}
                                             
                                             <button type="submit" class="search-button">To research</button>
                                         </div>
@@ -149,122 +149,138 @@
     <!-- About Us Section End -->
 
     <!-- Our Services Section Start -->
-    {{-- <div class="our-services bg-section dark-section">
+    <div class="our-services bg-section dark-section">
         <div class="container">
             <div class="row section-row align-items-center">
                 <div class="col-lg-12">
                     <!-- Section Title Start -->
                     <div class="section-title section-title-center">
-                        <h3 class="wow fadeInUp">Featured services</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">A curated collection of treatments to rejuvenate <span>your body</span></h2>
+                        
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">Why Glowees <span>Love GoGlow</span></h2>
+                        <hr>
+                        <h3 class="wow fadeInUp">A revolutionary beauty experience that combines social inspiration smart booking</h3>
                     </div>
                     <!-- Section Title End -->
                 </div>
             </div>
 
             <div class="row service-list">
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-6">
                     <!-- Service Item Start -->
                     <div class="service-item active wow fadeInUp">
                         <div class="icon-box">
                             <img src="images/icon-service-1.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Signature Facials</a></h3>
-                            <p>This all-in-one treatment begins with a thorough skin.</p>
+                            <h3>Get inspired by real local beauty content</h3>
+                            <p>Scroll looks from real Glowers near you</p>
                         </div>
-                        <div class="service-item-list">
-                            <ul>
-                                <li>Skin Soul Shine</li>
-                                <li>Your skin, only better.</li>
-                            </ul>
-                        </div>
-                        <div class="service-btn">
+                        
+                        {{-- <div class="service-btn">
                             <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
-                        </div>
+                        </div> --}}
                     </div>
                     <!-- Service Item End -->
                 </div>
                 
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-6">
                     <!-- Service Item Start -->
                     <div class="service-item wow fadeInUp" data-wow-delay="0.2s">
                         <div class="icon-box">
                             <img src="images/icon-service-2.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Therapeutic Massage</a></h3>
-                            <p>This all-in-one treatment begins with a thorough skin.</p>
+                            <h3>Find Glowers near you</h3>
+                            <p>Location-based: book beauty that’s actually close</p>
                         </div>
-                        <div class="service-item-list">
+                        {{-- <div class="service-item-list">
                             <ul>
                                 <li>Skin Soul Shine</li>
                                 <li>Your skin, only better.</li>
                             </ul>
-                        </div>
-                        <div class="service-btn">
+                        </div> --}}
+                        {{-- <div class="service-btn">
                             <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
-                        </div>
+                        </div> --}}
                     </div>
                     <!-- Service Item End -->
                 </div>
                 
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-6">
                     <!-- Service Item Start -->
                     <div class="service-item wow fadeInUp" data-wow-delay="0.4s">
                         <div class="icon-box">
                             <img src="images/icon-service-3.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Body Scrubs </a></h3>
-                            <p>This all-in-one treatment begins with a thorough skin.</p>
+                            <h3>Make an appointment in seconds</h3>
+                            <p>Last-minute appointments — no more DM chaos</p>
                         </div>
-                        <div class="service-item-list">
-                            <ul>
-                                <li>Skin Soul Shine</li>
-                                <li>Your skin, only better.</li>
-                            </ul>
-                        </div>
-                        <div class="service-btn">
+                        
+                        {{-- <div class="service-btn">
                             <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
-                        </div>
-                    </div>
-                    <!-- Service Item End -->
-                </div>
-                
-                <div class="col-lg-3 col-md-6">
-                    <!-- Service Item Start -->
-                    <div class="service-item wow fadeInUp" data-wow-delay="0.6s">
-                        <div class="icon-box">
-                            <img src="images/icon-service-4.svg" alt="">
-                        </div>                        
-                        <div class="service-content">
-                            <h3><a href="{{ url('/service-detail') }}">Reflexology</a></h3>
-                            <p>This all-in-one treatment begins with a thorough skin.</p>
-                        </div>
-                        <div class="service-item-list">
-                            <ul>
-                                <li>Skin Soul Shine</li>
-                                <li>Your skin, only better.</li>
-                            </ul>
-                        </div>
-                        <div class="service-btn">
-                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
-                        </div>
+                        </div> --}}
                     </div>
                     <!-- Service Item End -->
                 </div>
 
-                <div class="col-lg-12">
-                    <!-- Section Footer Text Start -->
-                    <div class="section-footer-text wow fadeInUp" data-wow-delay="0.8s">
-                        <p><span>Free</span>Begin your path to total relaxation today. <a href="{{ url('/book-appointment') }}">Book your free wellness consultation!</a></p>
+                <div class="col-lg-4 col-md-6">
+                    <!-- Service Item Start -->
+                    <div class="service-item active wow fadeInUp">
+                        <div class="icon-box">
+                            <img src="images/icon-service-1.svg" alt="">
+                        </div>                        
+                        <div class="service-content">
+                            <h3>Custom Smart Engine</h3>
+                            <p>Tailor-make recommendations based on your tastes and preferences</p>
+                        </div>
+                        
+                        {{-- <div class="service-btn">
+                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
+                        </div> --}}
                     </div>
-                    <!-- Section Footer Text End -->
+                    <!-- Service Item End -->
                 </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <!-- Service Item Start -->
+                    <div class="service-item wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="icon-box">
+                            <img src="images/icon-service-2.svg" alt="">
+                        </div>                        
+                        <div class="service-content">
+                            <h3>Integrated secure payment</h3>
+                            <p>Pay securely in-app</p>
+                        </div>
+                        
+                        {{-- <div class="service-btn">
+                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
+                        </div> --}}
+                    </div>
+                    <!-- Service Item End -->
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <!-- Service Item Start -->
+                    <div class="service-item wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="icon-box">
+                            <img src="images/icon-service-3.svg" alt="">
+                        </div>                        
+                        <div class="service-content">
+                            <h3>Ultra-fast experience</h3>
+                            <p>Follow your favorite Glowers and get notified when they drop availability</p>
+                        </div>
+                        
+                        {{-- <div class="service-btn">
+                            <a href="{{ url('/service-detail') }}" class="readmore-btn">view more</a>
+                        </div> --}}
+                    </div>
+                    <!-- Service Item End -->
+                </div>
+                
             </div>            
         </div>
-    </div> --}}
+    </div>
     <!-- Our Services Section End -->
 
     <!-- Our Feature Section Start -->
@@ -482,7 +498,7 @@
                                 <img src="images/icon-what-we-do-1.svg" alt="">
                             </div>
                             <div class="what-do-item-content">
-                                <h3>Find</h3>
+                                <h3>Explore looks and services</h3>
                                 <p>Explore a variety of trusted salons near you offering hair, nails, skin, and more beauty services.</p>
                             </div>
                         </div>
@@ -494,7 +510,7 @@
                                 <img src="images/icon-what-we-do-2.svg" alt="">
                             </div>
                             <div class="what-do-item-content">
-                                <h3>Book</h3>
+                                <h3>Choose your service</h3>
                                 <p>Select your preferred time, service, and salon, then book instantly through our platform.</p>
                             </div>
                         </div>
@@ -505,8 +521,9 @@
                             <div class="icon-box">
                                 <img src="images/icon-service-1.svg" alt="">
                             </div>
+                            
                             <div class="what-do-item-content">
-                                <h3>Glow</h3>
+                                <h3>shine</h3>
                                 <p>Show up at your appointment, enjoy expert care, and walk out glowing with confidence.</p>
                             </div>
                         </div>
@@ -1015,7 +1032,7 @@
     <!-- Our Team Section End -->
 
     <!-- Our Partners Section Start -->
-    {{-- <div class="our-partners bg-section">
+    <div class="our-partners bg-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -1024,8 +1041,8 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">Our partners</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Premium partnerships that enhance <span>every aspect</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">We offer more than just treatments - we deliver personalized wellness experiences designed to relax the body, refresh the mind, and restore inner balance.</p>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">Trusted salon partnerships that <span>elevate your experience</span></h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">We collaborate with top-tier salons and beauty experts to ensure you receive quality services, professional care, and consistent results—every time you book.</p>
                         </div>
                         <!-- Section Title End -->
 
@@ -1087,7 +1104,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     <!-- Our Partners Section End -->
 
     <!-- Join Us Section Start -->
@@ -1464,77 +1481,94 @@
     </div> --}}
      
    
-    {{-- <div class="our-pricing bg-section dark-section">
+    <div class="our-pricing bg-section dark-section">
         <div class="container">
             <div class="row section-row">
                 <div class="col-lg-12">
                     <div class="section-title section-title-center">
-                        <h3 class="wow fadeInUp">Pricing plan</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Transparent flexible packages for every <span>wellness need</span></h2>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">Want to shine <span>near you?</span></h2>
+                        <hr>
+                        <h3 class="wow fadeInUp">Discover the trends around you</h3>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-4 col-md-6">
                     <div class="pricing-box wow fadeInUp">
-                        <div class="pricing-header">
-                            <h3>Basic Plan</h3>
+                        <div class="pricing-header" style="border-bottom: initial;margin-bottom: initial;padding-bottom: initial;">
+                            <p>🔥 POPULAR</p>
                         </div>
                         <div class="pricing-content">
-                            <h2>$39 <span>Monthly</span></h2>
+                            <div class="pricing-header" style="display: flex; justify-content: space-between;">
+                                <h3 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">Your very long heading text</h3>
+                                <p>$30</p>
+                            </div>
                             <p>We believe great design is more than just visuals — it's a feeling. </p>
                         </div>
-                        <div class="pricing-btn">
-                            <a href="{{ url('/contact-us') }}" class="btn-default">Get Started With Plan</a>
-                        </div>
-                        <div class="pricing-list">
+                        <div class="pricing-list" style="margin-bottom: 20px;">
                             <ul>
                                 <li>Full Body Scrub</li>
                                 <li>Detoxifying Body Wrap</li>
                                 <li>Hydrating Body Wrap</li>
                             </ul>
+                        </div>
+                        <div class="pricing-btn" style="margin-bottom: initial;">
+                            <a href="" class="btn-default">
+                                <i class="fa-solid fa-calendar-days" style="margin-right: 8px;"></i> To book
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="pricing-box highlighted-box wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="pricing-header">
-                            <h3>Standard Plan</h3>
+                        <div class="pricing-header" style="border-bottom: initial;margin-bottom: initial;padding-bottom: initial;">
+                            <p>🔥 POPULAR</p>
                         </div>
                         <div class="pricing-content">
-                            <h2>$49 <span>Monthly</span></h2>
+                            <div class="pricing-header" style="display: flex; justify-content: space-between;">
+                                <h3 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">Your very long heading text</h3>
+                                <h3>$30</h3>
+                            </div>
+                            {{-- <h2>$49 <span>Monthly</span></h2> --}}
                             <p>We believe great design is more than just visuals — it's a feeling. </p>
                         </div>
-                        <div class="pricing-btn">
-                            <a href="{{ url('/contact-us') }}" class="btn-default">Get Started With Plan</a>
-                        </div>
-                        <div class="pricing-list">
+                         <div class="pricing-list" style="margin-bottom: 20px;">
                             <ul>
                                 <li>Full Body Scrub</li>
                                 <li>Detoxifying Body Wrap</li>
                                 <li>Hydrating Body Wrap</li>
                             </ul>
+                        </div>
+                        <div class="pricing-btn" style="margin-bottom: initial;">
+                            <a href="" class="btn-default">
+                                <i class="fa-solid fa-calendar-days" style="margin-right: 8px;"></i> To book
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="pricing-box wow fadeInUp" data-wow-delay="0.4s">
-                        <div class="pricing-header">
-                            <h3>Premium Plan</h3>
+                        <div class="pricing-header" style="border-bottom: initial;margin-bottom: initial;padding-bottom: initial;">
+                            <p>🔥 POPULAR</p>
                         </div>
                         <div class="pricing-content">
-                            <h2>$59 <span>Monthly</span></h2>
+                            <div class="pricing-header" style="display: flex; justify-content: space-between;">
+                                <h3 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">Your very long heading text</h3>
+                                <h3>$30</h3>
+                            </div>
                             <p>We believe great design is more than just visuals — it's a feeling. </p>
                         </div>
-                        <div class="pricing-btn">
-                            <a href="{{ url('/contact-us') }}" class="btn-default">Get Started With Plan</a>
-                        </div>
-                        <div class="pricing-list">
+                        <div class="pricing-list" style="margin-bottom: 20px;">
                             <ul>
                                 <li>Full Body Scrub</li>
                                 <li>Detoxifying Body Wrap</li>
                                 <li>Hydrating Body Wrap</li>
                             </ul>
+                        </div>
+                        <div class="pricing-btn" style="margin-bottom: initial;">
+                            <a href="" class="btn-default">
+                                <i class="fa-solid fa-calendar-days" style="margin-right: 8px;"></i> To book
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1549,7 +1583,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     {{-- app --}}
     <section style="background-color: #0d0d0d; padding: 60px 0;">
         <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;">
