@@ -187,7 +187,7 @@
                         <form id="appointmentForm" action="#" method="POST" data-toggle="validator">
                             <div class="row">
                                 <!-- Service Details Section -->
-                                <div class="col-md-12 mb-4">
+                                {{-- <div class="col-md-12 mb-4">
                                     <div class="service-details-box">
                                         <div class="form-group mb-3">
                                             <label for="service_name">Service Name</label>
@@ -198,7 +198,7 @@
                                             <input type="text" name="service_price" class="form-control" id="service_price" value="${{ $selectedService['service_price'] ?? '0' }}" readonly>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <!-- Personal Information -->                                
                                 <div class="form-group col-md-6 mb-4">
@@ -252,10 +252,10 @@
                                 </div>
 
                                 <!-- Notes Section -->
-                                <div class="form-group col-md-12 mb-4">
+                                {{-- <div class="form-group col-md-12 mb-4">
                                     <label for="notes">Additional Notes</label>
                                     <textarea name="notes" id="notes" class="form-control" rows="4" placeholder="Any special requests or notes for your appointment"></textarea>
-                                </div>
+                                </div> --}}
     
                                 <div class="col-md-12">
                                     <button type="submit" class="btn-default"><span>Book an appointment</span></button>
