@@ -81,22 +81,6 @@
                                     <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
-                                
-                                <div class="form-group col-md-6 mb-4">
-                                    <select name="services" class="form-control form-select" id="services" required>
-                                        <option value="" disabled selected>Select Category</option>
-                                        <option value="signature_facials">Hair</option>
-                                        <option value="therapeutic_massages">Nails</option>
-                                        <option value="body_scrubs">Skin</option>
-                                        <option value="manicures_and_pedicures">Waxing</option>
-                                    </select>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-    
-                                <div class="form-group col-md-6 mb-5">
-                                    <input type="date" name="date" class="form-control" id="date" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
     
                                 <div class="col-md-12">
                                     <button type="submit" class="btn-default"><span>Book an appointment</span></button>
