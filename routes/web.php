@@ -18,6 +18,9 @@ Route::get('/', function () {return view('home.indexImage');});
 // Route::get('/home-image', function () {return view('home.indexImage');});
 Route::get('/home-video', function () {return view('home.indexVideo');});
 
+// Search routes
+Route::get('/search', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
+
 // about
 Route::get('/about', function () {return view('about.index');});
 

@@ -24,30 +24,41 @@
                                 <h1 class="text-anime-style-2" data-cursor="-opaque">Discover  <span> Book </span> Glow </h1>
                                 <h3 class="wow fadeInUp"> From trending beauty content to trusted local pros — your next glow-up is just a scroll away</h3>
                                 <div class="search-bar">
-                                    <form action="saloons" method="GET" class="search-form">
+                                    <form action="{{ route('search') }}" method="GET" class="search-form">
                                         <div class="search-inputs">
                                             <div class="search-item">
                                                 <i class="fas fa-search"></i>
-                                                <input type="text" placeholder="All care and facilities">
+                                                <input type="text" id="searchInput" placeholder="Search by service or provider name" name="search" required>
                                             </div>
                                             
                                             <div class="search-item">
                                                 <i class="fas fa-map-marker-alt"></i>
-                                                <input type="text" placeholder="Current position">
+                                                <input type="text" id="locationInput" placeholder="Location (required for service search)" name="location">
                                             </div>
                                             
-                                            {{-- <div class="search-item">
-                                                <i class="far fa-calendar"></i>
-                                                <input type="text" placeholder="Any date"> --}}
-                                                  {{-- <input type="text" id="datePicker" placeholder="Any date" class="datepicker-input"> --}}
-                                            {{-- </div> --}}
-                                            
-                                            {{-- <div class="search-item">
-                                                <i class="far fa-clock"></i>
-                                                <input type="text" placeholder="Any time">
-                                            </div> --}}
-                                            
-                                            <button type="submit" class="search-button">To research</button>
+                                            <button type="submit" class="search-button">Search</button>
+
+                                            <script>
+                                                document.getElementById('searchInput').addEventListener('input', function() {
+                                                    const searchValue = this.value.toLowerCase();
+                                                    const locationInput = document.getElementById('locationInput');
+                                                    
+                                                    // Make an API call to check if the search term matches any provider names
+                                                    fetch('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders')
+                                                        .then(response => response.json())
+                                                        .then(providers => {
+                                                            const isProvider = providers.some(provider => 
+                                                                provider.ownerName.toLowerCase().includes(searchValue)
+                                                            );
+                                                            
+                                                            // If searching for a provider, location is not required
+                                                            locationInput.required = !isProvider;
+                                                            locationInput.placeholder = isProvider ? 
+                                                                "Location (optional for provider search)" : 
+                                                                "Location (required for service search)";
+                                                        });
+                                                });
+                                            </script>
                                         </div>
                                     </form>
                                 </div>
