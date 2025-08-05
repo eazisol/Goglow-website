@@ -4,7 +4,131 @@
 
 {{-- Style Files --}}
 @section('styles')
+<style>
+    .service-details-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #e9ecef;
+    }
 
+    .service-details-box label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .service-details-box input[readonly] {
+        background-color: #fff;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .booking-days-buttons {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 15px;
+        margin-top: 15px;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+    }
+
+    .day-btn {
+        position: relative;
+        padding: 15px 10px;
+        border: 2px solid #e9ecef;
+        background: #fff;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    .day-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--theme-color);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .day-btn span {
+        display: block;
+        font-weight: 600;
+        font-size: 14px;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+
+    .day-btn:hover {
+        border-color: var(--theme-color);
+        transform: translateY(-2px);
+    }
+
+    .day-btn:hover::before {
+        transform: scaleX(1);
+    }
+
+    .day-btn:hover span {
+        color: var(--theme-color);
+    }
+
+    .day-btn.active {
+        background: var(--theme-color);
+        border-color: var(--theme-color);
+        transform: translateY(-2px);
+    }
+
+    .day-btn.active::before {
+        transform: scaleX(1);
+        background: #fff;
+    }
+
+    .day-btn.active span {
+        color: #fff;
+    }
+
+    @media (max-width: 991px) {
+        .booking-days-buttons {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    @media (max-width: 575px) {
+        .booking-days-buttons {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .booking-days-buttons {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
 @endsection
 
 
@@ -61,7 +185,22 @@
                     <!-- Book Appointment Form Start -->
                     <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
                         <form id="appointmentForm" action="#" method="POST" data-toggle="validator">
-                            <div class="row">                                
+                            <div class="row">
+                                <!-- Service Details Section -->
+                                <div class="col-md-12 mb-4">
+                                    <div class="service-details-box">
+                                        <div class="form-group mb-3">
+                                            <label for="service_name">Service Name</label>
+                                            <input type="text" name="service_name" class="form-control" id="service_name" value="{{ $selectedService['service_name'] ?? '' }}" readonly>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="service_price">Service Price</label>
+                                            <input type="text" name="service_price" class="form-control" id="service_price" value="${{ $selectedService['service_price'] ?? '0' }}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Personal Information -->                                
                                 <div class="form-group col-md-6 mb-4">
                                     <input type="text" name="fname" class="form-control" id="fname" placeholder="First Name" required>
                                     <div class="help-block with-errors"></div>
@@ -73,13 +212,49 @@
                                 </div>
                                 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="email" name ="email" class="form-control" id="email" placeholder="Email Address" required>
+                                    <input type="email" name="email" class="form-control" id="email" placeholder="Email Address" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
     
                                 <div class="form-group col-md-12 mb-4">
                                     <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number" required>
                                     <div class="help-block with-errors"></div>
+                                </div>
+
+                                <!-- Booking Days Section -->
+                                <div class="col-md-12 mb-4">
+                                    <label class="form-label">Select Booking Day</label>
+                                    <div class="booking-days-buttons">
+                                        <button type="button" class="day-btn" data-day="monday">
+                                            <span>MON</span>
+                                        </button>
+                                        <button type="button" class="day-btn" data-day="tuesday">
+                                            <span>TUE</span>
+                                        </button>
+                                        <button type="button" class="day-btn" data-day="wednesday">
+                                            <span>WED</span>
+                                        </button>
+                                        <button type="button" class="day-btn" data-day="thursday">
+                                            <span>THU</span>
+                                        </button>
+                                        <button type="button" class="day-btn" data-day="friday">
+                                            <span>FRI</span>
+                                        </button>
+                                        <button type="button" class="day-btn" data-day="saturday">
+                                            <span>SAT</span>
+                                        </button>
+                                        <button type="button" class="day-btn" data-day="sunday">
+                                            <span>SUN</span>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="selected_day" id="selected_day" required>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+
+                                <!-- Notes Section -->
+                                <div class="form-group col-md-12 mb-4">
+                                    <label for="notes">Additional Notes</label>
+                                    <textarea name="notes" id="notes" class="form-control" rows="4" placeholder="Any special requests or notes for your appointment"></textarea>
                                 </div>
     
                                 <div class="col-md-12">
@@ -178,6 +353,34 @@
 
 {{-- Scripts --}}
 @section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all day buttons and the hidden input
+    const dayButtons = document.querySelectorAll('.day-btn');
+    const selectedDayInput = document.getElementById('selected_day');
 
+    // Add click event to each day button
+    dayButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            dayButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Set the selected day in hidden input
+            selectedDayInput.value = this.dataset.day;
+        });
+    });
 
+    // Form validation
+    const form = document.getElementById('appointmentForm');
+    form.addEventListener('submit', function(e) {
+        if (!selectedDayInput.value) {
+            e.preventDefault();
+            alert('Please select a booking day');
+        }
+    });
+});
+</script>
 @endsection
