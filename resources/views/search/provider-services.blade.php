@@ -90,7 +90,7 @@
                                     @endif
                                 </div>
                                 <div class="mt-3">
-                                    <a href="{{ url('/book-appointment?service=' . $service['id']) }}" class="btn-default">Book Now</a>
+<a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" class="btn-default">Book Now</a>
                                 </div>
                             </div>
                         </div>

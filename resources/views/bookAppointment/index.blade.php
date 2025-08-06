@@ -354,33 +354,96 @@
 {{-- Scripts --}}
 @section('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Get all day buttons and the hidden input
+document.addEventListener('DOMContentLoaded', function () {
     const dayButtons = document.querySelectorAll('.day-btn');
     const selectedDayInput = document.getElementById('selected_day');
+    const form = document.getElementById('appointmentForm');
 
-    // Add click event to each day button
+    // Handle day button selection
     dayButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Remove active class from all buttons
+        button.addEventListener('click', function () {
             dayButtons.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to clicked button
             this.classList.add('active');
-            
-            // Set the selected day in hidden input
             selectedDayInput.value = this.dataset.day;
         });
     });
 
-    // Form validation
-    const form = document.getElementById('appointmentForm');
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
         if (!selectedDayInput.value) {
-            e.preventDefault();
             alert('Please select a booking day');
+            return;
+        }
+
+        // Get form values
+        const fname = form.fname.value.trim();
+        const lname = form.lname.value.trim();
+        const email = form.email.value.trim();
+        const phone = form.phone.value.trim();
+
+        // Combine name (just in case you want it)
+        const fullName = fname + ' ' + lname;
+
+        // Get params from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceId = urlParams.get('serviceId');
+        const serviceProviderId = urlParams.get('service_provider_id');
+
+        // Optional: Replace with actual values if needed
+        const userId = serviceId; // REPLACE with actual logic if dynamic
+        const bookingTime = new Date().toISOString();  // Example: "2025-08-01T15:00:00Z"
+        const serviceName = "Full Arms Wax";            // You may want to fetch this dynamically
+        const servicePrice = 729;
+        const durationMinutes = 30;
+
+        if (!serviceId || !serviceProviderId) {
+            alert("Missing 'serviceId' or 'service_provider_id' in URL.");
+            return;
+        }
+
+        // Construct payload
+        const payload = {
+            booking_time: bookingTime,
+            service_provider_id: serviceProviderId,
+            user_id: userId,
+            services: [
+                {
+                    serviceId: serviceId,
+                    serviceName: serviceName,
+                    durationMinutes: durationMinutes,
+                    discountedPrice: servicePrice,
+                    servicePrice: servicePrice,
+                    isCompleted: false,
+                    startTime: bookingTime
+                }
+            ]
+        };
+
+        try {
+            const response = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/bookService', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                alert('Appointment booked successfully!');
+                form.reset();
+                selectedDayInput.value = '';
+                dayButtons.forEach(btn => btn.classList.remove('active'));
+            } else {
+                const errorData = await response.json();
+                alert('Booking failed: ' + (errorData.message || 'Unknown error'));
+            }
+        } catch (err) {
+            alert('An error occurred: ' + err.message);
         }
     });
 });
 </script>
+
 @endsection
+
