@@ -31,12 +31,31 @@
 <body>
   <style>
     :root {
-        --primary-bg: {{ $theme_bg_color }};
+        --primary-color: {{ $theme['primary_color'] }};
+        --secondary-color: {{ $theme['secondary_color'] }};
+        --accent-secondary-color: {{ $theme['accent_secondary'] }};
+        --bg-color: {{ $theme['bg_color'] }};
+        --text-color: {{ $theme['text_color'] }};
+        --accent-color: {{ $theme['accent_color'] }};
+        --white-color: {{ $theme['white_color'] }};
+        --divider-color: {{ $theme['divider_color'] }};
+        --dark-divider-color: {{ $theme['dark_divider_color'] }};
+        --error-color: {{ $theme['error_color'] }};
+        --default-font: {{ $theme['default_font'] }};
+        --accent-font: {{ $theme['accent_font'] }};
     }
 
     body {
-        background-color: var(--primary-bg);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--default-font);
     }
+
+    .button {
+        background-color: var(--primary-color);
+        color: var(--white-color);
+    }
+
     .feature-list {
     list-style: none;
     padding: 0;

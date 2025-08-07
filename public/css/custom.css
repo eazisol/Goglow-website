@@ -233,7 +233,7 @@ body{
     z-index: 0;
 }
 
-.btn-default::before{
+/* .btn-default::before{
 	content: '';
 	position: absolute;
 	top: 50%;
@@ -246,7 +246,7 @@ body{
 	transform: translate(-30px, -50%);
 	transition: all 0.4s ease-in-out;
 	z-index: 1;
-}
+} */
 
 .btn-default:hover::before{
 	transform: translate(-30px, -50%) rotate(45deg);
@@ -283,8 +283,8 @@ body{
 
 .btn-default.border-btn{
 	background: transparent;
-	border: 1px solid var(--secondary-color);
-	padding: 17px 58px 17px 30px;
+	border: 1px solid #F18A00;
+	padding: 17px 30px 17px 30px;
 }
 
 .btn-default.border-btn:hover{
@@ -591,7 +591,7 @@ header.main-header .container-fluid{
 	font-weight: 600;
 	line-height: 1.2em;
 	padding: 14px 20px !important;
-	color: var(--secondary-color);
+	color: #F18A00;
 	text-transform: capitalize;
 	transition: all 0.3s ease-in-out;
 }
@@ -606,7 +606,7 @@ header.main-header .container-fluid{
 
 .main-menu ul li a:hover,
 .main-menu ul li a:focus{
-	color: var(--secondary-color);
+	color: #F18A00;
 }
 
 .main-menu ul ul{
@@ -812,7 +812,7 @@ header.main-header .container-fluid{
 
 .hero.hero-bg-image{
 	position: relative;
-	background: url('../images/5.webp') no-repeat;
+	background: url('../images/benyamin-bohlouli-LGXN4OSQSa4-unsplash (1).jpg') no-repeat;
 	background-position: center center;
 	background-size: cover;
 	overflow: hidden;
@@ -2853,10 +2853,11 @@ header.main-header .container-fluid{
 
 .page-header{
     position: relative;
-	background: url('../images/page-header-bg.png') no-repeat;
+	/* background: url('../images/page-header-bg.png') no-repeat; */;
+	background-color: var(--secondary-color);
 	background-position: center center;
 	background-size: cover;
-	padding: 180px 0 50px;
+	padding: 75px 0 50px;
 	margin-top: 20px;
 }
 
@@ -2868,7 +2869,7 @@ header.main-header .container-fluid{
 	display: inline-block;
 	font-size: 60px;
     font-weight: 600;
-	color: var(--secondary-color);
+	color: var(--primary-color);
 	margin-bottom: 15px;
 	cursor: none;
 }

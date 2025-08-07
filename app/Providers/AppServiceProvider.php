@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::share('theme_bg_color', config('theme.primary_bg_color'));
+        // View::share('theme_bg_color', config('theme.primary_bg_color'));
+        View::share('theme', config('theme'));
     }
 }

@@ -158,6 +158,84 @@
         {{-- </div>
     </div> --}}
     <!-- About Us Section End -->
+            <!-- Why Choose Us Section Start -->
+        <div class="why-choose-us">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <!-- Why Choose Content Start -->
+                        <div class="why-choose-content">
+                            <!-- Section Title Start -->
+                            <div class="section-title">
+                                <h3 class="wow fadeInUp">Why choose us</h3>
+                                <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>salon experiences</span></h2>
+                                <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                    We bring all your beauty and grooming needs under one roof. Our trusted network of professional salons, transparent booking system, and quality-focused service help us deliver consistent satisfaction to every client.
+                                </p>
+                            </div>
+                            <!-- Section Title End -->
+                            
+                            <!-- Why Choose Item List Start -->
+                            <div class="why-choose-item-list">
+                                <!-- Why Choose Item Start -->
+                                <div class="why-choose-item wow fadeInUp" data-wow-delay="0.4s">
+                                    <div class="why-choose-item-header">
+                                        <div class="icon-box">
+                                            <img src="images/icon-why-choose-1.svg" alt="">
+                                        </div>
+                                        <div class="why-choose-item-title">
+                                            <h3>All-in-One Salon Platform</h3>
+                                        </div>
+                                    </div>
+                                    <div class="why-choose-item-content">
+                                        <p>From Hair to Nails, Skin to Waxing—book any service at top-rated salons near you, all in one place.</p>
+                                    </div>
+                                </div>
+                                <!-- Why Choose Item End -->
+                                
+                                <!-- Why Choose Item Start -->
+                                <div class="why-choose-item wow fadeInUp" data-wow-delay="0.6s">
+                                    <div class="why-choose-item-header">
+                                        <div class="icon-box">
+                                            <img src="images/icon-why-choose-2.svg" alt="">
+                                        </div>
+                                        <div class="why-choose-item-title">
+                                            <h3>Trusted Salon Partners</h3>
+                                        </div>
+                                    </div>
+                                    <div class="why-choose-item-content">
+                                        <p>We partner only with licensed, well-reviewed salons to ensure you get quality care from skilled professionals.</p>
+                                    </div>
+                                </div>
+                                <!-- Why Choose Item End -->    
+                            </div>
+                            <!-- Why Choose Item List End -->
+                        </div>
+                        <!-- Why Choose Content End -->
+                    </div>
+
+                    <div class="col-lg-6">
+                        <!-- Why Choose Images Start -->
+                        <div class="why-choose-image">
+                            <figure class="image-anime">
+                                <img src="images/kimia-kazemi-u93nTfWqR9w-unsplash.jpg" alt="">
+                            </figure>
+
+                            <!-- Contact Us Circle Start -->
+                            <div class="contact-us-circle">
+                                <a href="{{ url('/contact-us') }}">
+                                    <img src="images/contact-us-circle.svg" alt="">
+                                </a>
+                            </div>
+                            <!-- Contact Us Circle End -->
+                        </div>
+                        <!-- Why Choose Images End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Why Choose Us Section End -->
 
     <!-- Our Services Section Start -->
     <div class="our-services bg-section dark-section">
@@ -397,87 +475,10 @@
     </div> --}}
     <!-- Our Feature Section End -->
 
-        <!-- Why Choose Us Section Start -->
-<div class="why-choose-us">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <!-- Why Choose Content Start -->
-                <div class="why-choose-content">
-                    <!-- Section Title Start -->
-                    <div class="section-title">
-                        <h3 class="wow fadeInUp">Why choose us</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>salon experiences</span></h2>
-                        <p class="wow fadeInUp" data-wow-delay="0.2s">
-                            We bring all your beauty and grooming needs under one roof. Our trusted network of professional salons, transparent booking system, and quality-focused service help us deliver consistent satisfaction to every client.
-                        </p>
-                    </div>
-                    <!-- Section Title End -->
-                    
-                    <!-- Why Choose Item List Start -->
-                    <div class="why-choose-item-list">
-                        <!-- Why Choose Item Start -->
-                        <div class="why-choose-item wow fadeInUp" data-wow-delay="0.4s">
-                            <div class="why-choose-item-header">
-                                <div class="icon-box">
-                                    <img src="images/icon-why-choose-1.svg" alt="">
-                                </div>
-                                <div class="why-choose-item-title">
-                                    <h3>All-in-One Salon Platform</h3>
-                                </div>
-                            </div>
-                            <div class="why-choose-item-content">
-                                <p>From Hair to Nails, Skin to Waxing—book any service at top-rated salons near you, all in one place.</p>
-                            </div>
-                        </div>
-                        <!-- Why Choose Item End -->
-                        
-                        <!-- Why Choose Item Start -->
-                        <div class="why-choose-item wow fadeInUp" data-wow-delay="0.6s">
-                            <div class="why-choose-item-header">
-                                <div class="icon-box">
-                                    <img src="images/icon-why-choose-2.svg" alt="">
-                                </div>
-                                <div class="why-choose-item-title">
-                                    <h3>Trusted Salon Partners</h3>
-                                </div>
-                            </div>
-                            <div class="why-choose-item-content">
-                                <p>We partner only with licensed, well-reviewed salons to ensure you get quality care from skilled professionals.</p>
-                            </div>
-                        </div>
-                        <!-- Why Choose Item End -->    
-                    </div>
-                    <!-- Why Choose Item List End -->
-                </div>
-                <!-- Why Choose Content End -->
-            </div>
 
-            <div class="col-lg-6">
-                <!-- Why Choose Images Start -->
-                <div class="why-choose-image">
-                    <figure class="image-anime">
-                        <img src="images/kimia-kazemi-u93nTfWqR9w-unsplash.jpg" alt="">
-                    </figure>
-
-                    <!-- Contact Us Circle Start -->
-                    <div class="contact-us-circle">
-                        <a href="{{ url('/contact-us') }}">
-                            <img src="images/contact-us-circle.svg" alt="">
-                        </a>
-                    </div>
-                    <!-- Contact Us Circle End -->
-                </div>
-                <!-- Why Choose Images End -->
-            </div>
-        </div>
-    </div>
-</div>
-
-    <!-- Why Choose Us Section End -->
 
     <!-- What We Do Section Start -->
-    <div class="what-we-do bg-section">
+    <div class="what-we-do bg-section" style="background-color: initial;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
@@ -1043,7 +1044,7 @@
     <!-- Our Team Section End -->
 
     <!-- Our Partners Section Start -->
-    <div class="our-partners bg-section">
+    <div class="our-partners bg-section" style="background-color: initial;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -1596,7 +1597,7 @@
         </div>
     </div>
     {{-- app --}}
-    <section style="background-color: #0d0d0d; padding: 60px 0;">
+    <section style="padding: 60px 0;">
         <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;">
             
             <!-- Left: Mobile App Image -->
