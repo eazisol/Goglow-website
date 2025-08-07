@@ -10,6 +10,17 @@
             <div class="row">
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
+                    
+                    <!-- Page Header Box End -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+     <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Page Header Box Start -->
                     <div class="page-header-box">
                         <h2 class="text-anime-style-2" style="color:white;" data-cursor="-opaque">Search Results for "{{ $search }}"
                         @if($location) in "{{ $location }}" @endif
@@ -25,8 +36,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Page Header End -->
 
 <!-- Search Results Section Start -->
 <div class="search-results" style="margin: 50px 0 50px 0;">
@@ -65,20 +74,22 @@
                                         @endif
                                     </div>
                                     <div class="provider-details mt-3">
-                                        @if(isset($provider['proType']))
-                                            <div class="type">
-                                                <strong>Type:</strong> {{ $provider['proType'] }}
-                                            </div>
-                                        @endif
                                         @if(isset($provider['timing']))
-                                            <div class="timing">
-                                                <strong>Available:</strong> 
+                                            <div class="timing d-flex gap-2 flex-wrap">
                                                 @foreach($provider['timing'] as $day => $times)
-                                                    {{ $day }},
+                                                    @php
+                                                        $date = \Carbon\Carbon::parse($day); // Make sure $day is a valid date string
+                                                    @endphp
+                                                    <div class="date-box">
+                                                        {{ $date->format('D.d') }} <!-- e.g., Fri.08 -->
+                                                    </div>
                                                 @endforeach
                                             </div>
                                         @endif
                                     </div>
+                                    <button class="appointment-btn">Make an appointment</button>
+
+
                                 </div>
                             </a>
                         </div>
@@ -98,6 +109,29 @@
 
 @section('styles')
 <style>
+    .appointment-btn {
+    margin-top: 20px;
+    background-color: #1c1c1c;  /* Dark background */
+    color: white;               /* White text */
+    border: none;
+    border-radius: 10px;        /* Rounded corners */
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+    .appointment-btn:hover {
+        background-color: #333;     /* Slightly lighter on hover */
+    }
+    .date-box {
+    border: 1px solid #3F51B5; /* or your desired blue */
+    border-radius: 10px;
+    padding: 5px 10px;
+    color: #3F51B5;
+    font-weight: 500;
+    display: inline-block;
+}
 .provider-card {
     background: #fff;
     border-radius: 10px;

@@ -9,16 +9,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
-                    <div class="page-header-box">
-                        <h1 class="text-anime-style-2" data-cursor="-opaque">Services</h1>
-                        {{-- <nav class="wow fadeInUp">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ url('/services') }}">services</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Signature facials</li>
-                            </ol>
-                        </nav> --}}
-                    </div>
+                    
                     <!-- Page Header Box End -->
                 </div>
             </div>
@@ -32,14 +23,6 @@
             <div class="col-lg-12">
                 <div class="provider-header mb-1">
                     <div class="row align-items-center">
-                        <div class="col-md-2">
-                            <div class="provider-image">
-                                <img src="{{ isset($provider['profileImg']) && $provider['profileImg'] ? $provider['profileImg'] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
-                                     alt="{{ $provider['name'] }}" 
-                                     class="img-fluid rounded-circle"
-                                     onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
-                            </div>
-                        </div>
                         <div class="col-md-10">
                             <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2>
                             @if(isset($provider['companyName']))
@@ -58,9 +41,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="provider-image">
+                                <img src="{{ isset($provider['profileImg']) && $provider['profileImg'] ? $provider['profileImg'] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
+                                     alt="{{ $provider['name'] }}" 
+                                     class="img-fluid"
+                                     onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                            </div>
                 </div>
             </div>
         </div>
+
 
         <div class="row">
             @if(count($services) > 0)
@@ -90,7 +80,7 @@
                                     @endif
                                 </div>
                                 <div class="mt-3">
-<a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" class="btn-default">Book Now</a>
+                                   <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" class="btn-default">Book Now</a>
                                 </div>
                             </div>
                         </div>
@@ -125,17 +115,17 @@
 }
 
 .provider-image img {
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    height: 300px;
     object-fit: cover;
 }
 
 .provider-info {
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 .provider-info p {
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .provider-info i {
