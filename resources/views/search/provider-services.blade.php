@@ -52,46 +52,66 @@
         </div>
 
 
-        <div class="row">
+<div class="row">
+    <div class="col-lg-8">
+        <div class="custom-service-list">
+
             @if(count($services) > 0)
                 @foreach($services as $service)
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="service-card">
+                    <div class="service-row d-flex justify-content-between align-items-start flex-wrap">
+                        
+                        <!-- Left -->
+                        <div class="service-info">
                             <div class="service-image">
                                 <img src="{{ (isset($service['images']) && count($service['images']) > 0) ? $service['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
                                      alt="{{ $service['service_name'] }}" 
-                                     class="img-fluid"
+                                     class="img-fluid rounded-circle"
                                      onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                             </div>
-                            <div class="service-details p-4">
-                                <h3>{{ $service['service_name'] }}</h3>
-                                <p>{{ $service['service_details'] }}</p>
-                                <div class="service-meta">
-                                    <div class="price">
-                                        <strong>Price:</strong> ${{ $service['service_price'] ?? '0' }}
-                                        @if(isset($service['discounted_price']) && isset($service['service_price']) && $service['discounted_price'] < $service['service_price'])
-                                            <span class="discounted">${{ $service['discounted_price'] }}</span>
-                                        @endif
-                                    </div>
-                                    @if(isset($service['duration_minutes']))
-                                        <div class="duration">
-                                            <strong>Duration:</strong> {{ $service['duration_minutes'] }} minutes
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="mt-3">
-                                   <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" class="btn-default">Book Now</a>
-                                </div>
+                            <div class="service-name fw-semibold">
+                                {{ $service['service_name'] }}
                             </div>
+                            @if(!empty($service['service_details']))
+                                <div class="service-desc text-muted">
+                                    {{ $service['service_details'] }}
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Right -->
+                        <div class="service-meta text-end">
+                            <div class="text-muted small mb-1">
+                                {{ $service['duration_minutes'] ?? 0 }} min 
+                                &bull; 
+                                from €{{ $service['service_price'] ?? '0' }}
+                            </div>
+                            <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" 
+                               class="choose-btn">Choose</a>
                         </div>
                     </div>
                 @endforeach
             @else
-                <div class="col-12 text-center">
-                    <h3>No services available from this provider.</h3>
+                <div class="text-center py-4">
+                    <h5>No services available from this provider.</h5>
                 </div>
             @endif
+
         </div>
+    </div>
+        <div class="col-lg-4">
+        <div class="custom-service-list">
+
+            
+                <div class="text-center py-4">
+                    <h5>No services available from this provider.</h5>
+                </div>
+            
+
+        </div>
+    </div>
+</div>
+
+
         
         <div class="row mt-4">
             <div class="col-12">
@@ -145,8 +165,8 @@
 }
 
 .service-image img {
-    width: 100%;
-    height: 200px;
+    width: 60px;
+    height: 60px;
     object-fit: cover;
 }
 
@@ -167,5 +187,56 @@
 .service-meta > div {
     margin-bottom: 8px;
 }
+/* SCOPED to .custom-service-list */
+.custom-service-list {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.custom-service-list .service-row {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.custom-service-list .service-row:last-child {
+    border-bottom: none;
+}
+
+.custom-service-list .service-info {
+    max-width: 70%;
+}
+
+.custom-service-list .service-name {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.custom-service-list .service-desc {
+    font-size: 14px;
+    color: #666;
+}
+
+.custom-service-list .service-meta {
+    min-width: 120px;
+}
+
+.custom-service-list .choose-btn {
+    background-color: #1c1c1c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.custom-service-list .choose-btn:hover {
+    background-color: #333;
+}
+
 </style>
 @endsection
