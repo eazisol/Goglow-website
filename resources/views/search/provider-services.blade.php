@@ -68,7 +68,8 @@
                                      class="img-fluid rounded-circle"
                                      onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                             </div>
-                            <div class="service-name fw-semibold">
+                            <div class="service-list-details">
+                                <div class="service-name fw-semibold">
                                 {{ $service['service_name'] }}
                             </div>
                             @if(!empty($service['service_details']))
@@ -76,6 +77,7 @@
                                     {{ $service['service_details'] }}
                                 </div>
                             @endif
+                            </div>
                         </div>
 
                         <!-- Right -->
@@ -85,8 +87,11 @@
                                 &bull; 
                                 from €{{ $service['service_price'] ?? '0' }}
                             </div>
-                            <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" 
+                            <div class="choose-button">
+                                <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" 
                                class="choose-btn">Choose</a>
+                            </div>
+
                         </div>
                     </div>
                 @endforeach
@@ -100,13 +105,20 @@
     </div>
         <div class="col-lg-4">
         <div class="custom-service-list">
-
-            
-                <div class="text-center py-4">
-                    <h5>No services available from this provider.</h5>
-                </div>
-            
-
+                                    <div class="provider-details mt-3">
+                                        @if(isset($provider['timing']))
+                                            <div class="timing d-flex gap-2 flex-wrap">
+                                                @foreach($provider['timing'] as $day => $times)
+                                                    @php
+                                                        $date = \Carbon\Carbon::parse($day); // Make sure $day is a valid date string
+                                                    @endphp
+                                                    <div class="date-box">
+                                                        {{ $date->format('D.d') }} <!-- e.g., Fri.08 -->
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </div>
         </div>
     </div>
 </div>
@@ -127,6 +139,9 @@
 
 @section('styles')
 <style>
+.choose-button{
+    margin-top: 50px;
+}
 .provider-header {
     background: #fff;
     border-radius: 10px;
@@ -168,6 +183,9 @@
     width: 60px;
     height: 60px;
     object-fit: cover;
+}
+.service-image{
+    margin-bottom: 10px;
 }
 
 .service-details {
