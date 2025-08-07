@@ -16,6 +16,45 @@
             </div>
         </div>
     </div>
+                                    <div class="search-bar">
+                                    <form action="{{ route('search') }}" method="GET" class="search-form">
+                                        <div class="search-inputs">
+                                            <div class="search-item">
+                                                <i class="fas fa-search"></i>
+                                                <input type="text" id="searchInput" placeholder="Search by service or provider name" name="search" required>
+                                            </div>
+                                            
+                                            <div class="search-item">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                <input type="text" id="locationInput" placeholder="Location (required for service search)" name="location">
+                                            </div>
+                                            
+                                            <button type="submit" class="search-button">Search</button>
+
+                                            <script>
+                                                document.getElementById('searchInput').addEventListener('input', function() {
+                                                    const searchValue = this.value.toLowerCase();
+                                                    const locationInput = document.getElementById('locationInput');
+                                                    
+                                                    // Make an API call to check if the search term matches any provider names
+                                                    fetch('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders')
+                                                        .then(response => response.json())
+                                                        .then(providers => {
+                                                            const isProvider = providers.some(provider => 
+                                                                provider.ownerName.toLowerCase().includes(searchValue)
+                                                            );
+                                                            
+                                                            // If searching for a provider, location is not required
+                                                            locationInput.required = !isProvider;
+                                                            locationInput.placeholder = isProvider ? 
+                                                                "Location (optional for provider search)" : 
+                                                                "Location (required for service search)";
+                                                        });
+                                                });
+                                            </script>
+                                        </div>
+                                    </form>
+                                </div>
     <!-- Page Header End -->
      <div class="container">
             <div class="row">
@@ -108,6 +147,7 @@
 @endsection
 
 @section('styles')
+<link rel="stylesheet" href="{{ asset('css/search.css') }}">
 <style>
     .appointment-btn {
     margin-top: 20px;
