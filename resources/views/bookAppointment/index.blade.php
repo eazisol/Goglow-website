@@ -265,6 +265,7 @@
         </div>
     </div>
     <!-- Book Appointment Section End -->
+    <h1>Category:{{ $selectedCategory['name'] }}</h1>
 
     <!-- Why Choose Us Section Start -->
 <div class="why-choose-us">
@@ -352,6 +353,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const bootstrap = {
         service: @json($selectedService ?? null),
+        category: @json($selectedCategory ?? null),
         serviceId: @json($serviceId ?? null),
         serviceProviderId: @json($serviceProviderId ?? null),
     };

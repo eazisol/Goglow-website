@@ -13,6 +13,7 @@ class BookAppointmentController extends Controller
         $serviceProviderId = $request->query('service_provider_id');
 
         $selectedService = null;
+        $selectedCategory = null;
 
         if ($serviceId) {
             try {
@@ -24,15 +25,18 @@ class BookAppointmentController extends Controller
                     $json = $response->json();
                     // API returns keys: service, category, agents
                     $selectedService = $json['service'] ?? null;
+                    $selectedCategory = $json['category'] ?? null;
                 }
             } catch (\Throwable $e) {
                 // Silently ignore and render page without prefilled service
                 $selectedService = null;
+                $selectedCategory = null;
             }
         }
 
         return view('bookAppointment.index', [
             'selectedService' => $selectedService,
+            'selectedCategory' => $selectedCategory,
             'serviceProviderId' => $serviceProviderId,
             'serviceId' => $serviceId,
         ]);
