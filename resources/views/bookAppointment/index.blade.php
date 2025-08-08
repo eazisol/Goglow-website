@@ -155,7 +155,9 @@
                     <!-- Appointment image Start -->
                     <div class="appointment-image">
                         <figure class="image-anime reveal">
-                            <img src="images/appointment-image.jpg" alt="">
+                                            <img src="{{ (isset($selectedService['images']) && count($selectedService['images']) > 0) ? $selectedService['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
+                                            alt="{{ $selectedService['service_name'] }}"
+                                            onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                         </figure>
                         
                         <!-- Appointment Info List Start -->
@@ -178,7 +180,8 @@
                         <form id="appointmentForm" action="#" method="POST" data-toggle="validator">
                             <div class="row">
                                 <!-- Service Details Section -->
-                                {{-- <div class="col-md-12 mb-4">
+                                @if(!empty($selectedService))
+                                <div class="col-md-12 mb-4">
                                     <div class="service-details-box">
                                         <div class="form-group mb-3">
                                             <label for="service_name">Service Name</label>
@@ -186,10 +189,11 @@
                                         </div>
                                         <div class="form-group mb-3">
                                             <label for="service_price">Service Price</label>
-                                            <input type="text" name="service_price" class="form-control" id="service_price" value="${{ $selectedService['service_price'] ?? '0' }}" readonly>
+                                            <input type="text" name="service_price" class="form-control" id="service_price" value="${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? '0') }}" readonly>
                                         </div>
                                     </div>
-                                </div> --}}
+                                </div>
+                                @endif
 
                                 <!-- Personal Information -->                                
                                 <div class="form-group col-md-6 mb-4">
@@ -346,6 +350,11 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const bootstrap = {
+        service: @json($selectedService ?? null),
+        serviceId: @json($serviceId ?? null),
+        serviceProviderId: @json($serviceProviderId ?? null),
+    };
     const dayButtons = document.querySelectorAll('.day-btn');
     const selectedDayInput = document.getElementById('selected_day');
     const form = document.getElementById('appointmentForm');
@@ -376,17 +385,16 @@ document.addEventListener('DOMContentLoaded', function () {
         // Combine name (just in case you want it)
         const fullName = fname + ' ' + lname;
 
-        // Get params from URL
+        // Get params from URL (fallback) and from server (preferred)
         const urlParams = new URLSearchParams(window.location.search);
-        const serviceId = urlParams.get('serviceId');
-        const serviceProviderId = urlParams.get('service_provider_id');
+        const serviceId = bootstrap.serviceId || urlParams.get('serviceId');
+        const serviceProviderId = bootstrap.serviceProviderId || urlParams.get('service_provider_id');
 
-        // Optional: Replace with actual values if needed
-        const userId = serviceId; // REPLACE with actual logic if dynamic
-        const bookingTime = new Date().toISOString();  // Example: "2025-08-01T15:00:00Z"
-        const serviceName = "Full Arms Wax";            // You may want to fetch this dynamically
-        const servicePrice = 729;
-        const durationMinutes = 30;
+        const bookingTime = new Date().toISOString();
+        const serviceName = bootstrap.service?.service_name || 'Selected Service';
+        const servicePrice = (bootstrap.service?.discounted_price ?? bootstrap.service?.service_price ?? 0);
+        const durationMinutes = (bootstrap.service?.duration_minutes ?? 0);
+        const userId = bootstrap.service?.user_id || serviceId; // TODO: replace with authenticated user id when available
 
         if (!serviceId || !serviceProviderId) {
             alert("Missing 'serviceId' or 'service_provider_id' in URL.");

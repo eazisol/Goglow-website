@@ -60,7 +60,7 @@ Route::get('/faqs', function () {return view('FAQs.index');});
 Route::get('/404', function () {return view('errors.404');});
 
 // book appointment
-Route::get('/book-appointment', function () {return view('bookAppointment.index');});
+Route::get('/book-appointment', [\App\Http\Controllers\BookAppointmentController::class, 'show']);
 
 // i am a beauty professional
 Route::get('/beauty-professional', function () {return view('iamProfessional.index');});

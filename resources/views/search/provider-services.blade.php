@@ -113,8 +113,8 @@
                                         from €{{ $service['service_price'] ?? '0' }}
                                     </div>
                                     <div class="choose-button">
-                                        <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" 
-                                    class="choose-btn">Choose</a>
+                                        <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . ($provider['id'] ?? '')) }}" 
+                                        class="choose-btn">Choose</a>
                                     </div>
 
                                 </div>
