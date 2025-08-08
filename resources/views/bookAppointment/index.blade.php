@@ -128,6 +128,61 @@
             grid-template-columns: repeat(2, 1fr);
         }
     }
+
+    /* Agents horizontal avatars */
+    .agent-avatars {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 10px 0;
+        margin-top: 6px;
+    }
+    .agent-avatar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        min-width: 84px;
+        user-select: none;
+    }
+    .agent-avatar .avatar-img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: 3px solid #e9ecef;
+        object-fit: cover;
+        transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .agent-avatar.active .avatar-img {
+        border-color: var(--theme-color);
+        transform: translateY(-2px);
+    }
+    .agent-avatar .agent-name {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #333;
+        text-align: center;
+        max-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* Readonly schedule tiles styled like booking day buttons */
+    #agentScheduleGrid .day-btn {
+        cursor: default;
+    }
+    #agentScheduleGrid .day-btn.disabled {
+        opacity: 0.5;
+    }
+    #agentScheduleGrid .day-btn .time-text {
+        display: block;
+        font-weight: 400;
+        font-size: 12px;
+        color: #666;
+        margin-top: 6px;
+    }
 </style>
 @endsection
 
@@ -195,6 +250,24 @@
                                 </div>
                                 @endif
 
+                                @if(!empty($agents))
+                                <div class="col-md-12 mb-4">
+                                    <label class="form-label">Select Agent</label>
+                                    <div id="agentList" class="agent-avatars">
+                                        @foreach($agents as $agent)
+                                            <div class="agent-avatar" data-agent='@json($agent)'>
+                                                <img class="avatar-img" src="{{ asset('images/istockphoto-1300845620-612x612.jpg') }}" alt="{{ $agent['name'] ?? 'Agent' }}">
+                                                <div class="agent-name">{{ $agent['name'] ?? 'Agent' }}</div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div id="agentSchedule" class="mt-3" style="display:none;">
+                                        <h5>Schedule</h5>
+                                        <div id="agentScheduleGrid" class="booking-days-buttons"></div>
+                                    </div>
+                                </div>
+                                @endif
+
                                 <!-- Personal Information -->                                
                                 <div class="form-group col-md-6 mb-4">
                                     <input type="text" name="fname" class="form-control" id="fname" placeholder="First Name" required>
@@ -213,36 +286,6 @@
     
                                 <div class="form-group col-md-12 mb-4">
                                     <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-
-                                <!-- Booking Days Section -->
-                                <div class="col-md-12 mb-4">
-                                    <label class="form-label">Select Booking Day</label>
-                                    <div class="booking-days-buttons">
-                                        <button type="button" class="day-btn" data-day="monday">
-                                            <span>MON</span>
-                                        </button>
-                                        <button type="button" class="day-btn" data-day="tuesday">
-                                            <span>TUE</span>
-                                        </button>
-                                        <button type="button" class="day-btn" data-day="wednesday">
-                                            <span>WED</span>
-                                        </button>
-                                        <button type="button" class="day-btn" data-day="thursday">
-                                            <span>THU</span>
-                                        </button>
-                                        <button type="button" class="day-btn" data-day="friday">
-                                            <span>FRI</span>
-                                        </button>
-                                        <button type="button" class="day-btn" data-day="saturday">
-                                            <span>SAT</span>
-                                        </button>
-                                        <button type="button" class="day-btn" data-day="sunday">
-                                            <span>SUN</span>
-                                        </button>
-                                    </div>
-                                    <input type="hidden" name="selected_day" id="selected_day" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
 
@@ -265,7 +308,7 @@
         </div>
     </div>
     <!-- Book Appointment Section End -->
-    <h1>Category:{{ $selectedCategory['name'] }}</h1>
+    {{-- <h1>Category:{{ $selectedCategory['name'] }}</h1> --}}
 
     <!-- Why Choose Us Section Start -->
 <div class="why-choose-us">
@@ -354,6 +397,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const bootstrap = {
         service: @json($selectedService ?? null),
         category: @json($selectedCategory ?? null),
+        agents: @json($agents ?? []),
         serviceId: @json($serviceId ?? null),
         serviceProviderId: @json($serviceProviderId ?? null),
     };
@@ -369,6 +413,62 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedDayInput.value = this.dataset.day;
         });
     });
+
+    // Agent selection and schedule rendering
+    const agentList = document.getElementById('agentList');
+    const agentSchedule = document.getElementById('agentSchedule');
+    const agentScheduleGrid = document.getElementById('agentScheduleGrid');
+
+    function secondsToHHMM(seconds) {
+        const date = new Date(seconds * 1000);
+        const hh = String(date.getUTCHours()).padStart(2, '0');
+        const mm = String(date.getUTCMinutes()).padStart(2, '0');
+        return `${hh}:${mm}`;
+    }
+
+    function renderTimingTiles(timing) {
+        const days = [
+            { key: 'Mon', label: 'MON' },
+            { key: 'Tue', label: 'TUE' },
+            { key: 'Wed', label: 'WED' },
+            { key: 'Thu', label: 'THU' },
+            { key: 'Fri', label: 'FRI' },
+            { key: 'Sat', label: 'SAT' },
+            { key: 'Sun', label: 'SUN' },
+        ];
+        return days.map(({ key, label }) => {
+            const range = timing?.[key] || [];
+            let inner = `<span>${label}</span>`;
+            let disabledClass = '';
+            if (Array.isArray(range) && range.length === 2) {
+                const [start, end] = range;
+                if (typeof start === 'number' && typeof end === 'number' && start !== end) {
+                    inner += `<span class="time-text">${secondsToHHMM(start)} - ${secondsToHHMM(end)}</span>`;
+                } else {
+                    disabledClass = ' disabled';
+                    inner += `<span class="time-text">Closed</span>`;
+                }
+            } else {
+                disabledClass = ' disabled';
+                inner += `<span class="time-text">Closed</span>`;
+            }
+            return `<button type="button" class="day-btn${disabledClass}" disabled>${inner}</button>`;
+        }).join('');
+    }
+
+    if (agentList) {
+        agentList.addEventListener('click', (e) => {
+            const avatar = e.target.closest('.agent-avatar');
+            if (!avatar) return;
+            // Highlight selection
+            [...agentList.querySelectorAll('.agent-avatar')].forEach(el => el.classList.remove('active'));
+            avatar.classList.add('active');
+
+            const agent = JSON.parse(avatar.dataset.agent);
+            agentSchedule.style.display = '';
+            agentScheduleGrid.innerHTML = renderTimingTiles(agent.timing || {});
+        });
+    }
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
