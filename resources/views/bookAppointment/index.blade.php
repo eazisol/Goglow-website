@@ -264,6 +264,18 @@
                                     <div id="agentSchedule" class="mt-3" style="display:none;">
                                         <h5>Schedule</h5>
                                         <div id="agentScheduleGrid" class="booking-days-buttons"></div>
+                                        <input type="hidden" name="selected_day" id="selected_day" required>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Select Date</label>
+                                                <input type="date" id="selected_date" name="selected_date" class="form-control" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Select Time</label>
+                                                <input type="time" id="selected_time" name="selected_time" class="form-control" step="60" required>
+                                            </div>
+                                        </div>
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 @endif
@@ -403,6 +415,8 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     const dayButtons = document.querySelectorAll('.day-btn');
     const selectedDayInput = document.getElementById('selected_day');
+    const selectedDateInput = document.getElementById('selected_date');
+    const selectedTimeInput = document.getElementById('selected_time');
     const form = document.getElementById('appointmentForm');
 
     // Handle day button selection
@@ -418,6 +432,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const agentList = document.getElementById('agentList');
     const agentSchedule = document.getElementById('agentSchedule');
     const agentScheduleGrid = document.getElementById('agentScheduleGrid');
+    let chosenAgent = null;
 
     function secondsToHHMM(seconds) {
         const date = new Date(seconds * 1000);
@@ -467,14 +482,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const agent = JSON.parse(avatar.dataset.agent);
             agentSchedule.style.display = '';
             agentScheduleGrid.innerHTML = renderTimingTiles(agent.timing || {});
+            chosenAgent = agent;
         });
     }
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        if (!selectedDayInput.value) {
-            alert('Please select a booking day');
+        if (!chosenAgent) {
+            alert('Please select an agent');
+            return;
+        }
+        if (!selectedDateInput?.value || !selectedTimeInput?.value) {
+            alert('Please select date and time');
             return;
         }
 
@@ -492,7 +512,35 @@ document.addEventListener('DOMContentLoaded', function () {
         const serviceId = bootstrap.serviceId || urlParams.get('serviceId');
         const serviceProviderId = bootstrap.serviceProviderId || urlParams.get('service_provider_id');
 
-        const bookingTime = new Date().toISOString();
+        // Build booking date object from selected date and time
+        const [year, month, day] = selectedDateInput.value.split('-').map(Number);
+        const [hour, minute] = selectedTimeInput.value.split(':').map(Number);
+        const localDate = new Date(year, (month - 1), day, hour, minute, 0, 0);
+
+        // Format as: July 17, 2025 at 6:24:00 PM UTC+5
+        function formatForApi(d) {
+            const monthNames = [
+                'January','February','March','April','May','June','July','August','September','October','November','December'
+            ];
+            const months = monthNames[d.getMonth()];
+            const dayNum = d.getDate();
+            const yearNum = d.getFullYear();
+            let hours = d.getHours();
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            const seconds = '00';
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12; if (hours === 0) hours = 12;
+
+            const tzOffsetMin = -d.getTimezoneOffset(); // e.g., +300 for UTC+5
+            const sign = tzOffsetMin >= 0 ? '+' : '-';
+            const absMin = Math.abs(tzOffsetMin);
+            const tzHours = Math.floor(absMin / 60);
+            const tzStr = `UTC${sign}${tzHours}`;
+
+            return `${months} ${dayNum}, ${yearNum} at ${hours}:${minutes}:${seconds} ${ampm} ${tzStr}`;
+        }
+
+        const bookingTime = formatForApi(localDate);
         const serviceName = bootstrap.service?.service_name || 'Selected Service';
         const servicePrice = (bootstrap.service?.discounted_price ?? bootstrap.service?.service_price ?? 0);
         const durationMinutes = (bootstrap.service?.duration_minutes ?? 0);
@@ -516,7 +564,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     discountedPrice: servicePrice,
                     servicePrice: servicePrice,
                     isCompleted: false,
-                    startTime: bookingTime
+                    startTime: bookingTime,
+                    agentId: chosenAgent?.id || null,
                 }
             ]
         };
