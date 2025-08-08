@@ -17,6 +17,8 @@
         </div>
     </div>
     <!-- Page Header End -->
+
+
 <!-- Provider Services Section Start -->
 <div class="provider-services" style="margin: 50px 0 50px 0;">
     <div class="container">
@@ -52,84 +54,129 @@
             </div>
         </div>
 
+        
+                            <div class="section-title">
+                                <h1 class="text-anime-style-2" data-cursor="-opaque">Book online for an appointment at<span> {{$provider['companyName']}}  </span></h1>
+                                <h3 class="wow fadeInUp">24/7 - Free - Payment on site - Immediate confirmation</h3>
+                            </div>
+@php
+    // Group services by category and sort by category name
+    $groupedServices = collect($services)
+        ->groupBy(function ($service) {
+            return $service['category']['name'] ?? 'Uncategorized';
+        })
+        ->sortKeys();
+@endphp
 
-<div class="row">
-    <div class="col-lg-8">
-        <div class="custom-service-list">
-
-            @if(count($services) > 0)
-                @foreach($services as $service)
-                    <div class="service-row d-flex justify-content-between align-items-start flex-wrap">
-                        
-                        <!-- Left -->
-                        <div class="service-info">
-                            <div class="section-title" style="margin-bottom:initial;">
-                                <h3 class="wow fadeInUp">{{ $service['category']['name'] }}</h3>
-                            </div>
-                            
-                        
-                            <div class="service-image">
-                                <img src="{{ (isset($service['images']) && count($service['images']) > 0) ? $service['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
-                                     alt="{{ $service['service_name'] }}" 
-                                     class="img-fluid rounded-circle"
-                                     onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
-                            </div>
-                            <div class="service-list-details">
-                                <div class="service-name fw-semibold">
-                                {{ $service['service_name'] }}
-                            </div>
-                            @if(!empty($service['service_details']))
-                                <div class="service-desc text-muted">
-                                    {{ $service['service_details'] }}
+    <div class="row">
+        <div class="col-lg-8">
+                @if(count($services) > 0)
+                @foreach($groupedServices as $categoryName => $servicesInCategory)
+                    <div class="section-title" style="margin-bottom:initial; margin-top: 20px;">
+                        {{-- Display category name --}}
+                        <h3 class="wow" style="font-size:30px; font-weight:600;">{{ $categoryName ?: 'Uncategorized' }}</h3>
+                    </div>
+                    <div class="custom-service-list">
+                        @foreach($servicesInCategory as $service)
+                            <div class="service-row d-flex justify-content-between align-items-start flex-wrap">
+                                
+                                <!-- Left -->
+                                <div class="service-info">
+                                    {{-- <div class="section-title" style="margin-bottom:initial;">
+                                        <h3 class="wow fadeInUp">{{ $service['category']['name'] }}</h3>
+                                    </div> --}}
+                                    
+                                
+                                    <div class="service-image">
+                                        <img src="{{ (isset($service['images']) && count($service['images']) > 0) ? $service['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
+                                            alt="{{ $service['service_name'] }}" 
+                                            class="img-fluid rounded-circle"
+                                            onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                                    </div>
+                                    <div class="service-list-details">
+                                        <div class="service-name fw-semibold">
+                                        {{ $service['service_name'] }}
+                                    </div>
+                                    @if(!empty($service['service_details']))
+                                        <div class="service-desc text-muted">
+                                            {{ $service['service_details'] }}
+                                        </div>
+                                    @endif
+                                    </div>
                                 </div>
+
+                                <!-- Right -->
+                                <div class="service-meta text-end">
+                                    <div class="text-muted small mb-1">
+                                        {{ $service['duration_minutes'] ?? 0 }} min 
+                                        &bull; 
+                                        from €{{ $service['service_price'] ?? '0' }}
+                                    </div>
+                                    <div class="choose-button">
+                                        <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" 
+                                    class="choose-btn">Choose</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endforeach 
+                @else
+                    <div class="custom-service-list">
+                    <div class="text-center py-4">
+                        <h5>No services available from this provider.</h5>
+                    </div>
+                    </div>
+                @endif
+
+                
+        </div>
+<div class="col-lg-4">
+    <div class="section-title" style="margin-bottom:initial; margin-top: 20px;">
+        <h3 class="wow" style="font-size:30px; font-weight:600;">Hours of operation</h3>
+    </div>
+    <div class="custom-service-list" style="padding: 30px;">
+        <div class="provider-details" style="color: #00000085;font-style: normal;font-size: 20px;">
+            @if(isset($provider['timing']))
+                @php
+                    $dayNames = [
+                        'Mon' => 'Monday',
+                        'Tue' => 'Tuesday',
+                        'Wed' => 'Wednesday',
+                        'Thu' => 'Thursday',
+                        'Fri' => 'Friday',
+                        'Sat' => 'Saturday',
+                        'Sun' => 'Sunday',
+                    ];
+                @endphp
+
+                @foreach($dayNames as $shortDay => $fullDay)
+                    <div class="d-flex justify-content-between py-4 {{ !$loop->last ? 'border-bottom' : '' }}">
+                        <span>{{ $fullDay }}</span>
+
+                        @if(isset($provider['timing'][$shortDay]) && count($provider['timing'][$shortDay]) === 2)
+                        @php
+                            $openTime  = \Carbon\Carbon::createFromTimestamp($provider['timing'][$shortDay][0], 'Europe/Paris')->format('H:i');
+                            $closeTime = \Carbon\Carbon::createFromTimestamp($provider['timing'][$shortDay][1], 'Europe/Paris')->format('H:i');
+                        @endphp
+
+                            @if($openTime === $closeTime || $openTime > $closeTime)
+                                <span>Farm</span>
+                            @else
+                                <span>{{ $openTime }} - {{ $closeTime }}</span>
                             @endif
-                            </div>
-                        </div>
-
-                        <!-- Right -->
-                        <div class="service-meta text-end">
-                            <div class="text-muted small mb-1">
-                                {{ $service['duration_minutes'] ?? 0 }} min 
-                                &bull; 
-                                from €{{ $service['service_price'] ?? '0' }}
-                            </div>
-                            <div class="choose-button">
-                                <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . $provider['id']) }}" 
-                               class="choose-btn">Choose</a>
-                            </div>
-
-                        </div>
+                        @else
+                            <span>Farm</span>
+                        @endif
                     </div>
                 @endforeach
-            @else
-                <div class="text-center py-4">
-                    <h5>No services available from this provider.</h5>
-                </div>
             @endif
-
-        </div>
-    </div>
-        <div class="col-lg-4">
-            
-            
-        <div class="custom-service-list">
-                                    <div class="provider-details mt-3">
-                                        @if(isset($provider['timing']))
-                                            <div class="timing d-flex gap-2 flex-wrap">
-                                                @foreach($provider['timing'] as $day => $times)
-                                                    @php
-                                                        $date = \Carbon\Carbon::parse($day); // Make sure $day is a valid date string
-                                                    @endphp
-                                                    <div class="date-box">
-                                                        {{ $date->format('D.d') }} <!-- e.g., Fri.08 -->
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @endif
-                                    </div>
         </div>
     </div>
 </div>
+
+    </div>
 
 
         

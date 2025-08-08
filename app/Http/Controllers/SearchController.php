@@ -63,4 +63,7 @@ class SearchController extends Controller
             'location' => $location
         ]);
     }
+    public function showProviderServices($providerId)
+    {
+    }
 }
