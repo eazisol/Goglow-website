@@ -178,6 +178,7 @@
     overflow: hidden;
     transition: transform 0.3s ease;
     height: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .provider-card:hover {

@@ -45,6 +45,9 @@
                         <div class="terms-text">
                             {{-- <h2>GoGlow - Conditions Générales d'Utilisation</h2> --}}
                             <p class="text-end">Dernière mise à jour : 24 juillet 2025</p>
+                                                    <div class="section-title">
+                            <h3 class="wow">Term & Conditions</h3>
+                        </div>
                             
                             <h3>1. Introduction</h3>
                             <p>Les présentes Conditions Générales d'Utilisation régissent l'utilisation de l'application mobile GoGlow, exploitée par GoGlow, reliant les clients (Glowees) et les prestataires (Glowers) pour la réservation et la gestion de services de beauté. L'application est destinée aux utilisateurs en France, à Paris et dans l'UE et respecte le RGPD et la législation française sous la supervision de la CNIL.</p>

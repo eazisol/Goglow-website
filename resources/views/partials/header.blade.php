@@ -16,7 +16,7 @@
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/home-video') }}">Home - Video</a></li>
                                     </ul> --}}
                                 </li>   
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/book-appointment') }}">Book Service</a></li>                             
+                                <li class="nav-item"><a class="nav-link" href="{{ url('/search') }}">Book Service</a></li>                             
                                 <li class="nav-item"><a class="nav-link" href="{{ url('/about') }}">About Us</a>
                                 
                                 {{-- <li class="nav-item"><a class="nav-link" href="{{ url('/blogs') }}">Blog</a></li> --}}

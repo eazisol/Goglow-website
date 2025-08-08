@@ -202,6 +202,7 @@
     border-radius: 10px;
     padding: 20px;
     color: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .provider-image img {
@@ -265,7 +266,7 @@
     background: #fff;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .custom-service-list .service-row {

@@ -4,7 +4,7 @@ return [
     'primary_color'         => '#F18A00',
     'secondary_color'       => '#F7F3ED',
     'accent_secondary'      => '#f18a00',
-    'bg_color'              => '#fb900052',
+    'bg_color'              => '#ffffffff',
     'text_color'            => '#f18a00',
     'accent_color'          => '#E50050',
     'white_color'           => '#FFFFFF',

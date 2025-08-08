@@ -129,6 +129,48 @@
         }
     }
 
+    /* Service summary card (left side) */
+    .service-summary-card {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 20px;
+    }
+    .service-summary-card .card-cover img {
+        display: block;
+        width: 100%;
+        height: 220px; /* fixed so it doesn't stretch with form */
+        object-fit: cover;
+    }
+    .service-summary-card .card-body {
+        padding: 16px;
+    }
+    .service-summary-title {
+        margin: 0 0 6px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: #1c1c1c;
+    }
+    .service-summary-price {
+        margin: 0 0 10px 0;
+        font-weight: 600;
+        color: #1c1c1c;
+    }
+    .service-summary-price .old-price {
+        color: #999;
+        text-decoration: line-through;
+        margin-left: 8px;
+        font-weight: 400;
+    }
+    .service-summary-desc {
+        margin: 0;
+        color: #555;
+        line-height: 1.5;
+    }
+
     /* Agents horizontal avatars */
     .agent-avatars {
         display: flex;
@@ -207,26 +249,27 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
-                    <!-- Appointment image Start -->
-                    <div class="appointment-image">
-                        <figure class="image-anime reveal">
-                                            <img src="{{ (isset($selectedService['images']) && count($selectedService['images']) > 0) ? $selectedService['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
-                                            alt="{{ $selectedService['service_name'] }}"
-                                            onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
-                        </figure>
-                        
-                        <!-- Appointment Info List Start -->
-                        {{-- <div class="appointment-timing-box">
-                            <h3>Opening Hours:</h3>
-                            <ul>
-                                <li>Mon - Fri ( 09:00 - 21:00 )</li>
-                                <li>Saturday ( 09:00 - 14:00 )</li>
-                                <li>Sunday ( Closed )</li>
-                            </ul>
-                        </div> --}}
-                        <!-- Appointment Info List End -->
+                    <!-- Service summary card Start -->
+                    <div class="service-summary-card">
+                        <div class="card-cover">
+                            <img src="{{ (isset($selectedService['images']) && count($selectedService['images']) > 0) ? $selectedService['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}"
+                                 alt="{{ $selectedService['service_name'] ?? 'Service' }}"
+                                 onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="service-summary-title">{{ $selectedService['service_name'] ?? 'Selected Service' }}</h4>
+                            <p class="service-summary-price">
+                                ${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }}
+                                @if(isset($selectedService['discounted_price']) && isset($selectedService['service_price']) && $selectedService['discounted_price'] < $selectedService['service_price'])
+                                    <span class="old-price">${{ $selectedService['service_price'] }}</span>
+                                @endif
+                            </p>
+                            @if(!empty($selectedService['service_details']))
+                                <p class="service-summary-desc">{{ $selectedService['service_details'] }}</p>
+                            @endif
+                        </div>
                     </div>
-                    <!-- Appointment image End -->
+                    <!-- Service summary card End -->
                 </div>
 
                 <div class="col-lg-6">
