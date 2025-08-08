@@ -3,6 +3,7 @@
 @section('title', 'Provider Services')
 
 @section('content')
+
     <!-- Page Header Start -->
     <div class="page-header bg-section">
         <div class="container">
@@ -62,6 +63,11 @@
                         
                         <!-- Left -->
                         <div class="service-info">
+                            <div class="section-title" style="margin-bottom:initial;">
+                                <h3 class="wow fadeInUp">{{ $service['category']['name'] }}</h3>
+                            </div>
+                            
+                        
                             <div class="service-image">
                                 <img src="{{ (isset($service['images']) && count($service['images']) > 0) ? $service['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
                                      alt="{{ $service['service_name'] }}" 
@@ -104,6 +110,8 @@
         </div>
     </div>
         <div class="col-lg-4">
+            
+            
         <div class="custom-service-list">
                                     <div class="provider-details mt-3">
                                         @if(isset($provider['timing']))
