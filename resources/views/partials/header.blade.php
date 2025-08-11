@@ -1,10 +1,11 @@
-<header class="main-header bg-section">
+@php($isHome = request()->is('/'))
+<header class="main-header {{ $isHome ? 'bg-section header--transparent' : 'header--solid' }}">
 		<div class="header-sticky">
 			<nav class="navbar navbar-expand-lg">
 				<div class="container-fluid">
 					<a class="navbar-brand" href="{{ url('/') }}">
 						{{-- <img src="images/goglowlogo.png" alt="Logo" style="width: 60px;"> --}}
-                        <h1 class="text-anime-style-2" data-cursor="-opaque" style="color: white;">Go<span>Glow</span></h1>
+						<h1 class="text-anime-style-2 header-logo {{ $isHome ? 'text-white' : 'text-dark' }}" data-cursor="-opaque">Go<span>Glow</span></h1>
 					</a>
 					<div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
@@ -16,8 +17,8 @@
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/home-video') }}">Home - Video</a></li>
                                     </ul> --}}
                                 </li>   
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/search') }}">Book Service</a></li>                             
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/about') }}">About Us</a>
+								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/search') }}">Book Service</a></li>                             
+								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/about') }}">About Us</a>
                                 
                                 {{-- <li class="nav-item"><a class="nav-link" href="{{ url('/blogs') }}">Blog</a></li> --}}
                                 {{-- <li class="nav-item submenu"><a class="nav-link" href="#">Pages</a>
@@ -36,12 +37,12 @@
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/404') }}">404</a></li>
                                     </ul>
                                 </li> --}}
-                                <li class="nav-item"><a class="nav-link" href="{{ url('/contact-us') }}">Contact Us</a></li>
-                                <li class="nav-item highlighted-menu"><a class="nav-link" href="{{ url('/book-appointment') }}">Book Appointment</a></li>
+								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/contact-us') }}">Contact Us</a></li>
+								<li class="nav-item highlighted-menu"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/book-appointment') }}">Book Appointment</a></li>
                             </ul>
                         </div>
                         <div class="header-btn">
-                            <a href="{{ url('/beauty-professional') }}" class="btn-default border-btn">I'm Professional</a>
+							<a href="{{ url('/beauty-professional') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">I'm Professional</a>
                             {{-- <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">book appointment</a>             --}}
                         </div>
 					</div>

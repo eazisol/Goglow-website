@@ -85,6 +85,31 @@
     margin-bottom: 30px;
     color: #ccc;
 }
+
+/* Header color modes */
+.header--solid {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.header--solid .nav-link,
+.header--solid .header-logo {
+  color: #1c1c1c !important;
+}
+.header--solid .header-btn .btn-default {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+.header--solid .header-btn .btn-default:hover {
+  background: #333 !important;
+  border-color: #333 !important;
+}
+.header--transparent .nav-link,
+.header--transparent .header-logo {
+  color: #fff !important;
+}
+.text-white { color: #fff !important; }
+.text-dark { color: #1c1c1c !important; }
 </style>
 
     <div class="preloader">
