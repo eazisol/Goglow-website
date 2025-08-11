@@ -279,18 +279,8 @@
                             <div class="row">
                                 <!-- Service Details Section -->
                                 @if(!empty($selectedService))
-                                <div class="col-md-12 mb-4">
-                                    <div class="service-details-box">
-                                        <div class="form-group mb-3">
-                                            <label for="service_name">Service Name</label>
-                                            <input type="text" name="service_name" class="form-control" id="service_name" value="{{ $selectedService['service_name'] ?? '' }}" readonly>
-                                        </div>
-                                        <div class="form-group mb-3">
-                                            <label for="service_price">Service Price</label>
-                                            <input type="text" name="service_price" class="form-control" id="service_price" value="${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? '0') }}" readonly>
-                                        </div>
-                                    </div>
-                                </div>
+                                    <input type="hidden" name="service_name" id="service_name" value="{{ $selectedService['service_name'] ?? '' }}">
+                                    <input type="hidden" name="service_price" id="service_price" value="{{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? '0') }}">
                                 @endif
 
                                 @if(!empty($agents))
