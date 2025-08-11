@@ -283,16 +283,17 @@ body{
 
 .btn-default.border-btn{
 	background: transparent;
-	border: 1px solid #F18A00;
+	border: 1px solid #ffffff;
 	padding: 17px 30px 17px 30px;
 }
 
 .btn-default.border-btn:hover{
-	border-color: var(--accent-color);
+	color: #000000;
+	border-color: white;
 }
 
 .btn-default.border-btn::after{
-	background-color: var(--accent-color);
+	background-color: white;
 }
 
 .readmore-btn{
@@ -531,7 +532,7 @@ header.main-header .header-sticky{
 	top: 0;
 	width: 100%;
 	max-width: 1480px;
-	border-bottom: 1px solid var(--dark-divider-color);
+	/* border-bottom: 1px solid var(--dark-divider-color); */
 	margin: 0 auto;
 	z-index: 100;
 }
@@ -591,7 +592,7 @@ header.main-header .container-fluid{
 	font-weight: 600;
 	line-height: 1.2em;
 	padding: 14px 20px !important;
-	color: #F18A00;
+	color: #ffffff;
 	text-transform: capitalize;
 	transition: all 0.3s ease-in-out;
 }
@@ -606,7 +607,7 @@ header.main-header .container-fluid{
 
 .main-menu ul li a:hover,
 .main-menu ul li a:focus{
-	color: #F18A00;
+	color: #989898;
 }
 
 .main-menu ul ul{

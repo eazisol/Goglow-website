@@ -3,8 +3,8 @@
 			<nav class="navbar navbar-expand-lg">
 				<div class="container-fluid">
 					<a class="navbar-brand" href="{{ url('/') }}">
-						<img src="images/goglowlogo.png" alt="Logo" style="width: 60px;">
-                        {{-- <h1 class="text-anime-style-2" data-cursor="-opaque" style="color: white;">Go<span>Glow</span></h1> --}}
+						{{-- <img src="images/goglowlogo.png" alt="Logo" style="width: 60px;"> --}}
+                        <h1 class="text-anime-style-2" data-cursor="-opaque" style="color: white;">Go<span>Glow</span></h1>
 					</a>
 					<div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
@@ -41,7 +41,7 @@
                             </ul>
                         </div>
                         <div class="header-btn">
-                            <a href="{{ url('/beauty-professional') }}" class="btn-default border-btn" style="color: #F18A00;">I'm Professional</a>
+                            <a href="{{ url('/beauty-professional') }}" class="btn-default border-btn">I'm Professional</a>
                             {{-- <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">book appointment</a>             --}}
                         </div>
 					</div>
