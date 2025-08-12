@@ -371,6 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
         agents: @json($agents ?? []),
         serviceId: @json($serviceId ?? null),
         serviceProviderId: @json($serviceProviderId ?? null),
+        userId: @json($userId ?? null),
     };
     const dayButtons = document.querySelectorAll('.day-btn');
     const selectedDayInput = document.getElementById('selected_day');
@@ -503,7 +504,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const serviceName = bootstrap.service?.service_name || 'Selected Service';
         const servicePrice = (bootstrap.service?.discounted_price ?? bootstrap.service?.service_price ?? 0);
         const durationMinutes = (bootstrap.service?.duration_minutes ?? 0);
-        const userId = bootstrap.service?.user_id || serviceId; // TODO: replace with authenticated user id when available
+        const userId = bootstrap.userId;
+        if (!userId) {
+            alert('You must be logged in to book an appointment.');
+            window.location.href = '{{ route('login') }}?redirect=' + encodeURIComponent(window.location.href);
+            return;
+        }
 
         if (!serviceId || !serviceProviderId) {
             alert("Missing 'serviceId' or 'service_provider_id' in URL.");

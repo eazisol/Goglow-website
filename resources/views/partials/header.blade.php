@@ -42,7 +42,15 @@
                             </ul>
                         </div>
                         <div class="header-btn">
-                            <a href="{{ url('/signup') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">Sign up</a>
+                            @if(session('firebase_uid'))
+                                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn-default {{ $isHome ? 'border-btn' : '' }}">Logout</button>
+                                </form>
+                            @else
+                                <a href="{{ url('/login') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">Login</a>
+                                <a href="{{ url('/signup') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">Sign up</a>
+                            @endif
                             <a href="{{ url('/beauty-professional') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">I'm Professional</a>
                             {{-- <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">book appointment</a>             --}}
                         </div>

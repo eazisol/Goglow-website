@@ -11,6 +11,7 @@ class BookAppointmentController extends Controller
     {
         $serviceId = $request->query('serviceId');
         $serviceProviderId = $request->query('service_provider_id');
+        $firebaseUid = session('firebase_uid');
 
         $selectedService = null;
         $selectedCategory = null;
@@ -43,6 +44,7 @@ class BookAppointmentController extends Controller
             'agents' => $agents,
             'serviceProviderId' => $serviceProviderId,
             'serviceId' => $serviceId,
+            'userId' => $firebaseUid,
         ]);
     }
 }
