@@ -55,10 +55,10 @@
         </div>
 
         
-                            <div class="section-title">
-                                {{-- <h1 class="text-anime-style-2" data-cursor="-opaque">Book online for an appointment at<span> {{$provider['companyName']}}  </span></h1> --}}
+                            {{-- <div class="section-title">
+                                <h1 class="text-anime-style-2" data-cursor="-opaque">Book online for an appointment at<span> {{$provider['companyName']}}  </span></h1>
                                 <h3 class="wow fadeInUp">24/7 - Free - Payment on site - Immediate confirmation</h3>
-                            </div>
+                            </div> --}}
 @php
     // Group services by category and sort by category name
     $groupedServices = collect($services)

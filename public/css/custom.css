@@ -441,7 +441,7 @@ body{
 	font-family: var(--accent-font);
 	font-size: 18px;
     font-weight: 400;
-	font-style: italic;
+	/* font-style: italic; */
     color: var(--primary-color);
 	padding-left: 15px;
     margin-bottom: 10px;
