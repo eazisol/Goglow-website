@@ -42,7 +42,8 @@
                             </ul>
                         </div>
                         <div class="header-btn">
-							<a href="{{ url('/beauty-professional') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">I'm Professional</a>
+                            <a href="{{ url('/signup') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">Sign up</a>
+                            <a href="{{ url('/beauty-professional') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">I'm Professional</a>
                             {{-- <a href="{{ url('/book-appointment') }}" class="btn-default btn-highlighted">book appointment</a>             --}}
                         </div>
 					</div>

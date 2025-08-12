@@ -70,3 +70,7 @@ Route::get('/terms_condition', function () {return view('termsConditions.index')
 
 // privacy policy
 Route::get('/privacy_policy', function () {return view('privacyPolicy.index');});
+
+// auth - signup
+Route::get('/signup', [\App\Http\Controllers\AuthController::class, 'showRegisterForm'])->name('signup');
+Route::post('/signup', [\App\Http\Controllers\AuthController::class, 'register'])->name('signup.store');
