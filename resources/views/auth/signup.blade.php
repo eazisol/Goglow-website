@@ -22,7 +22,7 @@
     .alert { border-radius: 8px; }
     .input-group-text { background: #fff; }
     .password-toggle { cursor: pointer; }
-    .btn-default { width: 100%; }
+    /* .btn-default { width: 100%; } */
     .divider { display: flex; align-items: center; gap: 12px; color: #999; margin: 16px 0; }
     .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #eee; }
     .social-btn { width: 100%; background: #fff; border: 1px solid #e9ecef; color: #1c1c1c; }
@@ -55,13 +55,11 @@
             <div class="row align-items-start">
                 <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
                     <div class="auth-card">
-                        <div class="card-cover">
-                            <img src="{{ asset('images/hero-image.png') }}" alt="Create your account">
-                        </div>
+
                         <div class="card-body">
                             <div class="section-title mb-3">
                                 <h3 class="wow fadeInUp">create account</h3>
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">Join <span>GoGlow</span></h2>
+                                {{-- <h2 class="text-anime-style-2" data-cursor="-opaque">Join <span>GoGlow</span></h2> --}}
                                 <p class="small-text">Sign up to book beauty services, track appointments, and enjoy member perks.</p>
                             </div>
 
@@ -132,16 +130,17 @@
                                 </div>
                             </form>
 
-                            <div class="divider">or</div>
+                            {{-- <div class="divider">or</div>
                             <button type="button" class="btn btn-light social-btn" disabled>
                                 <img src="{{ asset('images/icon-google.svg') }}" alt="Google"> Continue with Google
-                            </button>
-                            <p class="small-text mt-3 mb-0">Already have an account? <a href="#">Sign in</a></p>
+                            </button> --}}
+                            <p class="small-text mt-3 mb-0">Already have an account? <a href="{{ route('login') }}">Login</a></p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6 order-lg-1">
+                    
                     <div class="auth-side-copy">
                         <div class="section-title">
                             <h3 class="wow fadeInUp">why join</h3>

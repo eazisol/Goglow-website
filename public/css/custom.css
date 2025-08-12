@@ -2723,13 +2723,14 @@ header.main-header .container-fluid{
 }
 
 .footer-newsletter-form .form-group .form-control{
+	border: 0.1px solid #9f9f9f;
 	width: 80%;
 	font-size: 16px;
 	font-weight: 500;
 	line-height: 1.4em;
 	color: var(--secondary-color);
 	background-color: transparent;
-	border: 1px solid var(--dark-divider-color);
+	/* border: 1px solid var(--dark-divider-color); */
 	border-right: none;
 	border-radius: 10px 0 0 10px;
 	outline: none;

@@ -88,7 +88,7 @@
                                     <div class="form-check">
                                         <input type="checkbox" name="terms" class="form-check-input" id="terms" required>
                                         <label class="form-check-label" for="terms">
-                                            I agree to the <a href="{{ url('/terms-conditions') }}" target="_blank">Terms & Conditions</a>
+                                            I agree to the <a href="{{ url('/terms_condition') }}" target="_blank">Terms & Conditions</a>
                                         </label>
                                         <div class="help-block with-errors"></div>
                                     </div>

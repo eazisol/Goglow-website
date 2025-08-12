@@ -6,7 +6,7 @@
     .auth-card .card-cover img { display: block; width: 100%; height: 220px; object-fit: cover; }
     .auth-card .card-body { padding: 24px; }
     .form-label { font-weight: 500; color: #333; margin-bottom: 8px; display: block; }
-    .btn-default { width: 100%; }
+    /* .btn-default { width: 100%; } */
 </style>
 @endsection
 
