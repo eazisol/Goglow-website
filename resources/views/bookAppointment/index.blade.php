@@ -362,7 +362,7 @@
     
                                 <div class="col-md-12">
                                     <button type="submit" class="btn-default"><span>Book an appointment</span></button>
-                                    <button type="button" id="testStripeBtn" class="btn-alt" style="margin-left: 10px;"><span>Test Stripe Connection</span></button>
+                                    {{-- <button type="button" id="testStripeBtn" class="btn-alt" style="margin-left: 10px;"><span>Test Stripe Connection</span></button> --}}
                                     <div id="msgSubmit" class="h3 hidden"></div>
                                 </div>
                             </div>
