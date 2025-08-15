@@ -275,7 +275,8 @@
                 <div class="col-lg-6">
                     <!-- Book Appointment Form Start -->
                     <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
-                        <form id="appointmentForm" action="#" method="POST" data-toggle="validator">
+                        <form id="appointmentForm" action="{{ route('checkout.session') }}" method="POST" data-toggle="validator">
+                                @csrf
                             <div class="row">
                                 <!-- Service Details Section -->
                                 @if(!empty($selectedService))
@@ -333,6 +334,25 @@
                                     <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
+                                
+                                <!-- Payment Options -->
+                                <div class="form-group col-md-12 mb-4">
+                                    <label class="form-label">Payment Options</label>
+                                    <div class="payment-options">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
+                                            <label class="form-check-label" for="payDeposit">
+                                                Pay 15% deposit now (${{ number_format(($selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0)) * 0.15, 2) }})
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
+                                            <label class="form-check-label" for="payFull">
+                                                Pay full amount now (${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }})
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Notes Section -->
                                 {{-- <div class="form-group col-md-12 mb-4">
@@ -342,6 +362,7 @@
     
                                 <div class="col-md-12">
                                     <button type="submit" class="btn-default"><span>Book an appointment</span></button>
+                                    <button type="button" id="testStripeBtn" class="btn-alt" style="margin-left: 10px;"><span>Test Stripe Connection</span></button>
                                     <div id="msgSubmit" class="h3 hidden"></div>
                                 </div>
                             </div>
@@ -365,6 +386,9 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('DOM fully loaded - initializing booking form');
+    // Check if Stripe is loaded
+    console.log('Stripe object availability:', typeof Stripe !== 'undefined' ? 'Available' : 'Not available');
     const bootstrap = {
         service: @json($selectedService ?? null),
         category: @json($selectedCategory ?? null),
@@ -463,8 +487,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const lname = form.lname.value.trim();
         const email = form.email.value.trim();
         const phone = form.phone.value.trim();
+        
+        // Get payment option
+        const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
 
-        // Combine name (just in case you want it)
+        // Combine name
         const fullName = fname + ' ' + lname;
 
         // Get params from URL (fallback) and from server (preferred)
@@ -516,8 +543,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Construct payload
-        const payload = {
+        // Construct booking payload
+        const bookingPayload = {
             booking_time: bookingTime,
             service_provider_id: serviceProviderId,
             user_id: userId,
@@ -534,27 +561,167 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             ]
         };
+        
+        // Collect form data to pass through the payment process
+        const formData = {
+            fname,
+            lname,
+            email,
+            phone
+        };
 
         try {
-            const response = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/bookService', {
+            // Store form data in localStorage before going to Stripe
+            const formDataToStore = {
+                fname,
+                lname,
+                email,
+                phone,
+                selectedDate: selectedDateInput.value,
+                selectedTime: selectedTimeInput.value,
+                agentId: chosenAgent?.id || null,
+                agentName: chosenAgent?.name || 'Selected Agent'
+            };
+            
+            // Store full booking data in localStorage so we can retrieve it after payment
+            localStorage.setItem('bookingFormData', JSON.stringify(formDataToStore));
+            localStorage.setItem('bookingPayload', JSON.stringify(bookingPayload));
+            
+            console.log('Preparing to send checkout request with data:', {
+                serviceId,
+                serviceProviderId,
+                serviceName,
+                servicePrice,
+                paymentType,
+                formData: formDataToStore
+            });
+            
+            const checkoutUrl = '{{ route("checkout.session") }}';
+            console.log('Checkout URL:', checkoutUrl);
+            
+            const response = await fetch(checkoutUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({
+                    serviceId,
+                    serviceProviderId,
+                    serviceName, 
+                    servicePrice,
+                    paymentType,
+                    formData: formDataToStore,
+                    bookingData: bookingPayload
+                })
+            });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Error response:', response.status, errorText);
+                throw new Error(`Server responded with ${response.status}: ${errorText}`);
+            }
+
+            const session = await response.json();
+            console.log('Received session:', session);
+            
+            if (session.error) {
+                alert('Error: ' + session.error);
+                return;
+            }
+
+            // Initialize Stripe object with publishable key
+            const stripe = Stripe('pk_test_YvIcG9lWoxs6ITHB264wNchO');
+            console.log('Redirecting to Stripe checkout with session ID:', session.id);
+            
+            // For Stripe v7.0 compatibility
+            // Redirect to Stripe Checkout
+            const result = await stripe.redirectToCheckout({
+                sessionId: session.id
             });
 
-            if (response.ok) {
-                alert('Appointment booked successfully!');
-                form.reset();
-                selectedDayInput.value = '';
-                dayButtons.forEach(btn => btn.classList.remove('active'));
-            } else {
-                const errorData = await response.json();
-                alert('Booking failed: ' + (errorData.message || 'Unknown error'));
+            if (result.error) {
+                alert('Error: ' + result.error.message);
             }
         } catch (err) {
+            console.error('Error in form submission:', err);
             alert('An error occurred: ' + err.message);
+        }
+    });
+    
+    // Add test button functionality
+    document.getElementById('testStripeBtn').addEventListener('click', async function() {
+        try {
+            // Initialize Stripe with the publishable key
+            const stripe = Stripe('pk_test_YvIcG9lWoxs6ITHB264wNchO');
+            console.log('Test button clicked, Stripe initialized');
+            
+            // Create a minimal test session directly
+            const response = await fetch('{{ route("checkout.session") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                body: JSON.stringify({
+                    serviceId: '1',
+                    serviceProviderId: '1',
+                    serviceName: 'Test Service',
+                    servicePrice: 1.00,
+                    paymentType: 'full',
+                    formData: {
+                        fname: 'Test',
+                        lname: 'User',
+                        email: 'test@example.com',
+                        phone: '1234567890'
+                    },
+                    bookingData: {
+                        booking_time: 'Test Time',
+                        service_provider_id: '1',
+                        user_id: '1',
+                        services: [
+                            {
+                                serviceId: '1',
+                                serviceName: 'Test Service',
+                                durationMinutes: 30,
+                                discountedPrice: 1.00,
+                                servicePrice: 1.00,
+                                isCompleted: false,
+                                startTime: 'Test Time',
+                                agentId: '1',
+                            }
+                        ]
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Error response:', response.status, errorText);
+                throw new Error(`Server responded with ${response.status}: ${errorText}`);
+            }
+            
+            const session = await response.json();
+            console.log('Test session created:', session);
+            
+            if (session.error) {
+                alert('Error creating test session: ' + session.error);
+                return;
+            }
+            
+            // Redirect to Stripe checkout with the test session
+            console.log('Redirecting to Stripe checkout with test session ID:', session.id);
+            // For Stripe v7.0 compatibility
+            const result = await stripe.redirectToCheckout({
+                sessionId: session.id
+            });
+            
+            if (result.error) {
+                alert('Error in test redirect: ' + result.error.message);
+            }
+        } catch (err) {
+            console.error('Test button error:', err);
+            alert('Test failed: ' + err.message);
         }
     });
 });

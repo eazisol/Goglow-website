@@ -27,6 +27,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+{{-- Stripe.js --}}
+<script src="https://js.stripe.com/v3/"></script>
+
 </head>
 <body>
   <style>

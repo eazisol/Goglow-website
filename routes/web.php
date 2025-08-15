@@ -60,7 +60,11 @@ Route::get('/faqs', function () {return view('FAQs.index');});
 Route::get('/404', function () {return view('errors.404');});
 
 // book appointment
-Route::get('/book-appointment', [\App\Http\Controllers\BookAppointmentController::class, 'show'])->middleware('firebase.auth');
+Route::get('/book-appointment', [\App\Http\Controllers\BookAppointmentController::class, 'show'])->middleware('firebase.auth')->name('book-appointment');
+
+// Payment routes
+Route::post('/create-checkout-session', [\App\Http\Controllers\PaymentController::class, 'createCheckoutSession'])->name('checkout.session');
+Route::get('/payment-success', [\App\Http\Controllers\PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
 
 // i am a beauty professional
 Route::get('/beauty-professional', function () {return view('iamProfessional.index');});

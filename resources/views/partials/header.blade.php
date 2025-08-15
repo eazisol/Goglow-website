@@ -4,8 +4,8 @@
 			<nav class="navbar navbar-expand-lg">
 				<div class="container-fluid">
 					<a class="navbar-brand" href="{{ url('/') }}">
-						{{-- <img src="images/goglowlogo.png" alt="Logo" style="width: 60px;"> --}}
-						<h1 class="text-anime-style-2 header-logo {{ $isHome ? 'text-white' : 'text-dark' }}" data-cursor="-opaque">Go<span>Glow</span></h1>
+						<img src="images/goglowlogo.png" alt="Logo" style="width: 60px;">
+						{{-- <h1 class="text-anime-style-2 header-logo {{ $isHome ? 'text-white' : 'text-dark' }}" data-cursor="-opaque">Go<span>Glow</span></h1> --}}
 					</a>
 					<div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
