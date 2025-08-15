@@ -65,7 +65,8 @@
                                 </div>
 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="WhatsApp Number" required>
+                                    <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="WhatsApp Number with country code (e.g. +1234567890)" required>
+                                    <small class="text-muted">Enter with country code (e.g., +1 for US). Special characters will be removed automatically.</small>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 
@@ -115,21 +116,57 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('appointmentForm');
+    
+    // Function to format phone number - remove all non-numeric characters except the + at the beginning
+    function formatPhoneNumber(phoneNumber) {
+        // Keep the + sign if it exists at the beginning, then remove all non-numeric characters
+        if (phoneNumber.startsWith('+')) {
+            return '+' + phoneNumber.substring(1).replace(/[^0-9]/g, '');
+        }
+        // If no + sign, just remove all non-numeric characters
+        return phoneNumber.replace(/[^0-9]/g, '');
+    }
+    
+    // Add a loading indicator
+    function showLoading(isLoading) {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (isLoading) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span><i class="fa fa-spinner fa-spin"></i> Submitting...</span>';
+        } else {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>Submit Application</span>';
+        }
+    }
+    
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        // Show loading state
+        showLoading(true);
 
         // Gather form data
         const name = form.brand_name.value.trim();
         const email = form.email.value.trim();
-        const whatsapp = form.whatsapp.value.trim();
+        let whatsapp = form.whatsapp.value.trim();
         const instagram = form.instagram.value.trim();
         const tiktok = form.tiktok.value.trim();
         const platform = form.current_platform.value.trim();
         const termsAccepted = form.terms.checked;
 
+        // Format the phone number to remove parentheses, spaces, and other non-numeric characters
+        whatsapp = formatPhoneNumber(whatsapp);
+        
+        console.log('Formatted WhatsApp number:', whatsapp);
+
         // Simple validation: if any field is empty or terms not checked, do not submit or show alert
         if (!name || !email || !whatsapp || !instagram || !tiktok || !platform || !termsAccepted) {
-            // Do nothing, let UI validation handle feedback
+            showLoading(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: 'Please fill in all required fields'
+            });
             return;
         }
 
@@ -145,6 +182,8 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         try {
+            console.log('Submitting payload:', payload);
+            
             const response = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/submitQuery', {
                 method: 'POST',
                 headers: {
@@ -152,16 +191,70 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify(payload)
             });
-
+            
+            // Check if the response is OK first
             if (response.ok) {
-                // alert('Your query has been submitted successfully!');
-                form.reset();
+                // Try to get the response as text first
+                const responseText = await response.text();
+                console.log('API Response (text):', responseText);
+                
+                // Check if the response contains "successfully"
+                if (responseText.includes("successfully")) {
+                    form.reset();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Your application has been submitted successfully!'
+                    });
+                } else {
+                    // If not a success message, show the response text
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Response Received',
+                        text: responseText
+                    });
+                }
             } else {
-                const errorData = await response.json();
-                alert('Submission failed: ' + (errorData.message || 'Unknown error'));
+                // Handle error response
+                try {
+                    // Try to parse as JSON first
+                    const errorText = await response.text();
+                    console.log('Error response (text):', errorText);
+                    
+                    let errorMessage = 'An error occurred while submitting your application';
+                    
+                    // Try to parse as JSON if possible
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.message || errorMessage;
+                    } catch (jsonError) {
+                        // If not valid JSON, use the text as is
+                        errorMessage = errorText;
+                    }
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Submission Failed',
+                        text: errorMessage
+                    });
+                } catch (parseError) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Submission Failed',
+                        text: 'Could not process server response'
+                    });
+                }
             }
         } catch (error) {
-            alert('An error occurred: ' + error.message);
+            console.error('Error submitting form:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Network error: ' + (error.message || 'Could not connect to server')
+            });
+        } finally {
+            // Reset loading state
+            showLoading(false);
         }
     });
 });
