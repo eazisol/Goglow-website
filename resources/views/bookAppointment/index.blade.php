@@ -136,8 +136,8 @@
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        position: sticky;
-        top: 20px;
+        /* previously sticky; make it normal so it scrolls with the page */
+        position: static;
     }
     .service-summary-card .card-cover img {
         display: block;
@@ -211,20 +211,126 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    /* Readonly schedule tiles styled like booking day buttons */
-    #agentScheduleGrid .day-btn {
-        cursor: default;
+    
+    /* Weekly Calendar Styles */
+    .weekly-calendar {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
     }
-    #agentScheduleGrid .day-btn.disabled {
-        opacity: 0.5;
+    
+    .days-header {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        margin-bottom: 10px;
     }
-    #agentScheduleGrid .day-btn .time-text {
+    
+    @media (max-width: 768px) {
+        .days-header {
+            overflow-x: auto;
+            display: flex;
+            padding-bottom: 10px;
+        }
+        
+        .day-column {
+            min-width: 60px;
+        }
+    }
+    
+    .day-column {
+        flex: 1;
+        text-align: center;
+        padding: 10px 0;
+        font-weight: 500;
+    }
+    
+    .day-name {
+        font-weight: 600;
         display: block;
-        font-weight: 400;
+        font-size: 14px;
+    }
+    
+    .day-date {
         font-size: 12px;
         color: #666;
-        margin-top: 6px;
     }
+    
+    .day-column.active {
+        background-color: black;
+        color: white;
+        border-radius: 8px;
+    }
+    
+    .day-column.active .day-date {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    /* Align 7 vertical columns of slots under the 7 days */
+    .time-slots-container {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        margin-top: 15px;
+        align-items: start;
+    }
+
+    /* Each day's vertical stack */
+    .day-slots-column {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-height: 60px;
+    }
+    
+    .time-slot {
+        padding: 8px 4px;
+        text-align: center;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid #e9ecef;
+    }
+    
+    .time-slot:hover {
+        background-color: #e9ecef;
+        transform: translateY(-2px);
+    }
+    
+    .time-slot.selected {
+        background-color: black;
+        color: white;
+        border-color: var(--theme-color);
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .time-slot.unavailable {
+        display: none;
+    }
+    
+    #weekDisplay {
+        font-size: 16px;
+        padding: 0 15px;
+    }
+    
+    .calendar-navigation button {
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    /* Layout fixes: ensure right form column doesn't get vertically centered
+       or add large top/bottom whitespace when left column grows */
+    .page-book-appointment .row { align-items: flex-start !important; }
+    /* Keep uniform padding so top/bottom match left/right */
+    .appointment-form { min-height: unset !important; height: auto !important; display: block !important; padding: 24px !important; }
 </style>
 @endsection
 
@@ -248,7 +354,7 @@
     <div class="page-book-appointment">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-7 col-xl-8">
                     <!-- Service summary card Start -->
                     <div class="service-summary-card">
                         <div class="card-cover">
@@ -270,9 +376,53 @@
                         </div>
                     </div>
                     <!-- Service summary card End -->
+
+                                @if(!empty($agents))
+                    <!-- Agent & Schedule (moved here) -->
+                    <div class="mt-4">
+                                    <label class="form-label">Select Agent</label>
+                                    <div id="agentList" class="agent-avatars">
+                                        @foreach($agents as $agent)
+                                            <div class="agent-avatar" data-agent='@json($agent)'>
+                                                <img class="avatar-img" src="{{ asset('images/istockphoto-1300845620-612x612.jpg') }}" alt="{{ $agent['name'] ?? 'Agent' }}">
+                                                <div class="agent-name">{{ $agent['name'] ?? 'Agent' }}</div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    <div id="agentSchedule" class="mt-3" style="display:none;">
+                            <h5 style="margin-bottom: 10px;">Schedule</h5>
+
+                            <!-- Selected slot info (moved directly under heading) -->
+                            <div id="selectedSlotInfo" class="alert alert-info mb-3" style="display: none;">
+                                <i class="fa fa-info-circle"></i>
+                                Selected: <span id="selectedDateTimeDisplay"></span>
+                                            </div>
+
+                            <!-- Calendar Navigation -->
+                            <div class="calendar-navigation mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button type="button" id="prevWeek" class="btn btn-sm btn-secondary">
+                                        <i class="fa fa-chevron-left"></i>
+                                    </button>
+                                    <div id="weekDisplay" class="fw-bold text-center"></div>
+                                    <button type="button" id="nextWeek" class="btn btn-sm btn-secondary">
+                                        <i class="fa fa-chevron-right"></i>
+                                    </button>
+                                            </div>
+                                        </div>
+
+                            <!-- Weekly Calendar View -->
+                            <div id="weeklyCalendar" class="weekly-calendar mb-4">
+                                <div class="days-header d-flex justify-content-between mb-2"></div>
+                                <div id="timeSlotGrid" class="time-slots-container"></div>
+                            </div>
+                                    </div>
+                                </div>
+                                @endif
                 </div>
 
-                <div class="col-lg-6">
+                <div class="col-lg-5 col-xl-4">
                     <!-- Book Appointment Form Start -->
                     <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
                         <form id="appointmentForm" action="{{ route('checkout.session') }}" method="POST" data-toggle="validator">
@@ -284,35 +434,10 @@
                                     <input type="hidden" name="service_price" id="service_price" value="{{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? '0') }}">
                                 @endif
 
-                                @if(!empty($agents))
-                                <div class="col-md-12 mb-4">
-                                    <label class="form-label">Select Agent</label>
-                                    <div id="agentList" class="agent-avatars">
-                                        @foreach($agents as $agent)
-                                            <div class="agent-avatar" data-agent='@json($agent)'>
-                                                <img class="avatar-img" src="{{ asset('images/istockphoto-1300845620-612x612.jpg') }}" alt="{{ $agent['name'] ?? 'Agent' }}">
-                                                <div class="agent-name">{{ $agent['name'] ?? 'Agent' }}</div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <div id="agentSchedule" class="mt-3" style="display:none;">
-                                        <h5>Schedule</h5>
-                                        <div id="agentScheduleGrid" class="booking-days-buttons"></div>
-                                        <input type="hidden" name="selected_day" id="selected_day" required>
-                                        <div class="row mt-3">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label">Select Date</label>
-                                                <input type="date" id="selected_date" name="selected_date" class="form-control" required>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label">Select Time</label>
-                                                <input type="time" id="selected_time" name="selected_time" class="form-control" step="60" required>
-                                            </div>
-                                        </div>
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-                                </div>
-                                @endif
+                                <!-- Hidden fields for the selected slot from left column -->
+                                <input type="hidden" name="selected_day" id="selected_day" required>
+                                <input type="hidden" id="selected_date" name="selected_date" required>
+                                <input type="hidden" id="selected_time" name="selected_time" required>
 
                                 <!-- Personal Information -->                                
                                 <div class="form-group col-md-6 mb-4">
@@ -415,58 +540,321 @@ document.addEventListener('DOMContentLoaded', function () {
     // Agent selection and schedule rendering
     const agentList = document.getElementById('agentList');
     const agentSchedule = document.getElementById('agentSchedule');
-    const agentScheduleGrid = document.getElementById('agentScheduleGrid');
+    const timeSlotGrid = document.getElementById('timeSlotGrid');
+    const daysHeader = document.querySelector('.days-header');
+    const weekDisplay = document.getElementById('weekDisplay');
+    const prevWeekBtn = document.getElementById('prevWeek');
+    const nextWeekBtn = document.getElementById('nextWeek');
+    const selectedSlotInfo = document.getElementById('selectedSlotInfo');
+    const selectedDateTimeDisplay = document.getElementById('selectedDateTimeDisplay');
+    
     let chosenAgent = null;
-
-    function secondsToHHMM(seconds) {
-        const date = new Date(seconds * 1000);
-        const hh = String(date.getUTCHours()).padStart(2, '0');
-        const mm = String(date.getUTCMinutes()).padStart(2, '0');
-        return `${hh}:${mm}`;
-    }
-
-    function renderTimingTiles(timing) {
-        const days = [
-            { key: 'Mon', label: 'MON' },
-            { key: 'Tue', label: 'TUE' },
-            { key: 'Wed', label: 'WED' },
-            { key: 'Thu', label: 'THU' },
-            { key: 'Fri', label: 'FRI' },
-            { key: 'Sat', label: 'SAT' },
-            { key: 'Sun', label: 'SUN' },
-        ];
-        return days.map(({ key, label }) => {
-            const range = timing?.[key] || [];
-            let inner = `<span>${label}</span>`;
-            let disabledClass = '';
+    let currentWeekStart = new Date();
+    currentWeekStart.setHours(0, 0, 0, 0);
+    // Adjust to start the week on Monday
+    const day = currentWeekStart.getDay();
+    currentWeekStart.setDate(currentWeekStart.getDate() - (day === 0 ? 6 : day - 1));
+    
+    // Day names mapping
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const shortDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const dayKeys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    
+    // Convert timing data to slots format
+    function convertTimingToSlots(timing) {
+        const slots = {};
+        
+        Object.keys(timing).forEach(day => {
+            const range = timing[day];
             if (Array.isArray(range) && range.length === 2) {
                 const [start, end] = range;
-                if (typeof start === 'number' && typeof end === 'number' && start !== end) {
-                    inner += `<span class="time-text">${secondsToHHMM(start)} - ${secondsToHHMM(end)}</span>`;
-                } else {
-                    disabledClass = ' disabled';
-                    inner += `<span class="time-text">Closed</span>`;
+                
+                // Skip if closed or invalid range
+                if (typeof start !== 'number' || typeof end !== 'number' || start === end) {
+                    return;
                 }
-            } else {
-                disabledClass = ' disabled';
-                inner += `<span class="time-text">Closed</span>`;
+                
+                // Convert seconds to hours and generate hourly slots
+                const startHour = Math.floor(start / 3600);
+                const endHour = Math.floor(end / 3600);
+                
+                slots[day] = [];
+                
+                // Generate hourly slots from start to end
+                for (let hour = startHour; hour < endHour; hour++) {
+                    const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+                    slots[day].push({
+                        time: timeStr,
+                        available: true
+                    });
+                }
             }
-            return `<button type="button" class="day-btn${disabledClass}" disabled>${inner}</button>`;
-        }).join('');
+        });
+        
+        return slots;
     }
+    
+    // Create sample slots for testing
+    function createSampleSlots() {
+        const slots = {};
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+        
+        // Create sample slots for each day
+        days.forEach(day => {
+            slots[day] = [];
+            
+            // Morning slots
+            for (let hour = 9; hour <= 12; hour++) {
+                slots[day].push({
+                    time: `${hour.toString().padStart(2, '0')}:00`,
+                    available: Math.random() > 0.3 // 70% chance of being available
+                });
+            }
+            
+            // Afternoon slots
+            for (let hour = 14; hour <= 17; hour++) {
+                slots[day].push({
+                    time: `${hour.toString().padStart(2, '0')}:00`,
+                    available: Math.random() > 0.3 // 70% chance of being available
+                });
+            }
+        });
+        
+        return slots;
+    }
+    
+    // Format time from "HH:MM" to display format
+    function formatTimeDisplay(timeStr) {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        const ampm = hours >= 12 ? 'p.m.' : 'a.m.';
+        const displayHours = hours % 12 || 12;
+        return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    }
+    
+    // Format date for display
+    function formatDate(date) {
+        return date.toLocaleDateString('en-US', { 
+            month: 'long', 
+            day: 'numeric',
+            year: 'numeric'
+        });
+    }
+    
+    // Format date in YYYY-MM-DD using LOCAL date parts (avoid UTC / timezone shift)
+    function formatDateValue(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    
+    // Update the week display
+    function updateWeekDisplay() {
+        const endDate = new Date(currentWeekStart);
+        endDate.setDate(endDate.getDate() + 6);
+        
+        const startMonth = currentWeekStart.toLocaleString('default', { month: 'long' });
+        const endMonth = endDate.toLocaleString('default', { month: 'long' });
+        
+        if (startMonth === endMonth) {
+            weekDisplay.textContent = `${startMonth} ${currentWeekStart.getDate()} - ${endDate.getDate()}`;
+                } else {
+            weekDisplay.textContent = `${startMonth} ${currentWeekStart.getDate()} - ${endMonth} ${endDate.getDate()}`;
+        }
+    }
+    
+    // Render the days header
+    function renderDaysHeader() {
+        daysHeader.innerHTML = '';
+        
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(currentWeekStart);
+            date.setDate(date.getDate() + i);
+            
+            const dayCol = document.createElement('div');
+            dayCol.className = 'day-column';
+            dayCol.dataset.date = formatDateValue(date);
+            dayCol.dataset.dayIndex = i;
+            
+            const dayName = document.createElement('span');
+            dayName.className = 'day-name';
+            dayName.textContent = shortDayNames[(date.getDay() + 7) % 7];
+            
+            const dayDate = document.createElement('span');
+            dayDate.className = 'day-date';
+            dayDate.textContent = date.getDate();
+            
+            dayCol.appendChild(dayName);
+            dayCol.appendChild(dayDate);
+            daysHeader.appendChild(dayCol);
+            
+            // Add click event to focus the chosen day (no filtering – keep all slots visible)
+            dayCol.addEventListener('click', function() {
+                document.querySelectorAll('.day-column').forEach(col => col.classList.remove('active'));
+                this.classList.add('active');
+                const dayKey = dayKeys[date.getDay()];
+                selectedDayInput.value = dayKey;
+                // Smoothly scroll the corresponding column into view
+                const col = document.querySelector(`.day-slots-column[data-day="${dayKey}"]`);
+                col?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+            });
+        }
+    }
+    
+    // Keep function unused (no filtering). Left in place for future use if needed.
+    function filterTimeSlotsByDay(dayKey) {}
+    
+    // Render time slots for the week
+    function renderTimeSlots(slots) {
+        console.log('Rendering time slots:', slots);
+        timeSlotGrid.innerHTML = '';
+        
+        if (!slots || Object.keys(slots).length === 0) {
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No available time slots</div>';
+            return;
+        }
+        
+        // Debug: Count total available slots
+        let totalSlots = 0;
+        Object.keys(slots).forEach(day => {
+            const availableSlots = Array.isArray(slots[day]) ? 
+                slots[day].filter(slot => slot.available).length : 0;
+            totalSlots += availableSlots;
+            console.log(`Day ${day}: ${availableSlots} available slots`);
+        });
+        console.log(`Total available slots: ${totalSlots}`);
+        
+        // If no slots are available after filtering, show a message
+        if (totalSlots === 0) {
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No available time slots for this week</div>';
+            return;
+        }
+        
+        // Create a vertical column for each day and fill with that day's slots
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(currentWeekStart);
+            date.setDate(date.getDate() + i);
+            const dayKey = dayKeys[date.getDay()];
 
+            const daySlots = slots[dayKey] || [];
+
+            // Create the column wrapper regardless, to keep alignment
+            const col = document.createElement('div');
+            col.className = 'day-slots-column';
+            col.dataset.day = dayKey;
+
+            if (Array.isArray(daySlots) && daySlots.length > 0) {
+                daySlots.forEach(slot => {
+                    if (!slot.available) return; // Skip unavailable slots
+
+                    const timeSlot = document.createElement('div');
+                    timeSlot.className = 'time-slot';
+                    timeSlot.dataset.day = dayKey;
+                    timeSlot.dataset.time = slot.time;
+                    timeSlot.dataset.date = formatDateValue(date);
+                    timeSlot.textContent = formatTimeDisplay(slot.time);
+
+                    // Add click handler for slot selection
+                    timeSlot.addEventListener('click', function() {
+                        // Deselect any previously selected slot
+                        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+
+                        // Select this slot
+                        this.classList.add('selected');
+
+                        // Update hidden inputs
+                        selectedDateInput.value = this.dataset.date;
+                        selectedTimeInput.value = this.dataset.time;
+
+                        // Show selected date/time info (parse as local to avoid UTC offset issues)
+                        const [yy, mm, dd] = this.dataset.date.split('-').map(Number);
+                        const selectedDate = new Date(yy, mm - 1, dd);
+                        const formattedDate = formatDate(selectedDate);
+                        const formattedTime = formatTimeDisplay(this.dataset.time);
+                        selectedDateTimeDisplay.textContent = `${formattedDate} at ${formattedTime}`;
+                        selectedSlotInfo.style.display = '';
+                        // Ensure hidden selected day reflects the clicked slot's day
+                        selectedDayInput.value = this.dataset.day;
+                    });
+
+                    col.appendChild(timeSlot);
+                });
+            }
+
+            timeSlotGrid.appendChild(col);
+        }
+        
+        // Do not auto-select any day; show all columns with their slots by default
+    }
+    
+    // Navigate to previous week
+    prevWeekBtn.addEventListener('click', function() {
+        currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+        updateWeekDisplay();
+        renderDaysHeader();
+        if (chosenAgent && chosenAgent.slots) {
+            renderTimeSlots(chosenAgent.slots);
+        }
+    });
+    
+    // Navigate to next week
+    nextWeekBtn.addEventListener('click', function() {
+        currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+        updateWeekDisplay();
+        renderDaysHeader();
+        if (chosenAgent && chosenAgent.slots) {
+            renderTimeSlots(chosenAgent.slots);
+        }
+    });
+    
+    // Initialize the calendar when an agent is selected
     if (agentList) {
         agentList.addEventListener('click', (e) => {
             const avatar = e.target.closest('.agent-avatar');
             if (!avatar) return;
+            
             // Highlight selection
             [...agentList.querySelectorAll('.agent-avatar')].forEach(el => el.classList.remove('active'));
             avatar.classList.add('active');
 
+            // Parse agent data
             const agent = JSON.parse(avatar.dataset.agent);
-            agentSchedule.style.display = '';
-            agentScheduleGrid.innerHTML = renderTimingTiles(agent.timing || {});
             chosenAgent = agent;
+            
+            // Debug agent data
+            console.log('Agent data:', agent);
+            console.log('Agent slots:', agent.slots);
+            console.log('Agent timing:', agent.timing);
+            
+            // Show the schedule section
+            agentSchedule.style.display = '';
+            
+            // Reset selection
+            selectedDayInput.value = '';
+            selectedDateInput.value = '';
+            selectedTimeInput.value = '';
+            selectedSlotInfo.style.display = 'none';
+            
+            // Initialize the week display
+            updateWeekDisplay();
+            renderDaysHeader();
+            
+            // If agent has timing data but no slots, convert timing to slots format
+            if (!agent.slots && agent.timing) {
+                console.log('Converting timing to slots format');
+                const slots = convertTimingToSlots(agent.timing);
+                console.log('Generated slots:', slots);
+                renderTimeSlots(slots);
+            } else if (agent.slots) {
+                // Render time slots from agent data
+                renderTimeSlots(agent.slots);
+            } else {
+                // No slots or timing data, create sample data for testing
+                console.log('No slots or timing data found, creating sample data');
+                const sampleSlots = createSampleSlots();
+                console.log('Sample slots:', sampleSlots);
+                renderTimeSlots(sampleSlots);
+            }
         });
     }
 
@@ -478,7 +866,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         if (!selectedDateInput?.value || !selectedTimeInput?.value) {
-            alert('Please select date and time');
+            alert('Please select a time slot');
             return;
         }
 
@@ -487,7 +875,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const lname = form.lname.value.trim();
         const email = form.email.value.trim();
         const phone = form.phone.value.trim();
-        
+
         // Get payment option
         const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
 

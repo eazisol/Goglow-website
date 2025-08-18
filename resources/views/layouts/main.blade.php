@@ -115,12 +115,12 @@
 .text-dark { color: #1c1c1c !important; }
 </style>
 
-    <div class="preloader">
+    {{-- <div class="preloader">
 		<div class="loading-container">
 			<div class="loading"></div>
 			<div id="loading-icon"><img src="{{ asset('images/loader.svg') }}" alt=""></div>
 		</div>
-	</div>
+	</div> --}}
     
     
                 @include('partials.header')                
