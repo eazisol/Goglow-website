@@ -1,0 +1,151 @@
+/**
+ * Auth Modals CSS
+ */
+
+/* Modal styling */
+.modal-content {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: transparent;
+}
+
+.modal-header {
+    padding: 15px 20px 0;
+    border-bottom: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 10;
+}
+
+.modal-header .btn-close {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    padding: 0.5rem;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+    background-color: white;
+}
+
+.modal-body {
+    padding: 0;
+}
+
+/* Override appointment form styles for modals */
+.modal .appointment-form {
+    border-radius: 20px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    height: auto;
+    min-height: auto;
+    padding: 40px;
+    background-color: var(--secondary-color);
+}
+
+.modal .section-title h3 {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.modal .section-title h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.modal .small-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.modal .policy-link {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.modal .policy-link:hover {
+    color: var(--accent-color);
+}
+
+/* Form elements */
+.modal .form-check-input {
+    width: 18px;
+    height: 18px;
+    margin-top: 0.25em;
+}
+
+.modal .form-check-label {
+    padding-left: 5px;
+}
+
+.modal .password-toggle {
+    cursor: pointer;
+    background: transparent;
+    border-left: none;
+}
+
+.modal .input-group .form-control {
+    border-right: none;
+}
+
+/* Alert styling */
+.modal .alert {
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+/* Responsive adjustments */
+/* Modal animations */
+.modal.fade .modal-dialog {
+    transform: translateY(-20px);
+    transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: translateY(0);
+}
+
+/* Button animation */
+.modal .btn-default {
+    position: relative;
+    overflow: hidden;
+}
+
+.modal .btn-default::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.modal .btn-default:hover::after {
+    width: 300px;
+    height: 300px;
+}
+
+@media (max-width: 767px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .modal .appointment-form {
+        padding: 30px 20px;
+    }
+    
+    .modal .section-title h2 {
+        font-size: 24px;
+    }
+}

@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
 <link rel="stylesheet" href="{{ asset('css/mousecursor.css') }}">
 <link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="screen">
+<link href="{{ asset('css/auth-modals.css') }}" rel="stylesheet" media="screen">
 
 {{-- datepicker --}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
