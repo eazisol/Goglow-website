@@ -10,6 +10,7 @@
 	<meta name="description" content="">
 	<meta name="keywords" content="">
 	<meta name="author" content="Awaiken">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
 	<link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
@@ -30,6 +31,15 @@
 {{-- Stripe.js --}}
 <script src="https://js.stripe.com/v3/"></script>
 
+<script>
+    // Auth status for JS
+    window.isAuthenticated = {{ session()->has('firebase_uid') ? 'true' : 'false' }};
+    window.showAuthModal = {{ session()->has('show_auth_modal') ? 'true' : 'false' }};
+    window.authRedirect = "{{ session('auth_redirect', '') }}";
+    
+    // Make sure bootstrap is defined globally
+    window.bootstrap = window.bootstrap || {};
+</script>
 </head>
 <body>
   <style>
@@ -157,6 +167,13 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/professional-form.js') }}"></script>
   @yield('scripts')
-
+  
+  @include('partials.auth-modals')
+  
+  <!-- Auth modals script must be loaded after Bootstrap and modals are in the DOM -->
+  <script src="{{ asset('js/auth-modals.js') }}"></script>
+  
+  <!-- Book appointment auth script -->
+  <script src="{{ asset('js/book-appointment-auth.js') }}"></script>
 </body>
 </html>

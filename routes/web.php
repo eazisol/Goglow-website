@@ -60,7 +60,7 @@ Route::get('/faqs', function () {return view('FAQs.index');});
 Route::get('/404', function () {return view('errors.404');});
 
 // book appointment
-Route::get('/book-appointment', [\App\Http\Controllers\BookAppointmentController::class, 'show'])->middleware('firebase.auth')->name('book-appointment');
+Route::get('/book-appointment', [\App\Http\Controllers\BookAppointmentController::class, 'show'])->middleware('firebase.auth.modal')->name('book-appointment');
 
 // Payment routes
 Route::post('/create-checkout-session', [\App\Http\Controllers\PaymentController::class, 'createCheckoutSession'])->name('checkout.session');
@@ -83,3 +83,7 @@ Route::post('/signup', [\App\Http\Controllers\AuthController::class, 'register']
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login.store');
 Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+
+// AJAX auth routes
+Route::post('/ajax/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('ajax.login');
+Route::post('/ajax/signup', [\App\Http\Controllers\AuthController::class, 'register'])->name('ajax.signup');

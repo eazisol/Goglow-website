@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'firebase.auth' => \App\Http\Middleware\FirebaseAuthenticate::class,
+        'firebase.auth.modal' => \App\Http\Middleware\FirebaseAuthenticateModal::class,
     ];
 }

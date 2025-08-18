@@ -39,6 +39,14 @@ class AuthController extends Controller
 
             if (!$response->ok()) {
                 $msg = $response->json('error.message') ?? 'Authentication failed';
+                
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $msg
+                    ], 422);
+                }
+                
                 return back()->withErrors(['email' => $msg])->withInput();
             }
 
@@ -52,9 +60,29 @@ class AuthController extends Controller
                 'firebase_id_token' => $idToken,
             ]);
 
-            $redirect = $request->input('redirect') ?: route('search');
+            // Check for stored book appointment URL first, then request redirect, then default to search
+            $redirect = session('last_book_appointment_url') ?: $request->input('redirect') ?: route('search');
+            
+            // Clear the stored URL after using it
+            session()->forget('last_book_appointment_url');
+            
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Logged in successfully',
+                    'redirect' => $redirect
+                ]);
+            }
+            
             return redirect($redirect)->with('success', 'Logged in successfully');
         } catch (\Throwable $e) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Login failed: ' . $e->getMessage()
+                ], 422);
+            }
+            
             return back()->withErrors(['email' => 'Login failed: ' . $e->getMessage()])->withInput();
         }
     }
@@ -106,7 +134,8 @@ class AuthController extends Controller
 
             if ($request->wantsJson()) {
                 return response()->json([
-                    'message' => 'User created successfully',
+                    'success' => true,
+                    'message' => 'Account created successfully. You can now sign in.',
                     'uid' => $createdUser->uid,
                     'phone' => $validated['phone'] ?? null,
                     'location' => $validated['location'] ?? null,
@@ -119,8 +148,8 @@ class AuthController extends Controller
 
             if ($request->wantsJson()) {
                 return response()->json([
-                    'message' => 'Registration failed',
-                    'error' => $e->getMessage(),
+                    'success' => false,
+                    'message' => 'Registration failed: ' . $e->getMessage(),
                 ], 422);
             }
 

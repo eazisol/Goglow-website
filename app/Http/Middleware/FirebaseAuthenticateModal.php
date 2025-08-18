@@ -5,12 +5,13 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class FirebaseAuthenticate
+class FirebaseAuthenticateModal
 {
     public function handle(Request $request, Closure $next)
     {
         if (!session()->has('firebase_uid')) {
-            $redirect = $request->fullUrl();
+            // Use the stored book appointment URL if available, otherwise use the current URL
+            $redirect = session('last_book_appointment_url', $request->fullUrl());
             
             // Check if request is AJAX
             if ($request->ajax() || $request->wantsJson()) {
@@ -26,21 +27,15 @@ class FirebaseAuthenticate
             session()->flash('show_auth_modal', true);
             session()->flash('auth_redirect', $redirect);
             
-            // Return a response that will show the modal via JavaScript
-            // instead of redirecting to the login page
-            if ($request->header('X-Requested-With') == 'XMLHttpRequest') {
-                return response()->json([
-                    'authenticated' => false,
-                    'message' => 'Authentication required'
-                ], 401);
+            // For the book-appointment route, we want to allow access but show the modal via JavaScript
+            if (strpos($request->path(), 'book-appointment') !== false) {
+                return $next($request);
             }
             
-            // Return to the same page where the modal will be shown
+            // For other routes, return to the previous page
             return back();
         }
 
         return $next($request);
     }
 }
-
-

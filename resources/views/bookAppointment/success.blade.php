@@ -118,10 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
                             </div>
                             
-                            <div class="alert alert-info">
+                            {{-- <div class="alert alert-info">
                                 <i class="fas fa-info-circle mr-2"></i>
                                 A confirmation has been sent to your email address.
-                            </div>
+                            </div> --}}
                             
                             <div class="alert alert-success" id="bookingConfirmation">
                                 <i class="fas fa-check-circle mr-2"></i>

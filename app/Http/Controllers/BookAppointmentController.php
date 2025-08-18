@@ -12,6 +12,16 @@ class BookAppointmentController extends Controller
         $serviceId = $request->query('serviceId');
         $serviceProviderId = $request->query('service_provider_id');
         $firebaseUid = session('firebase_uid');
+        
+        // Store the current URL with query parameters in the session
+        // This will be used if authentication is needed
+        session(['last_book_appointment_url' => $request->fullUrl()]);
+        
+        // If user is not authenticated, set a flag to show the auth modal
+        if (!$firebaseUid) {
+            session()->flash('show_auth_modal', true);
+            session()->flash('auth_redirect', $request->fullUrl());
+        }
 
         $selectedService = null;
         $selectedCategory = null;
