@@ -33,7 +33,7 @@
                             <div class="col-md-12">
                                 <button type="submit" class="btn-default"><span>Sign in</span></button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
-                                <p class="mt-3 mb-0">No account? <a href="#" id="show-signup-modal">Create one</a></p>
+                                <p class="mt-3 mb-0" style="text-align: center;">No account? <a href="#" id="show-signup-modal">Create one</a></p>
                             </div>
                         </div>
                     </form>
@@ -114,7 +114,7 @@
                             <div class="col-md-12">
                                 <button type="submit" class="btn-default"><span>Create account</span></button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
-                                <p class="mt-3 mb-0">Already have an account? <a href="#" id="show-login-modal">Login</a></p>
+                                <p class="mt-3 mb-0" style="text-align: center;">Already have an account? <a href="#" id="show-login-modal">Login</a></p>
                             </div>
                         </div>
                     </form>

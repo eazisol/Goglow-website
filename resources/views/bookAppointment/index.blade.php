@@ -921,8 +921,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const durationMinutes = (bootstrap.service?.duration_minutes ?? 0);
         const userId = bootstrap.userId;
         if (!userId) {
-            alert('You must be logged in to book an appointment.');
-            window.location.href = '{{ route('login') }}?redirect=' + encodeURIComponent(window.location.href);
+            // Store the current URL for redirection after login
+            localStorage.setItem('book_appointment_url', window.location.href);
+            
+            // Show the login modal instead of alert
+            if (typeof $ !== 'undefined') {
+                $('#loginModal').modal('show');
+            } else if (typeof bootstrap !== 'undefined') {
+                const loginModalElement = document.getElementById('loginModal');
+                if (loginModalElement) {
+                    const modal = new bootstrap.Modal(loginModalElement);
+                    modal.show();
+                }
+            }
             return;
         }
 
