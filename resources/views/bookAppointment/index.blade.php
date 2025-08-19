@@ -331,6 +331,23 @@
     .page-book-appointment .row { align-items: flex-start !important; }
     /* Keep uniform padding so top/bottom match left/right */
     .appointment-form { min-height: unset !important; height: auto !important; display: block !important; padding: 24px !important; }
+    
+    /* Highlight today's date in the schedule */
+    .day-column.today {
+        background-color: rgba(28, 28, 28, 0.05);
+        border-bottom-color: var(--theme-color);
+    }
+    
+    .day-column.today .day-date {
+        color: var(--theme-color);
+        font-weight: 700;
+    }
+    
+    .day-slots-column.today {
+        background-color: rgba(28, 28, 28, 0.03);
+        border-left: 2px solid var(--theme-color);
+        border-right: 2px solid var(--theme-color);
+    }
 </style>
 @endsection
 
@@ -549,11 +566,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedDateTimeDisplay = document.getElementById('selectedDateTimeDisplay');
     
     let chosenAgent = null;
-    let currentWeekStart = new Date();
-    currentWeekStart.setHours(0, 0, 0, 0);
-    // Adjust to start the week on Monday
-    const day = currentWeekStart.getDay();
-    currentWeekStart.setDate(currentWeekStart.getDate() - (day === 0 ? 6 : day - 1));
+    
+    // Start with today's date as the reference point
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Initialize current week start to today
+    let currentWeekStart = new Date(today);
+    
+    // Store today's date for reference
+    const todayDate = today.getDate();
+    const todayMonth = today.getMonth();
+    const todayYear = today.getFullYear();
     
     // Day names mapping
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -667,14 +691,31 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderDaysHeader() {
         daysHeader.innerHTML = '';
         
-        for (let i = 0; i < 7; i++) {
+        // Calculate how many days to show (up to 7 days from today)
+        const daysToShow = 7;
+        
+        for (let i = 0; i < daysToShow; i++) {
             const date = new Date(currentWeekStart);
             date.setDate(date.getDate() + i);
+            
+            // Skip rendering if the date is before today
+            if (date < today) {
+                continue;
+            }
             
             const dayCol = document.createElement('div');
             dayCol.className = 'day-column';
             dayCol.dataset.date = formatDateValue(date);
             dayCol.dataset.dayIndex = i;
+            
+            // Check if this is today
+            const isToday = date.getDate() === todayDate && 
+                           date.getMonth() === todayMonth && 
+                           date.getFullYear() === todayYear;
+            
+            if (isToday) {
+                dayCol.classList.add('today');
+            }
             
             const dayName = document.createElement('span');
             dayName.className = 'day-name';
@@ -734,14 +775,28 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let i = 0; i < 7; i++) {
             const date = new Date(currentWeekStart);
             date.setDate(date.getDate() + i);
+            
+            // Skip rendering if the date is before today
+            if (date < today) {
+                continue;
+            }
+            
             const dayKey = dayKeys[date.getDay()];
-
             const daySlots = slots[dayKey] || [];
 
             // Create the column wrapper regardless, to keep alignment
             const col = document.createElement('div');
             col.className = 'day-slots-column';
             col.dataset.day = dayKey;
+            
+            // Check if this is today
+            const isToday = date.getDate() === todayDate && 
+                           date.getMonth() === todayMonth && 
+                           date.getFullYear() === todayYear;
+            
+            if (isToday) {
+                col.classList.add('today');
+            }
 
             if (Array.isArray(daySlots) && daySlots.length > 0) {
                 daySlots.forEach(slot => {
@@ -787,14 +842,45 @@ document.addEventListener('DOMContentLoaded', function () {
         // Do not auto-select any day; show all columns with their slots by default
     }
     
+    // Function to check if a date is in the past (before today)
+    function isDateInPast(date) {
+        return date < today;
+    }
+    
+    // Function to update the prev week button state
+    function updatePrevWeekButtonState() {
+        // Calculate the date that would be the start of the previous week
+        const prevWeekDate = new Date(currentWeekStart);
+        prevWeekDate.setDate(prevWeekDate.getDate() - 7);
+        
+        // Disable the button if the previous week would be in the past
+        if (isDateInPast(prevWeekDate)) {
+            prevWeekBtn.classList.add('disabled');
+            prevWeekBtn.setAttribute('disabled', 'disabled');
+        } else {
+            prevWeekBtn.classList.remove('disabled');
+            prevWeekBtn.removeAttribute('disabled');
+        }
+    }
+    
     // Navigate to previous week
     prevWeekBtn.addEventListener('click', function() {
-        currentWeekStart.setDate(currentWeekStart.getDate() - 7);
-        updateWeekDisplay();
-        renderDaysHeader();
-        if (chosenAgent && chosenAgent.slots) {
-            renderTimeSlots(chosenAgent.slots);
+        // Calculate the new week start
+        const newWeekStart = new Date(currentWeekStart);
+        newWeekStart.setDate(newWeekStart.getDate() - 7);
+        
+        // Only navigate if the new week start is not in the past
+        if (!isDateInPast(newWeekStart)) {
+            currentWeekStart = newWeekStart;
+            updateWeekDisplay();
+            renderDaysHeader();
+            if (chosenAgent && chosenAgent.slots) {
+                renderTimeSlots(chosenAgent.slots);
+            }
         }
+        
+        // Update button state
+        updatePrevWeekButtonState();
     });
     
     // Navigate to next week
@@ -805,6 +891,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (chosenAgent && chosenAgent.slots) {
             renderTimeSlots(chosenAgent.slots);
         }
+        
+        // Update button state
+        updatePrevWeekButtonState();
     });
     
     // Initialize the calendar when an agent is selected
@@ -838,6 +927,9 @@ document.addEventListener('DOMContentLoaded', function () {
             // Initialize the week display
             updateWeekDisplay();
             renderDaysHeader();
+            
+            // Initialize the button state
+            updatePrevWeekButtonState();
             
             // If agent has timing data but no slots, convert timing to slots format
             if (!agent.slots && agent.timing) {
