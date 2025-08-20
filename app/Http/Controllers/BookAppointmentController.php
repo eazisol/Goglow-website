@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Kreait\Firebase\Auth as FirebaseAuth;
 
 class BookAppointmentController extends Controller
 {
+    protected $auth;
+
+    public function __construct(FirebaseAuth $auth)
+    {
+        $this->auth = $auth;
+    }
+
     public function show(Request $request)
     {
         $serviceId = $request->query('serviceId');
@@ -26,6 +34,28 @@ class BookAppointmentController extends Controller
         $selectedService = null;
         $selectedCategory = null;
         $agents = [];
+        $userData = null;
+
+        // Get user data if authenticated
+        if ($firebaseUid) {
+            try {
+                $user = $this->auth->getUser($firebaseUid);
+                $userData = [
+                    'id' => $firebaseUid,
+                    'name' => $user->displayName ?? '',
+                    'email' => $user->email ?? session('firebase_email', ''),
+                    'phone' => $user->phoneNumber ?? '',
+                ];
+            } catch (\Throwable $e) {
+                // If we can't get user data, use what we have in session
+                $userData = [
+                    'id' => $firebaseUid,
+                    'name' => '',
+                    'email' => session('firebase_email', ''),
+                    'phone' => '',
+                ];
+            }
+        }
 
         if ($serviceId) {
             try {
@@ -55,6 +85,7 @@ class BookAppointmentController extends Controller
             'serviceProviderId' => $serviceProviderId,
             'serviceId' => $serviceId,
             'userId' => $firebaseUid,
+            'userData' => $userData,
         ]);
     }
 }

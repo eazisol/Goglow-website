@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         bookingPayload.payed = false;
     }
-    
+        console.log('After conditions booking payload:', bookingPayload);
     // Submit the booking to the API
     submitBooking(bookingPayload);
     

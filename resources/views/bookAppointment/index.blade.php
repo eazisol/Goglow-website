@@ -348,6 +348,30 @@
         border-left: 2px solid var(--theme-color);
         border-right: 2px solid var(--theme-color);
     }
+    
+    /* User info summary styling */
+    .user-info-summary {
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--theme-color);
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+    
+    .user-info-summary h5 {
+        color: var(--theme-color);
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+    
+    .user-info-summary p {
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+    
+    .user-info-summary p:last-child {
+        margin-bottom: 0;
+    }
 </style>
 @endsection
 
@@ -456,25 +480,18 @@
                                 <input type="hidden" id="selected_date" name="selected_date" required>
                                 <input type="hidden" id="selected_time" name="selected_time" required>
 
-                                <!-- Personal Information -->                                
-                                <div class="form-group col-md-6 mb-4">
-                                    <input type="text" name="fname" class="form-control" id="fname" placeholder="First Name" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                                
-                                <div class="form-group col-md-6 mb-4">
-                                    <input type="text" name="lname" class="form-control" id="lname" placeholder="Last Name" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
+                                <!-- Personal Information from logged-in user -->
+                                <input type="hidden" name="name" id="name" value="{{ $userData['name'] ?? '' }}">
+                                <input type="hidden" name="email" id="email" value="{{ $userData['email'] ?? '' }}">
+                                <input type="hidden" name="phone" id="phone" value="{{ $userData['phone'] ?? '' }}">
                                 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="Email Address" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-    
-                                <div class="form-group col-md-12 mb-4">
-                                    <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number" required>
-                                    <div class="help-block with-errors"></div>
+                                    <div class="user-info-summary alert alert-info">
+                                        <h5>Booking as:</h5>
+                                        <p><strong>Name:</strong> {{ $userData['name'] ?? 'Not provided' }}</p>
+                                        <p><strong>Email:</strong> {{ $userData['email'] ?? 'Not provided' }}</p>
+                                        <p><strong>Phone:</strong> {{ $userData['phone'] ?? 'Not provided' }}</p>
+                                    </div>
                                 </div>
                                 
                                 <!-- Payment Options -->
@@ -531,13 +548,14 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM fully loaded - initializing booking form');
     // Check if Stripe is loaded
     console.log('Stripe object availability:', typeof Stripe !== 'undefined' ? 'Available' : 'Not available');
-    const bootstrap = {
+         const bootstrap = {
         service: @json($selectedService ?? null),
         category: @json($selectedCategory ?? null),
         agents: @json($agents ?? []),
         serviceId: @json($serviceId ?? null),
         serviceProviderId: @json($serviceProviderId ?? null),
         userId: @json($userId ?? null),
+        userData: @json($userData ?? null),
     };
     const dayButtons = document.querySelectorAll('.day-btn');
     const selectedDayInput = document.getElementById('selected_day');
@@ -962,17 +980,14 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Get form values
-        const fname = form.fname.value.trim();
-        const lname = form.lname.value.trim();
-        const email = form.email.value.trim();
-        const phone = form.phone.value.trim();
+                 // Get user data from bootstrap
+         const userData = bootstrap.userData || {};
+         const name = userData.name || '';
+         const email = userData.email || '';
+         const phone = userData.phone || '';
 
-        // Get payment option
-        const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
-
-        // Combine name
-        const fullName = fname + ' ' + lname;
+         // Get payment option
+         const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
 
         // Get params from URL (fallback) and from server (preferred)
         const urlParams = new URLSearchParams(window.location.search);
@@ -1049,14 +1064,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     isCompleted: false,
                     startTime: bookingTime,
                     agentId: chosenAgent?.id || null,
+                    agentName: chosenAgent?.name || 'Selected Agent'
+                }
+            ],
+            userInfo:[
+                {
+                    id: userId,
+                    name: name,
+                    email: email,
+                    phone: phone,
                 }
             ]
         };
         
         // Collect form data to pass through the payment process
         const formData = {
-            fname,
-            lname,
+            name,
             email,
             phone
         };
@@ -1064,8 +1087,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // Store form data in localStorage before going to Stripe
             const formDataToStore = {
-                fname,
-                lname,
+                name,
                 email,
                 phone,
                 selectedDate: selectedDateInput.value,
@@ -1160,9 +1182,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     serviceName: 'Test Service',
                     servicePrice: 1.00,
                     paymentType: 'full',
-                    formData: {
-                        fname: 'Test',
-                        lname: 'User',
+                                         formData: {
+                        name: 'Test User',
                         email: 'test@example.com',
                         phone: '1234567890'
                     },
