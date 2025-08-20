@@ -78,10 +78,10 @@
                     </div>
                     <div class="custom-service-list">
                         @foreach($servicesInCategory as $service)
-                            <div class="service-row d-flex justify-content-between align-items-start flex-wrap">
+                            <div class="service-row d-flex justify-content-between flex-wrap">
                                 
                                 <!-- Left -->
-                                <div class="service-info">
+                                <div class="service-info" style="display: flex;align-items: center;">
                                     {{-- <div class="section-title" style="margin-bottom:initial;">
                                         <h3 class="wow fadeInUp">{{ $service['category']['name'] }}</h3>
                                     </div> --}}
@@ -93,7 +93,7 @@
                                             class="img-fluid rounded-circle"
                                             onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                                     </div>
-                                    <div class="service-list-details">
+                                    <div class="service-list-details" style="margin-left: 35px;">
                                         <div class="service-name fw-semibold">
                                         {{ $service['service_name'] }}
                                     </div>
@@ -195,7 +195,7 @@
 @section('styles')
 <style>
 .choose-button{
-    margin-top: 50px;
+    margin-top: 20px;
 }
 .provider-header {
     background: #fff;
@@ -241,7 +241,7 @@
     object-fit: cover;
 }
 .service-image{
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
 }
 
 .service-details {

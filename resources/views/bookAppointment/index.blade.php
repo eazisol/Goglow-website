@@ -480,19 +480,10 @@
                                 <input type="hidden" id="selected_date" name="selected_date" required>
                                 <input type="hidden" id="selected_time" name="selected_time" required>
 
-                                <!-- Personal Information from logged-in user -->
+                                <!-- Personal Information from logged-in user (hidden) -->
                                 <input type="hidden" name="name" id="name" value="{{ $userData['name'] ?? '' }}">
                                 <input type="hidden" name="email" id="email" value="{{ $userData['email'] ?? '' }}">
                                 <input type="hidden" name="phone" id="phone" value="{{ $userData['phone'] ?? '' }}">
-                                
-                                <div class="form-group col-md-12 mb-4">
-                                    <div class="user-info-summary alert alert-info">
-                                        <h5>Booking as:</h5>
-                                        <p><strong>Name:</strong> {{ $userData['name'] ?? 'Not provided' }}</p>
-                                        <p><strong>Email:</strong> {{ $userData['email'] ?? 'Not provided' }}</p>
-                                        <p><strong>Phone:</strong> {{ $userData['phone'] ?? 'Not provided' }}</p>
-                                    </div>
-                                </div>
                                 
                                 <!-- Payment Options -->
                                 <div class="form-group col-md-12 mb-4">
