@@ -548,7 +548,8 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM fully loaded - initializing booking form');
     // Check if Stripe is loaded
     console.log('Stripe object availability:', typeof Stripe !== 'undefined' ? 'Available' : 'Not available');
-         const bootstrap = {
+    
+    const bootstrap = {
         service: @json($selectedService ?? null),
         category: @json($selectedCategory ?? null),
         agents: @json($agents ?? []),
@@ -557,6 +558,10 @@ document.addEventListener('DOMContentLoaded', function () {
         userId: @json($userId ?? null),
         userData: @json($userData ?? null),
     };
+    
+    // Log logged-in user data at page load
+    console.log('Logged-in user ID:', bootstrap.userId);
+    console.log('Logged-in user data:', bootstrap.userData);
     const dayButtons = document.querySelectorAll('.day-btn');
     const selectedDayInput = document.getElementById('selected_day');
     const selectedDateInput = document.getElementById('selected_date');
@@ -933,6 +938,10 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Agent slots:', agent.slots);
             console.log('Agent timing:', agent.timing);
             
+            // Log logged-in user data
+            console.log('Logged-in user data:', bootstrap.userData);
+            
+            
             // Show the schedule section
             agentSchedule.style.display = '';
             
@@ -985,6 +994,15 @@ document.addEventListener('DOMContentLoaded', function () {
          const name = userData.name || '';
          const email = userData.email || '';
          const phone = userData.phone || '';
+         
+         // Log user data being used for the booking
+         console.log('User data for booking:', {
+             id: bootstrap.userId,
+             name: name,
+             email: email,
+             phone: phone,
+             userData: userData
+         });
 
          // Get payment option
          const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
