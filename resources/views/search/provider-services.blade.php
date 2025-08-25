@@ -99,9 +99,10 @@
                                     </div>
                                     @if(!empty($service['service_details']))
                                         <div class="service-desc text-muted">
-                                            {{ $service['service_details'] }}
+                                            {{ \Illuminate\Support\Str::limit($service['service_details'], 50, '...') }}
                                         </div>
                                     @endif
+
                                     </div>
                                 </div>
 
