@@ -94,7 +94,14 @@
                                          onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                                 </div>
                                 <div class="provider-details p-4">
-                                    <h3>{{ $provider['storeName'] ?? $provider['name'] }}</h3>
+                                    <h3>
+                                        {{ !empty($provider['storeName']) 
+                                            ? $provider['storeName'] 
+                                            : (!empty($provider['name']) 
+                                                ? $provider['name'] 
+                                                : 'No Name') }}
+                                    </h3>
+
                                     @if(isset($provider['companyName']))
                                         <p class="company-name">{{ $provider['companyName'] }}</p>
                                     @endif
@@ -207,7 +214,7 @@
 
 .company-name {
     color: #666;
-    font-style: italic;
+    /* font-style: italic; */
 }
 
 .provider-meta {
