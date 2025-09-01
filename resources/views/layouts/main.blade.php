@@ -55,8 +55,10 @@
         --divider-color: {{ $theme['divider_color'] }};
         --dark-divider-color: {{ $theme['dark_divider_color'] }};
         --error-color: {{ $theme['error_color'] }};
-        --default-font: {{ $theme['default_font'] }};
-        --accent-font: {{ $theme['accent_font'] }};
+        /* --default-font: {{ $theme['default_font'] }};
+        --accent-font: {{ $theme['accent_font'] }}; */
+        --default-font: "Plus Jakarta Sans", sans-serif;
+        --accent-font: "Lora", serif;
     }
 
     body {
