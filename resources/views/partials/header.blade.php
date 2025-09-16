@@ -1,7 +1,7 @@
 @php($isHome = request()->is('/'))
 <header class="main-header {{ $isHome ? 'bg-section header--transparent' : 'header--solid' }}">
 		<div class="header-sticky">
-			<nav class="navbar navbar-expand-lg">
+			<nav class="navbar navbar-expand-lg" style="margin-bottom: 23px;">
 				<div class="container-fluid">
 					<a class="navbar-brand" href="{{ url('/') }}">
 						<img src="images/goglowlogo.png" alt="Logo" style="width: 60px;">

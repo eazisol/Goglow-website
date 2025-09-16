@@ -24,6 +24,8 @@
 <link rel="stylesheet" href="{{ asset('css/mousecursor.css') }}">
 <link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="screen">
 <link href="{{ asset('css/auth-modals.css') }}" rel="stylesheet" media="screen">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">
+
 
 {{-- datepicker --}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">

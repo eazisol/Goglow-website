@@ -50,12 +50,14 @@ class LanguageHelper
      */
     public static function getLocaleFlag($locale)
     {
-        $flags = [
-            'en' => '🇺🇸',
-            'fr' => '🇫🇷',
-        ];
-
-        return $flags[$locale] ?? '🌐';
+     switch ($locale) {
+        case 'en':
+            return '<span class="fi fi-gb"></span>'; // UK flag
+        case 'fr':
+            return '<span class="fi fi-fr"></span>'; // France flag
+        default:
+            return '<span class="fi fi-xx"></span>'; // fallback
+    }
     }
 
     /**

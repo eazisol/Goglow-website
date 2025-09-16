@@ -522,9 +522,9 @@ header.main-header{
     left: 0;
     right: 0;
     top: 0;
-    background: transparent;
+    background: #00000096;
 	z-index: 100;
-	border-radius: 0;
+	border-radius: 23px 23px 0 0;
 }
 
 header.main-header .header-sticky{
@@ -815,7 +815,7 @@ header.main-header .container-fluid{
 
 .hero.hero-bg-image{
 	position: relative;
-	background: url('../images/WhatsApp Image 2025-08-19 at 12.16.37_86ef7ad6.jpg') no-repeat;
+	background: url('../images/adam-winger-VjRpkGtS55w-unsplash.jpg') no-repeat;
 	/* background-position: center center; */
 	background-size: cover;
 	overflow: hidden;

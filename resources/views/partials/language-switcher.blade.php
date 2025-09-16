@@ -7,7 +7,7 @@
 <div class="language-switcher">
     <div class="dropdown">
         <button class="language-btn" type="button" id="languageDropdown" aria-expanded="false">
-            <span class="language-flag">{{ LanguageHelper::getLocaleFlag($currentLocale) }}</span>
+            <span class="language-flag">{!! LanguageHelper::getLocaleFlag($currentLocale) !!}</span>
             <span class="language-name">{{ LanguageHelper::getLocaleName($currentLocale) }}</span>
             <i class="fas fa-chevron-down"></i>
         </button>
@@ -17,7 +17,7 @@
                 @if($locale !== $currentLocale)
                     <li>
                         <a href="{{ route('language.switch', $locale) }}" class="dropdown-item">
-                            <span class="language-flag">{{ LanguageHelper::getLocaleFlag($locale) }}</span>
+                            <span class="language-flag">{!! LanguageHelper::getLocaleFlag($locale) !!}</span>
                             <span class="language-name">{{ LanguageHelper::getLocaleName($locale) }}</span>
                         </a>
                     </li>
@@ -43,8 +43,8 @@
     padding: 8px 12px;
     cursor: pointer;
     display: flex;
-    align-items: center;+
-    gap: 8px;
+    align-items: center;
+    gap: 8px !important;
     color: inherit;
     font-size: 14px;
     border-radius: 4px;
@@ -89,7 +89,7 @@
 }
 
 .language-switcher .dropdown-item {
-    display: flex;
+    /* display: flex; */
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
