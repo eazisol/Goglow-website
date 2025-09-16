@@ -1,6 +1,6 @@
 @extends('layouts.main')
 {{-- Title --}}
-@section('title', 'home')
+@section('title', 'term&conditions')
 
 {{-- Style Files --}}
 @section('styles')
@@ -21,17 +21,7 @@
 {{-- Content --}}
 @section('content')
     <!-- Page Header Start -->
-    <div class="page-header bg-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <!-- Page Header Box Start -->
-                    
-                    <!-- Page Header Box End -->
-                </div>
-            </div>
-        </div>
-    </div>
+
     <!-- Page Header End -->
 	
 
@@ -91,20 +81,32 @@
                             
                             <h3>11. Suspension et Suppression de Compte</h3>
                             <p>GoGlow peut suspendre ou résilier des comptes en cas de violation des règles ou de comportement inapproprié. Les sanctions peuvent inclure avertissement, suspension temporaire ou suppression définitive. Les utilisateurs peuvent supprimer leur compte à tout moment ; toutes les données sont définitivement supprimées sous 30 jours.</p>
+                            {{-- /////////////////// --}}
+                            <h3>12. User-Generated Content</h3>
+                            <p>Our Service may allow you to post, link, store, share, and otherwise make available certain information, text, graphics, videos, or other material ("Content"). You are responsible for the Content that you post on or through the Service, including its legality, reliability, and appropriateness.</p>
                             
-                            <h3>12. Obligations des Prestataires</h3>
+                            <h3>13. Prohibited Content and Activities</h3>
+                            <p>You agree not to post any content that is illegal, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, sexually explicit, profane, hateful, or racially, ethnically, or otherwise objectionable. This includes, but is not limited to, content that promotes discrimination, bigotry, racism, hatred, harassment, or harm against any individual or group.
+You agree not to engage in any abusive behavior towards other users. Abusive behavior includes, but is not limited to, harassment, bullying, and spamming.</p>
+                            
+                            <h3>14. Content Moderation</h3>
+                            <p>We have no obligation to, but reserve the right to, monitor, filter, and remove any content that violates these terms. We also reserve the right to terminate or suspend your account for posting objectionable content or for abusive behavior.
+We will act on reports of objectionable content within 24 hours by removing the content and ejecting the user who provided the offending content.</p>
+                            {{-- /////////////////// --}}
+
+                            <h3>15. Obligations des Prestataires</h3>
                             <p>Les Glowers doivent fournir des informations exactes et à jour, honorer les réservations acceptées et respecter la législation sur la protection des consommateurs.</p>
                             
-                            <h3>13. Responsabilité</h3>
+                            <h3>16. Responsabilité</h3>
                             <p>GoGlow décline toute responsabilité concernant l'exécution des prestations, le contenu généré par les utilisateurs ou les liens externes. L'application est fournie « en l'état » sans garantie.</p>
                             
-                            <h3>14. Liens Externes</h3>
+                            <h3>17. Liens Externes</h3>
                             <p>Des liens externes peuvent être présents à titre informatif. GoGlow n'est pas responsable de leur contenu ni de leurs pratiques.</p>
                             
-                            <h3>15. Droit Applicable</h3>
+                            <h3>18. Droit Applicable</h3>
                             <p>Les présentes CGU sont régies par le droit français. Tout litige relève de la compétence exclusive des tribunaux de Paris.</p>
                             
-                            <h3>16. Contact</h3>
+                            <h3>19. Contact</h3>
                             <p>Pour toute question : <a href="mailto:contact@goglow.com">contact@goglow.com</a></p>
                         </div>
                     </div>

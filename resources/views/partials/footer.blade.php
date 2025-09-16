@@ -8,7 +8,7 @@
                             <h1 class="text-anime-style-2" data-cursor="-opaque" style="color: white;">Go<span>Glow</span></h1>
                         </div> --}}
                         <div class="about-footer-content">
-                            <p>Discover and book trusted salon services with ease. From hair to skin, we connect you with professionals who help you look and feel your best.</p>
+                            <p>{{ __('app.footer.about_description') }}</p>
                         </div>
    
                         <div class="footer-contact-details">
@@ -17,7 +17,7 @@
                                     <img src="images/icon-phone.svg" alt="">
                                 </div>
                                 <div class="footer-contact-item-content">
-                                    <h3>Urgent Support?</h3>
+                                    <h3>{{ __('app.footer.urgent_support') }}</h3>
                                     <p><a href="tel:+33607426151">+33 (607) 426-151</a></p>
                                 </div>
                             </div>
@@ -26,7 +26,7 @@
                                     <img src="images/icon-mail.svg" alt="">
                                 </div>
                                 <div class="footer-contact-item-content">
-                                    <h3>E-mail Us</h3>
+                                    <h3>{{ __('app.footer.email_us') }}</h3>
                                     <p><a href="mailto:info@goglow.fr">info@goglow.fr</a></p>
                                 </div>
                             </div>
@@ -40,13 +40,13 @@
                         <div class="footer-newsletter-form">
                             <form id="newslettersForm" action="#" method="POST">
                                 <div class="form-group">
-                                    <input type="email" name="mail" class="form-control"  id="mail" placeholder="Enter your email" required>
-                                    <button type="submit" class="btn-default btn-highlighted">subscribe</button>
+                                    <input type="email" name="mail" class="form-control"  id="mail" placeholder="{{ __('app.footer.enter_email') }}" required>
+                                    <button type="submit" class="btn-default btn-highlighted">{{ __('app.footer.subscribe') }}</button>
                                 </div>
                             </form>
                         </div>
                         <div class="footer-social-links">
-                            <h3>Connect with Us Online</h3>
+                            <h3>{{ __('app.footer.connect_with_us') }}</h3>
                             <ul>
                                 <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
                                 <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
@@ -61,17 +61,17 @@
                     <div class="footer-copyright">
                         <div class="footer-links">
                             <ul>
-                                <li><a href="{{ url('/') }}">Home</a></li>
-                                <li><a href="{{ url('/about') }}">About us</a></li>
-                                <li><a href="{{ url('/services') }}">services</a></li>
+                                <li><a href="{{ url('/') }}">{{ __('app.footer.home') }}</a></li>
+                                <li><a href="{{ url('/about') }}">{{ __('app.footer.about_us') }}</a></li>
+                                <li><a href="{{ url('/services') }}">{{ __('app.footer.services') }}</a></li>
                                 {{-- <li><a href="{{ url('/blogs') }}">blogs</a></li> --}}
-                                <li><a href="{{ url('/contact-us') }}">contact us</a></li>
-                                <li><a href="{{ url('/terms_condition') }}">Terms & Conditions</a></li>
-                                <li><a href="{{ url('/privacy_policy') }}">Privacy Policy</a></li>
+                                <li><a href="{{ url('/contact-us') }}">{{ __('app.footer.contact_us') }}</a></li>
+                                <li><a href="{{ url('/terms_condition') }}">{{ __('app.footer.terms_conditions') }}</a></li>
+                                <li><a href="{{ url('/privacy_policy') }}">{{ __('app.footer.privacy_policy') }}</a></li>
                             </ul>
                         </div>
                         <div class="footer-copyright-text">
-                            <p>Copyright © 2025 All Rights Reserved.</p>
+                            <p>{{ __('app.footer.copyright') }}</p>
                         </div>
                     </div>
                 </div>

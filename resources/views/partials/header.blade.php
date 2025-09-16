@@ -17,8 +17,8 @@
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/home-video') }}">Home - Video</a></li>
                                     </ul> --}}
                                 </li>   
-								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/search') }}">Book Service</a></li>                             
-								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/about') }}">About Us</a>
+								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/search') }}">{{ __('app.nav.book_service') }}</a></li>                             
+								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/about') }}">{{ __('app.nav.about_us') }}</a>
                                 
                                 {{-- <li class="nav-item"><a class="nav-link" href="{{ url('/blogs') }}">Blog</a></li> --}}
                                 {{-- <li class="nav-item submenu"><a class="nav-link" href="#">Pages</a>
@@ -37,15 +37,16 @@
                                         <li class="nav-item"><a class="nav-link" href="{{ url('/404') }}">404</a></li>
                                     </ul>
                                 </li> --}}
-								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/contact-us') }}">Contact Us</a></li>
-								<li class="nav-item highlighted-menu"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/book-appointment') }}">Book Appointment</a></li>
+								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/contact-us') }}">{{ __('app.nav.contact_us') }}</a></li>
+								<li class="nav-item highlighted-menu"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/book-appointment') }}">{{ __('app.nav.book_service') }}</a></li>
                             </ul>
                         </div>
-                        <div class="header-btn">
+                        <div class="header-btn" style="display: contents;">
+                            @include('partials.language-switcher')
                             @if(session('firebase_uid'))
                                 <a href="#" class="btn-default {{ $isHome ? 'border-btn' : '' }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="margin-right: 3px;">
+                                {{ __('app.nav.logout') }}
                                 </a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
                                     @csrf

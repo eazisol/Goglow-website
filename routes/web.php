@@ -70,7 +70,7 @@ Route::get('/payment-success', [\App\Http\Controllers\PaymentController::class, 
 Route::get('/beauty-professional', function () {return view('iamProfessional.index');});
 
 // term & conditions
-Route::get('/terms_condition', function () {return view('termsConditions.index');});
+Route::get('/terms_condition', function () {return view('termsConditions.index');})->name('terms_condition');
 
 // privacy policy
 Route::get('/privacy_policy', function () {return view('privacyPolicy.index');});
@@ -87,3 +87,10 @@ Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])-
 // AJAX auth routes
 Route::post('/ajax/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('ajax.login');
 Route::post('/ajax/signup', [\App\Http\Controllers\AuthController::class, 'register'])->name('ajax.signup');
+
+// Language switching routes
+Route::get('/language/{locale}', [\App\Http\Controllers\LanguageController::class, 'switchLanguage'])->name('language.switch');
+Route::get('/api/locale', [\App\Http\Controllers\LanguageController::class, 'getCurrentLocale'])->name('api.locale');
+
+// Test language page
+Route::get('/test-language', function () {return view('test.language');});

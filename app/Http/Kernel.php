@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\SetLocale::class,
         ],
 
         'api' => [
@@ -65,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'firebase.auth' => \App\Http\Middleware\FirebaseAuthenticate::class,
         'firebase.auth.modal' => \App\Http\Middleware\FirebaseAuthenticateModal::class,
+        'set.locale' => \App\Http\Middleware\SetLocale::class,
     ];
 }

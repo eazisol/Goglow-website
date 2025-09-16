@@ -2,7 +2,7 @@
 <html>
 <head>
     
-  <title>GoGlow</title>
+  <title>GoGlow - @yield('title')</title>
   @yield('styles')
   <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -57,7 +57,7 @@
         --error-color: {{ $theme['error_color'] }};
         /* --default-font: {{ $theme['default_font'] }};
         --accent-font: {{ $theme['accent_font'] }}; */
-        --default-font: "Plus Jakarta Sans", sans-serif;
+        --default-font: "DM Sans", sans-serif;
         --accent-font: "Lora", serif;
     }
 
@@ -136,9 +136,13 @@
 	</div> --}}
     
     
-                @include('partials.header')                
+                @if (!Route::is('terms_condition'))
+                    @include('partials.header')
+                @endif             
                   @yield('content')
-                @include('partials.footer')
+                @if (!Route::is('terms_condition'))
+                    @include('partials.footer')
+                @endif
 
                 
                 

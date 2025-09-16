@@ -97,6 +97,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Available Locales
+    |--------------------------------------------------------------------------
+    |
+    | This array contains the list of locales that your application supports.
+    | These locales will be used by the language switcher and locale middleware.
+    |
+    */
+
+    'available_locales' => ['en', 'fr'],
+
+    /*
+    |--------------------------------------------------------------------------
     | Faker Locale
     |--------------------------------------------------------------------------
     |

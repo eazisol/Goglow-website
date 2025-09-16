@@ -21,22 +21,22 @@
                         <div class="hero-content" style="width: 80%;">
                             <!-- Section Title Start -->
                             <div class="section-title">
-                                <h1 class="text-anime-style-2" data-cursor="-opaque">Discover  <span> Book </span> Glow </h1>
-                                <h3 class="wow fadeInUp"> From trending beauty content to trusted local pros — your next glow-up is just a scroll away</h3>
+                                <h1 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.hero_title') }}</h1>
+                                <h3 class="wow fadeInUp">{{ __('app.home.hero_subtitle') }}</h3>
                                 <div class="search-bar">
                                     <form action="{{ route('search') }}" method="GET" class="search-form">
                                         <div class="search-inputs">
                                             <div class="search-item">
                                                 <i class="fas fa-search"></i>
-                                                <input type="text" id="searchInput" placeholder="Search by service or provider name" name="search" required>
+                                                <input type="text" id="searchInput" placeholder="{{ __('app.home.search_service_placeholder') }}" name="search" required>
                                             </div>
                                             
                                             <div class="search-item">
                                                 <i class="fas fa-map-marker-alt"></i>
-                                                <input type="text" id="locationInput" placeholder="Location (required for service search)" name="location">
+                                                <input type="text" id="locationInput" placeholder="{{ __('app.home.search_location_placeholder') }}" name="location">
                                             </div>
                                             
-                                            <button type="submit" class="search-button">Search</button>
+                                            <button type="submit" class="search-button">{{ __('app.home.search_button') }}</button>
 
                                             <script>
                                                 document.getElementById('searchInput').addEventListener('input', function() {
@@ -54,8 +54,8 @@
                                                             // If searching for a provider, location is not required
                                                             locationInput.required = !isProvider;
                                                             locationInput.placeholder = isProvider ? 
-                                                                "Location (optional for provider search)" : 
-                                                                "Location (required for service search)";
+                                                                "{{ __('app.home.search_location_optional') }}" : 
+                                                                "{{ __('app.home.search_location_placeholder') }}";
                                                         });
                                                 });
                                             </script>
@@ -68,8 +68,8 @@
 
                             <!-- Hero Button Start -->
                             <div class="wow fadeInUp" data-wow-delay="0.4s" style="gap: 22px; display: inline-flex;">
-                                <a href="{{ url('/search') }}" class="btn-default btn-highlighted">Book Appointment</a>
-                                <a href="{{ url('/search') }}" class="btn-default border-btn">Our Services</a>
+                                <a href="{{ url('/search') }}" class="btn-default btn-highlighted">{{ __('app.home.book_appointment_button') }}</a>
+                                <a href="{{ url('/search') }}" class="btn-default border-btn">{{ __('app.home.our_services_button') }}</a>
                             </div>
                             <!-- Hero Button End -->
                         </div>
@@ -167,10 +167,10 @@
                         <div class="why-choose-content">
                             <!-- Section Title Start -->
                             <div class="section-title">
-                                <h3 class="wow fadeInUp">Why choose us</h3>
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>salon experiences</span></h2>
+                                <h3 class="wow fadeInUp">{{ __('app.home.why_choose_title') }}</h3>
+                                <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.why_choose_subtitle') }}</h2>
                                 <p class="wow fadeInUp" data-wow-delay="0.2s">
-                                    We bring all your beauty and grooming needs under one roof. Our trusted network of professional salons, transparent booking system, and quality-focused service help us deliver consistent satisfaction to every client.
+                                    {{ __('app.home.why_choose_description') }}
                                 </p>
                             </div>
                             <!-- Section Title End -->
@@ -184,11 +184,11 @@
                                             <img src="images/icon-why-choose-1.svg" alt="">
                                         </div>
                                         <div class="why-choose-item-title">
-                                            <h3>All-in-One Salon Platform</h3>
+                                            <h3>{{ __('app.home.all_in_one_title') }}</h3>
                                         </div>
                                     </div>
                                     <div class="why-choose-item-content">
-                                        <p>From Hair to Nails, Skin to Waxing—book any service at top-rated salons near you, all in one place.</p>
+                                        <p>{{ __('app.home.all_in_one_description') }}</p>
                                     </div>
                                 </div>
                                 <!-- Why Choose Item End -->
@@ -200,11 +200,11 @@
                                             <img src="images/icon-why-choose-2.svg" alt="">
                                         </div>
                                         <div class="why-choose-item-title">
-                                            <h3>Trusted Salon Partners</h3>
+                                            <h3>{{ __('app.home.trusted_partners_title') }}</h3>
                                         </div>
                                     </div>
                                     <div class="why-choose-item-content">
-                                        <p>We partner only with licensed, well-reviewed salons to ensure you get quality care from skilled professionals.</p>
+                                        <p>{{ __('app.home.trusted_partners_description') }}</p>
                                     </div>
                                 </div>
                                 <!-- Why Choose Item End -->    
@@ -245,9 +245,9 @@
                     <!-- Section Title Start -->
                     <div class="section-title section-title-center">
                         
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Why Glowees <span>Love GoGlow</span></h2>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.glowees_love_title') }}</h2>
                         <hr>
-                        <h3 class="wow fadeInUp">A revolutionary beauty experience that combines social inspiration smart booking</h3>
+                        <h3 class="wow fadeInUp">{{ __('app.home.glowees_love_subtitle') }}</h3>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -261,8 +261,8 @@
                             <img src="images/icon-service-1.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3>Get inspired by real local beauty content</h3>
-                            <p>Scroll looks from real Glowers near you</p>
+                            <h3>{{ __('app.home.get_inspired_title') }}</h3>
+                            <p>{{ __('app.home.get_inspired_description') }}</p>
                         </div>
                         
                         {{-- <div class="service-btn">
@@ -279,8 +279,8 @@
                             <img src="images/icon-service-2.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3>Find Glowers near you</h3>
-                            <p>Location-based: book beauty that’s actually close</p>
+                            <h3>{{ __('app.home.find_glowers_title') }}</h3>
+                            <p>{{ __('app.home.find_glowers_description') }}</p>
                         </div>
                         {{-- <div class="service-item-list">
                             <ul>
@@ -302,8 +302,8 @@
                             <img src="images/icon-service-3.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3>Make an appointment in seconds</h3>
-                            <p>Last-minute appointments — no more DM chaos</p>
+                            <h3>{{ __('app.home.make_appointment_title') }}</h3>
+                            <p>{{ __('app.home.make_appointment_description') }}</p>
                         </div>
                         
                         {{-- <div class="service-btn">
@@ -320,8 +320,8 @@
                             <img src="images/icon-service-1.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3>Custom Smart Engine</h3>
-                            <p>Tailor-make recommendations based on your tastes and preferences</p>
+                            <h3>{{ __('app.home.custom_engine_title') }}</h3>
+                            <p>{{ __('app.home.custom_engine_description') }}</p>
                         </div>
                         
                         {{-- <div class="service-btn">
@@ -338,8 +338,8 @@
                             <img src="images/icon-service-2.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3>Integrated secure payment</h3>
-                            <p>Pay securely in-app</p>
+                            <h3>{{ __('app.home.secure_payment_title') }}</h3>
+                            <p>{{ __('app.home.secure_payment_description') }}</p>
                         </div>
                         
                         {{-- <div class="service-btn">
@@ -356,8 +356,8 @@
                             <img src="images/icon-service-3.svg" alt="">
                         </div>                        
                         <div class="service-content">
-                            <h3>Ultra-fast experience</h3>
-                            <p>Follow your favorite Glowers and get notified when they drop availability</p>
+                            <h3>{{ __('app.home.ultra_fast_title') }}</h3>
+                            <p>{{ __('app.home.ultra_fast_description') }}</p>
                         </div>
                         
                         {{-- <div class="service-btn">
@@ -486,15 +486,15 @@
                     <div class="what-we-do-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">How it works</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">A simple way to <span>look and feel your best</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">From finding top-rated salons to booking with ease, our platform helps you glow effortlessly in just 3 simple steps.</p>
+                            <h3 class="wow fadeInUp">{{ __('app.home.how_it_works_title') }}</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.how_it_works_subtitle') }}</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ __('app.home.how_it_works_description') }}</p>
                         </div>
                         <!-- Section Title End -->
                         
                         <!-- What We Do Button Start -->
                         <div class="what-we-do-btn wow fadeInUp" data-wow-delay="0.4s">
-                            <a href="{{ url('/contact-us') }}" class="btn-default">contact us</a>
+                            <a href="{{ url('/contact-us') }}" class="btn-default">{{ __('app.home.contact_us_button') }}</a>
                         </div>
                         <!-- What We Do Button End -->
                     </div>
@@ -510,8 +510,8 @@
                                 <img src="images/icon-what-we-do-1.svg" alt="">
                             </div>
                             <div class="what-do-item-content">
-                                <h3>Explore looks and services</h3>
-                                <p>Explore a variety of trusted salons near you offering hair, nails, skin, and more beauty services.</p>
+                                <h3>{{ __('app.home.explore_services_title') }}</h3>
+                                <p>{{ __('app.home.explore_services_description') }}</p>
                             </div>
                         </div>
                         <!-- What We Do Item End -->
@@ -522,8 +522,8 @@
                                 <img src="images/icon-what-we-do-2.svg" alt="">
                             </div>
                             <div class="what-do-item-content">
-                                <h3>Choose your service</h3>
-                                <p>Select your preferred time, service, and salon, then book instantly through our platform.</p>
+                                <h3>{{ __('app.home.choose_service_title') }}</h3>
+                                <p>{{ __('app.home.choose_service_description') }}</p>
                             </div>
                         </div>
                         <!-- What We Do Item End -->
@@ -535,8 +535,8 @@
                             </div>
                             
                             <div class="what-do-item-content">
-                                <h3>shine</h3>
-                                <p>Show up at your appointment, enjoy expert care, and walk out glowing with confidence.</p>
+                                <h3>{{ __('app.home.shine_title') }}</h3>
+                                <p>{{ __('app.home.shine_description') }}</p>
                             </div>
                         </div>
                         <!-- What We Do Item End -->
@@ -694,8 +694,8 @@
                 <div class="col-lg-6">
                     <!-- Section Title Start -->
                     <div class="section-title">
-                        <h3 class="wow fadeInUp">Testimonials</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Where every look tells a <span>story</span></h2>
+                        <h3 class="wow fadeInUp">{{ __('app.home.testimonials_title') }}</h3>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.testimonials_subtitle') }}</h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -1052,15 +1052,15 @@
                     <div class="our-partners-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">Our partners</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Trusted salon partnerships that <span>elevate your experience</span></h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">We collaborate with top-tier salons and beauty experts to ensure you receive quality services, professional care, and consistent results—every time you book.</p>
+                            <h3 class="wow fadeInUp">{{ __('app.home.partners_title') }}</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.partners_subtitle') }}</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ __('app.home.partners_description') }}</p>
                         </div>
                         <!-- Section Title End -->
 
                         <!-- How It Work Button Start -->
                         <div class="our-partner-btn wow fadeInUp" data-wow-delay="0.4s">
-                            <a href="{{ url('/book-appointment') }}" class="btn-default">Book appointment</a>
+                            <a href="{{ url('/book-appointment') }}" class="btn-default">{{ __('app.home.book_appointment_partners') }}</a>
                         </div>
                         <!-- How It Work Button End -->
                     </div>
@@ -1498,9 +1498,9 @@
             <div class="row section-row">
                 <div class="col-lg-12">
                     <div class="section-title section-title-center">
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Want to shine <span>near you?</span></h2>
+                        <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.want_to_shine_title') }}</h2>
                         <hr>
-                        <h3 class="wow fadeInUp">Discover the trends around you</h3>
+                        <h3 class="wow fadeInUp">{{ __('app.home.discover_trends_subtitle') }}</h3>
                     </div>
                 </div>
             </div>
@@ -1608,9 +1608,9 @@
             <!-- Right: Content -->
             <div style="flex: 1; max-width: 550px;">
                         <div class="section-title">
-                            <h3 class="wow fadeInUp">Join us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Get the <span>GoGlow</span> App</h2>
-                            <p class="wow fadeInUp" data-wow-delay="0.2s">Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone.</p>
+                            <h3 class="wow fadeInUp">{{ __('app.home.join_us_title') }}</h3>
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.get_app_title') }}</h2>
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">{{ __('app.home.get_app_description') }}</p>
                         </div>
 
             <!-- Buttons -->
@@ -1627,15 +1627,15 @@
                     <ul class="feature-list">
                         <li>
                             <i class="fas fa-map-marker-alt"></i>
-                            <span>Find salons near you</span>
+                            <span>{{ __('app.home.find_salons_near') }}</span>
                         </li>
                         <li>
                             <i class="far fa-calendar"></i>
-                            <span>Schedule in seconds</span>
+                            <span>{{ __('app.home.schedule_seconds') }}</span>
                         </li>
                         <li>
                             <i class="fas fa-star"></i>
-                            <span>4.8 / 5 rating from 5,000+ users</span>
+                            <span>{{ __('app.home.rating_text') }}</span>
                         </li>
                     </ul>
             </div>
