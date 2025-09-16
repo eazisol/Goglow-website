@@ -11,6 +11,7 @@ return [
         'login' => 'Login',
         'logout' => 'Logout',
         'register' => 'Register',
+        'hero_section_button' => "Become a Glowee",
     ],
 
     // Authentication

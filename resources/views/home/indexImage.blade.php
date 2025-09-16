@@ -74,7 +74,7 @@
 
                             <!-- Hero Button Start -->
                             <div class="wow fadeInUp" data-wow-delay="0.4s" style="gap: 22px; display: inline-flex;">
-                                <a href="{{ url('/search') }}" class="btn-default btn-highlighted">{{ __('app.home.book_appointment_button') }}</a>
+                                {{-- <a href="{{ url('/search') }}" class="btn-default btn-highlighted">{{ __('app.home.book_appointment_button') }}</a> --}}
                                 <a href="{{ url('/search') }}" class="btn-default border-btn">{{ __('app.home.our_services_button') }}</a>
                             </div>
                             <!-- Hero Button End -->

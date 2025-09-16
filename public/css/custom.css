@@ -580,6 +580,7 @@ header.main-header .container-fluid{
 .main-menu .nav-menu-wrapper > ul{
 	align-items: center;
 	display: inline-flex;
+	margin-left: 100px;
 }
 
 .main-menu ul li{
@@ -808,6 +809,7 @@ header.main-header .container-fluid{
 }
 
 .hero .container-fluid{
+
 	padding: 0;
 }
 
@@ -4942,7 +4944,8 @@ header.main-header .container-fluid{
 
 	header.main-header .container-fluid,
 	.hero .container-fluid{
-		padding: 0 15px;
+		padding: 0 67px;
+		margin-top: 20px;
 	}
 
 	.hero,

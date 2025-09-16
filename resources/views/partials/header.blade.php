@@ -55,7 +55,7 @@
                                 {{-- <a href="{{ url('/login') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">Login</a>
                                 <a href="{{ url('/signup') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">Sign up</a> --}}
                             @endif
-                            <a href="{{ url('/beauty-professional') }}" class="btn-default {{ $isHome ? 'border-btn' : '' }}">I'm Professional</a>
+                            <a href="{{ url('/beauty-professional') }}" class="btn-default {{ $isHome ? 'btn-highlighted' : '' }}">{{ __('app.nav.hero_section_button') }}</a>
                         </div>
 					</div>
 					<div class="navbar-toggle"></div>
