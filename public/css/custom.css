@@ -813,8 +813,8 @@ header.main-header .container-fluid{
 
 .hero.hero-bg-image{
 	position: relative;
-	background: url('../images/benyamin-bohlouli-LGXN4OSQSa4-unsplash (1).jpg') no-repeat;
-	background-position: center center;
+	background: url('../images/WhatsApp Image 2025-08-19 at 12.16.37_86ef7ad6.jpg') no-repeat;
+	/* background-position: center center; */
 	background-size: cover;
 	overflow: hidden;
 	padding: 270px 0 155px;
@@ -828,7 +828,8 @@ header.main-header .container-fluid{
     bottom: 0;
     left: 0;
     right: 0;
-	background: linear-gradient(180.07deg, rgba(0, 0, 0, 0.3) 0.06%, #000000 114.98%), linear-gradient(359.91deg, rgba(0, 0, 0, 0.3) 70.64%, #000000 99.95%);
+	background: linear-gradient(180.07deg, rgba(0, 0, 0, 0.3) 0.06%, #0000004d 114.98%), linear-gradient(359.91deg, rgba(0, 0, 0, 0.3) 70.64%, #00000000 99.95%);
+	/* background: linear-gradient(180.07deg, rgba(0, 0, 0, 0.3) 0.06%, #000000 114.98%), linear-gradient(359.91deg, rgba(0, 0, 0, 0.3) 70.64%, #000000 99.95%); */
     opacity: 80%;
     width: 100%;
     height: 100%;

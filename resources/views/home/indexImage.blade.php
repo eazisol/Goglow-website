@@ -28,12 +28,18 @@
                                         <div class="search-inputs">
                                             <div class="search-item">
                                                 <i class="fas fa-search"></i>
-                                                <input type="text" id="searchInput" placeholder="{{ __('app.home.search_service_placeholder') }}" name="search" required>
+                                                <div class="input-text">
+                                                    <h5>{{ __('app.home.search_input_text') }}</h5>
+                                                    <input type="text" id="searchInput" placeholder="{{ __('app.home.search_service_placeholder') }}" name="search" required>
+                                                </div>
                                             </div>
                                             
                                             <div class="search-item">
                                                 <i class="fas fa-map-marker-alt"></i>
-                                                <input type="text" id="locationInput" placeholder="{{ __('app.home.search_location_placeholder') }}" name="location">
+                                                <div class="input-text">
+                                                    <h5>Or</h5>
+                                                    <input type="text" id="locationInput" placeholder="{{ __('app.home.search_location_placeholder') }}" name="location">
+                                                </div>
                                             </div>
                                             
                                             <button type="submit" class="search-button">{{ __('app.home.search_button') }}</button>

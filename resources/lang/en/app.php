@@ -119,6 +119,7 @@ return [
         'hero_title' => 'Discover Book Glow',
         'hero_subtitle' => 'From trending beauty content to trusted local pros — your next glow-up is just a scroll away',
         'search_service_placeholder' => 'Search by service or provider name',
+        'search_input_text' => 'What are you looking for ?',
         'search_location_placeholder' => 'Location (required for service search)',
         'search_location_optional' => 'Location (optional for provider search)',
         'search_button' => 'Search',
