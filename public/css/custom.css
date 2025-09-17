@@ -395,7 +395,7 @@ body{
 .bg-section{
 	width: 100%;
 	max-width: 1880px;
-	border-radius: 20px;
+	/* border-radius: 20px; */
 	margin: 0 auto;
 }
 
@@ -524,7 +524,7 @@ header.main-header{
     top: 0;
     background: #00000096;
 	z-index: 100;
-	border-radius: 23px 23px 0 0;
+	/* border-radius: 23px 23px 0 0; */
 }
 
 header.main-header .header-sticky{
@@ -799,7 +799,7 @@ header.main-header .container-fluid{
 	position: relative;
 	background-image: url('../images/hero-bg.png');
 	padding: 190px 0 75px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
 }
 
 .hero-section{
@@ -2614,7 +2614,7 @@ header.main-header .container-fluid{
 
 .main-footer{
 	padding: 100px 0 0;
-	margin-bottom: 20px;
+	/* margin-bottom: 20px; */
 }
 
 .about-footer{
@@ -2867,7 +2867,7 @@ header.main-header .container-fluid{
 	background-position: center center;
 	background-size: cover;
 	padding: 75px 0 50px;
-	margin-top: 20px;
+	/* margin-top: 20px; */
 }
 
 .page-header-box{
@@ -4940,10 +4940,10 @@ header.main-header .container-fluid{
 
 @media only screen and (max-width: 1880px){
 	
-	.bg-section{
+	/* .bg-section{
 		max-width: calc(100% - 40px);
 		margin: 0 20px;
-	}
+	} */
 
 	header.main-header .container-fluid,
 	.hero .container-fluid{
@@ -4951,13 +4951,13 @@ header.main-header .container-fluid{
 		
 	}
 
-	.hero,
+	/* .hero,
 	.page-header{
 		margin-top: 20px;
-	}
+	} */
 	
 	.main-footer{
-		margin-bottom: 20px;
+		/* margin-bottom: 20px; */
 	}
 
 }
