@@ -95,7 +95,8 @@
                                     </div>
                                     <div class="service-list-details" style="margin-left: 35px;">
                                         <div class="service-name fw-semibold">
-                                        {{ $service['service_name'] }}
+                                        {{-- {{ $service['service_name'] }} --}}
+                                        {{ \Illuminate\Support\Str::limit($service['service_name'], 50, '...') }}
                                     </div>
                                     @if(!empty($service['service_details']))
                                         <div class="service-desc text-muted">

@@ -16,20 +16,26 @@
             </div>
         </div>
     </div>
-                                    <div class="search-bar">
+                                <div class="search-bar">
                                     <form action="{{ route('search') }}" method="GET" class="search-form">
                                         <div class="search-inputs">
                                             <div class="search-item">
                                                 <i class="fas fa-search"></i>
-                                                <input type="text" id="searchInput" placeholder="Search by service or provider name" name="search" required>
+                                                <div class="input-text">
+                                                    <h5>{{ __('app.home.search_input_text') }}</h5>
+                                                    <input type="text" id="searchInput" placeholder="{{ __('app.home.search_service_placeholder') }}" name="search" required>
+                                                </div>
                                             </div>
                                             
                                             <div class="search-item">
                                                 <i class="fas fa-map-marker-alt"></i>
-                                                <input type="text" id="locationInput" placeholder="Location (required for service search)" name="location">
+                                                <div class="input-text">
+                                                    <h5>Or</h5>
+                                                    <input type="text" id="locationInput" placeholder="{{ __('app.home.search_location_placeholder') }}" name="location">
+                                                </div>
                                             </div>
                                             
-                                            <button type="submit" class="search-button">Search</button>
+                                            <button type="submit" class="search-button">{{ __('app.home.search_button') }}</button>
 
                                             <script>
                                                 document.getElementById('searchInput').addEventListener('input', function() {
@@ -47,8 +53,8 @@
                                                             // If searching for a provider, location is not required
                                                             locationInput.required = !isProvider;
                                                             locationInput.placeholder = isProvider ? 
-                                                                "Location (optional for provider search)" : 
-                                                                "Location (required for service search)";
+                                                                "{{ __('app.home.search_location_optional') }}" : 
+                                                                "{{ __('app.home.search_location_placeholder') }}";
                                                         });
                                                 });
                                             </script>
@@ -77,7 +83,7 @@
         </div>
 
 <!-- Search Results Section Start -->
-<div class="search-results" style="margin: 50px 0 50px 0;">
+<div class="search-results" style="margin: 0 0 50px 0;">
     <div class="container">
         
 
