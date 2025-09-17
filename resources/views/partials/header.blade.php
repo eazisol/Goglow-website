@@ -5,7 +5,7 @@
 				<div class="container-fluid">
 					<a class="navbar-brand" href="{{ url('/') }}">
 						<img src="images/WhatsApp_Image_2025-09-16_at_23.28.10_3ad6dde7-removebg-preview.png" alt="Logo" style="width: 125px;">
-						{{-- <h1 class="text-anime-style-2 header-logo {{ $isHome ? 'text-white' : 'text-dark' }}" data-cursor="-opaque">Go<span>Glow</span></h1> --}}
+						{{-- <h1 class="text-anime-style-2 header-logo {{ $isHome ? 'text-white' : 'text-dark' }}" >Go<span>Glow</span></h1> --}}
 					</a>
 					<div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">

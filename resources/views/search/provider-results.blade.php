@@ -61,7 +61,7 @@
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
-                        <h2 class="text-anime-style-2" style="color:white;" data-cursor="-opaque">Search Results for "{{ $search }}"
+                        <h2 class="text-anime-style-2" style="color:white;" >Search Results for "{{ $search }}"
                         @if($location) in "{{ $location }}" @endif
                         </h2>
                         {{-- <nav class="wow fadeInUp">

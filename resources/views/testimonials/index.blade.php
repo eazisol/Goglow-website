@@ -17,7 +17,7 @@
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
-                        <h1 class="text-anime-style-2" data-cursor="-opaque">Our <span>testimonials</span></h1>
+                        <h1 class="text-anime-style-2" >Our <span>testimonials</span></h1>
                         <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
@@ -166,7 +166,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">Frequently asked question</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Helpful answer for first-time & <span>returning guests</span></h2>
+                            <h2 class="text-anime-style-2" >Helpful answer for first-time & <span>returning guests</span></h2>
                         </div>
                         <!-- Section Title End -->
 
@@ -274,7 +274,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">Why choose us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>wellness and care</span></h2>
+                            <h2 class="text-anime-style-2" >Why our clients trust us for their <span>wellness and care</span></h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">Trust is built through our unwavering commitment to your health and well-being. We combine expert knowledge with personalized care.</p>
                         </div>
                         <!-- Section Title End -->

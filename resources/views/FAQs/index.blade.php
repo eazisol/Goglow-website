@@ -17,7 +17,7 @@
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
-                        <h1 class="text-anime-style-2" data-cursor="-opaque">Frequently asked <span>question</span></h1>
+                        <h1 class="text-anime-style-2" >Frequently asked <span>question</span></h1>
                         <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
@@ -73,7 +73,7 @@
                         <!-- FAQs section start -->
                         <div class="page-faq-accordion" id="faq1">
                             <div class="section-title">
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">Treatment <span>options</span></h2>
+                                <h2 class="text-anime-style-2" >Treatment <span>options</span></h2>
                             </div>
                             <!-- FAQ Accordion Start -->
                             <div class="faq-accordion" id="accordion">
@@ -145,7 +145,7 @@
                         <!-- FAQs section start -->
                         <div class="page-faq-accordion" id="faq2">
                             <div class="section-title">
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">Booking <span>process</span></h2>
+                                <h2 class="text-anime-style-2" >Booking <span>process</span></h2>
                             </div>
                             <!-- FAQ Accordion Start -->
                             <div class="faq-accordion" id="accordion1">
@@ -217,7 +217,7 @@
                         <!-- FAQs section start -->
                         <div class="page-faq-accordion" id="faq3">
                             <div class="section-title">
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">Product <span>details</span></h2>
+                                <h2 class="text-anime-style-2" >Product <span>details</span></h2>
                             </div>
                             <!-- FAQ Accordion Start -->
                             <div class="faq-accordion" id="accordion2">
@@ -288,7 +288,7 @@
                         <!-- FAQs section start -->
                         <div class="page-faq-accordion" id="faq4">
                             <div class="section-title">
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">Safety <span>guidelines</span></h2>
+                                <h2 class="text-anime-style-2" >Safety <span>guidelines</span></h2>
                             </div>
                             <!-- FAQ Accordion Start -->
                             <div class="faq-accordion" id="accordion3">

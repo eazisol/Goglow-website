@@ -5,7 +5,7 @@
                     <div class="about-footer">
                         {{-- <div class="footer-logo">
                             <img src="images/goglowlogo.png" alt="Logo" style="width: 60px;">
-                            <h1 class="text-anime-style-2" data-cursor="-opaque" style="color: white;">Go<span>Glow</span></h1>
+                            <h1 class="text-anime-style-2"  style="color: white;">Go<span>Glow</span></h1>
                         </div> --}}
                         <div class="about-footer-content">
                             <p>{{ __('app.footer.about_description') }}</p>

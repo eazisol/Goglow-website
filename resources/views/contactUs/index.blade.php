@@ -33,7 +33,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">contact us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Get in touch <span>with us</span></h2>
+                            <h2 class="text-anime-style-2" >Get in touch <span>with us</span></h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">
                                 Have questions or need help booking your next salon service? We're here to assist you—reach out anytime and let’s make beauty simple.
                             </p>
@@ -117,7 +117,7 @@
                     <div class="contact-us-form">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Send us a message</h2>
+                            <h2 class="text-anime-style-2" >Send us a message</h2>
                         </div>
                         <!-- Section Title End -->
 

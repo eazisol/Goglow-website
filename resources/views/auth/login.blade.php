@@ -43,7 +43,7 @@
                     <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
                         <div class="section-title mb-4">
                             <h3 class="wow fadeInUp">welcome back</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Sign in to <span>GoGlow</span></h2>
+                            <h2 class="text-anime-style-2" >Sign in to <span>GoGlow</span></h2>
                         </div>
                         
                         @if(session('success'))

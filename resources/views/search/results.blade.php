@@ -12,7 +12,7 @@
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
                         
-                        <h1 class="text-anime-style-2" data-cursor="-opaque">Search Results for "{{ $search }}"
+                        <h1 class="text-anime-style-2" >Search Results for "{{ $search }}"
                         @if($location) in "{{ $location }}" @endif
                         </h1>
                         {{-- <nav class="wow fadeInUp">
@@ -33,7 +33,7 @@
         {{-- <div class="row section-row">
             <div class="col-lg-12">
                 <div class="section-title section-title-center">
-                    <h2 class="text-anime-style-2" data-cursor="-opaque">Search Results for "{{ $search }}"
+                    <h2 class="text-anime-style-2" >Search Results for "{{ $search }}"
                         @if($location) in "{{ $location }}" @endif
                     </h2>
                 </div>

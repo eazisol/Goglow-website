@@ -17,7 +17,7 @@
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
-                        <h1 class="text-anime-style-2" data-cursor="-opaque">Everything you need ...</h1>
+                        <h1 class="text-anime-style-2" >Everything you need ...</h1>
                         <div class="post-single-meta wow fadeInUp">
 							<ol class="breadcrumb">
                                 <li><i class="fa-regular fa-user"></i> Admin</li>

@@ -17,7 +17,7 @@
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
-                        <h1 class="text-anime-style-2" data-cursor="-opaque">Jenny <span>wilson</span></h1>
+                        <h1 class="text-anime-style-2" >Jenny <span>wilson</span></h1>
                         <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
@@ -54,7 +54,7 @@
                             <div class="team-member-content">
                                 <!-- Member Content Header Start -->
                                 <div class="section-title">
-                                    <h2 class="text-anime-style-2" data-cursor="-opaque">About <span>me</span></h2>
+                                    <h2 class="text-anime-style-2" >About <span>me</span></h2>
                                     <p class="wow fadeInUp">Jenny Wilson is a skilled and dedicated Senior Esthetician with over 7 years of experience, known for delivering rejuvenating treatments with a personalized.</p>
                                 </div>
                                 <!-- Member Content Header End -->
@@ -90,7 +90,7 @@
                         <div class="team-member-info">
                             <!-- Section Title Start -->
                             <div class="section-title">
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">Personals <span>info</span></h2>
+                                <h2 class="text-anime-style-2" >Personals <span>info</span></h2>
                                 <p class="wow fadeInUp">Jenny Wilson is a seasoned Senior Esthetician with over 9 years of experience in advanced skin therapies and holistic wellness treatments. Her deep understanding of skin science, combined with a gentle and personalized approach, has earned her the trust of countless clients. Jenny believes that skincare is more than just a routine—it’s a journey toward confidence and self-care. She specializes in customized facial treatments, anti-aging solutions, and therapeutic techniques that restore natural balance and glow.the latest certifications and attending global skincare workshops.</p>
                                 <p class="wow fadeInUp" data-wow-delay="0.2s">Her commitment to excellence is reflected not only in her hands-on treatments but also in the way she mentors junior estheticians and educates clients on sustainable skincare habits. Whether you're visiting for a relaxing facial or a targeted skin solution, Jenny’s intuitive care and expert knowledge ensure a transformative experience every time.continues to stay ahead in the industry by pursuing.</p>
                             </div>
@@ -104,7 +104,7 @@
                             <div class="team-member-feature-box">
                                 <!-- Section Title Start -->
                                 <div class="section-title">
-                                    <h2 class="text-anime-style-2" data-cursor="-opaque">My <span>feature</span></h2>
+                                    <h2 class="text-anime-style-2" >My <span>feature</span></h2>
                                     <p class="wow fadeInUp">Jenny Wilson is a skilled and dedicated Senior Esthetician with over 7 years of experience, known for delivering rejuvenating treatments.</p>
                                 </div>
                                 <!-- Section Title End -->
@@ -174,7 +174,7 @@
                             <div class="contact-us-form team-contact-form">
                                 <!-- Section Title Start -->
                                 <div class="section-title">
-                                    <h2 class="text-anime-style-2" data-cursor="-opaque">Send us <span>a message</span></h2>
+                                    <h2 class="text-anime-style-2" >Send us <span>a message</span></h2>
                                 </div>
                                 <!-- Section Title End -->
 

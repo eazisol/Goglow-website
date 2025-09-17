@@ -33,7 +33,7 @@
                             <!-- Section Title Start -->
                             <div class="section-title">
                                 <h3 class="wow fadeInUp">Step into a world of calm and care</h3>
-                                <h1 class="text-anime-style-2" data-cursor="-opaque">Experience the ultimate escape into <span>relaxation and expert care</span></h1>
+                                <h1 class="text-anime-style-2" >Experience the ultimate escape into <span>relaxation and expert care</span></h1>
                                 <p class="wow fadeInUp" data-wow-delay="0.2s">Every detail is thoughtfully designed to help you unwind—from the tranquil ambiance to our skilled therapists and holistic treatments. Whether you seek deep relaxation, skin rejuvenation, or stress relief, we offer a personalized experience.</p>
                             </div>
                             <!-- Section Title End -->
@@ -63,7 +63,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">About us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Born from a love for natural beauty and inner peace, our spa is a sanctuary designed to restore balance, one <span>personalized experience at a time.</span></h2>
+                            <h2 class="text-anime-style-2" >Born from a love for natural beauty and inner peace, our spa is a sanctuary designed to restore balance, one <span>personalized experience at a time.</span></h2>
                         </div>
                         <!-- Section Title End -->
                         
@@ -138,7 +138,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title section-title-center">
                         <h3 class="wow fadeInUp">Featured services</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">A curated collection of treatments to rejuvenate <span>your body</span></h2>
+                        <h2 class="text-anime-style-2" >A curated collection of treatments to rejuvenate <span>your body</span></h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -257,7 +257,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title section-title-center">
                         <h3 class="wow fadeInUp">Our feature</h3>
-                        <h2 class="wow fadeInUp" data-wow-delay="0.2s" data-cursor="-opaque">Discover the unique features <img src="images/feature-title-img.jpg" alt=""> that set our spa experience apart and elevate <span>your path to wellness</span></h2>
+                        <h2 class="wow fadeInUp" data-wow-delay="0.2s" >Discover the unique features <img src="images/feature-title-img.jpg" alt=""> that set our spa experience apart and elevate <span>your path to wellness</span></h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -362,7 +362,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">What we do</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Thoughtfully designed for your <span>ultimate comfort</span></h2>
+                            <h2 class="text-anime-style-2" >Thoughtfully designed for your <span>ultimate comfort</span></h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">We've crafted every element of our spa to enhance your relaxation and deliver care. From soothing ambiance.</p>
                         </div>
                         <!-- Section Title End -->
@@ -468,7 +468,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">Why choose us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>wellness and care</span></h2>
+                            <h2 class="text-anime-style-2" >Why our clients trust us for their <span>wellness and care</span></h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">Trust is built through our unwavering commitment to your health and well-being. We combine expert knowledge with personalized care.</p>
                         </div>
                         <!-- Section Title End -->
@@ -542,7 +542,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title section-title-center">
                         <h3 class="wow fadeInUp">Pricing plan</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Transparent flexible packages for every <span>wellness need</span></h2>
+                        <h2 class="text-anime-style-2" >Transparent flexible packages for every <span>wellness need</span></h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -678,7 +678,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title section-title-center">
                         <h3 class="wow fadeInUp">Book appointment</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Book appointment now for wellness, peace and <span>rejuvenation</span></h2>
+                        <h2 class="text-anime-style-2" >Book appointment now for wellness, peace and <span>rejuvenation</span></h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -829,7 +829,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">Frequently asked question</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Helpful answer for first-time & <span>returning guests</span></h2>
+                            <h2 class="text-anime-style-2" >Helpful answer for first-time & <span>returning guests</span></h2>
                         </div>
                         <!-- Section Title End -->
 
@@ -935,7 +935,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title section-title-center">
                         <h3 class="wow fadeInUp">Expert team member</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">A team of trained professionals dedicated to <span>your comfort</span></h2>
+                        <h2 class="text-anime-style-2" >A team of trained professionals dedicated to <span>your comfort</span></h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -1084,7 +1084,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">Our partners</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Premium partnerships that enhance <span>every aspect</span></h2>
+                            <h2 class="text-anime-style-2" >Premium partnerships that enhance <span>every aspect</span></h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">We offer more than just treatments - we deliver personalized wellness experiences designed to relax the body, refresh the mind, and restore inner balance.</p>
                         </div>
                         <!-- Section Title End -->
@@ -1170,7 +1170,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">Join us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Healing touch, holistic care, <span>lasting wellness</span></h2>
+                            <h2 class="text-anime-style-2" >Healing touch, holistic care, <span>lasting wellness</span></h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">We offer more than just treatments - we deliver personalized wellness experiences designed to relax the body, refresh the mind, and restore inner balance.</p>
                         </div>
                         <!-- Section Title End -->
@@ -1223,7 +1223,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title">
                         <h3 class="wow fadeInUp">Testimonials</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">The spa experiences they can't stop <span>talking about</span></h2>
+                        <h2 class="text-anime-style-2" >The spa experiences they can't stop <span>talking about</span></h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -1424,7 +1424,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title">
                         <h3 class="wow fadeInUp">Latest blog</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Inside the ultimate luxury <span>spa experience</span></h2>
+                        <h2 class="text-anime-style-2" >Inside the ultimate luxury <span>spa experience</span></h2>
                     </div>
                     <!-- Section Title End -->
                 </div>

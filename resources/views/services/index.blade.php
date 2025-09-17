@@ -132,7 +132,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title">
                         <h3 class="wow fadeInUp">Testimonials</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">The spa experiences they can't stop <span>talking about</span></h2>
+                        <h2 class="text-anime-style-2" >The spa experiences they can't stop <span>talking about</span></h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -335,7 +335,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">Why choose us</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>wellness and care</span></h2>
+                            <h2 class="text-anime-style-2" >Why our clients trust us for their <span>wellness and care</span></h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">Trust is built through our unwavering commitment to your health and well-being. We combine expert knowledge with personalized care.</p>
                         </div>
                         <!-- Section Title End -->

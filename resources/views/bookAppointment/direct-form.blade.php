@@ -272,7 +272,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title">
                         <h3 class="wow fadeInUp">Why choose us</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Why our clients trust us for their <span>salon experiences</span></h2>
+                        <h2 class="text-anime-style-2" >Why our clients trust us for their <span>salon experiences</span></h2>
                         <p class="wow fadeInUp" data-wow-delay="0.2s">
                             We bring all your beauty and grooming needs under one roof. Our trusted network of professional salons, transparent booking system, and quality-focused service help us deliver consistent satisfaction to every client.
                         </p>

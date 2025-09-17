@@ -17,7 +17,7 @@
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
-                        <h1 class="text-anime-style-2" data-cursor="-opaque">Page <span>not found</span></h1>
+                        <h1 class="text-anime-style-2" >Page <span>not found</span></h1>
                         <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
@@ -47,7 +47,7 @@
                     <div class="error-page-content">
                         <!-- Section Title Start -->
                         <div class="section-title">
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Oops! page <span>not found</span></h2>
+                            <h2 class="text-anime-style-2" >Oops! page <span>not found</span></h2>
                         </div>
                         <!-- Section Title End -->
 

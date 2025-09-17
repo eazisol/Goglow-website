@@ -44,7 +44,7 @@
                         {{-- <div class="mt-4">
                             <div class="section-title">
                                 <h3 class="wow fadeInUp">why join</h3>
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">Beauty made <span>simple</span></h2>
+                                <h2 class="text-anime-style-2" >Beauty made <span>simple</span></h2>
                             </div>
                             <ul class="feature-list">
                                 <li><i class="fa fa-check"></i><span>Book services with top-rated professionals</span></li>
@@ -63,7 +63,7 @@
                     <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
                         <div class="section-title mb-4">
                             <h3 class="wow fadeInUp">Create Account</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">Join <span>GoGlow</span></h2>
+                            <h2 class="text-anime-style-2" >Join <span>GoGlow</span></h2>
                             <p class="small-text">Sign up to book beauty services, track appointments, and enjoy member perks.</p>
                         </div>
                         

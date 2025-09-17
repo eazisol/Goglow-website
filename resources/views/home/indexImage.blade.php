@@ -21,7 +21,7 @@
                         <div class="hero-content" style="width: 80%;">
                             <!-- Section Title Start -->
                             <div class="section-title">
-                                <h1 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.hero_title') }}</h1>
+                                <h1 class="text-anime-style-2" >{{ __('app.home.hero_title') }}</h1>
                                 <h3 class="wow fadeInUp">{{ __('app.home.hero_subtitle') }}</h3>
                                 <div class="search-bar">
                                     <form action="{{ route('search') }}" method="GET" class="search-form">
@@ -114,7 +114,7 @@
                             <!-- Section Title Start -->
                             <div class="section-title">
                                 <h3 class="wow fadeInUp">{{ __('app.home.why_choose_title') }}</h3>
-                                <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.why_choose_subtitle') }}</h2>
+                                <h2 class="text-anime-style-2" >{{ __('app.home.why_choose_subtitle') }}</h2>
                                 <p class="wow fadeInUp" data-wow-delay="0.2s">
                                     {{ __('app.home.why_choose_description') }}
                                 </p>
@@ -191,7 +191,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title section-title-center">
                         
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.glowees_love_title') }}</h2>
+                        <h2 class="text-anime-style-2" >{{ __('app.home.glowees_love_title') }}</h2>
                         <hr>
                         <h3 class="wow fadeInUp">{{ __('app.home.glowees_love_subtitle') }}</h3>
                     </div>
@@ -327,7 +327,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">{{ __('app.home.how_it_works_title') }}</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.how_it_works_subtitle') }}</h2>
+                            <h2 class="text-anime-style-2" >{{ __('app.home.how_it_works_subtitle') }}</h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">{{ __('app.home.how_it_works_description') }}</p>
                         </div>
                         <!-- Section Title End -->
@@ -399,7 +399,7 @@
                     <!-- Section Title Start -->
                     <div class="section-title">
                         <h3 class="wow fadeInUp">{{ __('app.home.testimonials_title') }}</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.testimonials_subtitle') }}</h2>
+                        <h2 class="text-anime-style-2" >{{ __('app.home.testimonials_subtitle') }}</h2>
                     </div>
                     <!-- Section Title End -->
                 </div>
@@ -612,7 +612,7 @@
                         <!-- Section Title Start -->
                         <div class="section-title">
                             <h3 class="wow fadeInUp">{{ __('app.home.partners_title') }}</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.partners_subtitle') }}</h2>
+                            <h2 class="text-anime-style-2" >{{ __('app.home.partners_subtitle') }}</h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">{{ __('app.home.partners_description') }}</p>
                         </div>
                         <!-- Section Title End -->
@@ -686,7 +686,7 @@
             <div class="row section-row">
                 <div class="col-lg-12">
                     <div class="section-title section-title-center">
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.want_to_shine_title') }}</h2>
+                        <h2 class="text-anime-style-2" >{{ __('app.home.want_to_shine_title') }}</h2>
                         <hr>
                         <h3 class="wow fadeInUp">{{ __('app.home.discover_trends_subtitle') }}</h3>
                     </div>
@@ -797,7 +797,7 @@
             <div style="flex: 1; max-width: 550px;">
                         <div class="section-title">
                             <h3 class="wow fadeInUp">{{ __('app.home.join_us_title') }}</h3>
-                            <h2 class="text-anime-style-2" data-cursor="-opaque">{{ __('app.home.get_app_title') }}</h2>
+                            <h2 class="text-anime-style-2" >{{ __('app.home.get_app_title') }}</h2>
                             <p class="wow fadeInUp" data-wow-delay="0.2s">{{ __('app.home.get_app_description') }}</p>
                         </div>
 

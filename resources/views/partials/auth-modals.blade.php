@@ -10,7 +10,7 @@
                 <div class="appointment-form">
                     <div class="section-title mb-4">
                         <h3 class="wow fadeInUp">welcome</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Sign in</h2>
+                        <h2 class="text-anime-style-2" >Sign in</h2>
                     </div>
                     
                     <div class="alert alert-danger d-none" id="login-error"></div>
@@ -56,7 +56,7 @@
                 <div class="appointment-form">
                     <div class="section-title mb-4">
                         <h3 class="wow fadeInUp">Create Account</h3>
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">Join</h2>
+                        <h2 class="text-anime-style-2" >Join</h2>
                         <p class="small-text">Sign up to book beauty services, track appointments, and enjoy member perks.</p>
                     </div>
                     
