@@ -105,7 +105,7 @@
 }
 
 /* Dark mode support */
-.header--transparent .language-btn,
+.language-btn,
 .header--transparent .language-switcher .dropdown-item {
     color: #fff;
 }

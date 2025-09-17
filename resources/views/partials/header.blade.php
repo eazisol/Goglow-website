@@ -1,5 +1,5 @@
 @php($isHome = request()->is('/'))
-<header class="main-header {{ $isHome ? 'bg-section header--transparent' : 'header--solid' }}">
+<header class="{{ $isHome ? 'main-header bg-section header--transparent' : 'main-header-nav' }}">
 		<div class="header-sticky">
 			<nav class="navbar navbar-expand-lg">
 				<div class="container-fluid">
@@ -10,16 +10,16 @@
 					<div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
                             <ul class="navbar-nav mr-auto" id="menu"> 
-								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/search') }}">{{ __('app.nav.book_service') }}</a></li>                             
-								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/about') }}">{{ __('app.nav.about_us') }}</a>
-								<li class="nav-item"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/contact-us') }}">{{ __('app.nav.contact_us') }}</a></li>
+								<li class="nav-item"><a class="nav-link text-white" href="{{ url('/search') }}">{{ __('app.nav.book_service') }}</a></li>                             
+								<li class="nav-item"><a class="nav-link text-white" href="{{ url('/about') }}">{{ __('app.nav.about_us') }}</a>
+								<li class="nav-item"><a class="nav-link text-white" href="{{ url('/contact-us') }}">{{ __('app.nav.contact_us') }}</a></li>
 								<li class="nav-item highlighted-menu"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/book-appointment') }}">{{ __('app.nav.book_service') }}</a></li>
                             </ul>
                         </div>
                         <div class="header-btn" style="display: contents;">
                             @include('partials.language-switcher')
                             @if(session('firebase_uid'))
-                                <a href="#" class="btn-default {{ $isHome ? 'border-btn' : '' }}"
+                                <a href="#" class="btn-default {{ $isHome ? 'border-btn' : 'border-btn' }}"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="margin-right: 3px;">
                                 {{ __('app.nav.logout') }}
                                 </a>

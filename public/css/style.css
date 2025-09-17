@@ -1,3 +1,14 @@
+.main-header-nav{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    background: #0a0a0a;
+	z-index: 100;
+	border-radius:0;
+}
+
+
 /* /////////////////// */
 /* app section after hero section overlap box */
 .overlap-box {
