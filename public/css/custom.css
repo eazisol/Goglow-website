@@ -1051,6 +1051,9 @@ header.main-header .container-fluid{
 
 .our-services{
 	padding: 100px 0;
+	position: relative;  /* important */
+	z-index: 1;          /* isko ensure karein k neeche bhi visible ho */
+	overflow: visible;
 }
 
 .service-item{
@@ -4945,7 +4948,7 @@ header.main-header .container-fluid{
 	header.main-header .container-fluid,
 	.hero .container-fluid{
 		padding: 0 67px;
-		margin-top: 20px;
+		
 	}
 
 	.hero,

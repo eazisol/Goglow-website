@@ -1,0 +1,43 @@
+/* /////////////////// */
+/* app section after hero section overlap box */
+.overlap-box {
+  position: relative;
+  width: 60%;
+  margin: 0 auto;
+  background: #f9f9f9;
+  padding: 50px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+
+  /* Magic part - overlap */
+  margin-top: -50px; /* half top*/
+  margin-bottom:-50px; /*half bottom */
+  z-index: 5;
+}
+.app-download-p{
+    padding: 0 200px;
+    margin-bottom: initial;
+}
+.app-button{
+    display: flex; 
+    gap: 20px; 
+    margin-bottom: 30px; 
+    justify-content: center;
+    margin-top: 20px;
+}
+
+@media (max-width: 576px) {
+    .app-download-p{
+        padding: initial;
+    }
+    .overlap-box{
+        width: 75%;
+        padding: 30px;
+        margin-top: -25px;
+        margin-bottom: -25px;
+    }
+    .app-button{
+        gap: 5px;
+    }
+}

@@ -173,7 +173,7 @@ return [
         'want_to_shine_title' => 'Vous voulez briller près de chez vous ?',
         'discover_trends_subtitle' => 'Découvrez les tendances autour de vous',
         'join_us_title' => 'Rejoignez-nous',
-        'get_app_title' => 'Obtenez l\'application GoGlow',
+        'get_app_title' => 'Obtenez l\'Application goGlow',
         'get_app_description' => 'Réservez des services beauté et bien-être en toute simplicité. Explorez des salons bien notés, planifiez des rendez-vous et brillez en déplacement — le tout depuis votre téléphone.',
         'find_salons_near' => 'Trouvez des salons près de chez vous',
         'schedule_seconds' => 'Planifiez en quelques secondes',

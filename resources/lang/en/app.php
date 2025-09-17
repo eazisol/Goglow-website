@@ -173,7 +173,7 @@ return [
         'want_to_shine_title' => 'Want to shine near you?',
         'discover_trends_subtitle' => 'Discover the trends around you',
         'join_us_title' => 'Join us',
-        'get_app_title' => 'Get the GoGlow App',
+        'get_app_title' => 'Get The goGlow App',
         'get_app_description' => 'Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone.',
         'find_salons_near' => 'Find salons near you',
         'schedule_seconds' => 'Schedule in seconds',
