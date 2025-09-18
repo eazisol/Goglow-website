@@ -38,7 +38,7 @@
 <script>
     // Auth status for JS
     window.isAuthenticated = {{ session()->has('firebase_uid') ? 'true' : 'false' }};
-    window.showAuthModal = {{ session()->has('show_auth_modal') ? 'true' : 'false' }};
+    // window.showAuthModal = {{ session()->has('show_auth_modal') ? 'true' : 'false' }};
     window.authRedirect = "{{ session('auth_redirect', '') }}";
     
     // Make sure bootstrap is defined globally

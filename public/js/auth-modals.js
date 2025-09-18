@@ -268,36 +268,36 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Auto-show login modal if needed (set by middleware)
-    if (window.showAuthModal) {
-        console.log('Auto-showing login modal');
+    // if (window.showAuthModal) {
+    //     console.log('Auto-showing login modal');
         
-        // Store the redirect URL in localStorage for use after login
-        if (window.authRedirect && window.authRedirect.includes('/book-appointment')) {
-            localStorage.setItem('book_appointment_url', window.authRedirect);
-            console.log('Stored book appointment URL:', window.authRedirect);
-        }
+    //     // Store the redirect URL in localStorage for use after login
+    //     if (window.authRedirect && window.authRedirect.includes('/book-appointment')) {
+    //         localStorage.setItem('book_appointment_url', window.authRedirect);
+    //         console.log('Stored book appointment URL:', window.authRedirect);
+    //     }
         
-        const loginRedirectInput = document.getElementById('login-redirect');
-        if (loginRedirectInput) {
-            loginRedirectInput.value = window.authRedirect || '';
-        }
+    //     const loginRedirectInput = document.getElementById('login-redirect');
+    //     if (loginRedirectInput) {
+    //         loginRedirectInput.value = window.authRedirect || '';
+    //     }
         
-        // Add a small delay to ensure DOM is ready
-        setTimeout(function() {
-            // Try multiple methods to show the modal
-            if (loginModal) {
-                console.log('Showing modal using loginModal object');
-                loginModal.show();
-            } else if (typeof $ !== 'undefined') {
-                console.log('Showing modal using jQuery');
-                $('#loginModal').modal('show');
-            } else if (typeof bootstrap !== 'undefined' && loginModalElement) {
-                console.log('Showing modal using bootstrap directly');
-                const modal = new bootstrap.Modal(loginModalElement);
-                modal.show();
-            } else {
-                console.error('Could not show login modal - no method available');
-            }
-        }, 500);
-    }
+    //     // Add a small delay to ensure DOM is ready
+    //     setTimeout(function() {
+    //         // Try multiple methods to show the modal
+    //         if (loginModal) {
+    //             console.log('Showing modal using loginModal object');
+    //             loginModal.show();
+    //         } else if (typeof $ !== 'undefined') {
+    //             console.log('Showing modal using jQuery');
+    //             $('#loginModal').modal('show');
+    //         } else if (typeof bootstrap !== 'undefined' && loginModalElement) {
+    //             console.log('Showing modal using bootstrap directly');
+    //             const modal = new bootstrap.Modal(loginModalElement);
+    //             modal.show();
+    //         } else {
+    //             console.error('Could not show login modal - no method available');
+    //         }
+    //     }, 500);
+    // }
 });
