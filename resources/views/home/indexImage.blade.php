@@ -786,15 +786,15 @@
     </div>
     {{-- app --}}
     <section style="padding: 60px 0;">
-        <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;">
+        <div class="app-cta" style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;">
             
             <!-- Left: Mobile App Image -->
-                <div style="flex: 1; text-align: center; ">
+                <div class="mobile-image" style="flex: 1; text-align: center; ">
                 <img src="images/app5.png" alt="GoGlow App">
                 </div>
             
             <!-- Right: Content -->
-            <div style="flex: 1; max-width: 550px;">
+            <div class="app-section-content" style="flex: 1; max-width: 550px;">
                         <div class="section-title">
                             <h3 class="wow fadeInUp">{{ __('app.home.join_us_title') }}</h3>
                             <h2 class="text-anime-style-2" >{{ __('app.home.get_app_title') }}</h2>
@@ -802,7 +802,7 @@
                         </div>
 
             <!-- Buttons -->
-            <div style="display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;">
+            <div class="app-section-button" style="display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;">
                 <a href="#">
                 <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on App Store" style="height: 50px;">
                 </a>

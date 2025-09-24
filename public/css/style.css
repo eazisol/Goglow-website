@@ -1,3 +1,9 @@
+@media (max-width: 767px) {
+    .app-cta { flex-direction: column; align-items: center; }
+    .app-cta > div { width: 100%; }
+    .app-cta img { max-width: 100%; height: auto; }
+    .app-cta .content { max-width: 100% !important; }
+}
 .main-header-nav{
     position: absolute;
     left: 0;
@@ -40,6 +46,12 @@
 }
 
 @media (max-width: 576px) {
+    .navbar{
+        padding: 0;
+    }
+    .app-button{
+        margin-bottom: 15px;
+    }
     .app-download-p{
         padding: initial;
     }
@@ -51,5 +63,67 @@
     }
     .app-button{
         gap: 5px;
+    }
+    header.main-header .container-fluid, .hero .container-fluid{
+        padding: 0 20px;
+    }
+    .btn-default.border-btn{
+        padding: 17px 30px 17px 30px;
+    }
+    .btn-default{
+        padding: 17px 30px 17px 30px;
+    }
+    .hero-content{
+        margin-top: 30px;
+    }
+    /* .hero-content .section-title .wow{
+        display: none;
+    } */
+    .section-title h3::before{
+        content: none;
+    }
+    .section-title h3{
+        font-size: 14px;
+    }
+    .overlap-box h1{
+        font-size: 23px;
+    }
+    .mobile-image{
+        display: none;
+    }
+    .app-section-content{
+        padding: 0 50px;
+    }
+    .app-section-button{
+        display: initial !important;
+    }
+    .service-item {
+    display: flex;
+    flex-direction: column; /* stack icon and text vertically */
+    justify-content: center; /* center vertically */
+    align-items: center;     /* center horizontally */
+    text-align: center;      /* center text */
+    }
+    .section-title{
+    display: flex;
+    flex-direction: column; /* stack icon and text vertically */
+    justify-content: center; /* center vertically */
+    align-items: center;     /* center horizontally */
+    text-align: center;      /* center text */
+    }
+    .what-we-do-btn{
+        display: flex;
+        justify-content: center;
+    }
+    .our-partner-btn{
+        display: flex; 
+        justify-content: center;
+    }
+    .feature-list{
+        display: flex;
+    }
+    .feature-list li{
+        align-items: initial!important;
+        font-size: 11px !important;
     }
 }
