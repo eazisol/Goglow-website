@@ -326,14 +326,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         icon: 'success',
                         title: 'Success!',
                         text: 'Your application has been submitted successfully!'
-                    });
+                    }).then(() => { window.location.href = '/'; });
                 } else {
                     // If not a success message, show the response text
                     Swal.fire({
                         icon: 'success',
                         title: 'Response Received',
                         text: responseText
-                    });
+                    }).then(() => { window.location.href = '/'; });
                 }
             } else {
                 // Handle error response
