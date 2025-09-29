@@ -1,3 +1,6 @@
+/* Reset default browser gap at the very top */
+html, body { margin: 0; }
+
 @media (max-width: 767px) {
     .app-cta { flex-direction: column; align-items: center; }
     .app-cta > div { width: 100%; }
@@ -5,7 +8,7 @@
     .app-cta .content { max-width: 100% !important; }
 }
 .main-header-nav{
-    position: absolute;
+    position: sticky;
     left: 0;
     right: 0;
     top: 0;
@@ -16,6 +19,30 @@
 }
 
 
+/* Wizard uses normal document flow now that header is sticky */
+
+/* Hero background wrapper for professional wizard */
+.pro-wizard-hero{
+    position: relative;
+    min-height: 100vh;
+    padding: 120px 20px 80px; /* room for sticky header */
+    display: flex;
+    align-items: center;        /* vertical centering */
+    justify-content: center;    /* horizontal centering */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Subtle dark overlay to improve text readability */
+.pro-wizard-hero::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180.07deg, rgba(0, 0, 0, 0.3) 0.06%, #0000004d 114.98%), linear-gradient(359.91deg, rgba(0, 0, 0, 0.3) 70.64%, #00000000 99.95%);
+}
+
+.pro-wizard-hero .bw-wizard{ position: relative; z-index: 1; background: transparent; border-radius: 16px; }
 /* /////////////////// */
 /* app section after hero section overlap box */
 .overlap-box {
@@ -126,4 +153,71 @@
         align-items: initial!important;
         font-size: 11px !important;
     }
+}
+
+/* Professional wizard styles */
+.bw-wizard .wizard-card{padding:50px;}
+/* Force darker-on-light readability inside the card */
+.bw-wizard .wizard-card,
+.bw-wizard .wizard-card h1,
+.bw-wizard .wizard-card h3,
+.bw-wizard .wizard-card h4,
+.bw-wizard .wizard-card h5,
+.bw-wizard .wizard-card h6,
+.bw-wizard .wizard-card p,
+.bw-wizard .wizard-card dt,
+.bw-wizard .wizard-card dd { color: #000000; }
+.bw-wizard .wizard-progress{font-weight:700;color:#ffffff;margin-bottom:18px;text-align:center}
+.bw-wizard .wizard-progressbar{margin-bottom:20px}
+.bw-wizard .wizard-progressbar-track{position:relative;height:6px;background:#eee;border-radius:999px}
+.bw-wizard .wizard-progressbar-track{--progress:0}
+.bw-wizard .wizard-progressbar-track::before{content:"";position:absolute;left:0;top:0;height:6px;background:linear-gradient(90deg, #bfbfbf, #6b6b6b);border-radius:999px;width:var(--progress);transition:width .35s ease}
+.bw-wizard .wizard-dot{position:absolute;top:50%;transform:translate(-50%, -50%);width:16px;height:16px;background:#fff;border:2px solid #cfcfcf;border-radius:50%;transition:all .2s ease}
+.bw-wizard .wizard-dot.active{border-color:#111;background:#111}
+.bw-wizard .wizard-dot.completed{border-color:#111;background:#111}
+.bw-wizard .wizard-dot.completed::after{content:none}
+.bw-wizard .wizard-card h2{color:#ffffff;}
+
+
+/* Hide step circles as requested */
+.bw-wizard .wizard-dot{display:none}
+
+/* positions for 5 steps */
+.bw-wizard .wizard-dot[data-step="1"]{left:0%}
+.bw-wizard .wizard-dot[data-step="2"]{left:25%}
+.bw-wizard .wizard-dot[data-step="3"]{left:50%}
+.bw-wizard .wizard-dot[data-step="4"]{left:75%}
+.bw-wizard .wizard-dot[data-step="5"]{left:100%}
+.bw-wizard .wizard-card label{color: #ffffff;}
+.bw-wizard .wizard-title{font-size:32px;line-height:1.2;margin-bottom:18px;color:#ffffff !important}
+.bw-wizard .wizard-step{display:none}
+.bw-wizard .wizard-step.active{display:block}
+.bw-wizard .wizard-options{display:flex;gap:16px;flex-wrap:wrap}
+.bw-wizard .wizard-option{flex:1 1 240px;border:1px solid #d6d6d6;background:#fff;color:#111;border-radius:12px;padding:18px 20px;cursor:pointer;text-align:left;transition:box-shadow .2s,border-color .2s}
+.bw-wizard .wizard-option:hover{box-shadow:0 4px 16px rgba(0,0,0,.06);border-color:#bdbdbd}
+.bw-wizard .wizard-actions{display:flex;gap:12px;justify-content:space-between;margin-top:10px}
+.bw-wizard .btn-default{background:#111;color:#fff;border:1px solid #111;border-radius:999px;padding:12px 18px}
+.bw-wizard .btn-default.btn-outline{background:#fff;color:#000000;border:1px solid #111}
+.bw-wizard .btn-default.btn-outline:hover{background:#111;color:#fff;border-color:#111}
+.bw-wizard .wizard-actions .btn-default[data-next]{background:#fff;color:#000000;border:1px solid #111}
+.bw-wizard .wizard-actions .btn-default[data-next]:hover{background:#111;color:#fff;border-color:#111}
+/* Make submit button match the Next button UI */
+.bw-wizard .wizard-actions button[type="submit"].btn-default{background:#fff;color:#000000;border:1px solid #111}
+.bw-wizard .wizard-actions button[type="submit"].btn-default:hover{background:#111;color:#fff;border-color:#111}
+.bw-wizard .wizard-actions .btn-default[data-prev]::before{content:"\2190";margin-right:8px}
+.bw-wizard .wizard-actions .btn-default[data-next]::after{content:none}
+.bw-wizard .wizard-actions .btn-default:active{transform:scale(.98)}
+.bw-wizard .wizard-summary{background:#fafafa;border:1px solid #e6e6e6;border-radius:12px;padding:16px;color:#333}
+.bw-wizard .wizard-summary{background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.08);backdrop-filter: blur(2px);padding:20px;border-radius:14px}
+.bw-wizard .wizard-summary .review-grid{display:grid;grid-template-columns: 1fr 2fr;gap:10px 16px;margin:0}
+.bw-wizard .wizard-summary .review-grid dt{font-weight:700;color:#111;text-transform:capitalize}
+.bw-wizard .wizard-summary .review-grid dd{margin:0;color:#000;word-break:break-word}
+.bw-wizard .wizard-radio label{display:block;margin-bottom:10px;color:#ffffff}
+.bw-wizard .wizard-radio input[type="radio"]{margin-right:8px}
+.bw-wizard input.form-control, .bw-wizard select.form-control, .bw-wizard textarea.form-control{border:1px solid #d6d6d6;border-radius:12px;padding:14px 16px;font-size:16px}
+.bw-wizard input.form-control:focus, .bw-wizard select.form-control:focus, .bw-wizard textarea.form-control:focus{outline:0;box-shadow:0 0 0 3px rgba(0,0,0,.12);border-color:#111}
+.bw-wizard .text-muted{color:#e8e8e8 !important}
+
+@media (max-width: 576px){
+  .bw-wizard .wizard-option{flex:1 1 100%}
 }

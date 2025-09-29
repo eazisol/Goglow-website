@@ -1,4 +1,4 @@
-@php($isHome = request()->is('/'))
+@php($isHome = request()->is('/') || request()->is('beauty-professional'))
 <header class="{{ $isHome ? 'main-header bg-section header--transparent' : 'main-header-nav' }}">
 		<div class="header-sticky">
 			<nav class="navbar navbar-expand-lg">
