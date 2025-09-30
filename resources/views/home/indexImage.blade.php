@@ -803,7 +803,7 @@
 
             <!-- Buttons -->
             <div class="app-section-button" style="display:flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center;">
-                <a href="#">
+                <a href="https://apps.apple.com/pk/app/goglow-app/id6743101981">
                 <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on App Store" style="height: 50px;">
                 </a>
                 <a href="#">
