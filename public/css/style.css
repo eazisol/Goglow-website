@@ -121,9 +121,9 @@ html, body { margin: 0; }
     .app-section-content{
         padding: 0 50px;
     }
-    .app-section-button{
+    /* .app-section-button{
         display: initial !important;
-    }
+    } */
     .service-item {
     display: flex;
     flex-direction: column; /* stack icon and text vertically */
@@ -152,6 +152,9 @@ html, body { margin: 0; }
     .feature-list li{
         align-items: initial!important;
         font-size: 11px !important;
+    }
+    .app-section-button a img{
+        height:42px !important;
     }
 }
 
@@ -246,4 +249,23 @@ html, body { margin: 0; }
 
 @media (max-width: 576px){
   .bw-wizard .wizard-option{flex:1 1 100%}
+}
+
+/* Laptop screens like 1366x768: compact the wizard UI */
+@media (max-width: 1400px) and (max-height: 820px){
+  .pro-wizard-hero{ padding: 90px 16px 54px; }
+  .bw-wizard .wizard-card{ padding: 32px; }
+  .bw-wizard .wizard-title{ font-size: 24px !important; margin-bottom: 12px; }
+  .bw-wizard .wizard-progress{ margin-bottom: 12px; font-size: 14px; }
+  .bw-wizard input.form-control,
+  .bw-wizard select.form-control,
+  .bw-wizard textarea.form-control{ padding: 10px 12px; font-size: 14px; }
+  .bw-wizard .wizard-option{ padding: 14px; font-size: 14px; }
+  .bw-wizard .btn-default{ padding: 10px 16px; font-size: 14px; }
+  .bw-wizard .wizard-summary{ padding: 14px; }
+  .bw-wizard .wizard-summary .review-grid{ gap: 8px 12px; }
+  .bw-wizard .wizard-card label,
+  .bw-wizard .wizard-card p,
+  .bw-wizard .wizard-card dt,
+  .bw-wizard .wizard-card dd{ font-size: 14px; }
 }
