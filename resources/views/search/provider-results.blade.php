@@ -2,6 +2,8 @@
 
 @section('title', 'Search Results')
 
+
+
 @section('content')
 
     <!-- Page Header Start -->
@@ -16,7 +18,10 @@
             </div>
         </div>
     </div>
-                                <div class="search-bar">
+
+    {{-- search bar start --}}
+    <div class="container">
+                                        <div class="search-bar">
                                     <form action="{{ route('search') }}" method="GET" class="search-form">
                                         <div class="search-inputs">
                                             <div class="search-item">
@@ -61,6 +66,8 @@
                                         </div>
                                     </form>
                                 </div>
+    </div>
+    {{-- search bar end --}}
     <!-- Page Header End -->
      <div class="container">
             <div class="row">

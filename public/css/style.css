@@ -156,6 +156,11 @@ html, body { margin: 0; }
     .app-section-button a img{
         height:42px !important;
     }
+
+    /* //search page// */
+    .page-header{
+        padding: 0px 0 20px;
+    }
 }
 
 /* Professional wizard styles */
