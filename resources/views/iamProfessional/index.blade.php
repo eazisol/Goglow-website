@@ -83,16 +83,16 @@
                     </div>
                 </section>
 
-                <!-- Step 3 – Social Media (kept required to preserve current JS) -->
+                <!-- Step 3 – Social Media (optional fields) -->
                 <section class="wizard-step" data-step="3">
                     <h2 class="wizard-title">Social Media</h2>
                     <div class="form-group mb-3">
                         {{-- <label for="instagram">Instagram Handle</label> --}}
-                        <input type="text" name="instagram" class="form-control" id="instagram" placeholder="@Instagram Handle" required>
+                        <input type="text" name="instagram" class="form-control" id="instagram" placeholder="@Instagram Handle">
                     </div>
                     <div class="form-group mb-4">
                         {{-- <label for="tiktok">TikTok Handle</label> --}}
-                        <input type="text" name="tiktok" class="form-control" id="tiktok" placeholder="@TikTok Handle" required>
+                        <input type="text" name="tiktok" class="form-control" id="tiktok" placeholder="@TikTok Handle">
                     </div>
                     <div class="wizard-actions">
                         <button type="button" class="btn-default btn-outline" data-prev="2">Back</button>
@@ -188,8 +188,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     document.querySelectorAll('[data-next]').forEach(btn=>{
         btn.addEventListener('click', ()=>{
-            // For step 4, persist platform choice
             const next = btn.getAttribute('data-next');
+            const currentStep = btn.closest('.wizard-step').getAttribute('data-step');
+            
+            // Validate current step before proceeding
+            if (!validateStep(currentStep)) {
+                return; // Stop if validation fails
+            }
+            
+            // For step 4, persist platform choice
             if(next==='5'){
                 buildReview();
             }
@@ -215,6 +222,44 @@ document.addEventListener('DOMContentLoaded', function() {
         const val = platformOtherInput.value.trim();
         document.getElementById('current_platform').value = val || 'Other';
     });
+
+    // Step validation function
+    function validateStep(step) {
+        switch(step) {
+            case '2':
+                // Step 2: Basic Info - require brand_name, email, whatsapp
+                const name = form.brand_name.value.trim();
+                const email = form.email.value.trim();
+                const whatsapp = form.whatsapp.value.trim();
+                
+                if (!name || !email || !whatsapp) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Information',
+                        text: 'Please fill in all required fields: Name, Email, and WhatsApp number.'
+                    });
+                    return false;
+                }
+                return true;
+                
+            case '4':
+                // Step 4: Platform choice - require platform selection
+                const platform = document.getElementById('current_platform').value.trim();
+                
+                if (!platform) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Platform Required',
+                        text: 'Please select which platform you are currently using.'
+                    });
+                    return false;
+                }
+                return true;
+                
+            default:
+                return true; // No validation for other steps
+        }
+    }
 
     function buildReview(){
         const summary = document.getElementById('review_summary');
@@ -280,8 +325,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         console.log('Formatted WhatsApp number:', whatsapp);
 
-        // Simple validation: if any field is empty or terms not checked, do not submit or show alert
-        if (!name || !email || !whatsapp || !instagram || !tiktok || !platform || !termsAccepted) {
+        // Simple validation: if any required field is empty or terms not checked, do not submit or show alert
+        if (!name || !email || !whatsapp || !platform || !termsAccepted) {
             showLoading(false);
             Swal.fire({
                 icon: 'error',
