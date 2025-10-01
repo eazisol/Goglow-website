@@ -92,6 +92,28 @@
 .header--transparent .lang-dropdown-item:hover { background-color: rgba(255,255,255,0.06); }
 </style>
 
+<style>
+/* Mobile: show only the flag (keep chevron) in the mobile header area */
+@media (max-width: 991px) {
+    /* hide name in the toggle, keep chevron */
+    .mobile-actions .lang-switcher .language-btn .language-name { display: none !important; }
+
+    /* tighten spacing for flag + chevron */
+    .mobile-actions .lang-switcher .language-btn { padding: 8px; gap: 6px !important; }
+
+    /* make dropdown as narrow as the flag */
+    .mobile-actions .lang-switcher .lang-dropdown-menu {
+        min-width: 44px; /* match flag width */
+        width: auto;
+        padding: 6px 6px;
+    }
+
+    /* hide names inside dropdown items */
+    .mobile-actions .lang-switcher .lang-dropdown-menu .language-name { display: none !important; }
+    .mobile-actions .lang-switcher .lang-dropdown-item { justify-content: center; gap: 0; padding: 8px 10px; }
+}
+</style>
+
 <script>
 (function () {
     // delegate once for entire document so both desktop and mobile instances work

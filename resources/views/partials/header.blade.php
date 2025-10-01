@@ -8,7 +8,7 @@
 						{{-- <h1 class="text-anime-style-2 header-logo {{ $isHome ? 'text-white' : 'text-dark' }}" >Go<span>Glow</span></h1> --}}
 					</a>
                     <a class="navbar-brand-mobile" href="{{ url('/') }}">
-						<img src="images/Glow - mobile responsive.png" alt="Logo" style="width: 45px;">
+						<img src="images/Glow - mobile responsive.png" alt="Logo" style="width: 40px;">
 						{{-- <h1 class="text-anime-style-2 header-logo {{ $isHome ? 'text-white' : 'text-dark' }}" >Go<span>Glow</span></h1> --}}
 					</a>
 					<div class="collapse navbar-collapse main-menu">
@@ -37,7 +37,7 @@
                             <a href="{{ url('/beauty-professional') }}" class="btn-default {{ $isHome ? 'btn-highlighted' : '' }}">{{ __('app.nav.hero_section_button') }}</a>
                         </div>
 					</div>
-                    <div class="mobile-actions d-lg-none" style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+                    <div class="mobile-actions d-lg-none" style="display:flex;align-items:center;margin-left:auto;">
                         @include('partials.language-switcher')
 						<a href="{{ url('/beauty-professional') }}" class="btn-default border-btn">{{ __('app.nav.hero_section_button') }}</a>
 					</div>

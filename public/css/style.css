@@ -20,7 +20,7 @@ html, body { margin: 0; }
 
 /* Mobile header actions (language + Become a Glowee) */
 @media (max-width: 991px){
-  .mobile-actions .btn-default.border-btn{ padding: 10px 14px; font-size: 14px; }
+  .mobile-actions .btn-default.border-btn{ padding: 10px 14px; font-size: 14px; margin-right: 6px;}
 }
 
 
