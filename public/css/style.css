@@ -76,6 +76,12 @@ html, body { margin: 0; }
     .navbar{
         padding: 0;
     }
+    .navbar-brand{
+        display: none;
+    }
+    .navbar-brand-mobile{
+        display: block;
+    }
     .app-button{
         margin-bottom: 15px;
     }

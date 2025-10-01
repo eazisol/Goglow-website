@@ -7,13 +7,17 @@
 						<img src="images/WhatsApp_Image_2025-09-16_at_23.28.10_3ad6dde7-removebg-preview.png" alt="Logo" style="width: 125px;">
 						{{-- <h1 class="text-anime-style-2 header-logo {{ $isHome ? 'text-white' : 'text-dark' }}" >Go<span>Glow</span></h1> --}}
 					</a>
+                    <a class="navbar-brand-mobile" href="{{ url('/') }}">
+						<img src="images/Glow - mobile responsive.png" alt="Logo" style="width: 45px;">
+						{{-- <h1 class="text-anime-style-2 header-logo {{ $isHome ? 'text-white' : 'text-dark' }}" >Go<span>Glow</span></h1> --}}
+					</a>
 					<div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
                             <ul class="navbar-nav mr-auto" id="menu"> 
 								<li class="nav-item"><a class="nav-link text-white" href="{{ url('/search') }}">{{ __('app.nav.book_service') }}</a></li>                             
 								<li class="nav-item"><a class="nav-link text-white" href="{{ url('/about') }}">{{ __('app.nav.about_us') }}</a>
 								<li class="nav-item"><a class="nav-link text-white" href="{{ url('/contact-us') }}">{{ __('app.nav.contact_us') }}</a></li>
-								<li class="nav-item highlighted-menu"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/book-appointment') }}">{{ __('app.nav.book_service') }}</a></li>
+								{{-- <li class="nav-item highlighted-menu"><a class="nav-link {{ $isHome ? 'text-white' : 'text-dark' }}" href="{{ url('/book-appointment') }}">{{ __('app.nav.book_service') }}</a></li> --}}
                             </ul>
                         </div>
                         <div class="header-btn" style="display: contents;">
