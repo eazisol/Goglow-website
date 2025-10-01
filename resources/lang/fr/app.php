@@ -11,7 +11,7 @@ return [
         'login' => 'Connexion',
         'logout' => 'Déconnexion',
         'register' => 'S\'inscrire',
-        'hero_section_button' => "Devenez un Glowee",
+        'hero_section_button' => "Devenir Une Fleur",
     ],
 
     // Authentication

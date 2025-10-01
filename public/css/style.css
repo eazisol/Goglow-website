@@ -1,12 +1,5 @@
 /* Reset default browser gap at the very top */
 html, body { margin: 0; }
-
-@media (max-width: 767px) {
-    .app-cta { flex-direction: column; align-items: center; }
-    .app-cta > div { width: 100%; }
-    .app-cta img { max-width: 100%; height: auto; }
-    .app-cta .content { max-width: 100% !important; }
-}
 .main-header-nav{
     position: sticky;
     left: 0;
@@ -17,13 +10,9 @@ html, body { margin: 0; }
 	border-radius:0;
     padding: 0 77px;
 }
-
-/* Mobile header actions (language + Become a Glowee) */
-@media (max-width: 991px){
-  .mobile-actions .btn-default.border-btn{ padding: 10px 14px; font-size: 14px; margin-right: 6px;}
-}
-
-
+    .navbar-brand-mobile{
+        display: none;
+    }
 /* Wizard uses normal document flow now that header is sticky */
 
 /* Hero background wrapper for professional wizard */
@@ -75,103 +64,6 @@ html, body { margin: 0; }
     margin-bottom: 30px; 
     justify-content: center;
     margin-top: 20px;
-}
-
-@media (max-width: 576px) {
-    .navbar{
-        padding: 0;
-    }
-    .navbar-brand{
-        display: none;
-    }
-    .navbar-brand-mobile{
-        display: block;
-    }
-    .app-button{
-        margin-bottom: 15px;
-    }
-    .app-download-p{
-        padding: initial;
-    }
-    .overlap-box{
-        width: 75%;
-        padding: 30px;
-        margin-top: -25px;
-        margin-bottom: -25px;
-    }
-    .app-button{
-        gap: 5px;
-    }
-    header.main-header .container-fluid, .hero .container-fluid{
-        padding: 0 8px;
-    }
-    .btn-default.border-btn{
-        padding: 17px 30px 17px 30px;
-    }
-    .btn-default{
-        padding: 17px 30px 17px 30px;
-    }
-    .hero-content{
-        margin-top: 30px;
-    }
-    /* .hero-content .section-title .wow{
-        display: none;
-    } */
-    .section-title h3::before{
-        content: none;
-    }
-    .section-title h3{
-        font-size: 14px;
-    }
-    .overlap-box h1{
-        font-size: 23px;
-    }
-    .mobile-image{
-        display: none;
-    }
-    .app-section-content{
-        padding: 0 50px;
-    }
-    /* .app-section-button{
-        display: initial !important;
-    } */
-    .service-item {
-    display: flex;
-    flex-direction: column; /* stack icon and text vertically */
-    justify-content: center; /* center vertically */
-    align-items: center;     /* center horizontally */
-    text-align: center;      /* center text */
-    }
-    .section-title{
-    display: flex;
-    flex-direction: column; /* stack icon and text vertically */
-    justify-content: center; /* center vertically */
-    align-items: center;     /* center horizontally */
-    text-align: center;      /* center text */
-    }
-    .what-we-do-btn{
-        display: flex;
-        justify-content: center;
-    }
-    .our-partner-btn{
-        display: flex; 
-        justify-content: center;
-    }
-    .feature-list{
-        display: flex;
-    }
-    .feature-list li{
-        align-items: initial!important;
-        font-size: 11px !important;
-    }
-    .app-section-button a img{
-        height:42px !important;
-    }
-
-    /* //search page// */
-    .page-header{
-        padding: 0px 0 20px;
-    }
 }
 
 /* Professional wizard styles */
@@ -263,9 +155,6 @@ html, body { margin: 0; }
 .bw-wizard .form-check-input{margin:0;width:18px;height:18px}
 .bw-wizard .form-check-label{margin:0;line-height:1.2}
 
-@media (max-width: 576px){
-  .bw-wizard .wizard-option{flex:1 1 100%}
-}
 
 /* Laptop screens like 1366x768: compact the wizard UI */
 @media (max-width: 1400px) and (max-height: 820px){
@@ -284,4 +173,121 @@ html, body { margin: 0; }
   .bw-wizard .wizard-card p,
   .bw-wizard .wizard-card dt,
   .bw-wizard .wizard-card dd{ font-size: 14px; }
+}
+
+/* Mobile header actions (language + Become a Glowee) */
+@media (max-width: 991px){
+  .mobile-actions .btn-default.border-btn{ padding: 10px 14px; font-size: 14px; margin-right: 6px;}
+  .navbar{
+    padding: 0%;
+  }
+}
+
+@media (max-width: 767px) {
+    .app-cta { flex-direction: column; align-items: center; }
+    .app-cta > div { width: 100%; }
+    .app-cta img { max-width: 100%; height: auto; }
+    .app-cta .content { max-width: 100% !important; }
+    
+}
+
+@media (max-width: 576px) {
+    .hero-content{
+        width: 88%!important;
+    }
+    .navbar{
+        padding: 0;
+    }
+    .navbar-brand{
+        display: none;
+    }
+    .navbar-brand-mobile{
+        display: block !important;
+    }
+    .app-button{
+        margin-bottom: 15px;
+    }
+    .app-download-p{
+        padding: initial;
+    }
+    .overlap-box{
+        width: 75%;
+        padding: 30px;
+        margin-top: -25px;
+        margin-bottom: -25px;
+    }
+    .app-button{
+        gap: 5px;
+    }
+    header.main-header .container-fluid, .hero .container-fluid{
+        padding: 0 8px;
+    }
+    .btn-default.border-btn{
+        padding: 17px 30px 17px 30px;
+    }
+    .btn-default{
+        padding: 17px 30px 17px 30px;
+    }
+    .hero-content{
+        margin-top: 30px;
+    }
+    /* .hero-content .section-title .wow{
+        display: none;
+    } */
+    .section-title h3::before{
+        content: none;
+    }
+    .section-title h3{
+        font-size: 14px;
+    }
+    .overlap-box h1{
+        font-size: 23px;
+    }
+    .mobile-image{
+        display: none;
+    }
+    .app-section-content{
+        padding: 0 50px;
+    }
+    /* .app-section-button{
+        display: initial !important;
+    } */
+    .service-item {
+    display: flex;
+    flex-direction: column; /* stack icon and text vertically */
+    justify-content: center; /* center vertically */
+    align-items: center;     /* center horizontally */
+    text-align: center;      /* center text */
+    }
+    .section-title{
+    display: flex;
+    flex-direction: column; /* stack icon and text vertically */
+    justify-content: center; /* center vertically */
+    align-items: center;     /* center horizontally */
+    text-align: center;      /* center text */
+    }
+    .what-we-do-btn{
+        display: flex;
+        justify-content: center;
+    }
+    .our-partner-btn{
+        display: flex; 
+        justify-content: center;
+    }
+    .feature-list{
+        display: flex;
+    }
+    .feature-list li{
+        align-items: initial!important;
+        font-size: 11px !important;
+    }
+    .app-section-button a img{
+        height:42px !important;
+    }
+
+    /* //search page// */
+    .page-header{
+        padding: 0px 0 20px;
+    }
+    .bw-wizard .wizard-option{flex:1 1 100%}
 }

@@ -38,7 +38,7 @@
         <div class="beauty-form-center">
             <div class="wizard-card">
                     <div class="section-title section-title-center">
-                        <h2>Become A Glowee</h2>
+                        <h2>Become A Glower</h2>
                     </div>
             <div class="wizard-progress" id="wizardProgress">Step 1 of 5</div>
             <div class="wizard-progressbar" id="wizardProgressbar" aria-hidden="true">
