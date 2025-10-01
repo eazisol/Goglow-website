@@ -38,7 +38,7 @@
         <div class="beauty-form-center">
             <div class="wizard-card">
                     <div class="section-title section-title-center">
-                        <h2>Become a Glowee</h2>
+                        <h2>Become A Glowee</h2>
                     </div>
             <div class="wizard-progress" id="wizardProgress">Step 1 of 5</div>
             <div class="wizard-progressbar" id="wizardProgressbar" aria-hidden="true">
@@ -66,16 +66,16 @@
                     <h2 class="wizard-title">Basic Info</h2>
                     <div class="form-group mb-3">
                         {{-- <label for="brand_name">Name / Brand Name</label> --}}
-                        <input type="text" name="brand_name" class="form-control" id="brand_name" placeholder="Name / Brand Name" required>
+                        <input type="text" name="brand_name" class="form-control" id="brand_name" placeholder="Enter your name or brand name" required>
                     </div>
                     <div class="form-group mb-3">
                         {{-- <label for="whatsapp">WhatsApp Number</label> --}}
-                        <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="Enter with country code (e.g., +1 for US). Special characters are removed automatically" required style="margin-bottom: 5px;">
+                        <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="Enter phone number (e.g., +33 612345678)" required style="margin-bottom: 5px;">
                         {{-- <small class="text-muted">Enter with country code (e.g., +1 for US). Special characters are removed automatically.</small> --}}
                     </div>
                     <div class="form-group mb-4">
                         {{-- <label for="email">Email Address</label> --}}
-                        <input type="email" name="email" class="form-control" id="email" placeholder="name@example.com" required>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email address" required>
                     </div>
                     <div class="wizard-actions">
                         <button type="button" class="btn-default btn-outline" data-prev="1">Back</button>
@@ -245,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
             case '4':
                 // Step 4: Platform choice - require platform selection
                 const platform = document.getElementById('current_platform').value.trim();
+                const platformOtherInput = document.getElementById('platform_other_input');
                 
                 if (!platform) {
                     Swal.fire({
@@ -254,6 +255,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     return false;
                 }
+                
+                // If "Other" is selected, require text input
+                if (platform === 'Other' && (!platformOtherInput || !platformOtherInput.value.trim())) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Platform Details Required',
+                        text: 'Please specify which platform you are using in the text field.'
+                    });
+                    return false;
+                }
+                
                 return true;
                 
             default:

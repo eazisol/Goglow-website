@@ -248,7 +248,7 @@ html, body { margin: 0; }
 .bw-wizard .text-muted{color:#e8e8e8 !important}
 
 /* Align checkbox and label nicely */
-.bw-wizard .form-check{display:flex;align-items:center;gap:10px}
+.bw-wizard .form-check{display:flex;align-items:center;gap:10px;padding: initial;}
 .bw-wizard .form-check-input{margin:0;width:18px;height:18px}
 .bw-wizard .form-check-label{margin:0;line-height:1.2}
 
