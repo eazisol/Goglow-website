@@ -18,6 +18,11 @@ html, body { margin: 0; }
     padding: 0 77px;
 }
 
+/* Mobile header actions (language + Become a Glowee) */
+@media (max-width: 991px){
+  .mobile-actions .btn-default.border-btn{ padding: 10px 14px; font-size: 14px; }
+}
+
 
 /* Wizard uses normal document flow now that header is sticky */
 
@@ -98,7 +103,7 @@ html, body { margin: 0; }
         gap: 5px;
     }
     header.main-header .container-fluid, .hero .container-fluid{
-        padding: 0 20px;
+        padding: 0 8px;
     }
     .btn-default.border-btn{
         padding: 17px 30px 17px 30px;

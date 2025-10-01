@@ -37,6 +37,10 @@
                             <a href="{{ url('/beauty-professional') }}" class="btn-default {{ $isHome ? 'btn-highlighted' : '' }}">{{ __('app.nav.hero_section_button') }}</a>
                         </div>
 					</div>
+                    <div class="mobile-actions d-lg-none" style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+                        @include('partials.language-switcher')
+						<a href="{{ url('/beauty-professional') }}" class="btn-default border-btn">{{ __('app.nav.hero_section_button') }}</a>
+					</div>
 					<div class="navbar-toggle"></div>
 				</div>
 			</nav>

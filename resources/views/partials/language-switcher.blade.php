@@ -4,19 +4,19 @@
     $availableLocales = LanguageHelper::getAvailableLocales();
 @endphp
 
-<div class="language-switcher">
-    <div class="dropdown">
-        <button class="language-btn" type="button" id="languageDropdown" aria-expanded="false">
+<div class="language-switcher lang-switcher">
+    <div class="lang-dropdown">
+        <button class="language-btn lang-toggle" type="button" aria-haspopup="true" aria-expanded="false">
             <span class="language-flag">{!! LanguageHelper::getLocaleFlag($currentLocale) !!}</span>
             <span class="language-name">{{ LanguageHelper::getLocaleName($currentLocale) }}</span>
-            <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
         </button>
-        
-        <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+
+        <ul class="lang-dropdown-menu" role="menu">
             @foreach($availableLocales as $locale)
                 @if($locale !== $currentLocale)
-                    <li>
-                        <a href="{{ route('language.switch', $locale) }}" class="dropdown-item">
+                    <li role="none">
+                        <a role="menuitem" href="{{ route('language.switch', $locale) }}" class="lang-dropdown-item">
                             <span class="language-flag">{!! LanguageHelper::getLocaleFlag($locale) !!}</span>
                             <span class="language-name">{{ LanguageHelper::getLocaleName($locale) }}</span>
                         </a>
@@ -28,14 +28,9 @@
 </div>
 
 <style>
-.language-switcher {
-    position: relative;
-    display: inline-block;
-}
-
-.language-switcher .dropdown {
-    position: relative;
-}
+/* Namespaced so it won't clash with Bootstrap */
+.lang-switcher { position: relative; display: inline-block; }
+.lang-dropdown { position: relative; }
 
 .language-btn {
     background: none;
@@ -50,121 +45,113 @@
     border-radius: 4px;
     transition: background-color 0.2s;
 }
+.language-btn:hover { background-color: rgba(0,0,0,0.05); }
 
-.language-btn:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
+.language-flag { font-size: 16px; }
+.language-name { font-weight: 500; }
 
-.language-flag {
-    font-size: 16px;
-}
+.language-btn i { font-size: 12px; transition: transform 0.18s; }
 
-.language-name {
-    font-weight: 500;
-}
-
-.language-btn i {
-    font-size: 12px;
-    transition: transform 0.2s;
-}
-
-.language-switcher .dropdown-menu {
+/* menu */
+.lang-dropdown-menu {
     position: absolute;
     top: 100%;
     right: 0;
     background: white;
     border: 1px solid #e0e0e0;
     border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     list-style: none;
     padding: 8px 0;
-    margin: 0;
+    margin: 6px 0 0 0;
     min-width: 150px;
-    z-index: 1000;
+    z-index: 1200;
     display: none;
 }
+.lang-dropdown-menu.show { display: block !important; }
 
-.language-switcher .dropdown-menu.show {
-    display: block !important;
-}
-
-.language-switcher .dropdown-item {
-    /* display: flex; */
+.lang-dropdown-item {
+    display: flex;
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
     color: #333;
     text-decoration: none;
-    transition: background-color 0.2s;
+    transition: background-color 0.15s;
 }
+.lang-dropdown-item:hover { background-color: #f5f5f5; color: #333; }
 
-.language-switcher .dropdown-item:hover {
-    background-color: #f5f5f5;
-    color: #333;
-    text-decoration: none;
+/* Dark header support */
+.header--transparent .language-btn,
+.header--transparent .lang-dropdown-item { color: #fff; }
+.header--transparent .language-btn:hover { background-color: rgba(255,255,255,0.06); }
+.header--transparent .lang-dropdown-menu {
+    background: rgba(0,0,0,0.9);
+    border-color: rgba(255,255,255,0.12);
 }
-
-/* Dark mode support */
-.language-btn,
-.header--transparent .language-switcher .dropdown-item {
-    color: #fff;
-}
-
-.header--transparent .language-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.header--transparent .language-switcher .dropdown-menu {
-    background: rgba(0, 0, 0, 0.9);
-    border-color: rgba(255, 255, 255, 0.2);
-}
-
-.header--transparent .language-switcher .dropdown-item {
-    color: #fff;
-}
-
-.header--transparent .language-switcher .dropdown-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
+.header--transparent .lang-dropdown-item:hover { background-color: rgba(255,255,255,0.06); }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const languageBtn = document.getElementById('languageDropdown');
-    const dropdownMenu = document.querySelector('.language-switcher .dropdown-menu');
-    
-    if (languageBtn && dropdownMenu) {
-        // Toggle dropdown
-        languageBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const isOpen = dropdownMenu.classList.contains('show');
-            
-            // Close all other dropdowns
-            document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
-                if (menu !== dropdownMenu) {
-                    menu.classList.remove('show');
-                }
-            });
-            
-            // Toggle current dropdown
-            dropdownMenu.classList.toggle('show', !isOpen);
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!languageBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                dropdownMenu.classList.remove('show');
-            }
-        });
-        
-        // Close dropdown when selecting a language
-        dropdownMenu.addEventListener('click', function(e) {
-            if (e.target.closest('.dropdown-item')) {
-                dropdownMenu.classList.remove('show');
-            }
+(function () {
+    // delegate once for entire document so both desktop and mobile instances work
+    if (window.__langSwitcherDelegated) return;
+    window.__langSwitcherDelegated = true;
+
+    function closeAllExcept(exceptMenu) {
+        document.querySelectorAll('.lang-dropdown-menu.show').forEach(function (menu) {
+            if (menu === exceptMenu) return;
+            menu.classList.remove('show');
+            const wrapper = menu.closest('.lang-switcher');
+            const toggle = wrapper && wrapper.querySelector('.lang-toggle');
+            if (toggle) toggle.setAttribute('aria-expanded', 'false');
+            const icon = toggle && toggle.querySelector('i');
+            if (icon) icon.style.transform = '';
         });
     }
-});
+
+    document.addEventListener('click', function (ev) {
+        const toggle = ev.target.closest('.lang-toggle');
+        if (toggle) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const wrapper = toggle.closest('.lang-switcher');
+            const menu = wrapper && wrapper.querySelector('.lang-dropdown-menu');
+            if (!menu) return;
+
+            const willOpen = !menu.classList.contains('show');
+            closeAllExcept(null);
+            if (willOpen) {
+                menu.classList.add('show');
+                toggle.setAttribute('aria-expanded', 'true');
+                const icon = toggle.querySelector('i');
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            } else {
+                menu.classList.remove('show');
+                toggle.setAttribute('aria-expanded', 'false');
+                const icon = toggle.querySelector('i');
+                if (icon) icon.style.transform = '';
+            }
+            return;
+        }
+
+        // click inside an open menu item
+        const clickedMenuItem = ev.target.closest('.lang-dropdown-item');
+        if (clickedMenuItem) {
+            const menu = clickedMenuItem.closest('.lang-dropdown-menu');
+            const wrapper = menu && menu.closest('.lang-switcher');
+            const t = wrapper && wrapper.querySelector('.lang-toggle');
+            if (menu) menu.classList.remove('show');
+            if (t) t.setAttribute('aria-expanded', 'false');
+            const icon = t && t.querySelector('i');
+            if (icon) icon.style.transform = '';
+            return; // allow navigation
+        }
+
+        // outside click closes any open menus
+        if (!ev.target.closest('.lang-switcher')) {
+            closeAllExcept(null);
+        }
+    });
+})();
 </script>
