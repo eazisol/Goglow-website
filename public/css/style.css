@@ -238,7 +238,8 @@ html, body { margin: 0; }
         content: none;
     }
     .section-title h3{
-        font-size: 14px;
+        margin-top: 10px;
+        font-size: 13px;
     }
     .overlap-box h1{
         font-size: 23px;

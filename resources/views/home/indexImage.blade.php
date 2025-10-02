@@ -790,7 +790,7 @@
             
             <!-- Left: Mobile App Image -->
                 <div class="mobile-image" style="flex: 1; text-align: center; ">
-                <img src="images/app5.png" alt="GoGlow App">
+                <img src="images/Get The goGlow App.png" alt="GoGlow App">
                 </div>
             
             <!-- Right: Content -->
