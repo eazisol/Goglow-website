@@ -22,7 +22,7 @@
                             <!-- Section Title Start -->
                             <div class="section-title">
                                 <h1 class="text-anime-style-2" >{{ __('app.home.hero_title') }}</h1>
-                                <h3 class="wow fadeInUp">{{ __('app.home.hero_subtitle') }}</h3>
+                                <h3 class="wow fadeInUp hero-contecnt-p">{{ __('app.home.hero_subtitle') }}</h3>
                                 <div class="search-bar">
                                     <form action="{{ route('search') }}" method="GET" class="search-form">
                                         <div class="search-inputs">

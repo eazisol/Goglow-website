@@ -39,7 +39,7 @@
 					</div>
                     <div class="mobile-actions d-lg-none" style="display:flex;align-items:center;margin-left:auto;">
                         @include('partials.language-switcher')
-						<a href="{{ url('/beauty-professional') }}" class="btn-default border-btn">{{ __('app.nav.hero_section_button') }}</a>
+						<a href="{{ url('/beauty-professional') }}" class="form-button">{{ __('app.nav.hero_section_button') }}</a>
 					</div>
 					<div class="navbar-toggle"></div>
 				</div>

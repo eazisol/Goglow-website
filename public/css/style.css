@@ -177,10 +177,10 @@ html, body { margin: 0; }
 
 /* Mobile header actions (language + Become a Glowee) */
 @media (max-width: 991px){
-  .mobile-actions .btn-default.border-btn{ padding: 10px 14px; font-size: 14px; margin-right: 6px;}
+  /* .mobile-actions .btn-default.border-btn{ padding: 10px 14px; font-size: 14px; margin-right: 6px;}
   .navbar{
     padding: 0%;
-  }
+  } */
 }
 
 @media (max-width: 767px) {
@@ -192,6 +192,31 @@ html, body { margin: 0; }
 }
 
 @media (max-width: 576px) {
+    .hero-contecnt-p{
+        padding-left: 0% !important;
+    }
+    .main-header-nav{
+        padding: 0%;
+    }
+    .mobile-actions .form-button{
+    position: relative;
+    display: inline-block;
+    background: var(--accent-color);
+    border-radius: 10px;
+    font-size: 14px;
+    margin-right: 6px;
+    font-weight: 700;
+    line-height: 1em;
+    text-transform: capitalize;
+    color: var(--secondary-color);
+    border: none;
+            padding: 13px 15px 13px 15px;
+    overflow: hidden;
+    transition: all 0.4s 
+    ease-in-out;
+    z-index: 0;
+        
+    }
     .hero-content{
         width: 88%!important;
     }
@@ -261,9 +286,9 @@ html, body { margin: 0; }
     text-align: center;      /* center text */
     }
     .section-title{
-    display: flex;
-    flex-direction: column; /* stack icon and text vertically */
-    justify-content: center; /* center vertically */
+    /* display: flex; */
+    /* flex-direction: column; stack icon and text vertically */
+    /* justify-content: center; center vertically */
     align-items: center;     /* center horizontally */
     text-align: center;      /* center text */
     }
