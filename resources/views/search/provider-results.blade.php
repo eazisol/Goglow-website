@@ -109,14 +109,35 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="provider-card">
                             <a href="{{ url('/search?provider_id=' . $provider['id']) }}" class="provider-link">
+                                @php
+                                    $avgRating = isset($provider['avg_ratting']) ? floatval($provider['avg_ratting']) : 0;
+                                @endphp
                                 <div class="provider-image">
                                     <img src="{{ isset($provider['profileImg']) && $provider['profileImg'] ? $provider['profileImg'] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
                                          alt="{{ $provider['name'] }}" 
                                          class="img-fluid"
                                          onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                                    <div class="image-overlay">
+                                        <div class="overlay-left">
+                                            <span class="overlay-title">
+                                                {{ !empty($provider['storeName']) 
+                                                    ? $provider['storeName'] 
+                                                    : (!empty($provider['name']) 
+                                                        ? $provider['name'] 
+                                                        : 'No Name') }}
+                                            </span>
+                                            @if(isset($provider['companyName']) && $provider['companyName'])
+                                                <span class="overlay-meta">{{ $provider['companyName'] }}</span>
+                                            @endif
+                                        </div>
+                                        <div class="rating-badge">
+                                            <i class="fas fa-star"></i>
+                                            <span>{{ number_format($avgRating, 1) }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="provider-details p-4">
-                                    <h3>
+                                    <h3 class="card-title">
                                         {{ !empty($provider['storeName']) 
                                             ? $provider['storeName'] 
                                             : (!empty($provider['name']) 
@@ -124,9 +145,6 @@
                                                 : 'No Name') }}
                                     </h3>
 
-                                    @if(isset($provider['companyName']))
-                                        <p class="company-name">{{ $provider['companyName'] }}</p>
-                                    @endif
                                     <div class="provider-meta">
                                         @if(isset($provider['address']))
                                             <div class="address">
@@ -134,30 +152,23 @@
                                                 <span>{{ $provider['address'] }}</span>
                                             </div>
                                         @endif
-                                        @if(isset($provider['avg_ratting']) && $provider['avg_ratting'] > 0)
-                                            <div class="rating">
-                                                <i class="fas fa-star"></i>
-                                                <span>{{ $provider['avg_ratting'] }} ({{ $provider['total_review'] ?? 0 }} reviews)</span>
-                                            </div>
-                                        @endif
                                     </div>
-                                    <div class="provider-details mt-3">
-                                        @if(isset($provider['timing']))
-                                            <div class="timing d-flex gap-2 flex-wrap">
-                                                @foreach($provider['timing'] as $day => $times)
-                                                    @php
-                                                        $date = \Carbon\Carbon::parse($day); // Make sure $day is a valid date string
-                                                    @endphp
-                                                    <div class="date-box">
-                                                        {{ $date->format('D.d') }} <!-- e.g., Fri.08 -->
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @endif
+
+                                    @if(isset($provider['timing']))
+                                        <div class="tag-list">
+                                            @foreach($provider['timing'] as $day => $times)
+                                                @php
+                                                    $date = \Carbon\Carbon::parse($day);
+                                                @endphp
+                                                <span class="tag-chip">{{ $date->format('D.d') }}</span>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    <div class="card-footer-row">
+                                        <div class="reviews-text">{{ $provider['total_review'] ?? 0 }} reviews</div>
+                                        <button class="appointment-btn">Book Now</button>
                                     </div>
-                                    <button class="appointment-btn">Make an appointment</button>
-
-
                                 </div>
                             </a>
                         </div>
@@ -200,6 +211,39 @@
     }
     /* Ensure existing search bar keeps its own layout inside */
     .search-outer-layout .provider-search-bar { margin-top: 0; }
+
+    /* Provider card redesign */
+    .search-results .provider-card {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(16,24,40,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        border: 1px solid rgba(0,0,0,0.06);
+    }
+    .search-results .provider-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(16,24,40,0.12); }
+    .search-results .provider-image { position: relative; }
+    .search-results .provider-image img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .search-results .image-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%); }
+    .overlay-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .overlay-title { color: #fff; font-weight: 700; font-size: 14px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+    .overlay-meta { color: #e6e6e6; font-size: 12px; }
+    .search-results .rating-badge { background: #fff; color: #111; border-radius: 999px; padding: 6px 10px; display: inline-flex; gap: 6px; align-items: center; font-weight: 700; box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+    .search-results .rating-badge i { color: #ffb400; }
+
+    .search-results .provider-details { color: #111827; }
+    .search-results .card-title { font-size: 16px; font-weight: 700; margin: 0 0 6px 0; }
+    .search-results .provider-meta .address { color: #6b7280; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+    .search-results .provider-meta .address i { color: #ef4444; }
+
+    .search-results .tag-list { margin: 12px 0; display: flex; gap: 8px; flex-wrap: wrap; }
+    .search-results .tag-chip { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+
+    .search-results .card-footer-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f1f1f1; }
+    .search-results .reviews-text { color: #6b7280; font-weight: 700; font-size: 14px; }
+    .provider-card .appointment-btn { background-color: #000000ff; color: #fff; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: 700; border: none; }
+    .provider-card .appointment-btn:hover { background-color: #727272ff; }
 
     .appointment-btn {
     margin-top: 20px;
