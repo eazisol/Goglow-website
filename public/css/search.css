@@ -108,14 +108,17 @@
 }
 
 @media (max-width: 768px) {
+    .provider-search-bar{
+        margin-top: 50px!important;
+    }
     /* Stack inputs */
     .search-inputs { flex-direction: column; gap: 12px; }
 
     /* Mobile card wraps heading, paragraph, form and button */
     .hero .section-title {
         margin-bottom: 15px !important;
-        background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.12);
+        background: #0000007a;
+        border: 1px solid rgb(0 0 0 / 36%);
         border-radius: 16px;
         padding: 16px;
         color: #111111;
@@ -125,7 +128,7 @@
     .hero .section-title h1,
     .hero .section-title h2,
     .hero .section-title h3,
-    .hero .section-title p { color: #111111 !important; }
+    .hero .section-title p { color: #ffffff !important; }
     /* Make inner search bar transparent when inside the card */
     .hero .section-title .search-bar { background: transparent; border: 0; box-shadow: none; margin: 12px 0; padding: 0; }
 
@@ -145,10 +148,10 @@
     .search-item .input-text { width: 100%; }
     .search-item .input-text input {
         width: 100%;
-        background: rgba(0,0,0,0.04);
-        border: 1px solid rgba(0,0,0,0.16);
+        background: rgb(255 255 255);
+        border: 1px solid rgba(0, 0, 0, 0.16);
         border-radius: 12px;
-        color: #111111;
+        color: #ffffff;
         padding: 14px 16px;
         font-size: 16px;
     }
@@ -164,7 +167,7 @@
         border-radius: 12px;
         padding: 14px 16px;
         font-weight: 700;
-        background: #000000; /* keep brand button */
+        background: #9f9f9f;
         color: #ffffff;
     }
 

@@ -21,7 +21,7 @@
 
     {{-- search bar start --}}
     <div class="container">
-                                        <div class="search-bar">
+                                        <div class="search-bar provider-search-bar">
                                     <form action="{{ route('search') }}" method="GET" class="search-form">
                                         <div class="search-inputs">
                                             <div class="search-item">
