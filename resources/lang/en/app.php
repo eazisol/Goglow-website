@@ -179,4 +179,9 @@ return [
         'schedule_seconds' => 'Schedule in seconds',
         'rating_text' => '4.8 / 5 rating from 5,000+ users',
     ],
+    // providers Page
+    'provider' => [
+        'searchbar_section_heading' => 'Find trusted salons & book instantly',
+        'searchbar_section_paragraph' => 'Discover best-rated salons near you.Compare services, read reviews, and reverse in seconds'
+    ],
 ];

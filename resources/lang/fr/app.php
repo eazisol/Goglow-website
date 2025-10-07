@@ -179,4 +179,9 @@ return [
         'schedule_seconds' => 'Planifiez en quelques secondes',
         'rating_text' => 'Note 4,8 / 5 de plus de 5 000 utilisateurs',
     ],
+        // providers Page
+    'provider' => [
+        'searchbar_section_heading' => 'Trouvez des salons de confiance et réservez instantanémentueil',
+        'searchbar_section_paragraph' => 'Découvrez les salons les mieux notés près de chez vous. Comparez les services, lisez les avis et inversez en quelques secondes'
+    ],
 ];

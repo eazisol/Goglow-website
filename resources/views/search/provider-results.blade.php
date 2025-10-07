@@ -19,54 +19,63 @@
         </div>
     </div>
 
-    {{-- search bar start --}}
-    <div class="container">
-                                        <div class="search-bar provider-search-bar">
-                                    <form action="{{ route('search') }}" method="GET" class="search-form">
-                                        <div class="search-inputs">
-                                            <div class="search-item">
-                                                <i class="fas fa-search"></i>
-                                                <div class="input-text">
-                                                    <h5>{{ __('app.home.search_input_text') }}</h5>
-                                                    <input type="text" id="searchInput" placeholder="{{ __('app.home.search_service_placeholder') }}" name="search" required>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="search-item">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                                <div class="input-text">
-                                                    <h5>Or</h5>
-                                                    <input type="text" id="locationInput" placeholder="{{ __('app.home.search_location_placeholder') }}" name="location">
-                                                </div>
-                                            </div>
-                                            
-                                            <button type="submit" class="search-button">{{ __('app.home.search_button') }}</button>
+    {{-- search bar start (inner search preserved) --}}
 
-                                            <script>
-                                                document.getElementById('searchInput').addEventListener('input', function() {
-                                                    const searchValue = this.value.toLowerCase();
-                                                    const locationInput = document.getElementById('locationInput');
-                                                    
-                                                    // Make an API call to check if the search term matches any provider names
-                                                    fetch('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders')
-                                                        .then(response => response.json())
-                                                        .then(providers => {
-                                                            const isProvider = providers.some(provider => 
-                                                                provider.ownerName.toLowerCase().includes(searchValue)
-                                                            );
-                                                            
-                                                            // If searching for a provider, location is not required
-                                                            locationInput.required = !isProvider;
-                                                            locationInput.placeholder = isProvider ? 
-                                                                "{{ __('app.home.search_location_optional') }}" : 
-                                                                "{{ __('app.home.search_location_placeholder') }}";
-                                                        });
-                                                });
-                                            </script>
-                                        </div>
-                                    </form>
+        <div class="container">
+            <section class="search-outer-layout">
+                <div class="search-outer-box">
+                    <h3 class="search-outer-title">{{ __('app.provider.searchbar_section_heading')}}</h3>
+                    <p class="search-outer-subtitle">{{ __('app.provider.searchbar_section_paragraph')}}</p>
+
+                    <div class="search-bar provider-search-bar">
+                        <form action="{{ route('search') }}" method="GET" class="search-form">
+                            <div class="search-inputs">
+                                <div class="search-item">
+                                    <i class="fas fa-search"></i>
+                                    <div class="input-text">
+                                        <h5>{{ __('app.home.search_input_text') }}</h5>
+                                        <input type="text" id="searchInput" placeholder="{{ __('app.home.search_service_placeholder') }}" name="search" required>
+                                    </div>
                                 </div>
-    </div>
+                                
+                                <div class="search-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <div class="input-text">
+                                        <h5>Or</h5>
+                                        <input type="text" id="locationInput" placeholder="{{ __('app.home.search_location_placeholder') }}" name="location">
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="search-button">{{ __('app.home.search_button') }}</button>
+
+                                <script>
+                                    document.getElementById('searchInput').addEventListener('input', function() {
+                                        const searchValue = this.value.toLowerCase();
+                                        const locationInput = document.getElementById('locationInput');
+                                        
+                                        // Make an API call to check if the search term matches any provider names
+                                        fetch('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders')
+                                            .then(response => response.json())
+                                            .then(providers => {
+                                                const isProvider = providers.some(provider => 
+                                                    provider.ownerName.toLowerCase().includes(searchValue)
+                                                );
+                                                
+                                                // If searching for a provider, location is not required
+                                                locationInput.required = !isProvider;
+                                                locationInput.placeholder = isProvider ? 
+                                                    "{{ __('app.home.search_location_optional') }}" : 
+                                                    "{{ __('app.home.search_location_placeholder') }}";
+                                            });
+                                    });
+                                </script>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+
     {{-- search bar end --}}
     <!-- Page Header End -->
      <div class="container">
@@ -169,6 +178,29 @@
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/search.css') }}">
 <style>
+    /* Outer layout around existing search bar */
+    .search-outer-layout {
+        margin: 20px 0 30px 0;
+        background: linear-gradient(180deg, rgb(159 159 159 / 73%) 0%, rgb(66 66 66 / 15%) 100%);
+        border-radius: 16px;
+    }
+    .search-outer-layout .search-outer-box {
+        padding: 50px 40px 24px 40px;
+    }
+    .search-outer-layout .search-outer-title {
+        color: #fff;
+        font-weight: 700;
+        margin: 0 0 6px 0;
+        font-size: 22px;
+    }
+    .search-outer-layout .search-outer-subtitle {
+        color: rgba(255,255,255,0.85);
+        margin: 0 0 16px 0;
+        font-size: 14px;
+    }
+    /* Ensure existing search bar keeps its own layout inside */
+    .search-outer-layout .provider-search-bar { margin-top: 0; }
+
     .appointment-btn {
     margin-top: 20px;
     background-color: #1c1c1c;  /* Dark background */
