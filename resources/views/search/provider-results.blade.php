@@ -154,16 +154,63 @@
                                         @endif
                                     </div>
 
-                                    @if(isset($provider['timing']))
-                                        <div class="tag-list">
-                                            @foreach($provider['timing'] as $day => $times)
-                                                @php
-                                                    $date = \Carbon\Carbon::parse($day);
-                                                @endphp
-                                                <span class="tag-chip">{{ $date->format('D.d') }}</span>
+                                    @php
+                                        $weeklyTiming = isset($provider['timing']) && is_array($provider['timing']) ? $provider['timing'] : [];
+                                        $daysOrder = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+                                        $now = \Carbon\Carbon::now();
+                                        $todayKey = $now->format('D');
+                                        $timezone = config('app.timezone') ?: 'UTC';
+
+                                        $formatRange = function($range) use ($timezone) {
+                                            if (!is_array($range) || count($range) < 2 || empty($range)) {
+                                                return null;
+                                            }
+                                            $openTs = (int) ($range[0] ?? 0);
+                                            $closeTs = (int) ($range[1] ?? 0);
+                                            if ($openTs <= 0 || $closeTs <= 0) { return null; }
+                                            $open = \Carbon\Carbon::createFromTimestamp($openTs, $timezone);
+                                            $close = \Carbon\Carbon::createFromTimestamp($closeTs, $timezone);
+                                            return $open->format('g:i A') . ' – ' . $close->format('g:i A');
+                                        };
+
+                                        $todayRangeText = $formatRange($weeklyTiming[$todayKey] ?? []);
+                                        $isOpenToday = $todayRangeText !== null;
+
+                                        // Find next opening day if closed today
+                                        $nextOpenText = null;
+                                        if (!$isOpenToday) {
+                                            for ($i = 1; $i <= 7; $i++) {
+                                                $day = $now->copy()->addDays($i);
+                                                $key = $day->format('D');
+                                                $r = $formatRange($weeklyTiming[$key] ?? []);
+                                                if ($r) { $nextOpenText = 'Opens ' . ($i === 1 ? 'Tomorrow ' : $day->format('D ') ) . $r; break; }
+                                            }
+                                        }
+                                        $cardId = $provider['id'] ?? uniqid('prov_');
+                                    @endphp
+
+                                    <div class="timing-status" data-tooltip-id="timing-tooltip-{{ $cardId }}">
+                                        <span class="status-dot {{ $isOpenToday ? 'open' : 'closed' }}"></span>
+                                        <span class="status-text">
+                                            @if($isOpenToday)
+                                                Open · {{ $todayRangeText }}
+                                            @else
+                                                Closed · {{ $nextOpenText ?: 'Hours unavailable' }}
+                                            @endif
+                                        </span>
+                                    </div>
+
+                                    <div class="timing-tooltip" id="timing-tooltip-{{ $cardId }}" aria-hidden="true">
+                                        <div class="timing-tooltip-inner">
+                                            @foreach($daysOrder as $dow)
+                                                @php $rangeText = $formatRange($weeklyTiming[$dow] ?? []); @endphp
+                                                <div class="timing-row {{ $todayKey === $dow ? 'today' : '' }}">
+                                                    <span class="timing-day">{{ $dow }}</span>
+                                                    <span class="timing-hours">{{ $rangeText ?: 'Closed' }}</span>
+                                                </div>
                                             @endforeach
                                         </div>
-                                    @endif
+                                    </div>
 
                                     <div class="card-footer-row">
                                         <div class="reviews-text">{{ $provider['total_review'] ?? 0 }} reviews</div>
@@ -244,6 +291,19 @@
     .search-results .reviews-text { color: #6b7280; font-weight: 700; font-size: 14px; }
     .provider-card .appointment-btn { background-color: #000000ff; color: #fff; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: 700; border: none; }
     .provider-card .appointment-btn:hover { background-color: #727272ff; }
+
+    /* Timing status & tooltip */
+    .timing-status .status-text{ font-size: 14px; font-weight: 400; }
+    .timing-status { margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #374151; font-weight: 600; }
+    .timing-status .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .timing-status .status-dot.open { background: #10b981; }
+    .timing-status .status-dot.closed { background: #ef4444; }
+    .timing-tooltip { position: fixed; z-index: 9999; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px; width: 240px; display: none; }
+    .timing-tooltip .timing-tooltip-inner { max-height: 260px; overflow: auto; }
+    .timing-row { display: flex; justify-content: space-between; padding: 6px 8px; border-radius: 8px; font-size: 14px; }
+    .timing-row.today { background: #f9fafb; font-weight: 700; }
+    .timing-day { color: #374151; }
+    .timing-hours { color: #111827; }
 
     .appointment-btn {
     margin-top: 20px;
@@ -327,4 +387,59 @@
     font-size: 0.9em;
 }
 </style>
+@endsection
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Delegate hover/click for timing tooltips
+  const containers = document.querySelectorAll('.provider-card');
+  containers.forEach(function(card){
+    const status = card.querySelector('.timing-status');
+    if(!status) return;
+    const tooltipId = status.getAttribute('data-tooltip-id');
+    const tooltip = tooltipId ? document.getElementById(tooltipId) : null;
+    if(!tooltip) return;
+
+    // Ensure tooltip is appended to body to avoid overflow clipping
+    if (tooltip.parentElement !== document.body) {
+      document.body.appendChild(tooltip);
+    }
+
+    // Position tooltip near status
+    function positionTooltip(){
+      const rect = status.getBoundingClientRect();
+      const top = rect.top + rect.height + 8; // pixels from viewport top
+      let left = rect.left; // pixels from viewport left
+      // Keep inside viewport horizontally
+      const maxLeft = window.innerWidth - tooltip.offsetWidth - 8;
+      if (left > maxLeft) left = Math.max(8, maxLeft);
+      tooltip.style.top = top + 'px';
+      tooltip.style.left = left + 'px';
+    }
+
+    function show(){ tooltip.style.display = 'block'; positionTooltip(); }
+    function hide(){ tooltip.style.display = 'none'; }
+
+    // Hover behavior
+    status.addEventListener('mouseenter', show);
+    status.addEventListener('mouseleave', function(){ setTimeout(function(){
+      // Only hide if not hovered over tooltip
+      if(!tooltip.matches(':hover')) hide();
+    }, 100); });
+    tooltip.addEventListener('mouseleave', hide);
+    // Also keep visible when moving from status to tooltip
+    tooltip.addEventListener('mouseenter', function(){ tooltip.style.display = 'block'; });
+    tooltip.addEventListener('mouseenter', function(){ /* keep visible */ });
+
+    // Click toggle for mobile
+    status.addEventListener('click', function(e){
+      e.preventDefault();
+      if(tooltip.style.display === 'block'){ hide(); } else { show(); }
+    });
+
+    window.addEventListener('scroll', function(){ if(tooltip.style.display==='block') positionTooltip(); });
+    window.addEventListener('resize', function(){ if(tooltip.style.display==='block') positionTooltip(); });
+  });
+});
+</script>
 @endsection
