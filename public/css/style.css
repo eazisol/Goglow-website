@@ -177,15 +177,7 @@ html, body { margin: 0; }
   .bw-wizard .wizard-card dd{ font-size: 14px; }
 }
 
-/* Mobile header actions (language + Become a Glowee) */
-@media (max-width: 991px){
-  /* .mobile-actions .btn-default.border-btn{ padding: 10px 14px; font-size: 14px; margin-right: 6px;}
-  .navbar{
-    padding: 0%;
-  } */
-}
-
-@media (max-width: 767px) {
+@media (min-width: 768px) and (max-width: 1024px) {
     .app-cta { flex-direction: column; align-items: center; }
     .app-cta > div { width: 100%; }
     .app-cta img { max-width: 100%; height: auto; }
@@ -193,7 +185,7 @@ html, body { margin: 0; }
     
 }
 
-@media (max-width: 576px) {
+@media (max-width: 767px) {
     .hero-contecnt-p{
         padding-left: 0% !important;
     }

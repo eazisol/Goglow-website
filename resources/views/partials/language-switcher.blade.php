@@ -9,7 +9,7 @@
         <button class="language-btn lang-toggle" type="button" aria-haspopup="true" aria-expanded="false">
             <span class="language-flag">{!! LanguageHelper::getLocaleFlag($currentLocale) !!}</span>
             <span class="language-name">{{ LanguageHelper::getLocaleName($currentLocale) }}</span>
-            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            <i class="fas fa-chevron-down" style="color:white;" aria-hidden="true"></i>
         </button>
 
         <ul class="lang-dropdown-menu" role="menu">
@@ -47,8 +47,9 @@
 }
 .language-btn:hover { background-color: rgba(0,0,0,0.05); }
 
-.language-flag { font-size: 16px; }
-.language-name { font-weight: 500; }
+.language-flag { font-size: 16px;}
+.language-name { font-weight: 500; color:white;}
+
 
 .language-btn i { font-size: 12px; transition: transform 0.18s; }
 
@@ -57,8 +58,8 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background: white;
-    border: 1px solid #e0e0e0;
+    background: rgba(0, 0, 0, 0.9);
+    /* border: 1px solid #e0e0e0; */
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     list-style: none;
@@ -79,7 +80,7 @@
     text-decoration: none;
     transition: background-color 0.15s;
 }
-.lang-dropdown-item:hover { background-color: #f5f5f5; color: #333; }
+.lang-dropdown-item:hover { background-color: rgba(255, 255, 255, 0.29); }
 
 /* Dark header support */
 .header--transparent .language-btn,
