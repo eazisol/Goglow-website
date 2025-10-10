@@ -815,7 +815,8 @@ header.main-header .container-fluid{
 
 .hero.hero-bg-image{
 	position: relative;
-	background: url('../images/adam-winger-VjRpkGtS55w-unsplash.jpg') no-repeat;
+	background: url('../images/image (13).png') no-repeat;
+	/* adam-winger-VjRpkGtS55w-unsplash.jpg */
 	/* background-position: center center; */
 	background-size: cover;
 	overflow: hidden;

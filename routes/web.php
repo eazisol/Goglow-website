@@ -73,7 +73,7 @@ Route::get('/beauty-professional', function () {return view('iamProfessional.ind
 Route::get('/terms_condition', function () {return view('termsConditions.index');})->name('terms_condition');
 
 // privacy policy
-Route::get('/privacy_policy', function () {return view('privacyPolicy.index');});
+Route::get('/privacy_policy', function () {return view('privacyPolicy.index');})->name('privacy_policy');
 
 // auth - signup
 Route::get('/signup', [\App\Http\Controllers\AuthController::class, 'showRegisterForm'])->name('signup');

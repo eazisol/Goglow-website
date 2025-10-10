@@ -139,11 +139,11 @@
 	</div> --}}
     
     
-                @if (!Route::is('terms_condition'))
+                @if (!Route::is('terms_condition') && !Route::is('privacy_policy'))
                     @include('partials.header')
                 @endif             
                   @yield('content')
-                @if (!Route::is('terms_condition'))
+                @if (!Route::is('terms_condition') && !Route::is('privacy_policy'))
                     @include('partials.footer')
                 @endif
 

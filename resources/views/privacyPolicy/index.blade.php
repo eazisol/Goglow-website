@@ -5,6 +5,15 @@
 {{-- Style Files --}}
 @section('styles')
     <style>
+        .privacy-policy {
+            font-size: 13px;
+        }
+        p{
+            margin-top: 10px;
+            border-radius: 8px;
+            background: aliceblue;
+            padding: 10px;
+        }
         .privacy-text ul li {
             padding-bottom: 8px;
             margin-bottom: 8px;
@@ -21,18 +30,7 @@
 
 {{-- Content --}}
 @section('content')
-    <!-- Page Header Start -->
-    <div class="page-header bg-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <!-- Page Header Box Start -->
-                    <!-- Page Header Box End -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Page Header End -->
+    <!-- Page Header intentionally removed to match Terms layout -->
 	
 
     <!-- Privacy Policy Section Start -->
@@ -46,8 +44,8 @@
                             {{-- <h2>GoGlow - Politique de Confidentialité</h2> --}}
                             <p class="text-end">Dernière mise à jour : 24 juillet 2025</p>
                             <div class="section-title">
-                            <h3 class="wow">Privacy Policy</h3>
-                        </div>
+                                <h3 class="wow">Privacy Policy</h3>
+                            </div>
                             {{-- <h3>1. Responsable du Traitement</h3>
                             <p>[Nom de l'entreprise]<br>
                             [Adresse de l'entreprise, France/UE]<br>
