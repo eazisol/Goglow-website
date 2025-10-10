@@ -87,7 +87,7 @@
     </div>
     
     <!--Download app overlap section start-->
-    <div class="overlap-box">                     
+    {{-- <div class="overlap-box">                     
         <h1 class="text-anime-style-2">{{ __('app.home.get_app_title') }}</h1>
             <!-- Buttons -->
         <div class="app-button">
@@ -100,7 +100,7 @@
         </div>
 
         <p class="app-download-p" data-wow-delay="0.2s">{{ __('app.home.get_app_description') }}</p>
-    </div>
+    </div> --}}
     <!--Download app overlap section end-->
     
     <!-- Hero Section End -->

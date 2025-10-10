@@ -111,9 +111,9 @@ html, body { margin: 0; }
 .bw-wizard .wizard-actions{display:flex;gap:12px;justify-content:space-between;margin-top:10px}
 .bw-wizard .btn-default{background:#111;color:#fff;border:1px solid #111;border-radius:999px;padding:12px 18px}
 .bw-wizard .btn-default.btn-outline{background:#fff;color:#000000;border:1px solid #111}
-.bw-wizard .btn-default.btn-outline:hover{background:#111;color:#fff;border-color:#111}
+.bw-wizard .btn-default.btn-outline:hover{background:#ce0048;color:#fff;border-color:#111}
 .bw-wizard .wizard-actions .btn-default[data-next]{background:#fff;color:#000000;border:1px solid #111}
-.bw-wizard .wizard-actions .btn-default[data-next]:hover{background:#111;color:#fff;border-color:#111}
+.bw-wizard .wizard-actions .btn-default[data-next]:hover{background:#ce0048;color:#fff;border-color:#111}
 /* Make submit button match the Next button UI */
 .bw-wizard .wizard-actions button[type="submit"].btn-default{background:#fff;color:#000000;border:1px solid #111}
 .bw-wizard .wizard-actions button[type="submit"].btn-default:hover{background:#111;color:#fff;border-color:#111}
