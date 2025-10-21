@@ -15,7 +15,9 @@
         {{-- new figma design --}}
 
     <!-- Open Graph / Facebook -->
-    <link href="{{ asset('css/newdesign.css') }}" rel="stylesheet" media="screen">  
+    <!-- Add this line before the newdesign.css -->
+    <link href="{{ asset('css/fonts.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/newdesign.css') }}" rel="stylesheet" media="screen"> 
     <meta property="og:type" content="website">
     <meta property="og:title" content="GoGlow - Book Beauty Services | Discover Local Salons">
     <meta property="og:description" content="Discover and book trusted salon services with GoGlow. Connect with local beauty professionals for hair, nails, skincare, and wellness treatments.">
@@ -25,9 +27,9 @@
 
 
     {{-- ////////////////////////////////////// --}}
-	<link rel="preconnect" href="https://fonts.googleapis.com/">
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+{{-- <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> --}}
     {{-- <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" media="screen"> --}}
     {{-- <link href="{{ asset('css/slicknav.min.css') }}" rel="stylesheet"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css') }}"> --}}
