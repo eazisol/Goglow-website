@@ -23,20 +23,27 @@
           <!-- Header -->
           <header class="header">
             <nav class="header-nav">
-              <img src="images/images/img_header_logo.png" alt="GoGlow Logo" class="logo">
+              <!-- Logo Section -->
+              <img src="images/images/WhatsApp_Image_2025-09-16_at_23.28.10_3ad6dde7-removebg-preview 1 (1).png" alt="GoGlow Logo" class="logo">
               
+              <!-- Navigation Menu -->
               <div class="nav-menu desktop-only">
-                <a href="#" class="active">home</a>
-                <a href="#">about us</a>
-                <a href="#">services</a>
-                <a href="#">book appointments</a>
-                <a href="#">reviews</a>
+                <a href="#" class="nav-link active">Home</a>
+                <span class="nav-separator">+</span>
+                <a href="#" class="nav-link">About Us</a>
+                <span class="nav-separator">+</span>
+                <a href="#" class="nav-link">Services</a>
+                <span class="nav-separator">+</span>
+                <a href="#" class="nav-link">Book Appointments</a>
+                <span class="nav-separator">+</span>
+                <a href="#" class="nav-link">Reviews</a>
               </div>
               
+              <!-- Header Actions -->
               <div class="header-actions">
                 <a href="#" class="btn-primary desktop-only">
-                  become a glower
-                  <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+                  BECOME A GLOWER
+                  <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
                 </a>
                 
                 <!-- Mobile Menu Toggle -->
@@ -54,17 +61,17 @@
               <div class="mobile-menu-content">
                 <div class="mobile-menu-nav">
                   <ul>
-                    <li><a href="#" class="active">home</a></li>
-                    <li><a href="#">about us</a></li>
-                    <li><a href="#">services</a></li>
-                    <li><a href="#">book appointments</a></li>
-                    <li><a href="#">reviews</a></li>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Book Appointments</a></li>
+                    <li><a href="#">Reviews</a></li>
                   </ul>
                 </div>
                 <div class="mobile-menu-footer">
                   <a href="#" class="btn-primary mobile-only">
-                    become a glower
-                    <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+                    BECOME A GLOWER
+                    <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
                   </a>
                 </div>
               </div>
