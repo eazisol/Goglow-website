@@ -82,7 +82,7 @@
           <div class="flex-col" style="align-items: center; text-align: center;">
             <div class="badge">
               <span class="badge-text">Glow Smarter with <span class="badge-highlight">GoGlow</span></span>
-              <img src="images/images/img_mdi_stars.svg" alt="" width="24" height="24">
+              <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
             
             <h1 class="hero-title">Discover. Book. <span style="font-family: Raflesia;">shine</span>.</h1>
