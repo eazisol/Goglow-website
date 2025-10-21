@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// figma
+Route::get('/home', function () {return view('figmaDesign.index');});
 
 // home
 Route::get('/', function () {return view('home.indexImage');});
