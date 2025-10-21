@@ -33,11 +33,42 @@
                 <a href="#">reviews</a>
               </div>
               
-              <a href="#" class="btn-primary">
-                become a glower
-                <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
-              </a>
+              <div class="header-actions">
+                <a href="#" class="btn-primary desktop-only">
+                  become a glower
+                  <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+                </a>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </button>
+              </div>
             </nav>
+            
+            <!-- Mobile Menu -->
+            <div class="mobile-menu-overlay"></div>
+            <div class="mobile-menu">
+              <div class="mobile-menu-content">
+                <div class="mobile-menu-nav">
+                  <ul>
+                    <li><a href="#" class="active">home</a></li>
+                    <li><a href="#">about us</a></li>
+                    <li><a href="#">services</a></li>
+                    <li><a href="#">book appointments</a></li>
+                    <li><a href="#">reviews</a></li>
+                  </ul>
+                </div>
+                <div class="mobile-menu-footer">
+                  <a href="#" class="btn-primary mobile-only">
+                    become a glower
+                    <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+                  </a>
+                </div>
+              </div>
+            </div>
           </header>
 
           <!-- Hero Content -->
