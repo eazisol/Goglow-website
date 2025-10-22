@@ -82,22 +82,22 @@
               <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
             
-            <h1 class="hero-title">Discover. Book. <span style="font-family: Raflesia;">shine</span>.</h1>
+            <h1 class="hero-title">Discover. Book. <span class="shine-word">shine</span>.</h1>
             
-            <p class="hero-subtitle">From trending beauty content to trusted local pros, your next glow-up is just a scroll away.</p>
+            <p class="hero-subtitle">from trending beauty content to trusted local pros, your next glow-up is just a scroll away.</p>
           </div>
         </div>
 
         <!-- Hero Visual Elements -->
-        <div style="position: relative; margin-top: 40px;">
+        <div style="position: relative; margin-top: 15px;">
           <!-- Left side content -->
-          <div style="position: absolute; left: 140px; bottom: 0; width: 308px; z-index: 3;" class="desktop-only">
-            <div style="background: rgba(255, 244, 248, 0.8); border-radius: 0 90px 0 0; padding: 40px 36px; margin-bottom: 136px;">
+          <div style="position: absolute; left: 118px; bottom: 0; width: 308px; z-index: 3;" class="desktop-only">
+            <div style="line-height: 1;background: rgba(255, 244, 248, 0.8);border-radius: 0 90px 0 0;padding: 28px 26px;margin-bottom: 419px;">
               <p style="font-size: 21px; font-weight: 700; color: #75213e; text-align: center; margin-top: 196px;">
                 More than 450 salons <span style="color: rgba(44, 13, 24, 0.5);">have joined Glow</span> already!!
               </p>
             </div>
-            <img src="images/images/img_glove_photoroom.png" alt="Beauty glove" style="width: 304px; height: 326px; position: absolute; top: -291px; left: 0;">
+            <img src="images/images/47abffa77278693eaa65f93217cd9d6a2ea127b5.png" alt="Beauty glove" style="width: 305px; position: absolute; top: -180px; left: 0;">
           </div>
 
           <!-- Center phone mockup -->
@@ -106,21 +106,21 @@
           </div>
 
           <!-- Right side phone -->
-          <div style="position: absolute; right: 140px; top: 0; width: 306px; z-index: 3;" class="desktop-only">
+          <div style="position: absolute; right: 140px; top: 285px; width: 306px; z-index: 3;" class="desktop-only">
             <div class="hero-phone">
               <div class="phone-bg"></div>
               <div class="phone-image">
                 <img src="images/images/img_3a3ade2330872de.png" alt="App Screenshot" style="width: 100%; height: 100%; object-fit: cover;">
               </div>
               <div class="phone-stats">
-                <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="position: relative;right: 5px;display: flex;align-items: center;gap: 10px;">
                   <img src="images/images/img_ellipse_230.png" alt="User" width="56" height="56" style="border-radius: 28px;">
-                  <img src="images/images/img_ellipse_232.png" alt="User" width="56" height="56" style="border-radius: 28px; margin-left: -24px;">
-                  <div style="background-color: #e50050; border-radius: 28px; padding: 16px; margin-left: -24px;">
-                    <img src="images/images/img_group_33526.svg" alt="" width="24" height="24">
+                  <img src="images/images/c2ef25d185909c7d661066c1e158f63eb89ccbb9.jpg" alt="User" width="56" height="56" style="border-radius: 28px; margin-left: -35px;">
+                  <div style="background-color: #e50050;border-radius: 28px;padding: 16px;margin-left: -33px;">
+                    <img src="images/images/Group 33489.svg" alt="" width="18" height="18">
                   </div>
                 </div>
-                <p style="font-size: 16px; font-weight: 700; color: #2c0d18; margin-left: 10px;">
+                <p style="right: 10px;position: relative;line-height:1;font-size: 17px;font-weight: 700;color: #2c0d18;">
                   2k+ users book<br>salon via <span style="text-transform: uppercase;">g</span>low
                 </p>
               </div>

@@ -31,3 +31,12 @@
 }
 
 /* Add more weights as needed */
+
+@font-face {
+  font-family: 'Raflesia';
+  src: url('../fonts/raflesia/raflesia.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+}

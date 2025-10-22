@@ -41,7 +41,7 @@
     .flex-col {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      /* gap: 16px; */
     }
 
     .hero-section {
@@ -387,23 +387,26 @@
     .hero-title {
       font-size: 48px;
       font-weight: 700;
-      line-height: 1.2;
+      line-height: 1;
       text-align: center;
       text-transform: capitalize;
       background: linear-gradient(99deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 24px;
+    }
+    .hero-title .shine-word{
+      font-family: 'Raflesia', serif;
+      font-weight: 400;
     }
 
     .hero-subtitle {
-      font-size: 18px;
+      line-height: 1.1;
+      font-size: 21px;
       font-weight: 500;
       color: #75213e;
       text-align: center;
-      margin-bottom: 32px;
-      max-width: 600px;
+      max-width: 750px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -428,11 +431,11 @@
     .badge {
     background-color: #fff4f8cc;
     border-radius: 88px;
-    padding: 20px 30px;
+    padding: 13px 30px;
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 16px;
+    /* margin-bottom: 16px; */
     }
 
     .badge-text {
@@ -477,10 +480,10 @@
     .phone-stats {
       position: absolute;
       bottom: 10px;
-      right: 4px;
+      right: 15px;
       background-color: #fff4f8;
       border-radius: 34px;
-      padding: 6px;
+      padding: 6px 14px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -1464,8 +1467,9 @@
 
     @media (min-width: 1280px) {
       .hero-title {
-        font-size: 115px;
+        font-size: 105px;
       }
+
     }
 
     /* Body scroll prevention when menu is open */
