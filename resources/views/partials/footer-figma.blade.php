@@ -1,8 +1,8 @@
     <!-- Footer -->
     <footer class="footer">
-      <div style="background-image: url('images/images/img_0e336be1b021b9ad01fcd3c5382a05e7_1.png'); background-size: cover; background-position: center; position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+      <div style="background-image: url('images/images/img_0e336be1b021b9ad01fcd3c5382a05e7_1.png'); background-size: cover; background-position: center; position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1;"></div>
       
-      <div class="footer-bg-text">glow app</div>
+      <div class="footer-bg-text">Glow App</div>
       
       <div class="container" style="position: relative; z-index: 2;">
         <div class="footer-content">
@@ -40,7 +40,7 @@
 
       <div class="footer-copyright">
         <p class="copyright-text">
-          Copyright © 2025 All Rights Reserved. <span class="copyright-brand">GoGlow.com</span>
+          copyright © 2025 all rights reserved. <span class="copyright-go">Go</span><span class="copyright-glow">Glow</span><span class="copyright-com">.com</span>
         </p>
       </div>
     </footer>

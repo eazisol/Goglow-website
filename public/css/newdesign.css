@@ -1038,13 +1038,21 @@
     .footer {
       background-color: #fff4f8;
       position: relative;
-      padding: 90px 0 38px;
+      max-width: 1600px;
+      width: 100%;
+      height: 727px;
+      margin: 0 auto;
+      overflow: hidden;
     }
 
     .footer-content {
       display: flex;
-      flex-direction: column;
-      gap: 40px;
+      justify-content: space-between;
+      width: 1277px;
+      height: 266px;
+      opacity: 1;
+      position: absolute;
+      top: 101px;
     }
 
     .footer-brand {
@@ -1071,6 +1079,7 @@
     }
 
     .footer-section h3 {
+      text-transform: capitalize;
       font-size: 22px;
       font-weight: 700;
       color: #75213e;
@@ -1081,7 +1090,7 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 29px;
     }
 
     .footer-section a {
@@ -1099,32 +1108,168 @@
 
     .footer-bg-text {
       position: absolute;
-      top: 50%;
+      bottom: -20px;
       left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 200px;
+      transform: translateX(-50%);
+      font-size: 367px;
       font-weight: 700;
-      color: #d5bec6;
       text-transform: capitalize;
       z-index: 1;
       pointer-events: none;
+      opacity: 0.6;
+      white-space: nowrap;
+      line-height: 1;
+      background: linear-gradient(180deg, #8b7c81 0%, #e1d3d8 50%, #ffffff 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
     }
 
     .footer-copyright {
-      background-color: #fff4f8;
-      padding: 38px;
       text-align: center;
-      box-shadow: 0px 4px 150px rgba(136, 136, 136, 1);
+      padding: 20px 0;
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      z-index: 10;
     }
 
     .copyright-text {
-      font-size: 20px;
       font-weight: 700;
-      color: rgba(44, 13, 24, 0.5);
+      font-size: 20px;
+      line-height: 26px;
+      letter-spacing: 0%;
+      text-align: center;
+      text-transform: lowercase;
+      color: #2C0D1880;
+      margin: 0;
     }
 
-    .copyright-brand {
-      color: #e50050;
+    .copyright-go {
+      text-transform: capitalize;
+      color: #E6007A;
+    }
+
+    .copyright-glow {
+      text-transform: capitalize;
+      color: #E6007A;
+    }
+
+    .copyright-com {
+      text-transform: lowercase;
+      color: #E6007A;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1600px) {
+      .footer-content {
+        width: 90%;
+        left: 5%;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .footer-content {
+        width: 95%;
+        left: 2.5%;
+        flex-direction: column;
+        gap: 40px;
+        height: auto;
+        top: 50px;
+      }
+
+      .footer-links {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 60px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .footer {
+        height: auto;
+        padding: 40px 0 80px 0;
+      }
+
+      .footer-content {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        padding: 0 20px;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .footer-brand {
+        max-width: 100%;
+        text-align: center;
+      }
+
+      .footer-logo {
+        width: 150px;
+        height: 90px;
+      }
+
+      .footer-description {
+        font-size: 16px;
+      }
+
+      .footer-section h3 {
+        font-size: 18px;
+      }
+
+      .footer-section a {
+        font-size: 16px;
+      }
+
+      .footer-copyright {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 40px;
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer {
+        padding: 30px 0 60px 0;
+      }
+
+      .footer-content {
+        padding: 0 15px;
+      }
+
+      .footer-logo {
+        width: 120px;
+        height: 72px;
+      }
+
+      .footer-description {
+        font-size: 14px;
+      }
+
+      .footer-section h3 {
+        font-size: 16px;
+      }
+
+      .footer-section a {
+        font-size: 14px;
+      }
+
+      .footer-copyright {
+        margin-top: 30px;
+        padding: 15px;
+      }
     }
 
     /* Interactive states */
@@ -1301,7 +1446,7 @@
       }
 
       .footer-bg-text {
-        font-size: 367px;
+        font-size: 336px;
       }
     }
 

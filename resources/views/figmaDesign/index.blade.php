@@ -11,9 +11,6 @@
 
 {{-- Content --}}
 @section('content')
-@endsection
-
-
   <main>
     <!-- Hero Section -->
     <section class="hero-section">
@@ -662,3 +659,6 @@
 
 
   </main>
+@endsection
+
+
