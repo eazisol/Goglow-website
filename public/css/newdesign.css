@@ -1203,16 +1203,19 @@
         width: 100%;
         height: auto;
         padding: 0 20px;
+        flex-direction: column;
+        gap: 40px;
       }
 
       .footer-links {
-        flex-direction: column;
-        gap: 30px;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 40px;
       }
 
       .footer-brand {
         max-width: 100%;
-        text-align: center;
+        text-align: left;
       }
 
       .footer-logo {
@@ -1243,6 +1246,13 @@
     }
 
     @media (max-width: 480px) {
+      .copyright-text {
+        font-size: 12px;
+      }
+      .footer-bg-text{
+        font-size: 90px;
+        
+      }
       .footer {
         padding: 30px 0 60px 0;
       }
