@@ -29,7 +29,7 @@
     }
 
     .section {
-      padding: 40px 0;
+      /* padding: 40px 0; */
     }
 
     .flex-row {
@@ -42,6 +42,16 @@
       display: flex;
       flex-direction: column;
       /* gap: 16px; */
+    }
+
+    .hero-button-design img{
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: auto;
+      z-index: 10;
     }
 
     .hero-section {
@@ -356,7 +366,7 @@
     .btn-secondary {
       background-color: #fff4f8;
       color: #e50050;
-      padding: 18px 50px 18px 34px;
+      padding: 18px 34px 18px 34px;
       border-radius: 34px;
       text-decoration: none;
       font-size: 14px;
@@ -1249,6 +1259,9 @@
     }
 
     @media (max-width: 480px) {
+      .hero-button-design img{
+        display: none;
+      }
       .copyright-text {
         font-size: 12px;
       }
@@ -1571,4 +1584,17 @@
       .mobile-only {
         display: none;
       }
+    }
+
+    /* Hero Buttons */
+    .hero-buttons {
+      position: absolute;
+      bottom: 200px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      z-index: 10;
     }

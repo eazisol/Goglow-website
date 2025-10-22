@@ -128,14 +128,19 @@
           </div>
         </div>
 
-        <!-- App Store Buttons -->
-        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 64px; flex-wrap: wrap;">
-          <img src="images/images/img_app_button.png" alt="Download on App Store" width="252" height="68" style="border-radius: 34px;">
-          <a href="#" class="btn-secondary">
-            become a glower
-            <img src="images/images/img_iconline_arrowright_pink_a400.svg" alt="" width="16" height="16">
-          </a>
-        </div>
+          <!-- App Store Buttons -->
+          <div class="hero-buttons">
+            <img src="images/images/img_app_button.png" alt="Download on App Store" width="252" height="68" style="border-radius: 34px;">
+            <a href="#" class="btn-secondary">
+              become a glower
+              <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
+            </a>
+          </div>
+          {{-- button design --}}
+          <div class="hero-button-design">
+            <img src="images/images/Rectangle 34.png" alt="Button Design">
+          </div>
+
       </div>
     </section>
 
