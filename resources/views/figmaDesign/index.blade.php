@@ -292,21 +292,21 @@
         <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 48px;">
           <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
             <span class="badge-text">How it <span class="badge-highlight">works</span></span>
-            <img src="images/images/img_mdistars_pink_a400.svg" alt="" width="24" height="24">
+            <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
-          <h2 class="section-title" style="background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+          <h2 class="section-title how-it-work-heading" style="margin-top: 10px; line-height:75px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
             Glow Smart<br>Feel <span style="font-family: Raflesia;">Beautiful</span>
           </h2>
           
-          <p class="section-subtitle">From finding top-rated salons to booking with ease, our platform helps you glow effortlessly in just 4 simple steps</p>
+          <p class="section-subtitle how-it-work-subtitle">from finding top-rated salons to booking with ease, our platform helps you glow effortlessly in just 4 simple steps</p>
         </div>
 
         <div class="steps-container">
           <div class="steps-image">
-            <div style="position: relative;">
-              <img src="images/images/img_whatsapp_image_2025_10_11_606x346.png" alt="App Screenshot 1" style="width: 346px; height: 606px; border-radius: 24px;">
-              <img src="images/images/img_whatsapp_image_2025_10_11.png" alt="App Screenshot 2" style="width: 340px; height: 604px; border-radius: 24px; position: absolute; top: 32px; right: -100px;" class="desktop-only">
+            <div class="how-it-work-mobile-ss" style="position: relative;">
+              <img src="images/images/171a4434f8b64fcfb43abd946bcd7150f7258ca0.png" class="right_image" alt="App Screenshot 1" style="z-index: 2;top: -66px;position: absolute;left: 57px;transform: rotate(350deg);width: 264px;height: 574px;border-radius: 24px;">
+              <img src="images/images/e5782f964f7141131e481a9ff680608ff974ae50.jpg" class="left_image" alt="App Screenshot 2" style="border: 3px solid #D5BEC6; transform: rotate(8deg);width: 264px;height: 574px;border-radius: 24px;position: absolute;top: -34px;right: 54px;">
             </div>
           </div>
 
@@ -345,14 +345,14 @@
           </div>
         </div>
 
-        <div style="display: flex; justify-content: center; gap: 14px; margin-top: 40px; flex-wrap: wrap;">
+        <div class="how-it-work-buttons" style="display: flex; justify-content: center; gap: 14px; margin-top: 110px; flex-wrap: wrap;">
           <a href="#" class="btn-gradient">
             download the app
-            <img src="images/images/img_iconline_share.svg" alt="" width="16" height="16">
+            <img src="images/images/downlaod.svg" alt="" width="16" height="16">
           </a>
           <a href="#" class="btn-primary">
             book a service
-            <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+            <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
           </a>
         </div>
       </div>

@@ -385,7 +385,7 @@
       border-radius: 28px;
       text-decoration: none;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 500;
       text-transform: uppercase;
       display: inline-flex;
       align-items: center;
@@ -427,11 +427,12 @@
       line-height: 1.2;
       text-align: center;
       text-transform: capitalize;
-      margin-bottom: 24px;
+      /* margin-bottom: 24px; */
     }
 
     .section-subtitle {
-      font-size: 18px;
+      max-width: 50%;
+      font-size: 20px;
       font-weight: 500;
       color: #75213e;
       text-align: center;
@@ -599,7 +600,7 @@
 
     .benefits-subtitle {
       font-size: 22px;
-      font-weight: 500;
+      font-weight: 400;
       color: #fff4f8;
       max-width: 600px;
       line-height: 25px;
@@ -732,7 +733,7 @@
 
     /* How it works section */
     .how-it-works {
-      padding: 70px 0;
+      padding: 65px 0;
     }
 
     .steps-container {
@@ -778,13 +779,19 @@
       font-size: 24px;
       font-weight: 700;
       color: #75213e;
-      margin-bottom: 6px;
+      /* margin-bottom: 6px; */
+    }
+    .steps-container{
+      margin-top: 70px;
     }
 
     .step-content p {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 500;
       color: rgba(44, 13, 24, 0.5);
+      text-transform: capitalize;
+      letter-spacing: 0px;
+      line-height: 26px;
     }
 
     /* Reviews section */
@@ -1482,6 +1489,69 @@
       .benefits-carousel-container{
         margin-left: 15px;
       }
+      /* how it work section  */
+      .how-it-works{
+        padding: 55px 0;
+      }
+      .how-it-work-heading{
+        line-height: 45px!important;
+        font-size: 43px;
+      }
+      .how-it-work-subtitle{
+            line-height: 20px;
+            font-size: 16px;
+            max-width: 100%;
+            margin-top: 5px;
+      }
+      .steps-list{
+        position: relative;
+        top: 300px;
+      }
+      .how-it-work-mobile-ss img{
+        width: 162px!important;
+        height: 354px!important;
+      }
+      .how-it-work-mobile-ss .right_image{
+        top: -66px!important;
+        left: 29px!important;
+      }
+      .how-it-work-mobile-ss .left_image{
+        top: -58px!important;
+        right: 25px!important;
+      }
+      .step-number{
+        width: 60px;
+        height: 60px;
+        font-size: 21px;
+      }
+      .step-content h3{
+        text-transform: capitalize;
+        letter-spacing: -1px;
+        font-size: 23px;
+      }
+      .step-content p{
+        text-transform: lowercase;
+        font-size: 18px;
+        line-height: 19px;
+      }
+      .how-it-work-buttons{
+        margin-top: 300px!important;
+        justify-content: initial!important;
+      }
+      .btn-gradient img{
+        display: none;
+      }
+      .btn-gradient{
+        padding: 13px 13px;
+        font-size: 15px;
+      }
+      .btn-primary img{
+        display: none;
+      }
+      .how-it-work-buttons .btn-primary{
+        padding: 13px 13px;
+        font-size: 15px;
+      }
     }
 
     /* Interactive states */
@@ -1705,7 +1775,7 @@
       }
       .badge{
         padding: 10px 20px;
-        margin-bottom: 5px;
+        /* margin-bottom: 5px; */
       }
       .hero-title{
         font-size: 41px;
