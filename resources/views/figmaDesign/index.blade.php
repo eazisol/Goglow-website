@@ -465,7 +465,7 @@
 
         <div class="pagination">
           <button class="pagination-btn">
-            <img src="images/images/img_frame_36.svg" alt="Previous" width="16" height="16">
+            <img src="images/images/left_arrow.svg" alt="Previous" width="16" height="16">
           </button>
           <div class="pagination-dots">
             <div class="dot"></div>
@@ -475,7 +475,7 @@
             <div class="dot"></div>
           </div>
           <button class="pagination-btn">
-            <img src="images/images/img_frame_36.svg" alt="Next" width="16" height="16">
+            <img src="images/images/right_arrow.svg" alt="Next" width="16" height="16">
           </button>
         </div>
       </div>
