@@ -200,67 +200,87 @@
           <div class="flex-col" style="align-items: flex-start; margin-bottom: 40px;">
             <div class="badge">
               <span class="badge-text">our <span class="badge-highlight">benefits</span></span>
-              <img src="images/images/img_mdi_stars.svg" alt="" width="24" height="24">
+              <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
             
-            <h2 class="benefits-title">Why Glowees<br>Love <span style="font-family: Raflesia;">Glow app</span></h2>
+            <h2 class="benefits-title">Why Glowees</h2>
+            <h2 class="benefits-title2">Love <span style="font-family: Raflesia; font-weight:500;">Glow App</span></h2>
+            
             
             <p class="benefits-subtitle">A revolutionary beauty experience that combines social inspiration smart booking</p>
           </div>
-
-          <div class="benefits-grid">
-            <div class="benefit-card">
-              <div class="benefit-icon gradient">
-                <img src="images/images/img_gridicons_video.svg" alt="" width="32" height="32">
+        </div>
+        <div class="container-fluid benefits-carousel-container">
+            <div class="benefits-carousel">
+            <div class="benefits-slider">
+              <div class="benefit-card">
+                <div class="benefit-icon gradient">
+                  <img src="images/images/video_icon.svg" alt="" width="23" height="23">
+                </div>
+                <h3 class="benefit-title">Scroll looks from real Glowers near you</h3>
+                <p class="benefit-description">get inspired by real local beauty content</p>
+                <a href="#" class="benefit-link">learn more</a>
               </div>
-              <h3 class="benefit-title">Scroll looks from real Glowers near you</h3>
-              <p class="benefit-description">Get inspired by real local beauty content</p>
-              <a href="#" class="benefit-link">learn more</a>
+
+              <div class="benefit-card">
+                <div class="benefit-icon white">
+                  <img src="images/images/Vector.svg" alt="" width="32" height="32">
+                </div>
+                <h3 class="benefit-title">Find Glowers near you</h3>
+                <p class="benefit-description">location-based: book beauty that's actually close to you</p>
+                <a href="#" class="benefit-link">learn more</a>
+              </div>
+
+              <div class="benefit-card">
+                <div class="benefit-icon white">
+                  <img src="images/images/solar_calendar-date-bold.svg" alt="" width="32" height="32">
+                </div>
+                <h3 class="benefit-title">Make an appointment in seconds</h3>
+                <p class="benefit-description">last-minute appointments — no more DM chaos</p>
+                <a href="#" class="benefit-link">learn more</a>
+              </div>
+
+              <div class="benefit-card">
+                <div class="benefit-icon white">
+                  <img src="images/images/hair_dryer.svg" alt="" width="32" height="32">
+                </div>
+                <h3 class="benefit-title">Custom Smart Engine</h3>
+                <p class="benefit-description">tailor-make recommendations based on your tastes and preferences</p>
+                <a href="#" class="benefit-link">learn more</a>
+              </div>
+
+              <div class="benefit-card">
+                <div class="benefit-icon white">
+                  <img src="images/images/fluent_payment-16-filled.svg" alt="" width="32" height="32">
+                </div>
+                <h3 class="benefit-title">integrated secure payment</h3>
+                <p class="benefit-description">Pay securely in-app</p>
+                <a href="#" class="benefit-link">learn more</a>
+              </div>
+
+              <div class="benefit-card">
+                <div class="benefit-icon white">
+                  <img src="images/images/solar_calendar-date-bold.svg" alt="" width="32" height="32">
+                </div>
+                <h3 class="benefit-title">Ultra-fast experience</h3>
+                <p class="benefit-description">follow your favorite Glowers and get notified when they drop availability</p>
+                <a href="#" class="benefit-link">learn more</a>
+              </div>
             </div>
-
-            <div class="benefit-card">
-              <div class="benefit-icon white">
-                <img src="images/images/img_mynaui_search_solid.svg" alt="" width="32" height="32">
+            
+            <!-- Carousel Navigation -->
+            <div class="carousel-navigation">
+              <button class="carousel-btn prev-btn" onclick="scrollBenefitsCarousel(-1)">
+                <img src="images/images/left_arrow.svg" alt="Previous" width="16" height="16">
+              </button>
+              <div class="carousel-dots">
+                <span class="dot active" onclick="currentBenefitsSlide(1)"></span>
+                <span class="dot" onclick="currentBenefitsSlide(2)"></span>
+                <span class="dot" onclick="currentBenefitsSlide(3)"></span>
               </div>
-              <h3 class="benefit-title">Find Glowers near you</h3>
-              <p class="benefit-description">Location-based: book beauty that's actually close to you</p>
-              <a href="#" class="benefit-link">learn more</a>
-            </div>
-
-            <div class="benefit-card">
-              <div class="benefit-icon white">
-                <img src="images/images/img_solar_calendar_date_bold.svg" alt="" width="32" height="32">
-              </div>
-              <h3 class="benefit-title">Make an appointment in seconds</h3>
-              <p class="benefit-description">Last-minute appointments — no more DM chaos</p>
-              <a href="#" class="benefit-link">learn more</a>
-            </div>
-
-            <div class="benefit-card">
-              <div class="benefit-icon white">
-                <img src="images/images/img_mdi_hair_dryer.svg" alt="" width="32" height="32">
-              </div>
-              <h3 class="benefit-title">Custom Smart Engine</h3>
-              <p class="benefit-description">Tailor-make recommendations based on your tastes and preferences</p>
-              <a href="#" class="benefit-link">learn more</a>
-            </div>
-
-            <div class="benefit-card">
-              <div class="benefit-icon white">
-                <img src="images/images/img_fluent_payment_16_filled.svg" alt="" width="32" height="32">
-              </div>
-              <h3 class="benefit-title">Integrated secure payment</h3>
-              <p class="benefit-description">Pay securely in-app</p>
-              <a href="#" class="benefit-link">learn more</a>
-            </div>
-
-            <div class="benefit-card">
-              <div class="benefit-icon white">
-                <img src="images/images/img_lets_icons_bell_pin_fill.svg" alt="" width="32" height="32">
-              </div>
-              <h3 class="benefit-title">Ultra-fast experience</h3>
-              <p class="benefit-description">Follow your favorite Glowers and get notified when they drop availability</p>
-              <a href="#" class="benefit-link">learn more</a>
+              <button class="carousel-btn next-btn" onclick="scrollBenefitsCarousel(1)">
+                <img src="images/images/right_arrow.svg" alt="Next" width="16" height="16">
+              </button>
             </div>
           </div>
         </div>
@@ -675,5 +695,59 @@
 
   </main>
 @endsection
+
+<script>
+let currentBenefitsSlideIndex = 0;
+const benefitsSlider = document.querySelector('.benefits-slider');
+const benefitCards = document.querySelectorAll('.benefit-card');
+const dots = document.querySelectorAll('.carousel-dots .dot');
+
+function scrollBenefitsCarousel(direction) {
+  const cardWidth = benefitCards[0].offsetWidth + 30; // card width + gap
+  const maxScroll = benefitsSlider.scrollWidth - benefitsSlider.clientWidth;
+  
+  if (direction === 1) {
+    currentBenefitsSlideIndex = Math.min(currentBenefitsSlideIndex + 1, Math.floor(maxScroll / cardWidth));
+  } else {
+    currentBenefitsSlideIndex = Math.max(currentBenefitsSlideIndex - 1, 0);
+  }
+  
+  benefitsSlider.scrollTo({
+    left: currentBenefitsSlideIndex * cardWidth,
+    behavior: 'smooth'
+  });
+  
+  updateDots();
+}
+
+function currentBenefitsSlide(slideIndex) {
+  currentBenefitsSlideIndex = slideIndex - 1;
+  const cardWidth = benefitCards[0].offsetWidth + 30;
+  
+  benefitsSlider.scrollTo({
+    left: currentBenefitsSlideIndex * cardWidth,
+    behavior: 'smooth'
+  });
+  
+  updateDots();
+}
+
+function updateDots() {
+  dots.forEach((dot, index) => {
+    dot.classList.toggle('active', index === currentBenefitsSlideIndex);
+  });
+}
+
+// Auto-scroll functionality (optional)
+setInterval(() => {
+  const maxSlides = Math.floor((benefitsSlider.scrollWidth - benefitsSlider.clientWidth) / (benefitCards[0].offsetWidth + 30));
+  if (currentBenefitsSlideIndex >= maxSlides) {
+    currentBenefitsSlideIndex = 0;
+  } else {
+    currentBenefitsSlideIndex++;
+  }
+  scrollBenefitsCarousel(1);
+}, 5000); // Auto-scroll every 5 seconds
+</script>
 
 
