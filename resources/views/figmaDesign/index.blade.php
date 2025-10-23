@@ -161,7 +161,7 @@
           <div class="search-row">
             <div class="search-item">
               <div class="search-icon">
-                <img src="images/images/img_mynaui_search_solid.svg" alt="Search" width="32" height="32">
+                <img src="images/images/Vector.svg" alt="Search" width="32" height="32">
               </div>
               <div class="search-content">
                 <h3 class="search-title">What are you looking for ?</h3>
@@ -169,23 +169,23 @@
               </div>
             </div>
             
-            <div class="divider mobile-only"></div>
+            <div class="divider"></div>
             
             <div class="search-item">
               <div class="search-icon">
-                <img src="images/images/img_mage_map_marker_fill.svg" alt="Location" width="32" height="32">
+                <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="32" height="32">
               </div>
               <div class="search-content">
-                <h3 class="search-title">add</h3>
+                <h3 class="search-title">Add</h3>
                 <p class="search-placeholder">Locations required for service search</p>
               </div>
             </div>
             
-            <div class="divider mobile-only"></div>
+            <div class="divider"></div>
             
             <a href="#" class="btn-primary" style="margin-left: auto;">
               search
-              <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+              <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
             </a>
           </div>
         </div>

@@ -46,7 +46,7 @@
 
     .hero-button-design img{
       position: absolute;
-      bottom: 28px;
+      bottom: -10px;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
@@ -76,7 +76,7 @@
     .hero-content {
       position: relative;
       z-index: 2;
-      padding: 40px 0;
+      padding: 40px 0 0 0;
     }
 
     /* Header */
@@ -512,7 +512,7 @@
     .search-row {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 55px;
     }
 
     .search-item {
@@ -542,7 +542,6 @@
       font-size: 20px;
       font-weight: 700;
       color: #75213e;
-      margin-bottom: 4px;
     }
 
     .search-placeholder {
