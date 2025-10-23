@@ -267,8 +267,9 @@
                 <a href="#" class="benefit-link">learn more</a>
               </div>
             </div>
-            
-            <!-- Carousel Navigation -->
+          </div>
+        </div>
+                    <!-- Carousel Navigation -->
             <div class="carousel-navigation">
               <button class="carousel-btn prev-btn" onclick="scrollBenefitsCarousel(-1)">
                 <img src="images/images/left_arrow.svg" alt="Previous" width="16" height="16">
@@ -282,8 +283,6 @@
                 <img src="images/images/right_arrow.svg" alt="Next" width="16" height="16">
               </button>
             </div>
-          </div>
-        </div>
       </div>
     </section>
 
