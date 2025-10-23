@@ -296,7 +296,7 @@
           </div>
           
           <h2 class="section-title how-it-work-heading" style="margin-top: 10px; line-height:75px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-            Glow Smart<br>Feel <span style="font-family: Raflesia;">Beautiful</span>
+            Glow Smart<br>Feel <span style="font-family: Raflesia; font-weight: 500;">Beautiful</span>
           </h2>
           
           <p class="section-subtitle how-it-work-subtitle">from finding top-rated salons to booking with ease, our platform helps you glow effortlessly in just 4 simple steps</p>
@@ -363,11 +363,11 @@
       <div class="container">
         <div class="reviews-header">
           <div>
-            <div class="badge" style="background-color: rgba(255, 244, 248, 0.9);">
+            <div class="badge" style="background-color: rgba(255, 244, 248, 0.9); margin-bottom: 8px;">
               <span class="badge-text">our <span class="badge-highlight">reviews</span></span>
-              <img src="images/images/img_mdistars_pink_a400.svg" alt="" width="24" height="24">
+              <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
             </div>
-            <h2 class="reviews-title">what our<br>glowees <span style="font-family: Raflesia;">say</span></h2>
+            <h2 class="reviews-title">What Our<br>Glowees <span style="font-family: Raflesia; font-weight: 500;">Say</span></h2>
           </div>
 
           <div class="reviews-stats">
@@ -376,16 +376,16 @@
               <img src="images/images/img_ellipse_230.png" alt="User" class="avatar">
               <img src="images/images/img_ellipse_232.png" alt="User" class="avatar">
               <div style="background-color: #fff4f8; border-radius: 28px; padding: 16px; margin-left: -24px;">
-                <img src="images/images/img_group_33526_pink_a400.svg" alt="" width="24" height="24">
+                <img src="images/images/Plus.svg" alt="" width="24" height="24">
               </div>
             </div>
             <div class="reviews-rating">
               <div class="stars">
-                <img src="images/images/img_vector.svg" alt="Star" class="star">
-                <img src="images/images/img_vector.svg" alt="Star" class="star">
-                <img src="images/images/img_vector.svg" alt="Star" class="star">
-                <img src="images/images/img_vector.svg" alt="Star" class="star">
-                <img src="images/images/img_vector.svg" alt="Star" class="star">
+                <img src="images/images/star_review.svg" alt="Star" class="star">
+                <img src="images/images/star_review.svg" alt="Star" class="star">
+                <img src="images/images/star_review.svg" alt="Star" class="star">
+                <img src="images/images/star_review.svg" alt="Star" class="star">
+                <img src="images/images/star_review.svg" alt="Star" class="star">
               </div>
               <p class="rating-text">4.9 (29k reviews)</p>
             </div>
@@ -394,7 +394,7 @@
 
         <div class="reviews-slider">
           <div class="review-card">
-            <img src="images/images/img_vector_gray_900.svg" alt="Quote" class="review-quote">
+            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
               <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
             </p>
@@ -407,17 +407,17 @@
                 </div>
               </div>
               <div class="review-stars">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
               </div>
             </div>
           </div>
 
           <div class="review-card">
-            <img src="images/images/img_vector_gray_900.svg" alt="Quote" class="review-quote">
+            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
               <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
             </p>
@@ -430,16 +430,17 @@
                 </div>
               </div>
               <div class="review-stars">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
               </div>
             </div>
           </div>
 
           <div class="review-card">
+            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
               <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
             </p>
@@ -452,11 +453,11 @@
                 </div>
               </div>
               <div class="review-stars">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
-                <img src="images/images/img_vector_pink_a400.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
               </div>
             </div>
           </div>
