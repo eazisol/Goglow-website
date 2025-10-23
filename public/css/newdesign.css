@@ -51,7 +51,7 @@
       transform: translateX(-50%);
       width: 100%;
       height: auto;
-      z-index: 10;
+      z-index: 5;
     }
 
     .hero-section {
@@ -1259,6 +1259,7 @@
     }
 
     @media (max-width: 480px) {
+
       .hero-button-design img{
         display: none;
       }
@@ -1281,9 +1282,43 @@
         width: 120px;
         height: 72px;
       }
-
+      .download-text{
+        font-size: 10px!important;
+      }
+      .store-text{
+        font-size: 15px!important;
+      }
+      .apple-logo{
+        width: 20px;
+      }
       .footer-description {
         font-size: 14px;
+      }
+      .btn-secondary{
+            padding: 12px 20px;
+            font-size: 14px;
+            gap: 0px;
+      }
+      .hero-buttons{
+        bottom: 100px!important;
+        flex-direction: row!important;
+        flex-wrap: nowrap!important;
+        gap: 12px;
+        justify-content: center;
+        
+      }
+      .app-store-btn{
+        min-width: 150px!important;
+        padding: 10px 16px!important;
+        width: initial;
+        height: initial;
+      }
+      .hero-content{
+        padding: 40px 0 0 0;
+      }
+      .btn-secondary{
+        min-width: 190px;
+        padding: 10px 16px;
       }
 
       .footer-section h3 {
@@ -1514,6 +1549,20 @@
       }
       .header-nav .logo{
         width: 60px;
+        height: 36px;
+      }
+      .badge-text{
+        font-size: 16px;
+      }
+      .badge{
+        padding: 10px 20px;
+        margin-bottom: 5px;
+      }
+      .hero-title{
+        font-size: 41px;
+      }
+      .hero-subtitle{
+        font-size: 16px;
       }
       
       .logo-q {
@@ -1586,15 +1635,64 @@
       }
     }
 
-    /* Hero Buttons */
-    .hero-buttons {
-      position: absolute;
-      bottom: 200px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      z-index: 10;
-    }
+     /* Hero Buttons */
+     .hero-buttons {
+       position: absolute;
+       bottom: 200px;
+       left: 50%;
+       transform: translateX(-50%);
+       display: flex;
+       justify-content: center;
+       gap: 16px;
+       flex-wrap: wrap;
+       z-index: 10;
+     }
+
+     .app-store-btn {
+       background-color: rgba(255, 255, 255, 0.95);
+       border-radius: 34px;
+       padding: 12px 20px;
+       text-decoration: none;
+       display: flex;
+       align-items: center;
+       transition: all 0.3s ease;
+       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+       min-width: 200px;
+       justify-content: center;
+     }
+
+     .app-store-btn:hover {
+       transform: translateY(-2px);
+       box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+     }
+
+     .app-store-content {
+       display: flex;
+       align-items: center;
+       gap: 12px;
+     }
+
+     .apple-logo {
+       display: flex;
+       align-items: center;
+     }
+
+     .app-store-text {
+       display: flex;
+       flex-direction: column;
+       align-items: flex-start;
+     }
+
+     .download-text {
+       font-size: 16px;
+       font-weight: 400;
+       color: #333333;
+       line-height: 1;
+     }
+
+     .store-text {
+       font-size: 26px;
+       font-weight: 700;
+       color: #333333;
+       line-height: 1;
+     }

@@ -128,14 +128,24 @@
           </div>
         </div>
 
-          <!-- App Store Buttons -->
-          <div class="hero-buttons">
-            <img src="images/images/img_app_button.png" alt="Download on App Store" width="252" height="68" style="border-radius: 34px;">
-            <a href="#" class="btn-secondary">
-              become a glower
-              <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
-            </a>
-          </div>
+           <!-- App Store Buttons -->
+           <div class="hero-buttons">
+             <a href="#" class="app-store-btn">
+               <div class="app-store-content">
+                 <div class="apple-logo">
+                   <img src="images/images/apple.svg" alt="Apple" width="36">
+                 </div>
+                 <div class="app-store-text">
+                   <span class="download-text">Download on the</span>
+                   <span class="store-text">App Store</span>
+                 </div>
+               </div>
+             </a>
+             <a href="#" class="btn-secondary">
+               become a glower
+               <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
+             </a>
+           </div>
           {{-- button design --}}
           <div class="hero-button-design">
             <img src="images/images/Rectangle 34.png" alt="Button Design">
@@ -654,10 +664,10 @@
             </div>
           </div>
 
-          <div class="app-icons">
+          {{-- <div class="app-icons">
             <img src="images/images/img_app_button_68x252.png" alt="Download on App Store" class="app-store-btn">
             <img src="images/images/img_app_button_68x252.png" alt="Get it on Google Play" class="google-play-btn">
-          </div>
+          </div> --}}
         </div>
       </div>
     </section>
