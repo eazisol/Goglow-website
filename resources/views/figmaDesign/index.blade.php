@@ -484,20 +484,22 @@
     <!-- Partners Section -->
     <section class="section">
       <div class="container">
-        <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 44px;">
+        <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 44px; margin-top: 70px;">
           <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
             <span class="badge-text">our <span class="badge-highlight">partners</span></span>
-            <img src="images/images/img_mdistars_pink_a400.svg" alt="" width="24" height="24">
+            <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
           <h2 class="section-title" style="background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-            Trusted salon<br><span style="font-family: Raflesia;">partners</span>
+            Trusted salon<br><span style="font-family: Raflesia; font-weight: 400;">partners</span>
           </h2>
           
-          <p class="section-subtitle">We collaborate with top-tier salons and beauty experts to ensure you receive quality services, professional care, and consistent results—every time you book.</p>
+          <p class="section-subtitle partner-section-subtitle">We collaborate with top-tier salons and beauty experts to ensure you receive quality services, professional care, and consistent results—every time you book.</p>
         </div>
 
-        <div class="partners-grid">
+
+      </div>
+              <div class="partners-grid">
           <img src="images/images/img_rectangle_35.png" alt="Partner Logo" class="partner-logo">
           <img src="images/images/img_rectangle_36.png" alt="Partner Logo" class="partner-logo">
           <img src="images/images/img_rectangle_39.png" alt="Partner Logo" class="partner-logo">
@@ -510,13 +512,12 @@
           <img src="images/images/img_rectangle_40.png" alt="Partner Logo" class="partner-logo">
         </div>
 
-        <div style="text-align: center; margin-top: 52px;">
+        <div style="text-align: center; margin-top: 52px; margin-bottom: 60px;">
           <a href="#" class="btn-gradient">
             Become a glower
-            <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+            <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
           </a>
         </div>
-      </div>
     </section>
 
     <!-- Pricing Section -->
@@ -526,7 +527,7 @@
         <div class="flex-col" style="align-items: flex-start; margin-bottom: 40px;">
           <div class="badge">
             <span class="badge-text" style="color: #e50050;">pricing</span>
-            <img src="images/images/img_mdistars_pink_a400.svg" alt="" width="24" height="24">
+            <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
           <h2 class="section-title" style="color: #fff4f8; text-align: left;">
@@ -560,7 +561,7 @@
             <div class="pricing-cta">
               <a href="#" class="btn-gradient">
                 book now
-                <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+                <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
               </a>
             </div>
           </div>
@@ -591,7 +592,7 @@
             <div class="pricing-cta">
               <a href="#" class="btn-primary">
                 book now
-                <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+                <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
               </a>
             </div>
           </div>
@@ -619,7 +620,7 @@
             <div class="pricing-cta">
               <a href="#" class="btn-gradient">
                 book now
-                <img src="images/images/img_iconline_arrowright.svg" alt="" width="16" height="16">
+                <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
               </a>
             </div>
           </div>
@@ -633,7 +634,7 @@
         <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 40px;">
           <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
             <span class="badge-text">our <span class="badge-highlight">app</span></span>
-            <img src="images/images/img_mdistars_pink_a400.svg" alt="" width="24" height="24">
+            <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
           <h2 class="section-title" style="background: linear-gradient(90deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
@@ -644,7 +645,8 @@
         </div>
 
         <div class="app-mockup">
-          <div style="position: relative; background-color: #fff4f8; border-radius: 74px 74px 0 0; padding: 100px 56px; box-shadow: 0px 4px 100px rgba(136, 136, 136, 1);">
+          <img src="images/images/Frame 1618873812.png" alt="App Mockup" class="app-mockup-image">
+          {{-- <div style="position: relative; background-color: #fff4f8; border-radius: 74px 74px 0 0; padding: 100px 56px; box-shadow: 0px 4px 100px rgba(136, 136, 136, 1);">
             <div style="position: relative; max-width: 716px; margin: 0 auto;">
               <img src="images/images/img_0d51a4231806639_6890ab39dc7b2.png" alt="Phone Mockup Background" style="width: 100%; height: 528px; object-fit: cover;">
               
@@ -682,7 +684,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> --}}
 
           {{-- <div class="app-icons">
             <img src="images/images/img_app_button_68x252.png" alt="Download on App Store" class="app-store-btn">

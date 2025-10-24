@@ -942,6 +942,9 @@
       display: flex;
       gap: 6px;
     }
+    .partner-section-subtitle{
+      line-height: 26px;
+    }
 
     /* Pagination */
     .pagination {
