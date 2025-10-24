@@ -20,7 +20,8 @@
   }
 
   .reviews-carousel-container .card {
-    flex: 0 0 33.3333% !important;
+    flex: 0 0 auto !important;
+    width: 500px !important;
     /* padding: 20px !important; */
     opacity: 0.5 !important;
     transform: scale(0.9) !important;
@@ -33,12 +34,12 @@
   .reviews-carousel-container .card-inner {
     background: #fff !important;
     border-radius: 20px !important;
-    padding:102px 30px !important;
-    max-width: 470px !important;
+    padding: 112px 30px 80px 30px !important;
+    max-width: 500px !important;
+    width: 100% !important;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
     text-align: center !important;
     position: relative !important;
-    width: 100% !important;
   }
 
   .reviews-carousel-container .card.active {

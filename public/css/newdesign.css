@@ -891,7 +891,7 @@
 
     .review-quote {
       position: absolute;
-      top: 30px;
+      top: 55px;
       right: 48px;
       width: 54px;
       height: 36px;
@@ -908,7 +908,8 @@
 
     .review-author {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
+      gap: 115px;
       align-items: center;
     }
 
