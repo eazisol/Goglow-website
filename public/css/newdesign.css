@@ -871,27 +871,34 @@
       overflow-x: auto;
       padding-bottom: 20px;
       scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .reviews-slider::-webkit-scrollbar {
+      display: none;
     }
 
     .review-card {
+      margin-top: 20px;
       background-color: rgba(255, 244, 248, 0.8);
       border-radius: 30px;
       padding: 70px 48px;
-      min-width: 400px;
+      min-width: 485px;
       position: relative;
       box-shadow: 0px 4px 100px rgba(136, 136, 136, 1);
     }
 
     .review-quote {
       position: absolute;
-      top: 70px;
+      top: 30px;
       right: 48px;
       width: 54px;
       height: 36px;
     }
 
     .review-text {
-      font-size: 20px;
+      font-size: 15px;
       font-weight: 500;
       font-style: italic;
       color: #75213e;
@@ -909,10 +916,10 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      background-color: #fff4f8;
+      /* background-color: #fff4f8;
       border-radius: 34px;
       padding: 6px;
-      box-shadow: 0px 4px 50px rgba(136, 136, 136, 1);
+      box-shadow: 0px 4px 50px rgba(136, 136, 136, 1); */
     }
 
     .author-avatar {
@@ -923,19 +930,23 @@
 
     .author-details {
       padding-right: 10px;
+      line-height: 16px;
     }
 
     .author-name {
       font-size: 16px;
       font-weight: 700;
-      color: #e50050;
+      color: #e50050!important;
       text-transform: uppercase;
+      letter-spacing: -1px;
     }
 
     .author-title {
       font-size: 16px;
       font-weight: 500;
       color: #75213e;
+      text-transform: capitalize;
+      letter-spacing: -1px;
     }
 
     .review-stars {
@@ -1720,7 +1731,8 @@
       }
 
       .reviews-slider {
-        overflow-x: visible;
+        overflow-x: auto;
+        margin-top: 20px;
       }
 
       .pricing-cards {

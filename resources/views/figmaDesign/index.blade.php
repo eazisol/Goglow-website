@@ -391,8 +391,31 @@
             </div>
           </div>
         </div>
-
-        <div class="reviews-slider">
+      </div>
+      @include('figmaDesign.slider')
+        {{-- <div class="reviews-slider">
+          <div class="review-card">
+            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
+            <p class="review-text">
+              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            </p>
+            <div class="review-author">
+              <div class="author-info">
+                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
+                <div class="author-details">
+                  <p class="author-name">emma loy</p>
+                  <p class="author-title">ceo of silo</p>
+                </div>
+              </div>
+              <div class="review-stars">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+              </div>
+            </div>
+          </div>
           <div class="review-card">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
@@ -477,8 +500,8 @@
           <button class="pagination-btn">
             <img src="images/images/right_arrow.svg" alt="Next" width="16" height="16">
           </button>
-        </div>
-      </div>
+        </div> --}}
+
     </section>
 
     <!-- Partners Section -->
@@ -699,6 +722,13 @@
 @endsection
 
 <script>
+  const slider = document.querySelector('.reviews-slider');
+document.querySelector('.next-btn').addEventListener('click', () => {
+  slider.scrollBy({ left: 400, behavior: 'smooth' });
+});
+document.querySelector('.prev-btn').addEventListener('click', () => {
+  slider.scrollBy({ left: -400, behavior: 'smooth' });
+});
 let currentBenefitsSlideIndex = 0;
 const benefitsSlider = document.querySelector('.benefits-slider');
 const benefitCards = document.querySelectorAll('.benefit-card');

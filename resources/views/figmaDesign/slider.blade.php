@@ -1,200 +1,412 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Focus Carousel</title>
 <style>
-  * {
+  .reviews-carousel-container * {
     box-sizing: border-box;
   }
 
-  body {
-    font-family: "Jura", sans-serif;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 30px;
-  }
-
-  h1 {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-  }
-
-  /* Carousel Container */
-  .carousel {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    gap: 20px;
-    padding: 20px;
-    width: 90%;
-    max-width: 750px;
-    scrollbar-width: none;
-  }
-
-  .carousel::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Each Slide */
-  .carousel > div {
-    flex: 0 0 250px;
-    text-align: center;
-    scroll-snap-align: center;
-    transition: all 0.4s ease;
-    opacity: 0.5;
-    transform: scale(0.8);
-    filter: blur(1px) grayscale(100%);
-  }
-
-  .carousel .img {
+  .reviews-carousel-container {
+    position: relative;
     width: 100%;
-    aspect-ratio: 3 / 4;
+    max-width: 1500px;
+    margin: 0 auto;
     overflow: hidden;
-    border-radius: 20px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    height: 600px;
   }
 
-  .carousel .img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .reviews-carousel-container .carousel-track {
+    display: flex !important;
+    transition: transform 0.7s ease !important;
+    align-items: center !important;
+    height: 100% !important;
   }
 
-  .carousel h2 {
-    font-size: 1rem;
-    margin: 10px 0 3px;
-    font-weight: 500;
-    transition: 0.3s;
+  .reviews-carousel-container .card {
+    flex: 0 0 33.3333% !important;
+    /* padding: 20px !important; */
+    opacity: 0.5 !important;
+    transform: scale(0.9) !important;
+    transition: transform 0.5s ease, opacity 0.5s ease !important;
+    display: flex !important;
+    justify-content: center !important;
+    transform-origin: center !important;
   }
 
-  .carousel p {
-    font-size: 0.85rem;
-    color: #666;
-    margin: 0;
-    transition: 0.3s;
+  .reviews-carousel-container .card-inner {
+    background: #fff !important;
+    border-radius: 20px !important;
+    padding:102px 30px !important;
+    max-width: 470px !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    text-align: center !important;
+    position: relative !important;
+    width: 100% !important;
   }
 
-  /* Active (centered) Slide */
-  .carousel > div.active {
-    transform: scale(1.1);
-    opacity: 1;
-    filter: none;
+  .reviews-carousel-container .card.active {
+    transform: scale(1.1) !important;
+    opacity: 1 !important;
+    z-index: 2 !important;
+    transform-origin: center !important;
   }
 
-  .carousel > div.active h2 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #000;
+  /* .reviews-carousel-container .card-inner p {
+    font-style: italic !important;
+    color: #76213E !important;
+    line-height: 1.6 !important;
+    margin-bottom: 20px !important;
+  } */
+
+  .reviews-carousel-container .user-info {
+    display: flex !important;
+    align-items: center !important;
+    flex-direction: column !important;
+    gap: 5px !important;
   }
 
-  .carousel > div.active p {
-    color: #222;
+  .reviews-carousel-container .user-info img {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
   }
 
-  /* Navigation Buttons */
-  .nav-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
+  .reviews-carousel-container .user-info h4 {
+    margin: 5px 0 0 !important;
+    font-size: 1rem !important;
+    color: #f54ea2 !important;
   }
 
-  .nav-buttons button {
-    background-color: #0f172b;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    font-size: 20px;
-    transition: 0.3s ease;
+  .reviews-carousel-container .user-info span {
+    font-size: 0.85rem !important;
+    color: #777 !important;
   }
 
-  .nav-buttons button:hover {
-    background-color: #e50050;
+  .reviews-carousel-container .stars {
+    color: #ff7676 !important;
+    font-size: 1.1rem !important;
+    margin-top: 10px !important;
+  }
+
+  .reviews-carousel-container .arrow {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: 2rem !important;
+    background: rgba(255, 255, 255, 0.7) !important;
+    border: none !important;
+    cursor: pointer !important;
+    z-index: 5 !important;
+    padding: 5px 12px !important;
+    border-radius: 50% !important;
+    transition: 0.3s !important;
+  }
+
+  .reviews-carousel-container .arrow:hover {
+    background: white !important;
+    transform: translateY(-50%) scale(1.1) !important;
+  }
+
+  .reviews-carousel-container .arrow-left {
+    left: 10px !important;
+  }
+
+  .reviews-carousel-container .arrow-right {
+    right: 10px !important;
+  }
+
+  .reviews-carousel-container .dots {
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 20px !important;
+    gap: 10px !important;
+    position: absolute !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10 !important;
+  }
+
+  .reviews-carousel-container .dot {
+    width: 10px !important;
+    height: 10px !important;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  }
+
+  .reviews-carousel-container .dot.active {
+    width: 16px !important;
+    height: 16px !important;
+    background-color: #e4005e !important;
+    border: 2px solid #fff !important;
+    box-shadow: 0 0 10px rgba(228, 0, 94, 0.5) !important;
+  }
+
+  @media (max-width: 480px) {
+    .reviews-carousel-container .card {
+      flex: 0 0 100% !important;
+      padding: 10px !important;
+    }
+
+    .reviews-carousel-container .card-inner {
+      max-width: 90% !important;
+      padding: 20px !important;
+    }
+
+    .reviews-carousel-container .arrow {
+      font-size: 1.5rem !important;
+      padding: 4px 8px !important;
+    }
+
+    .reviews-carousel-container .arrow-left {
+      left: 5px !important;
+    }
+
+    .reviews-carousel-container .arrow-right {
+      right: 5px !important;
+    }
   }
 </style>
-</head>
-<body>
 
-<h1>Team Members Carousel</h1>
-
-<div class="carousel" id="carousel">
-  <div>
-    <div class="img"><img src="https://i.pravatar.cc/400?img=53" alt="Raymond McKenzie"></div>
-    <h2>Raymond McKenzie</h2>
-    <p>CEO</p>
+<div class="reviews-carousel-container">
+  <button class="arrow arrow-left">&#10094;</button>
+  <div class="carousel-track" id="carousel-track">
+    <!-- Testimonial Cards -->
+    <div class="card">
+      <div class="card-inner">
+            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
+            <p class="review-text">
+              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            </p>
+            <div class="review-author">
+              <div class="author-info">
+                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
+                <div class="author-details">
+                  <p class="author-name">emma loy</p>
+                  <p class="author-title">ceo of silo</p>
+                </div>
+              </div>
+              <div class="review-stars">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+              </div>
+            </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-inner">
+            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
+            <p class="review-text">
+              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            </p>
+            <div class="review-author">
+              <div class="author-info">
+                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
+                <div class="author-details">
+                  <p class="author-name">emma loy</p>
+                  <p class="author-title">ceo of silo</p>
+                </div>
+              </div>
+              <div class="review-stars">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+              </div>
+            </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-inner">
+            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
+            <p class="review-text">
+              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            </p>
+            <div class="review-author">
+              <div class="author-info">
+                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
+                <div class="author-details">
+                  <p class="author-name">emma loy</p>
+                  <p class="author-title">ceo of silo</p>
+                </div>
+              </div>
+              <div class="review-stars">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+              </div>
+            </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-inner">
+            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
+            <p class="review-text">
+              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            </p>
+            <div class="review-author">
+              <div class="author-info">
+                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
+                <div class="author-details">
+                  <p class="author-name">emma loy</p>
+                  <p class="author-title">ceo of silo</p>
+                </div>
+              </div>
+              <div class="review-stars">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+              </div>
+            </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-inner">
+            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
+            <p class="review-text">
+              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            </p>
+            <div class="review-author">
+              <div class="author-info">
+                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
+                <div class="author-details">
+                  <p class="author-name">emma loy</p>
+                  <p class="author-title">ceo of silo</p>
+                </div>
+              </div>
+              <div class="review-stars">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+                <img src="images/images/pink_start.svg" alt="Star" class="star">
+              </div>
+            </div>
+      </div>
+    </div>
   </div>
-  <div>
-    <div class="img"><img src="https://i.pravatar.cc/300?img=5" alt="Elizabeth Turner"></div>
-    <h2>Elizabeth Turner</h2>
-    <p>Marketing Director</p>
-  </div>
-  <div>
-    <div class="img"><img src="https://i.pravatar.cc/300?img=44" alt="Suzanne Yorke"></div>
-    <h2>Suzanne Yorke</h2>
-    <p>Creative Director</p>
-  </div>
-  <div>
-    <div class="img"><img src="https://i.pravatar.cc/300?img=12" alt="Simon Hadley"></div>
-    <h2>Simon Hadley</h2>
-    <p>Social Media</p>
-  </div>
-  <div>
-    <div class="img"><img src="https://i.pravatar.cc/300?img=27" alt="Harriet Johnson"></div>
-    <h2>Harriet Johnson</h2>
-    <p>Front-End Developer</p>
-  </div>
-  <div>
-    <div class="img"><img src="https://i.pravatar.cc/300?img=15" alt="Jonathon Simmons"></div>
-    <h2>Jonathon Simmons</h2>
-    <p>Back-End Developer</p>
-  </div>
-</div>
-
-<div class="nav-buttons">
-  <button onclick="scrollCarousel(-1)">❮</button>
-  <button onclick="scrollCarousel(1)">❯</button>
+  <button class="arrow arrow-right">&#10095;</button>
+  <div class="dots"></div>
 </div>
 
 <script>
-  const carousel = document.getElementById('carousel');
-  const slides = Array.from(carousel.children);
+(function() {
+  const track = document.querySelector(".reviews-carousel-container #carousel-track");
+  let cards = Array.from(document.querySelectorAll(".reviews-carousel-container .card"));
+  const prevBtn = document.querySelector(".reviews-carousel-container .arrow-left");
+  const nextBtn = document.querySelector(".reviews-carousel-container .arrow-right");
+  const dotsContainer = document.querySelector(".reviews-carousel-container .dots");
 
-  function scrollCarousel(direction) {
-    const itemWidth = slides[0].offsetWidth + 20;
-    carousel.scrollBy({ left: direction * itemWidth, behavior: 'smooth' });
-  }
+  let index = 1; // Start at first real card after cloning
+  let autoPlayInterval;
 
-  // Highlight the centered (active) slide
-  function setActiveSlide() {
-    let center = carousel.scrollLeft + carousel.offsetWidth / 2;
-    let closest = slides.reduce((prev, curr) => {
-      let prevCenter = prev.offsetLeft + prev.offsetWidth / 2;
-      let currCenter = curr.offsetLeft + curr.offsetWidth / 2;
-      return Math.abs(currCenter - center) < Math.abs(prevCenter - center) ? curr : prev;
+  // 🔁 Clone first and last cards for smooth infinite loop
+  const firstClone = cards[0].cloneNode(true);
+  const lastClone = cards[cards.length - 1].cloneNode(true);
+  firstClone.classList.add("clone");
+  lastClone.classList.add("clone");
+
+  track.appendChild(firstClone);
+  track.prepend(lastClone);
+
+  // Update cards list after cloning
+  cards = Array.from(track.children);
+
+  // 🟢 Generate dots dynamically (for real cards only)
+  const dots = [];
+  for (let i = 0; i < cards.length - 2; i++) {
+    const dot = document.createElement("div");
+    dot.classList.add("dot");
+    if (i === 0) dot.classList.add("active");
+    dotsContainer.appendChild(dot);
+    dots.push(dot);
+
+    dot.addEventListener("click", () => {
+      index = i + 1; // Adjust for cloned card
+      updateCarousel();
+      resetAutoPlay();
     });
-    slides.forEach(slide => slide.classList.remove('active'));
-    closest.classList.add('active');
   }
 
-  carousel.addEventListener('scroll', () => {
-    clearTimeout(carousel._timeout);
-    carousel._timeout = setTimeout(setActiveSlide, 100);
+  function updateCarousel(transition = true) {
+    const cardWidth = cards[0].offsetWidth;
+    const visibleCards = window.innerWidth <= 480 ? 1 : 3;
+    const offset = visibleCards === 3 ? 1 : 0;
+
+    // Handle smooth transition toggle
+    track.style.transition = transition ? "transform 0.7s ease" : "none";
+    track.style.transform = `translateX(-${index * cardWidth}px)`;
+
+    // Update active state for cards
+    cards.forEach((card, i) => {
+      card.classList.remove("active");
+      if (i === index + offset) card.classList.add("active");
+    });
+
+    // Update dots (ignore cloned ones)
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("active", i === index - 1);
+    });
+  }
+
+  function nextSlide() {
+    index++;
+    updateCarousel();
+  }
+
+  function prevSlide() {
+    index--;
+    updateCarousel();
+  }
+
+  // 🔁 Loop seamlessly on transition end
+  track.addEventListener("transitionend", () => {
+    if (cards[index].classList.contains("clone") && index === cards.length - 1) {
+      track.style.transition = "none";
+      index = 1;
+      updateCarousel(false);
+    }
+    if (cards[index].classList.contains("clone") && index === 0) {
+      track.style.transition = "none";
+      index = cards.length - 2;
+      updateCarousel(false);
+    }
   });
 
-  // Set the first active on load
-  window.addEventListener('load', setActiveSlide);
-</script>
+  // Button actions
+  nextBtn.addEventListener("click", () => {
+    nextSlide();
+    resetAutoPlay();
+  });
 
-</body>
-</html>
+  prevBtn.addEventListener("click", () => {
+    prevSlide();
+    resetAutoPlay();
+  });
+
+  // function autoPlay() {
+  //   autoPlayInterval = setInterval(() => {
+  //     nextSlide();
+  //   }, 3000);
+  // }
+
+  function resetAutoPlay() {
+    clearInterval(autoPlayInterval);
+    autoPlay();
+  }
+
+  // 🟢 Initialize
+  updateCarousel(false);
+  autoPlay();
+})();
+
+</script>

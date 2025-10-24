@@ -110,7 +110,6 @@
   <script src="{{ asset('js/auth-modals.js') }}"></script>
   <!-- Book appointment auth script -->
   <script src="{{ asset('js/book-appointment-auth.js') }}"></script>
-
-
+  
 </body>
 </html>
