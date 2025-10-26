@@ -809,7 +809,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 40px;
-      margin-bottom: 52px;
+      /* margin-bottom: 52px; */
     }
 
     .reviews-title {
@@ -956,6 +956,8 @@
     }
     .partner-section-subtitle{
       line-height: 26px;
+      max-width: 51%;
+      font-size: 22px;
     }
 
     /* Pagination */
@@ -1570,6 +1572,54 @@
       .how-it-work-buttons .btn-primary{
         padding: 13px 13px;
         font-size: 15px;
+      }
+      /* reviews-section */
+      .reviews-section{
+        padding: 45px 0 0 0;
+      }
+      .reviews-title{
+        font-size: 38px;
+        letter-spacing: -1px;
+        line-height: 43px;
+      }
+      .reviews-header{
+        gap: 13px;
+      }
+      .avatar{
+        width: 50px;
+        height: 50px;
+      }
+      .reviews-stats{
+        gap: 15px;
+      }
+      .reviews-carousel-container .carousel-track{
+        height: 70%!important;
+      }
+      .review-text{
+        font-size: 16px;
+        line-height: 1.2;
+        margin-bottom: 42px;
+      }
+      .review-author{
+        gap: 40px;
+      }
+      .author-avatar{
+        width:30px;
+        height: 30px;
+      }
+      .author-title{
+       font-size: 13px;
+       letter-spacing: 0px;
+      }
+      .author-name{
+        font-size: 13px;
+        letter-spacing: 0px;
+      }
+      .review-quote{
+        top: 42px;
+        right: 27px;
+        width: 36px;
+        height: 25px;
       }
     }
 

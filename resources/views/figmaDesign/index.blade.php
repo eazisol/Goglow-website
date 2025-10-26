@@ -513,7 +513,7 @@
             <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
-          <h2 class="section-title" style="background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+          <h2 class="section-title" style="line-height: 80px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
             Trusted salon<br><span style="font-family: Raflesia; font-weight: 400;">partners</span>
           </h2>
           

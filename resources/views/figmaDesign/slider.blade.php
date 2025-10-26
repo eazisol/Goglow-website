@@ -16,7 +16,7 @@
     display: flex !important;
     transition: transform 0.7s ease !important;
     align-items: center !important;
-    height: 100% !important;
+    height: 83%;
   }
 
   .reviews-carousel-container .card {
@@ -25,10 +25,11 @@
     /* padding: 20px !important; */
     opacity: 0.5 !important;
     transform: scale(0.9) !important;
-    transition: transform 0.5s ease, opacity 0.5s ease !important;
+    transition: transform 0.5s ease, opacity 0.5s ease, filter 0.5s ease !important;
     display: flex !important;
     justify-content: center !important;
     transform-origin: center !important;
+    filter: blur(3px) !important;
   }
 
   .reviews-carousel-container .card-inner {
@@ -47,6 +48,7 @@
     opacity: 1 !important;
     z-index: 2 !important;
     transform-origin: center !important;
+    filter: blur(0px) !important;
   }
 
   /* .reviews-carousel-container .card-inner p {
@@ -89,15 +91,15 @@
 
   .reviews-carousel-container .arrow {
     position: absolute !important;
-    top: 50% !important;
+    top: 95% !important;
     transform: translateY(-50%) !important;
     font-size: 2rem !important;
-    background: rgba(255, 255, 255, 0.7) !important;
+    background: rgba(255, 255, 255, 1) !important;
     border: none !important;
     cursor: pointer !important;
     z-index: 5 !important;
-    padding: 5px 12px !important;
-    border-radius: 50% !important;
+    padding: 10px !important;
+    border-radius: 100% !important;
     transition: 0.3s !important;
   }
 
@@ -107,16 +109,17 @@
   }
 
   .reviews-carousel-container .arrow-left {
-    left: 10px !important;
+    left: 575px !important;
   }
 
   .reviews-carousel-container .arrow-right {
-    right: 10px !important;
+    right: 575px !important;
   }
 
   .reviews-carousel-container .dots {
     display: flex !important;
     justify-content: center !important;
+    align-items: center !important;
     margin-top: 20px !important;
     gap: 10px !important;
     position: absolute !important;
@@ -134,6 +137,10 @@
     transition: all 0.3s ease !important;
     cursor: pointer !important;
     border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
   }
 
   .reviews-carousel-container .dot.active {
@@ -142,6 +149,10 @@
     background-color: #e4005e !important;
     border: 2px solid #fff !important;
     box-shadow: 0 0 10px rgba(228, 0, 94, 0.5) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
   }
 
   @media (max-width: 480px) {
@@ -152,26 +163,37 @@
 
     .reviews-carousel-container .card-inner {
       max-width: 90% !important;
-      padding: 20px !important;
+      padding: 84px 17px 48px 17px !important;
+      margin-top: 90px;
     }
 
     .reviews-carousel-container .arrow {
       font-size: 1.5rem !important;
-      padding: 4px 8px !important;
+      padding: 15px !important;
+      top: 90% !important;
     }
 
     .reviews-carousel-container .arrow-left {
-      left: 5px !important;
+      left: 20px !important;
     }
 
     .reviews-carousel-container .arrow-right {
-      right: 5px !important;
+      right: 20px !important;
+    }
+    .reviews-carousel-container .dots{
+      bottom: 40px !important;
+    }
+    .reviews-carousel-container{
+      height: 530px;
     }
   }
 </style>
 
 <div class="reviews-carousel-container">
-  <button class="arrow arrow-left">&#10094;</button>
+  {{-- <button class="arrow arrow-left">&#10094;</button> --}}
+            <button class="arrow arrow-left">
+            <img src="images/images/left_arrow.svg" alt="Previous" width="16" height="16">
+          </button>
   <div class="carousel-track" id="carousel-track">
     <!-- Testimonial Cards -->
     <div class="card">
@@ -295,7 +317,10 @@
       </div>
     </div>
   </div>
-  <button class="arrow arrow-right">&#10095;</button>
+  {{-- <button class="arrow arrow-right">&#10095;</button> --}}
+            <button class="arrow arrow-right">
+            <img src="images/images/right_arrow.svg" alt="Next" width="16" height="16">
+          </button>
   <div class="dots"></div>
 </div>
 
@@ -394,11 +419,11 @@
     resetAutoPlay();
   });
 
-  // function autoPlay() {
-  //   autoPlayInterval = setInterval(() => {
-  //     nextSlide();
-  //   }, 3000);
-  // }
+  function autoPlay() {
+    autoPlayInterval = setInterval(() => {
+      nextSlide();
+    }, 7000);
+  }
 
   function resetAutoPlay() {
     clearInterval(autoPlayInterval);
