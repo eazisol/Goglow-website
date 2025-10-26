@@ -1010,8 +1010,29 @@
     .partners-grid {
       display: flex;
       gap: 40px;
-      overflow-x: auto;
+      overflow: hidden;
       padding-bottom: 20px;
+      position: relative;
+    }
+
+    .partners-marquee {
+      display: flex;
+      gap: 40px;
+      animation: marquee 30s linear infinite;
+      width: max-content;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .partners-marquee:hover {
+      animation-play-state: paused;
     }
 
     .partner-logo {
@@ -1621,6 +1642,31 @@
         width: 36px;
         height: 25px;
       }
+      .partner-section-header{
+        margin-top: 38px!important;
+      }
+      .partner-section-title{
+        line-height: 54px!important;
+        font-size: 46px!important;
+      }
+      .partner-section-subtitle{
+        letter-spacing: -0.1px;
+        line-height: 22px;
+        max-width: 100%;
+        font-size: 17px;
+      }
+      .partners-marquee{
+        gap: 8px;
+      }
+      .partner-logo{
+        width: 66px;
+        height: 53px;
+        border-radius: 0px;
+      }
+      .partner-section-button{
+        margin-top: 15px!important;
+        margin-bottom: 40px!important;
+      }
     }
 
     /* Interactive states */
@@ -1792,9 +1838,13 @@
       }
 
       .partners-grid {
-        overflow-x: visible;
-        justify-content: center;
-        flex-wrap: wrap;
+        overflow: hidden;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+      }
+
+      .partners-marquee {
+        animation: marquee 20s linear infinite;
       }
 
       .footer-bg-text {

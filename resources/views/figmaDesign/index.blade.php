@@ -507,13 +507,13 @@
     <!-- Partners Section -->
     <section class="section">
       <div class="container">
-        <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 44px; margin-top: 70px;">
+        <div class="flex-col partner-section-header" style="align-items: center; text-align: center; margin-top: 70px;">
           <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
             <span class="badge-text">our <span class="badge-highlight">partners</span></span>
             <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
-          <h2 class="section-title" style="line-height: 80px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+          <h2 class="section-title partner-section-title" style="line-height: 80px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
             Trusted salon<br><span style="font-family: Raflesia; font-weight: 400;">partners</span>
           </h2>
           
@@ -523,19 +523,32 @@
 
       </div>
               <div class="partners-grid">
-          <img src="images/images/img_rectangle_35.png" alt="Partner Logo" class="partner-logo">
-          <img src="images/images/img_rectangle_36.png" alt="Partner Logo" class="partner-logo">
-          <img src="images/images/img_rectangle_39.png" alt="Partner Logo" class="partner-logo">
-          <img src="images/images/img_rectangle_41.png" alt="Partner Logo" class="partner-logo">
-          <img src="images/images/img_rectangle_42.png" alt="Partner Logo" class="partner-logo">
-          <img src="images/images/img_rectangle_43.png" alt="Partner Logo" class="partner-logo">
-          <img src="images/images/img_rectangle_44.png" alt="Partner Logo" class="partner-logo">
-          <img src="images/images/img_rectangle_38.png" alt="Partner Logo" class="partner-logo">
-          <img src="images/images/img_rectangle_45.png" alt="Partner Logo" class="partner-logo">
-          <img src="images/images/img_rectangle_40.png" alt="Partner Logo" class="partner-logo">
-        </div>
+                <div class="partners-marquee">
+                  <img src="images/images/img_rectangle_35.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_36.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_39.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_41.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_42.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_43.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_44.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_38.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_45.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_40.png" alt="Partner Logo" class="partner-logo">
+                  <!-- Duplicate logos for seamless looping -->
+                  <img src="images/images/img_rectangle_35.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_36.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_39.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_41.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_42.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_43.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_44.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_38.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_45.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/img_rectangle_40.png" alt="Partner Logo" class="partner-logo">
+                </div>
+              </div>
 
-        <div style="text-align: center; margin-top: 52px; margin-bottom: 60px;">
+        <div class="partner-section-button" style="text-align: center; margin-top: 35px; margin-bottom: 60px;">
           <a href="#" class="btn-gradient">
             Become a glower
             <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
