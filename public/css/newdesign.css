@@ -1044,7 +1044,8 @@
 
     /* Pricing section */
     .pricing-section {
-      background: linear-gradient(188deg, #ff8c00 0%, #e50050 100%);
+      background: linear-gradient(203.85deg, #FF8C00 10.22%, #E50050 53.13%);
+
       position: relative;
       padding: 70px 0;
     }
@@ -1059,7 +1060,14 @@
     .pricing-card {
       background-color: rgba(255, 244, 248, 0.9);
       border-radius: 30px;
-      padding: 18px;
+      padding: 18px 18px 44px 18px;
+      min-width: 380px;
+      position: relative;
+    }
+    .pricing-card2 {
+      background-color: rgb(255, 255, 255);
+      border-radius: 30px;
+      padding: 18px 18px 44px 18px;
       min-width: 380px;
       position: relative;
     }
@@ -1077,6 +1085,7 @@
 
     .pricing-badge.popular {
       border: 1px solid #d5bec6;
+      text-transform: capitalize;
       background-color: transparent;
       color: #75213e;
     }
@@ -1091,12 +1100,18 @@
 
     .pricing-title {
       font-size: 29px;
+      text-transform: capitalize;
+      line-height: 29px;
+      letter-spacing: -1px;
       font-weight: 700;
       background: linear-gradient(65deg, #e50050 0%, #8750d4 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       max-width: 280px;
+    }
+    .pricing-cta .btn-gradient{
+      padding: 17px 26px;
     }
 
     .pricing-price {
@@ -1113,7 +1128,7 @@
 
     .pricing-feature {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 14px;
       margin-bottom: 8px;
     }
@@ -1122,13 +1137,14 @@
       width: 14px;
       height: 14px;
       background-color: #e50050;
-      border-radius: 6px;
-      margin-top: 4px;
+      border-radius: 50%;
       flex-shrink: 0;
+      margin-top: 0;
     }
 
     .feature-text {
-      font-size: 18px;
+      font-size: 17px;
+      text-transform: lowercase;
       font-weight: 500;
       color: rgba(44, 13, 24, 0.5);
     }
@@ -1303,6 +1319,9 @@
     .copyright-com {
       text-transform: lowercase;
       color: #E6007A;
+    }
+    .pricing-section-header{
+        line-height: 1;
     }
 
     /* Responsive Design */
@@ -1667,6 +1686,10 @@
         margin-top: 15px!important;
         margin-bottom: 40px!important;
       }
+      .pricing-card{
+        min-width: 350px;
+      }
+
     }
 
     /* Interactive states */

@@ -560,17 +560,17 @@
     <section class="pricing-section">
       <div style="background-image: url('images/images/img_group_33524.png'); background-size: cover; background-position: center; position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
       <div class="container" style="position: relative; z-index: 2;">
-        <div class="flex-col" style="align-items: flex-start; margin-bottom: 40px;">
+        <div class="flex-col" style="align-items: flex-start;">
           <div class="badge">
             <span class="badge-text" style="color: #e50050;">pricing</span>
             <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
-          <h2 class="section-title" style="color: #fff4f8; text-align: left;">
-            want to shine<br>near <span style="font-family: Raflesia;">you?</span>
+          <h2 class="section-title pricing-section-header" style="color: #fff4f8; text-align: left;">
+            want to shine<br>near <span style="font-family: Raflesia; font-weight: 400;">you?</span>
           </h2>
           
-          <p style="font-size: 22px; font-weight: 500; color: #fff4f8; margin-bottom: 40px;">Discover the trends around you</p>
+          <p style="font-size: 22px; font-weight: 500; color: #fff4f8; margin-bottom: 40px;">discover the trends around you</p>
         </div>
 
         <div class="pricing-cards">
@@ -602,8 +602,8 @@
             </div>
           </div>
 
-          <div class="pricing-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
+          <div class="pricing-card2">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
               <div class="pricing-badge">212 reviews : 4.4 starts</div>
               <div class="pricing-badge popular">popular 🔥</div>
             </div>
