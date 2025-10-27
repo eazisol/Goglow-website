@@ -245,8 +245,10 @@
     /* Close icon (cross) */
     .close-icon {
       position: absolute;
-      width: 20px;
-      height: 20px;
+      width: 44px;
+      height: 44px;
+      background: #ffffff;
+      border-radius: 50%;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -254,6 +256,7 @@
       opacity: 0;
       transform: scale(0);
       transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .close-icon span {
@@ -311,7 +314,7 @@
       width: 300px;
       height: 100vh;
       backdrop-filter: blur(78.8px);
-      background: rgba(197, 111, 141, 0.933);
+      background: rgba(229, 0, 80, 0.6);
       /* background: linear-gradient(180deg, #fff4f8 0%, rgba(255, 244, 248, 0.95) 100%); */
       /* backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px); */
