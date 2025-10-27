@@ -217,9 +217,6 @@
 
     /* Mobile Menu Toggle */
     .mobile-menu-toggle {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
       width: 44px;
       height: 44px;
       background: transparent;
@@ -227,34 +224,64 @@
       cursor: pointer;
       z-index: 1001;
       padding: 0;
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .mobile-menu-toggle:hover {
       transform: scale(1.1);
     }
 
-    .mobile-menu-toggle span {
-      display: block;
-      height: 3px;
+    /* Menu icon (grid icon) */
+    .menu-icon {
       width: 100%;
-      background: #75213e;
+      height: 100%;
+      transition: all 0.3s ease;
+    }
+
+    /* Close icon (cross) */
+    .close-icon {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s ease;
+    }
+
+    .close-icon span {
+      position: absolute;
+      width: 20px;
+      height: 3px;
+      background: #e50050;
       border-radius: 2px;
       transition: all 0.3s ease;
-      transform-origin: center;
     }
 
-    .mobile-menu-toggle.active span:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
+    .close-icon span:first-child {
+      transform: rotate(45deg);
     }
 
-    .mobile-menu-toggle.active span:nth-child(2) {
+    .close-icon span:last-child {
+      transform: rotate(-45deg);
+    }
+
+    /* Show close icon when menu is active */
+    .mobile-menu-toggle.active .menu-icon {
       opacity: 0;
-      transform: scaleX(0);
+      transform: scale(0);
     }
 
-    .mobile-menu-toggle.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(7px, -6px);
+    .mobile-menu-toggle.active .close-icon {
+      opacity: 1;
+      transform: scale(1);
     }
 
     /* Mobile Menu Overlay */
@@ -279,7 +306,7 @@
     /* Mobile Menu */
     .mobile-menu {
       position: fixed;
-      top: 0;
+      top: -12px;
       right: -100%;
       width: 300px;
       height: 100vh;
@@ -292,7 +319,7 @@
     }
 
     .mobile-menu.active {
-      right: 0;
+      right: -20;
     }
 
     .mobile-menu-content {
@@ -1430,6 +1457,9 @@
     }
 
     @media (max-width: 480px) {
+      .mobile-menu-nav a.active::before{
+        display: none;
+      }
 
       .hero-button-design img{
         display: none;
@@ -1485,7 +1515,7 @@
         height: initial;
       }
       .hero-content{
-        padding: 40px 0 0 0;
+        padding: 10px 0 0 0;
       }
       .btn-secondary{
         min-width: 190px;
@@ -1933,9 +1963,10 @@
 
     /* Focus states for accessibility */
     .mobile-menu-toggle:focus {
-      outline: 2px solid #e50050;
+      /* outline: 2px solid #e50050; */
       outline-offset: 2px;
     }
+    
 
     .nav-menu a:focus {
       outline: 2px solid #e50050;
@@ -1951,7 +1982,7 @@
     @media (max-width: 640px) {
       .header {
         
-       padding: 12px 9px 12px 10px !important;
+       padding:9px!important;
         margin-bottom: 20px;
       }
       .header-nav .logo{

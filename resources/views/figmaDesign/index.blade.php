@@ -44,7 +44,13 @@
                 </a>
                 
                 <!-- Mobile Menu Toggle -->
-                <img src="images/images/Frame 1618873824.svg" alt="Menu" class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                  <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">
+                  <div class="close-icon">
+                    <span></span>
+                    <span></span>
+                  </div>
+                </button>
                 {{-- <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
                   <span></span>
                   <span></span>
