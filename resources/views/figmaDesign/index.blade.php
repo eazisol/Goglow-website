@@ -73,9 +73,9 @@
                   </ul>
                 </div>
                 <div class="mobile-menu-footer">
-                  <a href="#" class="btn-primary mobile-only">
+                  <a href="#" class="mobile-menu-button mobile-only">
                     BECOME A GLOWER
-                    <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
+                    <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
                   </a>
                 </div>
               </div>

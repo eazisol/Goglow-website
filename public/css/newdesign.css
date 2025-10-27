@@ -310,9 +310,11 @@
       right: -100%;
       width: 300px;
       height: 100vh;
-      background: linear-gradient(180deg, #fff4f8 0%, rgba(255, 244, 248, 0.95) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(78.8px);
+      background: rgba(197, 111, 141, 0.933);
+      /* background: linear-gradient(180deg, #fff4f8 0%, rgba(255, 244, 248, 0.95) 100%); */
+      /* backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); */
       transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 1000;
       box-shadow: -8px 0 32px rgba(0, 0, 0, 0.1);
@@ -332,6 +334,7 @@
 
     .mobile-menu-nav {
       flex: 1;
+      text-align: center;
     }
 
     .mobile-menu-nav ul {
@@ -341,20 +344,36 @@
     }
 
     .mobile-menu-nav li {
-      margin-bottom: 20px;
+      margin-top: 35px;
     }
 
     .mobile-menu-nav a {
       display: block;
       padding: 15px 0;
-      color: #75213e;
+      color: #ffffff;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 18px;
       text-transform: capitalize;
-      border-bottom: 1px solid rgba(117, 33, 62, 0.1);
       transition: all 0.3s ease;
       position: relative;
+    }
+    .mobile-menu-button{
+      background-color: #ffffff;
+      color: #e50050;
+      padding: 17px 25px;
+      border-radius: 34px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.5px;
     }
 
     .mobile-menu-nav a:hover {
@@ -363,8 +382,9 @@
     }
 
     .mobile-menu-nav a.active {
-      color: #e50050;
+      color: #ffffff;
       font-weight: 700;
+      text-decoration: underline;
     }
 
     .mobile-menu-nav a.active::before {
@@ -381,7 +401,6 @@
 
     .mobile-menu-footer {
       padding-top: 30px;
-      border-top: 1px solid rgba(117, 33, 62, 0.1);
     }
 
     .mobile-menu-footer .btn-primary {
