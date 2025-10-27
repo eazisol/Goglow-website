@@ -1,14 +1,14 @@
-<style>
+  <style>
   .reviews-carousel-container * {
-    box-sizing: border-box;
-  }
+      box-sizing: border-box;
+    }
 
   .reviews-carousel-container {
-    position: relative;
+      position: relative;
     width: 100%;
     max-width: 1500px;
     margin: 0 auto;
-    overflow: hidden;
+      overflow: hidden;
     height: 600px;
   }
 
@@ -153,9 +153,9 @@
     align-items: center !important;
     justify-content: center !important;
     box-sizing: border-box !important;
-  }
+    }
 
-  @media (max-width: 480px) {
+    @media (max-width: 480px) {
     .reviews-carousel-container .card {
       flex: 0 0 100% !important;
       padding: 10px !important;
@@ -185,19 +185,19 @@
     }
     .reviews-carousel-container{
       height: 530px;
+      }
     }
-  }
-</style>
+  </style>
 
 <div class="reviews-carousel-container">
   {{-- <button class="arrow arrow-left">&#10094;</button> --}}
             <button class="arrow arrow-left">
             <img src="images/images/left_arrow.svg" alt="Previous" width="16" height="16">
           </button>
-  <div class="carousel-track" id="carousel-track">
-    <!-- Testimonial Cards -->
-    <div class="card">
-      <div class="card-inner">
+    <div class="carousel-track" id="carousel-track">
+      <!-- Testimonial Cards -->
+      <div class="card">
+        <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
               <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
@@ -217,11 +217,11 @@
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
               </div>
-            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-inner">
+      <div class="card">
+        <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
               <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
@@ -241,11 +241,11 @@
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
               </div>
-            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-inner">
+      <div class="card">
+        <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
               <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
@@ -265,11 +265,11 @@
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
               </div>
-            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-inner">
+      <div class="card">
+        <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
               <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
@@ -289,11 +289,11 @@
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
               </div>
-            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-inner">
+      <div class="card">
+        <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
               <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
@@ -313,18 +313,18 @@
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
                 <img src="images/images/pink_start.svg" alt="Star" class="star">
               </div>
-            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
   {{-- <button class="arrow arrow-right">&#10095;</button> --}}
             <button class="arrow arrow-right">
             <img src="images/images/right_arrow.svg" alt="Next" width="16" height="16">
           </button>
-  <div class="dots"></div>
-</div>
+    <div class="dots"></div>
+  </div>
 
-<script>
+  <script>
 (function() {
   const track = document.querySelector(".reviews-carousel-container #carousel-track");
   let cards = Array.from(document.querySelectorAll(".reviews-carousel-container .card"));
@@ -333,7 +333,7 @@
   const dotsContainer = document.querySelector(".reviews-carousel-container .dots");
 
   let index = 1; // Start at first real card after cloning
-  let autoPlayInterval;
+    let autoPlayInterval;
 
   // 🔁 Clone first and last cards for smooth infinite loop
   const firstClone = cards[0].cloneNode(true);
@@ -348,51 +348,51 @@
   cards = Array.from(track.children);
 
   // 🟢 Generate dots dynamically (for real cards only)
-  const dots = [];
+    const dots = [];
   for (let i = 0; i < cards.length - 2; i++) {
-    const dot = document.createElement("div");
-    dot.classList.add("dot");
-    if (i === 0) dot.classList.add("active");
-    dotsContainer.appendChild(dot);
-    dots.push(dot);
+      const dot = document.createElement("div");
+      dot.classList.add("dot");
+      if (i === 0) dot.classList.add("active");
+      dotsContainer.appendChild(dot);
+      dots.push(dot);
 
-    dot.addEventListener("click", () => {
+      dot.addEventListener("click", () => {
       index = i + 1; // Adjust for cloned card
-      updateCarousel();
-      resetAutoPlay();
-    });
+        updateCarousel();
+        resetAutoPlay();
+      });
   }
 
   function updateCarousel(transition = true) {
-    const cardWidth = cards[0].offsetWidth;
-    const visibleCards = window.innerWidth <= 480 ? 1 : 3;
-    const offset = visibleCards === 3 ? 1 : 0;
+      const cardWidth = cards[0].offsetWidth;
+      const visibleCards = window.innerWidth <= 480 ? 1 : 3;
+      const offset = visibleCards === 3 ? 1 : 0;
 
     // Handle smooth transition toggle
     track.style.transition = transition ? "transform 0.7s ease" : "none";
-    track.style.transform = `translateX(-${index * cardWidth}px)`;
+      track.style.transform = `translateX(-${index * cardWidth}px)`;
 
     // Update active state for cards
-    cards.forEach((card, i) => {
-      card.classList.remove("active");
-      if (i === index + offset) card.classList.add("active");
-    });
+      cards.forEach((card, i) => {
+        card.classList.remove("active");
+        if (i === index + offset) card.classList.add("active");
+      });
 
     // Update dots (ignore cloned ones)
-    dots.forEach((dot, i) => {
+      dots.forEach((dot, i) => {
       dot.classList.toggle("active", i === index - 1);
-    });
-  }
+      });
+    }
 
-  function nextSlide() {
-    index++;
-    updateCarousel();
-  }
+    function nextSlide() {
+      index++;
+      updateCarousel();
+    }
 
-  function prevSlide() {
-    index--;
-    updateCarousel();
-  }
+    function prevSlide() {
+      index--;
+      updateCarousel();
+    }
 
   // 🔁 Loop seamlessly on transition end
   track.addEventListener("transitionend", () => {
@@ -409,30 +409,30 @@
   });
 
   // Button actions
-  nextBtn.addEventListener("click", () => {
-    nextSlide();
-    resetAutoPlay();
-  });
+    nextBtn.addEventListener("click", () => {
+      nextSlide();
+      resetAutoPlay();
+    });
 
-  prevBtn.addEventListener("click", () => {
-    prevSlide();
-    resetAutoPlay();
-  });
+    prevBtn.addEventListener("click", () => {
+      prevSlide();
+      resetAutoPlay();
+    });
 
-  function autoPlay() {
+    function autoPlay() {
     autoPlayInterval = setInterval(() => {
       nextSlide();
     }, 7000);
-  }
+    }
 
-  function resetAutoPlay() {
-    clearInterval(autoPlayInterval);
-    autoPlay();
-  }
+    function resetAutoPlay() {
+      clearInterval(autoPlayInterval);
+      autoPlay();
+    }
 
   // 🟢 Initialize
   updateCarousel(false);
-  autoPlay();
+    autoPlay();
 })();
 
-</script>
+  </script>

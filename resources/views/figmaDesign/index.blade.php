@@ -44,11 +44,12 @@
                 </a>
                 
                 <!-- Mobile Menu Toggle -->
-                <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                <img src="images/images/Frame 1618873824.svg" alt="Menu" class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                {{-- <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
                   <span></span>
                   <span></span>
                   <span></span>
-                </button>
+                </button> --}}
               </div>
             </nav>
             
@@ -677,11 +678,11 @@
             get our app<br><span style="font-family: Raflesia;">Glow</span>
           </h2>
           
-          <p class="section-subtitle">Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone</p>
+          <p class="section-subtitle app-section-subtitle">Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone</p>
         </div>
 
         <div class="app-mockup">
-          <img src="images/images/Frame 1618873812.png" alt="App Mockup" class="app-mockup-image">
+          <img src="images/images/Group 36125.png" alt="App Mockup" class="app-mockup-image">
           {{-- <div style="position: relative; background-color: #fff4f8; border-radius: 74px 74px 0 0; padding: 100px 56px; box-shadow: 0px 4px 100px rgba(136, 136, 136, 1);">
             <div style="position: relative; max-width: 716px; margin: 0 auto;">
               <img src="images/images/img_0d51a4231806639_6890ab39dc7b2.png" alt="Phone Mockup Background" style="width: 100%; height: 528px; object-fit: cover;">
@@ -726,6 +727,33 @@
             <img src="images/images/img_app_button_68x252.png" alt="Download on App Store" class="app-store-btn">
             <img src="images/images/img_app_button_68x252.png" alt="Get it on Google Play" class="google-play-btn">
           </div> --}}
+
+        </div>
+        <div class="app-section-background-image">
+                      <div class="app-buttons">
+             <a href="#" class="app-store-btn">
+               <div class="app-store-content">
+                 <div class="apple-logo">
+                   <img src="images/images/apple.svg" alt="Apple" width="36">
+                 </div>
+                 <div class="app-store-text">
+                   <span class="download-text">Download on the</span>
+                   <span class="store-text">App Store</span>
+                 </div>
+               </div>
+             </a>
+              <a href="#" class="app-store-btn">
+               <div class="app-store-content">
+                 <div class="apple-logo">
+                   <img src="images/images/googleplay.svg" alt="Apple" width="36">
+                 </div>
+                 <div class="app-store-text">
+                   <span class="download-text">Get it on</span>
+                   <span class="store-text">Google Play</span>
+                 </div>
+               </div>
+             </a>
+           </div>
         </div>
       </div>
     </section>
