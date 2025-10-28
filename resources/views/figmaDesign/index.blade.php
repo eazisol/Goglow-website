@@ -769,64 +769,84 @@
 @endsection
 
 <script>
-  const slider = document.querySelector('.reviews-slider');
-document.querySelector('.next-btn').addEventListener('click', () => {
-  slider.scrollBy({ left: 400, behavior: 'smooth' });
-});
-document.querySelector('.prev-btn').addEventListener('click', () => {
-  slider.scrollBy({ left: -400, behavior: 'smooth' });
-});
+  document.addEventListener('DOMContentLoaded', function() {
+    // Reviews slider controls (scoped to reviews section only)
+    const reviewSlider = document.querySelector('.reviews-slider');
+    const reviewNextBtn = document.querySelector('.reviews-section .next-btn');
+    const reviewPrevBtn = document.querySelector('.reviews-section .prev-btn');
+    if (reviewSlider && reviewNextBtn && reviewPrevBtn) {
+      reviewNextBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        reviewSlider.scrollBy({ left: 400, behavior: 'smooth' });
+      });
+      reviewPrevBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        reviewSlider.scrollBy({ left: -400, behavior: 'smooth' });
+      });
+    }
 let currentBenefitsSlideIndex = 0;
 const benefitsSlider = document.querySelector('.benefits-slider');
 const benefitCards = document.querySelectorAll('.benefit-card');
 const dots = document.querySelectorAll('.carousel-dots .dot');
+const benefitsNextBtn = document.querySelector('.benefits-section .next-btn');
+const benefitsPrevBtn = document.querySelector('.benefits-section .prev-btn');
+if (benefitsNextBtn && benefitsPrevBtn) {
+  benefitsNextBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    scrollBenefitsCarousel(1);
+  });
+  benefitsPrevBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    scrollBenefitsCarousel(-1);
+  });
+}
 
 function scrollBenefitsCarousel(direction) {
-  const cardWidth = benefitCards[0].offsetWidth + 30; // card width + gap
-  const maxScroll = benefitsSlider.scrollWidth - benefitsSlider.clientWidth;
-  
-  if (direction === 1) {
-    currentBenefitsSlideIndex = Math.min(currentBenefitsSlideIndex + 1, Math.floor(maxScroll / cardWidth));
-  } else {
-    currentBenefitsSlideIndex = Math.max(currentBenefitsSlideIndex - 1, 0);
-  }
-  
-  benefitsSlider.scrollTo({
-    left: currentBenefitsSlideIndex * cardWidth,
-    behavior: 'smooth'
-  });
-  
+  if (!benefitsSlider || benefitCards.length === 0) return;
+  const computed = window.getComputedStyle(benefitsSlider);
+  const gapPx = parseInt(computed.gap || computed.columnGap || '0', 10) || 0;
+  const step = benefitCards[0].getBoundingClientRect().width + gapPx;
+  const maxLeft = benefitsSlider.scrollWidth - benefitsSlider.clientWidth;
+  const targetLeft = Math.max(0, Math.min(maxLeft, benefitsSlider.scrollLeft + (direction * step)));
+  benefitsSlider.scrollTo({ left: targetLeft, behavior: 'smooth' });
+  currentBenefitsSlideIndex = Math.round(targetLeft / step);
   updateDots();
 }
 
 function currentBenefitsSlide(slideIndex) {
+  if (!benefitsSlider || benefitCards.length === 0) return;
   currentBenefitsSlideIndex = slideIndex - 1;
-  const cardWidth = benefitCards[0].offsetWidth + 30;
-  
-  benefitsSlider.scrollTo({
-    left: currentBenefitsSlideIndex * cardWidth,
-    behavior: 'smooth'
-  });
-  
+  const computed = window.getComputedStyle(benefitsSlider);
+  const gapPx = parseInt(computed.gap || computed.columnGap || '0', 10) || 0;
+  const step = benefitCards[0].getBoundingClientRect().width + gapPx;
+  const maxLeft = benefitsSlider.scrollWidth - benefitsSlider.clientWidth;
+  const targetLeft = Math.max(0, Math.min(maxLeft, currentBenefitsSlideIndex * step));
+  benefitsSlider.scrollTo({ left: targetLeft, behavior: 'smooth' });
   updateDots();
 }
 
 function updateDots() {
+  if (dots.length === 0) return;
   dots.forEach((dot, index) => {
     dot.classList.toggle('active', index === currentBenefitsSlideIndex);
   });
 }
 
 // Auto-scroll functionality (optional)
-setInterval(() => {
-  const maxSlides = Math.floor((benefitsSlider.scrollWidth - benefitsSlider.clientWidth) / (benefitCards[0].offsetWidth + 30));
-  if (currentBenefitsSlideIndex >= maxSlides) {
-    currentBenefitsSlideIndex = 0;
-  } else {
-    currentBenefitsSlideIndex++;
-  }
-  scrollBenefitsCarousel(1);
-}, 5000); // Auto-scroll every 5 seconds
+// setInterval(() => {
+//   if (!benefitsSlider || benefitCards.length === 0) return;
+//   const computed = window.getComputedStyle(benefitsSlider);
+//   const gapPx = parseInt(computed.gap || computed.columnGap || '0', 10) || 0;
+//   const singleWidth = benefitCards[0].getBoundingClientRect().width + gapPx;
+//   const maxSlides = Math.floor((benefitsSlider.scrollWidth - benefitsSlider.clientWidth) / singleWidth);
+//   if (currentBenefitsSlideIndex >= maxSlides) {
+//     currentBenefitsSlideIndex = 0;
+//   } else {
+//     currentBenefitsSlideIndex++;
+//   }
+//   scrollBenefitsCarousel(1);
+// }, 5000); // Auto-scroll every 5 seconds
+  });
 </script>
 
 

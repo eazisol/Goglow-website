@@ -56,6 +56,8 @@
 
     .hero-section {
       background: url('../images/images/bakground.svg') no-repeat;
+      background-position: center center;
+      background-size: cover; /* ensure background scales on large screens */
       position: relative;
       overflow: hidden;
       min-height: 100vh;
@@ -67,7 +69,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('images/images/img_group_33523.png');
+      background-image: url('../images/images/img_group_33523.png');
       background-size: cover;
       background-position: center;
       z-index: 1;
@@ -1626,6 +1628,7 @@
       }
       .benefits-carousel-container{
         margin-left: 15px;
+        margin-right: 15px;
       }
       /* how it work section  */
       .how-it-works{
