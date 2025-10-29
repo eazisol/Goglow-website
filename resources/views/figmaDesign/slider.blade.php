@@ -419,11 +419,11 @@
       resetAutoPlay();
     });
 
-    function autoPlay() {
-    autoPlayInterval = setInterval(() => {
-      nextSlide();
-    }, 7000);
-    }
+    // function autoPlay() {
+    // autoPlayInterval = setInterval(() => {
+    //   nextSlide();
+    // }, 7000);
+    // }
     function resetAutoPlay() {
       clearInterval(autoPlayInterval);
       autoPlay();

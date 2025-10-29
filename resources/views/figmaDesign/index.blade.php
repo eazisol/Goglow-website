@@ -164,7 +164,7 @@
     <!-- Search Section -->
     <section class="section">
       <div class="container">
-        <div class="search-section">
+        {{-- <div class="search-section">
           <div class="search-row">
             <div class="search-item">
               <div class="search-icon">
@@ -195,6 +195,40 @@
               <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
             </a>
           </div>
+        </div> --}}
+        <div class="search-section">
+              <form action="{{ route('search') }}" method="GET">
+                  <div class="search-row">
+                      <div class="search-item">
+                          <div class="search-icon">
+                              <img src="images/images/Vector.svg" alt="Search" width="32" height="32" aria-hidden="true">
+                          </div>
+                          <div class="search-content">
+                              <h3 class="search-title">{{ __('app.home.search_input_text') }}</h3>
+                              <input type="search" class="searchInput" id="searchInput" name="search" placeholder="{{ __('app.home.search_service_placeholder') }}" required>
+                          </div>
+                      </div>
+
+                      <div class="divider"></div>
+
+                      <div class="search-item">
+                          <div class="search-icon">
+                              <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="32" height="32" aria-hidden="true">
+                          </div>
+                          <div class="search-content">
+                              <h3 class="search-title">{{ __('app.home.search_or_text') ?? 'Location' }}</h3>
+                              <input type="text" class="searchInput" id="locationInput" name="location" placeholder="{{ __('app.home.search_location_placeholder') }}">
+                          </div>
+                      </div>
+
+                      <div class="divider"></div>
+
+                      <button type="submit" class="btn-primary" style="margin-left: auto;">
+                          {{ __('app.home.search_button') }}
+                          <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
+                      </button>
+                  </div>
+              </form>
         </div>
       </div>
     </section>

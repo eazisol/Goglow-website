@@ -121,6 +121,7 @@ return [
         'hero_subtitle' => 'Du contenu beauté tendance aux professionnels locaux de confiance — votre prochain glow-up est à un scroll de distance',
         'search_service_placeholder' => 'Rechercher par service ou nom de prestataire',
         'search_input_text' => 'Qu’est-ce que tu cherches ?',
+        'search_or_text' => 'Ajouter',
         'search_location_placeholder' => 'Localisation (requise pour la recherche de service)',
         'search_location_optional' => 'Localisation (optionnelle pour la recherche de prestataire)',
         'search_button' => 'Rechercher',

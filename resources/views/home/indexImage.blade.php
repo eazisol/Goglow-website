@@ -5,6 +5,7 @@
 {{-- Style Files --}}
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/search.css') }}">
+<link rel="stylesheet" href="{{ asset('css/newdesign.css') }}">
 
 @endsection
 
@@ -23,48 +24,37 @@
                             <div class="section-title">
                                 <h1 class="text-anime-style-2" >{{ __('app.home.hero_title') }}</h1>
                                 <h3 class="wow fadeInUp hero-contecnt-p">{{ __('app.home.hero_subtitle') }}</h3>
-                                <div class="search-bar">
-                                    <form action="{{ route('search') }}" method="GET" class="search-form">
-                                        <div class="search-inputs">
+                                <div class="search-section">
+                                    <form action="{{ route('search') }}" method="GET">
+                                        <div class="search-row">
                                             <div class="search-item">
-                                                <i class="fas fa-search"></i>
-                                                <div class="input-text">
-                                                    <h5>{{ __('app.home.search_input_text') }}</h5>
-                                                    <input type="text" id="searchInput" placeholder="{{ __('app.home.search_service_placeholder') }}" name="search" required>
+                                                <div class="search-icon">
+                                                    <img src="images/images/Vector.svg" alt="Search" width="32" height="32" aria-hidden="true">
+                                                </div>
+                                                <div class="search-content">
+                                                    <h3 class="search-title">{{ __('app.home.search_input_text') }}</h3>
+                                                    <input type="search" id="searchInput" name="search" placeholder="{{ __('app.home.search_service_placeholder') }}" required style="border: none; background: transparent; outline: none; width: 100%; font-size: 16px; color: #2c0d18;">
                                                 </div>
                                             </div>
-                                            
-                                            <div class="search-item">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                                <div class="input-text">
-                                                    <h5>Or</h5>
-                                                    <input type="text" id="locationInput" placeholder="{{ __('app.home.search_location_placeholder') }}" name="location">
-                                                </div>
-                                            </div>
-                                            
-                                            <button type="submit" class="search-button">{{ __('app.home.search_button') }}</button>
 
-                                            <script>
-                                                document.getElementById('searchInput').addEventListener('input', function() {
-                                                    const searchValue = this.value.toLowerCase();
-                                                    const locationInput = document.getElementById('locationInput');
-                                                    
-                                                    // Make an API call to check if the search term matches any provider names
-                                                    fetch('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders')
-                                                        .then(response => response.json())
-                                                        .then(providers => {
-                                                            const isProvider = providers.some(provider => 
-                                                                provider.ownerName.toLowerCase().includes(searchValue)
-                                                            );
-                                                            
-                                                            // If searching for a provider, location is not required
-                                                            locationInput.required = !isProvider;
-                                                            locationInput.placeholder = isProvider ? 
-                                                                "{{ __('app.home.search_location_optional') }}" : 
-                                                                "{{ __('app.home.search_location_placeholder') }}";
-                                                        });
-                                                });
-                                            </script>
+                                            <div class="divider"></div>
+
+                                            <div class="search-item">
+                                                <div class="search-icon">
+                                                    <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="32" height="32" aria-hidden="true">
+                                                </div>
+                                                <div class="search-content">
+                                                    <h3 class="search-title">{{ __('app.home.search_or_text') ?? 'Location' }}</h3>
+                                                    <input type="text" id="locationInput" name="location" placeholder="{{ __('app.home.search_location_placeholder') }}" style="border: none; background: transparent; outline: none; width: 100%; font-size: 16px; color: #2c0d18;">
+                                                </div>
+                                            </div>
+
+                                            <div class="divider"></div>
+
+                                            <button type="submit" class="btn-primary" style="margin-left: auto;">
+                                                {{ __('app.home.search_button') }}
+                                                <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
