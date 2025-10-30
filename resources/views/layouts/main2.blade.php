@@ -18,6 +18,7 @@
     <!-- Add this line before the newdesign.css -->
     <link href="{{ asset('css/fonts.css') }}" rel="stylesheet" media="screen">
     <link href="{{ asset('css/newdesign.css') }}" rel="stylesheet" media="screen"> 
+        <link href="{{ asset('css/header.css') }}" rel="stylesheet" media="screen"> 
     <meta property="og:type" content="website">
     <meta property="og:title" content="GoGlow - Book Beauty Services | Discover Local Salons">
     <meta property="og:description" content="Discover and book trusted salon services with GoGlow. Connect with local beauty professionals for hair, nails, skincare, and wellness treatments.">
@@ -60,7 +61,7 @@
 </script>
 </head>
 <body>
-              
+              @include('figmaDesign.header')
                   @yield('content')
                 @if (!Route::is('terms_condition') && !Route::is('privacy_policy'))
                     @include('partials.footer-figma')

@@ -76,7 +76,7 @@
       background-size: cover; /* ensure background scales on large screens */
       position: relative;
       overflow: hidden;
-      min-height: 100vh;
+      /* min-height: 100vh; */
     }
 
     .hero-bg {

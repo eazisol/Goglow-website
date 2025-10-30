@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 // figma
 Route::get('/home', function () {return view('figmaDesign.index');});
-Route::get('/footor', function () {return view('figmaDesign.footor');});
+Route::get('/header', function () {return view('figmaDesign.header');});
 Route::get('/slider', function () {return view('figmaDesign.slider');});
+
+Route::get('/testing', function () {return view('figmaDesign.testing');});
 
 // home
 Route::get('/', function () {return view('home.indexImage');});
