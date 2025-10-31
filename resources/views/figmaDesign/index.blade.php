@@ -18,69 +18,7 @@
       <div class="hero-content">
         <div class="container">
           <!-- Header -->
-          <header class="header">
-            <nav class="header-nav">
-              <!-- Logo Section -->
-              <img src="images/images/WhatsApp_Image_2025-09-16_at_23.28.10_3ad6dde7-removebg-preview 1 (1).png" alt="GoGlow Logo" class="logo">
-              
-              <!-- Navigation Menu -->
-              <div class="nav-menu desktop-only">
-                <a href="#" class="nav-link active">Home</a>
-                <span class="nav-separator">+</span>
-                <a href="#" class="nav-link">About Us</a>
-                <span class="nav-separator">+</span>
-                <a href="#" class="nav-link">Services</a>
-                <span class="nav-separator">+</span>
-                <a href="#" class="nav-link">Book Appointments</a>
-                <span class="nav-separator">+</span>
-                <a href="#" class="nav-link">Reviews</a>
-              </div>
-              
-              <!-- Header Actions -->
-              <div class="header-actions">
-                <a href="#" class="btn-primary desktop-only">
-                  BECOME A GLOWER
-                  <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
-                </a>
-                
-                <!-- Mobile Menu Toggle -->
-                <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
-                  <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">
-                  <div class="close-icon">
-                    <span></span>
-                    <span></span>
-                  </div>
-                </button>
-                {{-- <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </button> --}}
-              </div>
-            </nav>
-            
-            <!-- Mobile Menu -->
-            <div class="mobile-menu-overlay"></div>
-            <div class="mobile-menu">
-              <div class="mobile-menu-content">
-                <div class="mobile-menu-nav">
-                  <ul>
-                    <li><a href="#" class="active">Home</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Book Appointments</a></li>
-                    <li><a href="#">Reviews</a></li>
-                  </ul>
-                </div>
-                <div class="mobile-menu-footer">
-                  <a href="#" class="mobile-menu-button mobile-only">
-                    BECOME A GLOWER
-                    <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
-                  </a>
-                </div>
-              </div>
-            </div>
-          </header>
+          @include('figmaDesign.header')
 
           <!-- Hero Content -->
           <div class="flex-col" style="align-items: center; text-align: center;">
