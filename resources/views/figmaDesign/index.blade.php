@@ -541,41 +541,41 @@
       <div class="container" style="position: relative; z-index: 2;">
         <div class="flex-col" style="align-items: flex-start;">
           <div class="badge">
-            <span class="badge-text" style="color: #e50050;">pricing</span>
+            <span class="badge-text" style="color: #e50050;">{{ __('app.home.pricing_title') }}</span>
             <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
           <h2 class="section-title pricing-section-header" style="color: #fff4f8; text-align: left;">
-            want to shine<br>near <span style="font-family: Raflesia; font-weight: 400;">you?</span>
+            {{ __('app.home.want_to_shine_title_first') }}<br>{{ __('app.home.want_to_shine_title_second') }}<span style="font-family: Raflesia; font-weight: 400;">{{ __('app.home.want_to_shine_title_third') }}</span>
           </h2>
           
-          <p style="font-size: 22px; font-weight: 500; color: #fff4f8; margin-bottom: 40px;">discover the trends around you</p>
+          <p style="font-size: 22px; font-weight: 500; color: #fff4f8; margin-bottom: 40px;">{{ __('app.home.discover_trends_subtitle') }}</p>
         </div>
 
         <div class="pricing-cards">
           <div class="pricing-card">
-            <div class="pricing-badge">212 reviews : 4.4 starts</div>
+            <div class="pricing-badge">{{ __('app.home.pricing_reviews') }}</div>
             <div class="pricing-header">
-              <h3 class="pricing-title">Brushing in 10 minutes away from your position</h3>
+              <h3 class="pricing-title">{{ __('app.home.pricing_card_title') }}</h3>
               <p class="pricing-price">$32</p>
             </div>
             <div class="pricing-features">
               <div class="pricing-feature">
                 <div class="feature-dot"></div>
-                <p class="feature-text">Full Body Scrub</p>
+                <p class="feature-text">{{ __('app.home.pricing_feature_full_body_scrub') }}</p>
               </div>
               <div class="pricing-feature">
                 <div class="feature-dot"></div>
-                <p class="feature-text">Detoxifying Body Wrap</p>
+                <p class="feature-text">{{ __('app.home.pricing_feature_detox_body_wrap') }}</p>
               </div>
               <div class="pricing-feature">
                 <div class="feature-dot"></div>
-                <p class="feature-text">Hydrating Body Wrap</p>
+                <p class="feature-text">{{ __('app.home.pricing_feature_hydrating_body_wrap') }}</p>
               </div>
             </div>
             <div class="pricing-cta">
               <a href="#" class="btn-gradient">
-                book now
+                {{ __('app.home.pricing_book_now') }}
                 <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
               </a>
             </div>
@@ -583,58 +583,58 @@
 
           <div class="pricing-card2">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div class="pricing-badge">212 reviews : 4.4 starts</div>
+              <div class="pricing-badge">{{ __('app.home.pricing_reviews') }}</div>
               <div class="pricing-badge popular">popular 🔥</div>
             </div>
             <div class="pricing-header">
-              <h3 class="pricing-title">Brushing in 10 minutes away from your position</h3>
+              <h3 class="pricing-title">{{ __('app.home.pricing_card_title') }}</h3>
               <p class="pricing-price">$32</p>
             </div>
             <div class="pricing-features">
               <div class="pricing-feature">
                 <div class="feature-dot"></div>
-                <p class="feature-text">Full Body Scrub</p>
+                <p class="feature-text">{{ __('app.home.pricing_feature_full_body_scrub') }}</p>
               </div>
               <div class="pricing-feature">
                 <div class="feature-dot"></div>
-                <p class="feature-text">Detoxifying Body Wrap</p>
+                <p class="feature-text">{{ __('app.home.pricing_feature_detox_body_wrap') }}</p>
               </div>
               <div class="pricing-feature">
                 <div class="feature-dot"></div>
-                <p class="feature-text">Hydrating Body Wrap</p>
+                <p class="feature-text">{{ __('app.home.pricing_feature_hydrating_body_wrap') }}</p>
               </div>
             </div>
             <div class="pricing-cta">
               <a href="#" class="btn-primary">
-                book now
+                {{ __('app.home.pricing_book_now') }}
                 <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
               </a>
             </div>
           </div>
 
           <div class="pricing-card">
-            <div class="pricing-badge">212 reviews : 4.4 starts</div>
+            <div class="pricing-badge">{{ __('app.home.pricing_reviews') }}</div>
             <div class="pricing-header">
-              <h3 class="pricing-title">Brushing in 10 minutes away from your position</h3>
+              <h3 class="pricing-title">{{ __('app.home.pricing_card_title') }}</h3>
               <p class="pricing-price">$32</p>
             </div>
             <div class="pricing-features">
               <div class="pricing-feature">
                 <div class="feature-dot"></div>
-                <p class="feature-text">Full Body Scrub</p>
+                <p class="feature-text">{{ __('app.home.pricing_feature_full_body_scrub') }}</p>
               </div>
               <div class="pricing-feature">
                 <div class="feature-dot"></div>
-                <p class="feature-text">Detoxifying Body Wrap</p>
+                <p class="feature-text">{{ __('app.home.pricing_feature_detox_body_wrap') }}</p>
               </div>
               <div class="pricing-feature">
                 <div class="feature-dot"></div>
-                <p class="feature-text">Hydrating Body Wrap</p>
+                <p class="feature-text">{{ __('app.home.pricing_feature_hydrating_body_wrap') }}</p>
               </div>
             </div>
             <div class="pricing-cta">
               <a href="#" class="btn-gradient">
-                book now
+                {{ __('app.home.pricing_book_now') }}
                 <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
               </a>
             </div>
@@ -648,15 +648,15 @@
       <div class="container">
         <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 40px;">
           <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
-            <span class="badge-text">our <span class="badge-highlight">app</span></span>
+            <span class="badge-text">{{ __('app.home.as_section_our') }} <span class="badge-highlight">{{ __('app.home.as_section_app') }}</span></span>
             <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
           <h2 class="section-title" style="background: linear-gradient(90deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-            get our app<br><span style="font-family: Raflesia;">Glow</span>
+            {{ __('app.home.as_title_first') }}<br><span style="font-family: Raflesia;">{{ __('app.home.as_title_second') }}</span>
           </h2>
           
-          <p class="section-subtitle app-section-subtitle">Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone</p>
+          <p class="section-subtitle app-section-subtitle">{{ __('app.home.as_section_paragraph') }}</p>
         </div>
 
         <div class="app-mockup">

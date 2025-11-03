@@ -242,12 +242,32 @@ return [
         'rs_title_second' => 'Glowees',
         'rs_title_third' => 'Say',
 
+        // Pricing Section (figmaDesign)
+        'pricing_title' => 'Pricing',
+        'want_to_shine_title_first' => 'Want To Shine',
+        'want_to_shine_title_second' => 'Near ',
+        'want_to_shine_title_third' => 'You?',
+        'discover_trends_subtitle' => 'discover the trends around you',
+        'pricing_reviews' => '212 reviews · 4.4 stars',
+        'pricing_card_title' => 'Brushing in 10 minutes away from your position',
+        'pricing_feature_full_body_scrub' => 'Full Body Scrub',
+        'pricing_feature_detox_body_wrap' => 'Detoxifying Body Wrap',
+        'pricing_feature_hydrating_body_wrap' => 'Hydrating Body Wrap',
+        'pricing_book_now' => 'book now',
+
         // Partners Section
         'partners_badge_our' => 'Our',
         'partners_badge_partners' => 'Partners',
         'partners_title_trusted' => 'Trusted Salon',
         'partners_title_partners' => 'Partners',
         'partners_subtitle_text' => 'We collaborate with top-tier salons and beauty experts to ensure you receive quality services, professional care, and consistent results—every time you book.',
+
+        // App Section
+        'as_section_our' => 'Our',
+        'as_section_app' => 'App',
+        'as_title_first' => 'Get Our App',
+        'as_title_second' => 'Glow',
+        'as_section_paragraph' => 'Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone.',
     ],
     // providers Page
     'provider' => [

@@ -238,6 +238,21 @@ return [
         'hiw_download_app' => 'téléchargez lapplication',
         'hiw_book_a_service' => 'réserver une prestation',
 
+        // Pricing Section (figmaDesign)
+        'pricing_title' => 'Tarifs',
+        'want_to_shine_title_first' => 'Veux Briller',
+        'want_to_shine_title_second' => 'Près ',
+        'want_to_shine_title_third' => 'Toi?',
+        'discover_trends_subtitle' => 'Découvrez les tendances autour de vous',
+        'pricing_reviews' => '212 avis · 4,4 étoiles',
+        'pricing_card_title' => 'Brushing à 10 minutes de votre position',
+        'pricing_feature_full_body_scrub' => 'gommage corporel complet',
+        'pricing_feature_detox_body_wrap' => 'enveloppement corporel détoxifiant',
+        'pricing_feature_hydrating_body_wrap' => 'enveloppement corporel hydratant',
+        'pricing_book_now' => 'RÉSERVEZ MAINTENANT',
+        'hiw_download_app' => 'téléchargez lapplication',
+        'hiw_book_a_service' => 'réserver une prestation',
+
 
         // review section (figmaDesign)
         'rs_badge_our' => 'Nos',
@@ -252,6 +267,13 @@ return [
         'partners_title_trusted' => 'Salon de confiance',
         'partners_title_partners' => 'Partenaires',
         'partners_subtitle_text' => 'Nous collaborons avec des salons de premier ordre et des experts de la beauté afin de vous garantir des services de qualité, des soins professionnels et des résultats constants à chaque réservation.',
+
+        // App Section
+        'as_section_our' => 'Notre',
+        'as_section_app' => 'Application',
+        'as_title_first' => 'Téléchargez notre application',
+        'as_title_second' => 'Glow',
+        'as_section_paragraph' => 'Réservez vos services beauté et bien-être en toute simplicité. Découvrez les salons les mieux notés, planifiez vos rendez-vous et rayonnez où que vous soyez — directement depuis votre téléphone.',
     ],
         // providers Page
     'provider' => [
