@@ -245,6 +245,13 @@ return [
         'rs_title_first' => 'Ce que notre',
         'rs_title_second' => 'Glowées',
         'rs_title_third' => 'Dire',
+
+        // Partners Section
+        'partners_badge_our' => 'Nos',
+        'partners_badge_partners' => 'Partenaires',
+        'partners_title_trusted' => 'Salon de confiance',
+        'partners_title_partners' => 'Partenaires',
+        'partners_subtitle_text' => 'Nous collaborons avec des salons de premier ordre et des experts de la beauté afin de vous garantir des services de qualité, des soins professionnels et des résultats constants à chaque réservation.',
     ],
         // providers Page
     'provider' => [

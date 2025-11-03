@@ -488,15 +488,15 @@
       <div class="container">
         <div class="flex-col partner-section-header" style="align-items: center; text-align: center; margin-top: 70px;">
           <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
-            <span class="badge-text">our <span class="badge-highlight">partners</span></span>
+            <span class="badge-text">{{ __('app.home.partners_badge_our') }} <span class="badge-highlight">{{ __('app.home.partners_badge_partners') }}</span></span>
             <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
           <h2 class="section-title partner-section-title" style="line-height: 80px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-            Trusted salon<br><span style="font-family: Raflesia; font-weight: 400;">partners</span>
+            {{ __('app.home.partners_title_trusted') }}<br><span style="font-family: Raflesia; font-weight: 400;">{{ __('app.home.partners_title_partners') }}</span>
           </h2>
           
-          <p class="section-subtitle partner-section-subtitle">We collaborate with top-tier salons and beauty experts to ensure you receive quality services, professional care, and consistent results—every time you book.</p>
+          <p class="section-subtitle partner-section-subtitle">{{ __('app.home.partners_subtitle_text') }}</p>
         </div>
 
 
@@ -529,7 +529,7 @@
 
         <div class="partner-section-button" style="text-align: center; margin-top: 35px; margin-bottom: 60px;">
           <a href="#" class="btn-gradient">
-            Become a glower
+            {{ __('app.home.become_a_glowee_button') }}
             <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
           </a>
         </div>

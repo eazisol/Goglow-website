@@ -241,6 +241,13 @@ return [
         'rs_title_first' => 'What Our',
         'rs_title_second' => 'Glowees',
         'rs_title_third' => 'Say',
+
+        // Partners Section
+        'partners_badge_our' => 'Our',
+        'partners_badge_partners' => 'Partners',
+        'partners_title_trusted' => 'Trusted Salon',
+        'partners_title_partners' => 'Partners',
+        'partners_subtitle_text' => 'We collaborate with top-tier salons and beauty experts to ensure you receive quality services, professional care, and consistent results—every time you book.',
     ],
     // providers Page
     'provider' => [
