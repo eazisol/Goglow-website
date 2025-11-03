@@ -16,8 +16,9 @@
       <span class="plus">+</span>
       <a href="#">Reviews</a>
     </div>
-
-    <button class="cta-btn">BECOME A GLOWER <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></button>
+    @include('partials.language-switcher')
+    <a href="{{ url('/beauty-professional') }}" class="cta-btn">BECOME A GLOWER <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></a>
+    {{-- <button class="cta-btn">BECOME A GLOWER <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></button> --}}
     <button class="menu-icon" id="menu-toggle">
       <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">
     </button>
@@ -34,7 +35,8 @@
     <a href="#">Services</a>
     <a href="#">Book Appointments</a>
     <a href="#">Reviews</a>
-    <button class="mobile-sidebar-button">BECOME A GLOWER <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16"></button>
+        <a href="{{ url('/beauty-professional') }}" class="mobile-sidebar-button">BECOME A GLOWER <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16"></a>
+    {{-- <button class="mobile-sidebar-button">BECOME A GLOWER <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16"></button> --}}
     <button class="cta-btn">BECOME A GLOWER →</button>
   </div>
 

@@ -29,7 +29,7 @@
 
 <style>
 /* Namespaced so it won't clash with Bootstrap */
-.lang-switcher { position: relative; display: inline-block; }
+.lang-switcher { position: relative; display: inline-block;left: 59px; }
 .lang-dropdown { position: relative; }
 
 .language-btn {
@@ -48,7 +48,7 @@
 .language-btn:hover { background-color: rgba(0,0,0,0.05); }
 
 .language-flag { font-size: 16px;}
-.language-name { font-weight: 500; color:white;}
+.language-name { font-weight: 500; color:black;}
 
 
 .language-btn i { font-size: 12px; transition: transform 0.18s; }
@@ -58,7 +58,7 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(244, 239, 239, 0.9);
     /* border: 1px solid #e0e0e0; */
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
