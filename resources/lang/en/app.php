@@ -179,6 +179,42 @@ return [
         'find_salons_near' => 'Find salons near you',
         'schedule_seconds' => 'Schedule in seconds',
         'rating_text' => '4.8 / 5 rating from 5,000+ users',
+
+        /////figma design start/////
+        'figma_design_hero_heading' => 'Discover. Book. ',
+        'figma_design_hero_shine' => 'Shine',
+        'figma_design_hero_450_salons' => 'More Than 200 Salons ',
+        'have joined Glow' => 'Have Joined Glow',
+        'figma_design_already' => ' Already!!',
+        'figma_design_Download' => 'Download on the ',
+        
+        ////figma design end//////
+
+        'become_a_glowee_button' => 'Become a Glower',
+        'go_smart' => 'Glow Smarter with ',
+        'go_glow' => 'GoGlow',
+        'hero_section_trending_paragraph' => 'from trending beauty content to trusted local pros, your next glow-up is just a scroll away.',
+
+        // Benefits section (figmaDesign)
+        'benefits_badge_our' => 'Our',
+        'benefits_badge_benefits' => 'Benefits',
+        'benefits_title_goglow' => 'Why Glowees',
+        'benefits_title_love' => 'Love ',
+        'benefits_title_glowApp' => 'Glow App',
+        'benefits_subtitle_text' => 'A revolutionary beauty experience that combines social inspiration smart booking',
+        'benefit_1_title' => 'SCROLL LOOKS FROM REAL GLOWEES NEAR YOU',
+        'benefit_1_desc' => 'get inspired by real local beauty content',
+        'benefit_learn_more' => 'LEARN MORE',
+        'benefit_2_title' => 'FIND GLOWEES NEAR YOU',
+        'benefit_2_desc' => "location-based: book beauty that's actually close to you",
+        'benefit_3_title' => 'MAKE AN APPOINTMENT IN SECONDS',
+        'benefit_3_desc' => 'last-minute appointments — no more DM chaos',
+        'benefit_4_title' => 'CUSTOM SMART ENGINE',
+        'benefit_4_desc' => 'tailor-make recommendations based on your tastes and preferences',
+        'benefit_5_title' => 'INTEGRATED SECURE PAYMENT',
+        'benefit_5_desc' => 'Pay securely in-app',
+        'benefit_6_title' => 'ULTRA-FAST EXPERIENCE',
+        'benefit_6_desc' => 'follow your favorite Glowees and get notified when they drop availability',
     ],
     // providers Page
     'provider' => [

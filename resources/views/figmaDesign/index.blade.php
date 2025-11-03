@@ -23,13 +23,13 @@
           <!-- Hero Content -->
           <div class="flex-col" style="align-items: center; text-align: center;">
             <div class="badge">
-              <span class="badge-text">Glow Smarter with <span class="badge-highlight">GoGlow</span></span>
+              <span class="badge-text">{{ __('app.home.go_smart') }}<span class="badge-highlight">{{ __('app.home.go_glow') }}</span></span>
               <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
             
-            <h1 class="hero-title">Discover. Book. <span class="shine-word">shine</span>.</h1>
+            <h1 class="hero-title">{{ __('app.home.figma_design_hero_heading') }}<span class="shine-word">{{ __('app.home.figma_design_hero_shine') }}</span>.</h1>
             
-            <p class="hero-subtitle">from trending beauty content to trusted local pros, your next glow-up is just a scroll away.</p>
+            <p class="hero-subtitle">{{ __('app.home.hero_section_trending_paragraph') }}</p>
           </div>
         </div>
 
@@ -39,7 +39,7 @@
           <div style="position: absolute; left: 118px; bottom: 0; width: 308px; z-index: 3;" class="desktop-only">
             <div style="line-height: 1;background: rgba(255, 244, 248, 0.8);border-radius: 0 90px 0 0;padding: 28px 26px;margin-bottom: 419px;">
               <p style="font-size: 21px; font-weight: 700; color: #75213e; text-align: center; margin-top: 196px;">
-                More than 450 salons <span style="color: rgba(44, 13, 24, 0.5);">have joined Glow</span> already!!
+                {{ __('app.home.figma_design_hero_450_salons') }}<br><span style="color: rgba(44, 13, 24, 0.5);">{{ __('app.home.have joined Glow') }}<br></span>{{ __('app.home.figma_design_already') }}
               </p>
             </div>
             <img src="images/images/47abffa77278693eaa65f93217cd9d6a2ea127b5.png" alt="Beauty glove" style="width: 305px; position: absolute; top: -180px; left: 0;">
@@ -81,13 +81,13 @@
                    <img src="images/images/apple.svg" alt="Apple" width="36">
                  </div>
                  <div class="app-store-text">
-                   <span class="download-text">Download on the</span>
+                   <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
                    <span class="store-text">App Store</span>
                  </div>
                </div>
              </a>
              <a href="#" class="btn-secondary">
-               become a glower
+               {{ __('app.home.become_a_glowee_button') }}
                <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
              </a>
            </div>
@@ -178,15 +178,15 @@
         <div class="container">
           <div class="flex-col" style="align-items: flex-start; margin-bottom: 40px;">
             <div class="badge">
-              <span class="badge-text">our <span class="badge-highlight">benefits</span></span>
+              <span class="badge-text">{{ __('app.home.benefits_badge_our') }} <span class="badge-highlight">{{ __('app.home.benefits_badge_benefits') }}</span></span>
               <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
             
-            <h2 class="benefits-title">Why Glowees</h2>
-            <h2 class="benefits-title2">Love <span style="font-family: Raflesia; font-weight:500;">Glow App</span></h2>
+            <h2 class="benefits-title">{{ __('app.home.benefits_title_goglow') }}</h2>
+            <h2 class="benefits-title2">{{ __('app.home.benefits_title_love') }} <span style="font-family: Raflesia; font-weight:500;">{{ __('app.home.benefits_title_glowApp') }} </span></h2>
             
             
-            <p class="benefits-subtitle">A revolutionary beauty experience that combines social inspiration smart booking</p>
+            <p class="benefits-subtitle">{{ __('app.home.benefits_subtitle_text') }} </p>
           </div>
         </div>
         <div class="container-fluid benefits-carousel-container">
@@ -196,54 +196,54 @@
                 <div class="benefit-icon gradient">
                   <img src="images/images/video_icon.svg" alt="" width="23" height="23">
                 </div>
-                <h3 class="benefit-title">Scroll looks from real Glowers near you</h3>
-                <p class="benefit-description">get inspired by real local beauty content</p>
-                <a href="#" class="benefit-link">learn more</a>
+                <h3 class="benefit-title">{{ __('app.home.benefit_1_title') }}</h3>
+                <p class="benefit-description">{{ __('app.home.benefit_1_desc') }}</p>
+                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
               </div>
 
               <div class="benefit-card">
                 <div class="benefit-icon white">
                   <img src="images/images/Vector.svg" alt="" width="32" height="32">
                 </div>
-                <h3 class="benefit-title">Find Glowers near you</h3>
-                <p class="benefit-description">location-based: book beauty that's actually close to you</p>
-                <a href="#" class="benefit-link">learn more</a>
+                <h3 class="benefit-title">{{ __('app.home.benefit_2_title') }}</h3>
+                <p class="benefit-description">{{ __('app.home.benefit_2_desc') }}</p>
+                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
               </div>
 
               <div class="benefit-card">
                 <div class="benefit-icon white">
                   <img src="images/images/solar_calendar-date-bold.svg" alt="" width="32" height="32">
                 </div>
-                <h3 class="benefit-title">Make an appointment in seconds</h3>
-                <p class="benefit-description">last-minute appointments — no more DM chaos</p>
-                <a href="#" class="benefit-link">learn more</a>
+                <h3 class="benefit-title">{{ __('app.home.benefit_3_title') }}</h3>
+                <p class="benefit-description">{{ __('app.home.benefit_3_desc') }}</p>
+                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
               </div>
 
               <div class="benefit-card">
                 <div class="benefit-icon white">
                   <img src="images/images/hair_dryer.svg" alt="" width="32" height="32">
                 </div>
-                <h3 class="benefit-title">Custom Smart Engine</h3>
-                <p class="benefit-description">tailor-make recommendations based on your tastes and preferences</p>
-                <a href="#" class="benefit-link">learn more</a>
+                <h3 class="benefit-title">{{ __('app.home.benefit_4_title') }}</h3>
+                <p class="benefit-description">{{ __('app.home.benefit_4_desc') }}</p>
+                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
               </div>
 
               <div class="benefit-card">
                 <div class="benefit-icon white">
                   <img src="images/images/fluent_payment-16-filled.svg" alt="" width="32" height="32">
                 </div>
-                <h3 class="benefit-title">integrated secure payment</h3>
-                <p class="benefit-description">Pay securely in-app</p>
-                <a href="#" class="benefit-link">learn more</a>
+                <h3 class="benefit-title">{{ __('app.home.benefit_5_title') }}</h3>
+                <p class="benefit-description">{{ __('app.home.benefit_5_desc') }}</p>
+                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
               </div>
 
               <div class="benefit-card">
                 <div class="benefit-icon white">
                   <img src="images/images/solar_calendar-date-bold.svg" alt="" width="32" height="32">
                 </div>
-                <h3 class="benefit-title">Ultra-fast experience</h3>
-                <p class="benefit-description">follow your favorite Glowers and get notified when they drop availability</p>
-                <a href="#" class="benefit-link">learn more</a>
+                <h3 class="benefit-title">{{ __('app.home.benefit_6_title') }}</h3>
+                <p class="benefit-description">{{ __('app.home.benefit_6_desc') }}</p>
+                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
               </div>
             </div>
           </div>

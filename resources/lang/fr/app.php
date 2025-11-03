@@ -179,6 +179,45 @@ return [
         'find_salons_near' => 'Trouvez des salons près de chez vous',
         'schedule_seconds' => 'Planifiez en quelques secondes',
         'rating_text' => 'Note 4,8 / 5 de plus de 5 000 utilisateurs',
+
+
+        /////figma design start/////
+        'figma_design_hero_heading' => 'Découvrez. Réservez. ',
+        'figma_design_hero_shine' => 'Brillez',
+        'figma_design_hero_450_salons' => 'Plus de 200 salons ',
+        'have joined Glow' => 'Ont Rejoint Glow',
+        'figma_design_already' => ' Déjà!!',
+        'figma_design_Download' => 'Télécharger sur le ',
+        'figma_design_become_a_glower' => 'Devenir un Glowee',
+        
+
+        ////figma design end//////
+        'become_a_glowee_button' => 'devenir un regard noir',
+        'go_smart' => 'Brillez plus intelligemment avec ',
+        'go_glow' => 'Glow',
+        'hero_section_trending_paragraph' => 'Des contenus beauté tendance aux professionnels locaux de confiance, votre prochaine transformation est à portée de clic.',
+        
+        // Benefits section (figmaDesign)
+        'benefits_badge_our' => 'Nos',
+        'benefits_badge_benefits' => 'Avantages',
+        'benefits_title' => 'Pourquoi les Glowees aiment l’application Glow',
+        'benefits_title_goglow' => 'Pourquoi Glowees',
+        'benefits_title_love' => 'Amour ',
+        'benefits_title_glowApp' => 'Application Glow',
+        'benefits_subtitle_text' => 'Une expérience beauté révolutionnaire qui associe l’inspiration sociale à une réservation intelligente.',
+        'benefit_1_title' => 'Parcourez les looks de vraies Glowees près de chez vous',
+        'benefit_1_desc' => 'Laissez-vous inspirer par de véritables contenus beauté locaux.',
+        'benefit_learn_more' => 'EN SAVOIR PLUS',
+        'benefit_2_title' => 'Trouvez des Glowees près de chez vous',
+        'benefit_2_desc' => 'Basé sur la localisation : réservez des services beauté vraiment proches de vous.',
+        'benefit_3_title' => 'Prenez rendez-vous en quelques secondes',
+        'benefit_3_desc' => 'Des rendez-vous de dernière minute — fini le chaos des messages privés.',
+        'benefit_4_title' => 'Moteur intelligent personnalisé',
+        'benefit_4_desc' => 'Des recommandations sur mesure selon vos goûts et préférences.',
+        'benefit_5_title' => 'Paiement sécurisé intégré',
+        'benefit_5_desc' => 'Payez en toute sécurité directement depuis l’application.',
+        'benefit_6_title' => 'Expérience ultra-rapide',
+        'benefit_6_desc' => 'Suivez vos Glowees préférées et recevez une notification dès qu’elles ouvrent de nouvelles disponibilités.',
     ],
         // providers Page
     'provider' => [
