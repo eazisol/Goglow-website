@@ -218,6 +218,33 @@ return [
         'benefit_5_desc' => 'Payez en toute sécurité directement depuis l’application.',
         'benefit_6_title' => 'Expérience ultra-rapide',
         'benefit_6_desc' => 'Suivez vos Glowees préférées et recevez une notification dès qu’elles ouvrent de nouvelles disponibilités.',
+        
+        // How It Works (figmaDesign)
+        'hiw_badge_first' => 'Comment ça',
+        'hiw_badge_second' => 'marche',
+        'hiw_heading_first' => 'Brillez intelligemment',
+        'hiw_heading_second' => 'Sentir',
+        'hiw_heading_third' => 'Belle',
+        'hiw_paragraph' => 'De la découverte des salons les mieux notés à la réservation en toute simplicité, notre plateforme vous aide à briller sans effort en seulement 4 étapes simples.',
+
+        'hiw_step1_title' => 'Explorez les looks et les services',
+        'hiw_step1_desc' => 'Découvrez une sélection de salons de confiance près de chez vous proposant des services de coiffure, d’onglerie, de soins de la peau et bien plus encore.',
+        'hiw_step2_title' => 'Choisissez votre service',
+        'hiw_step2_desc' => 'Sélectionnez l’horaire, le service et le salon de votre choix, puis réservez instantanément via notre plateforme.',
+        'hiw_step3_title' => 'Brillez',
+        'hiw_step3_desc' => 'Présentez-vous à votre rendez-vous, profitez d’un soin expert et repartez rayonnante et confiante.',
+        'hiw_step4_title' => 'Intelligence artificielle',
+        'hiw_step4_desc' => 'Notre technologie intelligente vous recommande les meilleures Glowees selon vos préférences.',
+        'hiw_download_app' => 'téléchargez lapplication',
+        'hiw_book_a_service' => 'réserver une prestation',
+
+
+        // review section (figmaDesign)
+        'rs_badge_our' => 'Nos',
+        'rs_badge_reviews' => 'Avis',
+        'rs_title_first' => 'Ce que notre',
+        'rs_title_second' => 'Glowées',
+        'rs_title_third' => 'Dire',
     ],
         // providers Page
     'provider' => [

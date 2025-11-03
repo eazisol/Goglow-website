@@ -215,6 +215,32 @@ return [
         'benefit_5_desc' => 'Pay securely in-app',
         'benefit_6_title' => 'ULTRA-FAST EXPERIENCE',
         'benefit_6_desc' => 'follow your favorite Glowees and get notified when they drop availability',
+
+        // How It Works (figmaDesign)
+        'hiw_badge_first' => 'How It',
+        'hiw_badge_second' => 'Works',
+        'hiw_heading_first' => 'Glow Smart',
+        'hiw_heading_second' => 'Feel',
+        'hiw_heading_third' => 'Beautiful',
+        'hiw_paragraph' => 'from finding top-rated salons to booking with ease, our platform helps you glow effortlessly in just 4 simple steps',
+
+        'hiw_step1_title' => 'Explore looks and services',
+        'hiw_step1_desc' => 'Explore A Variety Of Trusted Salons Near You Offering Hair, Nails, Skin, And More Beauty Services.',
+        'hiw_step2_title' => 'Choose your service',
+        'hiw_step2_desc' => 'Select Your Preferred Time, Service, And Salon, Then Book Instantly Through Our Platform.',
+        'hiw_step3_title' => 'Shine',
+        'hiw_step3_desc' => 'Show Up At Your Appointment, Enjoy Expert Care, And Walk Out Glowing With Confidence.',
+        'hiw_step4_title' => 'Artificial intelligence',
+        'hiw_step4_desc' => 'Our Smart Technology Recommends The Best Glowees Based On Your Preferences.',
+        'hiw_download_app' => 'download the app',
+        'hiw_book_a_service' => 'book a service',
+
+        // review section (figmaDesign)
+        'rs_badge_our' => 'Our',
+        'rs_badge_reviews' => 'Reviews',
+        'rs_title_first' => 'What Our',
+        'rs_title_second' => 'Glowees',
+        'rs_title_third' => 'Say',
     ],
     // providers Page
     'provider' => [

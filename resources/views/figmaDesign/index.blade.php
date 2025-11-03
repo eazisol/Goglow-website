@@ -270,15 +270,15 @@
       <div class="container">
         <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 48px;">
           <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
-            <span class="badge-text">How it <span class="badge-highlight">works</span></span>
+            <span class="badge-text">{{ __('app.home.hiw_badge_first') }} <span class="badge-highlight">{{ __('app.home.hiw_badge_second') }}</span></span>
             <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
           <h2 class="section-title how-it-work-heading" style="margin-top: 10px; line-height:75px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-            Glow Smart<br>Feel <span style="font-family: Raflesia; font-weight: 500;">Beautiful</span>
+            {{ __('app.home.hiw_heading_first') }}<br>{{ __('app.home.hiw_heading_second') }} <span style="font-family: Raflesia; font-weight: 500;">{{ __('app.home.hiw_heading_third') }}</span>
           </h2>
           
-          <p class="section-subtitle how-it-work-subtitle">from finding top-rated salons to booking with ease, our platform helps you glow effortlessly in just 4 simple steps</p>
+          <p class="section-subtitle how-it-work-subtitle">{{ __('app.home.hiw_paragraph') }}</p>
         </div>
 
         <div class="steps-container">
@@ -293,32 +293,32 @@
             <div class="step-item">
               <div class="step-number">01</div>
               <div class="step-content">
-                <h3>Explore looks and services</h3>
-                <p>Explore a variety of trusted salons near you offering hair, nails, skin, and more beauty services.</p>
+                <h3>{{ __('app.home.hiw_step1_title') }}</h3>
+                <p>{{ __('app.home.hiw_step1_desc') }}</p>
               </div>
             </div>
 
             <div class="step-item">
               <div class="step-number">02</div>
               <div class="step-content">
-                <h3>Choose your service</h3>
-                <p>Select your preferred time, service, and salon, then book instantly through our platform.</p>
+                <h3>{{ __('app.home.hiw_step2_title') }}</h3>
+                <p>{{ __('app.home.hiw_step2_desc') }}</p>
               </div>
             </div>
 
             <div class="step-item">
               <div class="step-number">03</div>
               <div class="step-content">
-                <h3>shine</h3>
-                <p>Show up at your appointment, enjoy expert care, and walk out glowing with confidence.</p>
+                <h3>{{ __('app.home.hiw_step3_title') }}</h3>
+                <p>{{ __('app.home.hiw_step3_desc') }}</p>
               </div>
             </div>
 
             <div class="step-item">
               <div class="step-number">04</div>
               <div class="step-content">
-                <h3>Artificial intelligence</h3>
-                <p>Our smart technology recommends the best Glowers based on your preferences.</p>
+                <h3>{{ __('app.home.hiw_step4_title') }}</h3>
+                <p>{{ __('app.home.hiw_step4_desc') }}</p>
               </div>
             </div>
           </div>
@@ -326,11 +326,11 @@
 
         <div class="how-it-work-buttons" style="display: flex; justify-content: center; gap: 14px; margin-top: 110px; flex-wrap: wrap;">
           <a href="#" class="btn-gradient">
-            download the app
+            {{ __('app.home.hiw_download_app') }}
             <img src="images/images/downlaod.svg" alt="" width="16" height="16">
           </a>
           <a href="#" class="btn-primary">
-            book a service
+            {{ __('app.home.hiw_book_a_service') }}
             <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
           </a>
         </div>
@@ -343,10 +343,10 @@
         <div class="reviews-header">
           <div>
             <div class="badge" style="background-color: rgba(255, 244, 248, 0.9); margin-bottom: 8px;">
-              <span class="badge-text">our <span class="badge-highlight">reviews</span></span>
+              <span class="badge-text">{{ __('app.home.rs_badge_our') }} <span class="badge-highlight">{{ __('app.home.rs_badge_reviews') }}</span></span>
               <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
             </div>
-            <h2 class="reviews-title">What Our<br>Glowees <span style="font-family: Raflesia; font-weight: 500;">Say</span></h2>
+            <h2 class="reviews-title">{{ __('app.home.rs_title_first') }}<br>G{{ __('app.home.rs_title_second') }} <span style="font-family: Raflesia; font-weight: 500;">{{ __('app.home.rs_title_third') }}</span></h2>
           </div>
 
           <div class="reviews-stats">
