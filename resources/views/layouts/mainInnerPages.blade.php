@@ -61,8 +61,10 @@
 </script>
 </head>
 <body>
-    <div class="container" style="padding: 40px 0 0 0;">
+    <div class="container">
+      <div class="nav-header-section">
         @include('figmaDesign.header')
+      </div>
     </div>
               
                   @yield('content')

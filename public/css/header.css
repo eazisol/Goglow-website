@@ -4,7 +4,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+
     }
 
     body {
@@ -13,6 +13,9 @@
     }
 
     /* ---------- Navbar Container ---------- */
+    .nav-header-section{
+      margin-top: 40px;
+    }
     .navbar {
       background: #fff6f8;
       border: 1px solid #f3d9e2;
@@ -191,6 +194,22 @@
         border: none;
         display: flex;
         gap: 7px;
+      }
+      .nav-header-section{
+        margin-top: 15px;
+      }
+      .search-outer-layout .search-outer-box{
+        padding: 25px 25px 15px 25px;
+      }
+      .search-outer-layout .search-outer-title{
+        line-height: 30px;
+        font-size: 23px;
+      }
+      .search-outer-layout .search-outer-subtitle{
+        color: rgb(255 255 255);
+        width: initial;
+        font-size: 18px;
+        line-height: 16px;
       }
 
     }

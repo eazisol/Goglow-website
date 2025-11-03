@@ -27,7 +27,7 @@
                     <h3 class="search-outer-title">{{ __('app.provider.searchbar_section_heading')}}</h3>
                     <p class="search-outer-subtitle">{{ __('app.provider.searchbar_section_paragraph')}}</p>
 
-                    <div class="search-bar provider-search-bar">
+                    {{-- <div class="search-bar provider-search-bar">
                         <form action="{{ route('search') }}" method="GET" class="search-form">
                             <div class="search-inputs">
                                 <div class="search-item">
@@ -71,7 +71,41 @@
                                 </script>
                             </div>
                         </form>
-                    </div>
+                    </div> --}}
+                            <div class="search-section" style="margin: 30px 0!important;padding: 15px!important;">
+                                <form action="{{ route('search') }}" method="GET">
+                                    <div class="search-row">
+                                        <div class="search-item">
+                                            <div class="search-icon">
+                                                <img src="images/images/Vector.svg" alt="Search" width="32" height="32" aria-hidden="true">
+                                            </div>
+                                            <div class="search-content">
+                                                <h3 class="search-title">{{ __('app.home.search_input_text') }}</h3>
+                                                <input type="search" class="searchInput" id="searchInput" name="search" placeholder="{{ __('app.home.search_service_placeholder') }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <div class="search-item">
+                                            <div class="search-icon">
+                                                <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="32" height="32" aria-hidden="true">
+                                            </div>
+                                            <div class="search-content">
+                                                <h3 class="search-title">{{ __('app.home.search_or_text') ?? 'Location' }}</h3>
+                                                <input type="text" class="searchInput" id="locationInput" name="location" placeholder="{{ __('app.home.search_location_placeholder') }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="divider"></div>
+
+                                        <button type="submit" class="btn-primary" style="margin-left: auto;">
+                                            {{ __('app.home.search_button') }}
+                                            <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                 </div>
             </section>
         </div>
@@ -239,22 +273,29 @@
     /* Outer layout around existing search bar */
     .search-outer-layout {
         margin: 20px 0 30px 0;
-        background: linear-gradient(180deg, rgb(159 159 159 / 73%) 0%, rgb(66 66 66 / 15%) 100%);
+        background-image: url('images/images/provider_search_image.jpg');
+        background-position: center;
+        /* background: linear-gradient(180deg, rgb(159 159 159 / 73%) 0%, rgb(66 66 66 / 15%) 100%); */
         border-radius: 16px;
     }
     .search-outer-layout .search-outer-box {
-        padding: 50px 40px 24px 40px;
+        padding: 40px 40px 24px 40px;
     }
     .search-outer-layout .search-outer-title {
+        text-transform: uppercase;
+        letter-spacing: -1px;
         color: #fff;
         font-weight: 700;
         margin: 0 0 6px 0;
-        font-size: 22px;
+        font-size: 30px;
     }
     .search-outer-layout .search-outer-subtitle {
-        color: rgba(255,255,255,0.85);
-        margin: 0 0 16px 0;
-        font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    /* margin: 0 0 16px 0; */
+    font-size: 22px;
+    width: 50%;
+    text-transform: lowercase;
+    line-height: 23px;
     }
     /* Ensure existing search bar keeps its own layout inside */
     .search-outer-layout .provider-search-bar { margin-top: 0; }
@@ -385,6 +426,11 @@
 
 .timing {
     font-size: 0.9em;
+}
+@media (max-width: 480px) {
+    .search-title {
+        font-size: 17px!important;
+    }
 }
 </style>
 @endsection
