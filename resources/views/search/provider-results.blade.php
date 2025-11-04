@@ -137,10 +137,10 @@
     <div class="container">
         
 
-        <div class="row">
+        <div class="results-grid">
             @if(count($providers) > 0)
                 @foreach($providers as $provider)
-                    <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="results-item">
                         <div class="provider-card">
                             <a href="{{ url('/search?provider_id=' . $provider['id']) }}" class="provider-link">
                                 @php
@@ -178,7 +178,6 @@
                                                 ? $provider['name'] 
                                                 : 'No Name') }}
                                     </h3>
-
                                     <div class="provider-meta">
                                         @if(isset($provider['address']))
                                             <div class="address">
@@ -221,6 +220,15 @@
                                             }
                                         }
                                         $cardId = $provider['id'] ?? uniqid('prov_');
+                                        // Build 3 upcoming day chips (today + next two days)
+                                        $chipDays = [];
+                                        for ($i = 0; $i < 3; $i++) {
+                                            $d = $now->copy()->addDays($i);
+                                            $chipDays[] = [
+                                                'label' => $d->format('D'),
+                                                'day' => $d->format('d'),
+                                            ];
+                                        }
                                     @endphp
 
                                     <div class="timing-status" data-tooltip-id="timing-tooltip-{{ $cardId }}">
@@ -246,9 +254,35 @@
                                         </div>
                                     </div>
 
+                                    <div class="rating-row">
+                                        <i class="fas fa-star"></i>
+                                        <span class="rating-value">{{ number_format($avgRating, 1) }}</span>
+                                        <span class="rating-count">({{ $provider['total_review'] ?? 0 }})</span>
+                                    </div>
+
+                                    <div class="availability-section">
+                                        <div class="availability-title">Next Availability</div>
+                                        <div class="availability-row">
+                                            <span class="time-of-day">Morning</span>
+                                            <div class="chip-group">
+                                                @foreach($chipDays as $cd)
+                                                    <span class="date-chip outline">{{ $cd['label'] }} <b>{{ $cd['day'] }}</b></span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <div class="availability-row">
+                                            <span class="time-of-day">Evening</span>
+                                            <div class="chip-group">
+                                                @foreach($chipDays as $cd)
+                                                    <span class="date-chip">{{ $cd['label'] }} <b>{{ $cd['day'] }}</b></span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="card-footer-row">
                                         <div class="reviews-text">{{ $provider['total_review'] ?? 0 }} reviews</div>
-                                        <button class="appointment-btn">Book Now</button>
+                                        <span class="book-now-btn">BOOK NOW</span>
                                     </div>
                                 </div>
                             </a>
@@ -303,12 +337,12 @@
     /* Provider card redesign */
     .search-results .provider-card {
         background: #fff;
-        border-radius: 16px;
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 8px 20px rgba(16,24,40,0.08);
+        box-shadow: 0 8px 24px rgba(16,24,40,0.08);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         height: 100%;
-        border: 1px solid rgba(0,0,0,0.06);
+        border: 1px solid rgba(17,24,39,0.06);
     }
     .search-results .provider-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(16,24,40,0.12); }
     .search-results .provider-image { position: relative; }
@@ -321,7 +355,12 @@
     .search-results .rating-badge i { color: #ffb400; }
 
     .search-results .provider-details { color: #111827; }
-    .search-results .card-title { font-size: 16px; font-weight: 700; margin: 0 0 6px 0; }
+    /* emulate Bootstrap p-4 utility locally */
+    .search-results .p-4 { padding: 1.5rem; }
+    /* emulate common Bootstrap utilities locally */
+    .search-results .text-center { text-align: center; }
+    .search-results .img-fluid { max-width: 100%; height: auto; display: block; }
+    .search-results .card-title { font-size: 18px; font-weight: 700; margin: 0 0 6px 0; letter-spacing: -0.2px; }
     .search-results .provider-meta .address { color: #6b7280; font-size: 14px; display: flex; align-items: center; gap: 8px; }
     .search-results .provider-meta .address i { color: #ef4444; }
 
@@ -346,6 +385,26 @@
     .timing-day { color: #374151; }
     .timing-hours { color: #111827; }
 
+    /* Rating inline row */
+    .rating-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; color: #374151; font-weight: 600; }
+    .rating-row .fa-star { color: #ffb400; }
+    .rating-row .rating-value { font-weight: 700; }
+    .rating-row .rating-count { color: #6b7280; font-weight: 600; }
+
+    /* Availability section */
+    .availability-section { margin-top: 12px; }
+    .availability-title { color: #374151; font-size: 14px; font-weight: 800; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .2px; }
+    .availability-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; flex-wrap: wrap; }
+    .time-of-day { color: #6b7280; font-weight: 700; font-size: 13px; width: 80px; }
+    .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .date-chip { background: #ffe6ee; color: #d81b60; border: 1px solid #ffd1df; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+    .date-chip b { font-weight: 800; }
+    .date-chip.outline { background: #fff; color: #6b7280; border-color: #e5e7eb; }
+
+    /* Book now button */
+    .book-now-btn { background: #ff8a00; color: #fff; border-radius: 999px; padding: 10px 16px; font-size: 12px; font-weight: 900; box-shadow: 0 8px 18px rgba(255,138,0,0.35); text-transform: uppercase; letter-spacing: .3px; }
+    .book-now-btn:hover { background: #ff9900; }
+
     .appointment-btn {
     margin-top: 20px;
     background-color: #1c1c1c;  /* Dark background */
@@ -369,6 +428,12 @@
     font-weight: 500;
     display: inline-block;
 }
+
+/* Page-scoped responsive grid (Bootstrap-free) */
+.results-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.results-item {  }
+@media (max-width: 992px) { .results-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .results-grid { grid-template-columns: 1fr; } }
 .provider-card {
     background: #fff;
     border-radius: 10px;
@@ -394,7 +459,7 @@
 
 .provider-image img {
     width: 100%;
-    height: 200px;
+    height: 220px;
     object-fit: cover;
 }
 
