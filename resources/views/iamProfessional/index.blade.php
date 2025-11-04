@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.main2')
 {{-- Title --}}
 @section('title', 'home')
 
@@ -6,7 +6,7 @@
 @section('styles')
 <style>
     .hero.hero-bg-image{
-        padding: 100px 0 0 !important;
+        padding: 35px 0 0 !important;
     }
 </style>
 
@@ -34,6 +34,9 @@
 </style>
     <!-- Professional Application Wizard (header/footer hidden for this route) -->
     <div class="hero hero-bg-image bg-section dark-section parallaxie pro-wizard-hero" style="background-image: url('images/image (13).png');">
+    <div class="container">
+        @include('figmaDesign.header')
+    </div>
     <div class="container bw-wizard" style="max-width: 860px; margin: 40px auto;">
         <div class="beauty-form-center">
             <div class="wizard-card">
