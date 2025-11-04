@@ -147,26 +147,28 @@
                                     $avgRating = isset($provider['avg_ratting']) ? floatval($provider['avg_ratting']) : 0;
                                 @endphp
                                 <div class="provider-image">
-                                    <img src="{{ isset($provider['profileImg']) && $provider['profileImg'] ? $provider['profileImg'] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
-                                         alt="{{ $provider['name'] }}" 
-                                         class="img-fluid"
-                                         onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
-                                    <div class="image-overlay">
-                                        <div class="overlay-left">
-                                            <span class="overlay-title">
-                                                {{ !empty($provider['storeName']) 
-                                                    ? $provider['storeName'] 
-                                                    : (!empty($provider['name']) 
-                                                        ? $provider['name'] 
-                                                        : 'No Name') }}
-                                            </span>
-                                            @if(isset($provider['companyName']) && $provider['companyName'])
-                                                <span class="overlay-meta">{{ $provider['companyName'] }}</span>
-                                            @endif
-                                        </div>
-                                        <div class="rating-badge">
-                                            <i class="fas fa-star"></i>
-                                            <span>{{ number_format($avgRating, 1) }}</span>
+                                    <div class="provider-image-inner">
+                                        <img src="{{ isset($provider['profileImg']) && $provider['profileImg'] ? $provider['profileImg'] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
+                                             alt="{{ $provider['name'] }}" 
+                                             class="img-fluid"
+                                             onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                                        <div class="image-overlay">
+                                            <div class="overlay-left">
+                                                <span class="overlay-title">
+                                                    {{ !empty($provider['storeName']) 
+                                                        ? $provider['storeName'] 
+                                                        : (!empty($provider['name']) 
+                                                            ? $provider['name'] 
+                                                            : 'No Name') }}
+                                                </span>
+                                                @if(isset($provider['companyName']) && $provider['companyName'])
+                                                    <span class="overlay-meta">{{ $provider['companyName'] }}</span>
+                                                @endif
+                                            </div>
+                                            {{-- <div class="rating-badge">
+                                                <i class="fas fa-star"></i>
+                                                <span>{{ number_format($avgRating, 1) }}</span>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -181,7 +183,9 @@
                                     <div class="provider-meta">
                                         @if(isset($provider['address']))
                                             <div class="address">
-                                                <i class="fas fa-map-marker-alt"></i>
+                                                <span class="search-icon search-icon-sm" aria-hidden="true">
+                                                    <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="20" height="20">
+                                                </span>
                                                 <span>{{ $provider['address'] }}</span>
                                             </div>
                                         @endif
@@ -232,7 +236,9 @@
                                     @endphp
 
                                     <div class="timing-status" data-tooltip-id="timing-tooltip-{{ $cardId }}">
-                                        <span class="status-dot {{ $isOpenToday ? 'open' : 'closed' }}"></span>
+                                                <span class="search-icon search-icon-sm" aria-hidden="true">
+                                                    <span class="status-dot {{ $isOpenToday ? 'open' : 'closed' }}"></span>
+                                                </span>
                                         <span class="status-text">
                                             @if($isOpenToday)
                                                 Open · {{ $todayRangeText }}
@@ -255,7 +261,7 @@
                                     </div>
 
                                     <div class="rating-row">
-                                        <i class="fas fa-star"></i>
+                                        <img src="images/images/star_cards.svg" alt="Location" width="20" height="20">
                                         <span class="rating-value">{{ number_format($avgRating, 1) }}</span>
                                         <span class="rating-count">({{ $provider['total_review'] ?? 0 }})</span>
                                     </div>
@@ -337,7 +343,7 @@
     /* Provider card redesign */
     .search-results .provider-card {
         background: #fff;
-        border-radius: 20px;
+        border-radius: 40px;
         overflow: hidden;
         box-shadow: 0 8px 24px rgba(16,24,40,0.08);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -345,36 +351,41 @@
         border: 1px solid rgba(17,24,39,0.06);
     }
     .search-results .provider-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(16,24,40,0.12); }
-    .search-results .provider-image { position: relative; }
-    .search-results .provider-image img { width: 100%; height: 180px; object-fit: cover; display: block; }
-    .search-results .image-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%); }
+    .search-results .provider-image { padding: 16px 16px 0 16px; }
+    .search-results .provider-image-inner { position: relative; border-radius: 25px; overflow: hidden; }
+    .search-results .provider-image img { width: 100%; height: 251px; object-fit: cover; display: block; }
+    .search-results .image-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%); }
     .overlay-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .overlay-title { color: #fff; font-weight: 700; font-size: 14px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
-    .overlay-meta { color: #e6e6e6; font-size: 12px; }
+    .overlay-title { color: #fff; font-weight: 700; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+    .overlay-meta { color: #e6e6e6; font-size: 14px; }
     .search-results .rating-badge { background: #fff; color: #111; border-radius: 999px; padding: 6px 10px; display: inline-flex; gap: 6px; align-items: center; font-weight: 700; box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
     .search-results .rating-badge i { color: #ffb400; }
 
     .search-results .provider-details { color: #111827; }
     /* emulate Bootstrap p-4 utility locally */
-    .search-results .p-4 { padding: 1.5rem; }
+    .search-results .p-4 { padding: 0.3rem 1.5rem 1.5rem 1.5rem; }
     /* emulate common Bootstrap utilities locally */
     .search-results .text-center { text-align: center; }
     .search-results .img-fluid { max-width: 100%; height: auto; display: block; }
     .search-results .card-title { font-size: 18px; font-weight: 700; margin: 0 0 6px 0; letter-spacing: -0.2px; }
     .search-results .provider-meta .address { color: #6b7280; font-size: 14px; display: flex; align-items: center; gap: 8px; }
     .search-results .provider-meta .address i { color: #ef4444; }
+    /* reuse search-icon with a small variant for address */
+    .search-results .search-icon { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; background: #ffe6ee; }
+    .search-results .search-icon img { width: 20px; height: 20px; display: block; }
+    .search-results .search-icon-sm { width: 30px; height: 30px; border-radius: 16px; }
 
     .search-results .tag-list { margin: 12px 0; display: flex; gap: 8px; flex-wrap: wrap; }
     .search-results .tag-chip { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
 
-    .search-results .card-footer-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f1f1f1; }
+    .search-results .card-footer-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px;}
     .search-results .reviews-text { color: #6b7280; font-weight: 700; font-size: 14px; }
     .provider-card .appointment-btn { background-color: #000000ff; color: #fff; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: 700; border: none; }
     .provider-card .appointment-btn:hover { background-color: #727272ff; }
 
     /* Timing status & tooltip */
     .timing-status .status-text{ font-size: 14px; font-weight: 400; }
-    .timing-status { margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #374151; font-weight: 600; }
+    .timing-status {display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #374151; font-weight: 600; }
     .timing-status .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
     .timing-status .status-dot.open { background: #10b981; }
     .timing-status .status-dot.closed { background: #ef4444; }
@@ -388,21 +399,22 @@
     /* Rating inline row */
     .rating-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; color: #374151; font-weight: 600; }
     .rating-row .fa-star { color: #ffb400; }
-    .rating-row .rating-value { font-weight: 700; }
-    .rating-row .rating-count { color: #6b7280; font-weight: 600; }
+    .rating-row .rating-value { font-weight: 700; color: #e50050;}
+    .rating-row .rating-count { color: #e50050; font-weight: 600; }
 
     /* Availability section */
-    .availability-section { margin-top: 12px; }
-    .availability-title { color: #374151; font-size: 14px; font-weight: 800; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .2px; }
+    .availability-section {}
+    .availability-title { color: #374151; font-size: 18px; font-weight: 700; margin-bottom: 6px; letter-spacing: 0px; }
     .availability-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; flex-wrap: wrap; }
-    .time-of-day { color: #6b7280; font-weight: 700; font-size: 13px; width: 80px; }
+    .time-of-day { color:rgba(118, 33, 62, 1); font-weight: 500; font-size: 16px; width: 80px; }
     .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
     .date-chip { background: #ffe6ee; color: #d81b60; border: 1px solid #ffd1df; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 800; }
     .date-chip b { font-weight: 800; }
     .date-chip.outline { background: #fff; color: #6b7280; border-color: #e5e7eb; }
 
     /* Book now button */
-    .book-now-btn { background: #ff8a00; color: #fff; border-radius: 999px; padding: 10px 16px; font-size: 12px; font-weight: 900; box-shadow: 0 8px 18px rgba(255,138,0,0.35); text-transform: uppercase; letter-spacing: .3px; }
+    .book-now-btn { background: linear-gradient(270deg, #FF8C00 0%, #E50050 100%);
+; color: #fff; border-radius: 999px; padding: 10px 16px; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .3px; }
     .book-now-btn:hover { background: #ff9900; }
 
     .appointment-btn {
@@ -457,11 +469,7 @@
     color: inherit;
 }
 
-.provider-image img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-}
+.provider-image img { width: 100%; height: 220px; object-fit: cover; }
 
 .provider-details {
     color: #333;
@@ -473,7 +481,7 @@
 }
 
 .provider-meta {
-    margin: 15px 0;
+    /* margin: 15px 0; */
 }
 
 .provider-meta > div {
