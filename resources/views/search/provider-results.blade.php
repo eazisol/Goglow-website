@@ -312,7 +312,7 @@
 <style>
     /* Outer layout around existing search bar */
     .search-outer-layout {
-        margin: 20px 0 30px 0;
+        margin: 45px 0 30px 0;
         background-image: url('images/images/provider_search_image.jpg');
         background-position: center;
         /* background: linear-gradient(180deg, rgb(159 159 159 / 73%) 0%, rgb(66 66 66 / 15%) 100%); */
@@ -348,7 +348,7 @@
         box-shadow: 0 8px 24px rgba(16,24,40,0.08);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         height: 100%;
-        border: 1px solid rgba(17,24,39,0.06);
+        border: 1px solid rgb(213 190 198);
     }
     .search-results .provider-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(16,24,40,0.12); }
     .search-results .provider-image { padding: 16px 16px 0 16px; }
