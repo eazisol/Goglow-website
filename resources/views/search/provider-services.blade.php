@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.mainInnerPages')
 
 @section('title', 'Provider Services')
 
@@ -6,9 +6,9 @@
 
     <!-- Page Header Start -->
     <div class="page-header bg-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
+        <div class="services-container">
+            <div class="services-row">
+                <div class="services-col-12">
                     <!-- Page Header Box Start -->
                     
                     <!-- Page Header Box End -->
@@ -21,12 +21,12 @@
 
 <!-- Provider Services Section Start -->
 <div class="provider-services" style="margin: 50px 0 50px 0;">
-    <div class="container">
-        <div class="row section-row">
-            <div class="col-lg-12">
-                <div class="provider-header mb-1">
-                    <div class="row align-items-center">
-                        <div class="col-md-10">
+    <div class="services-container">
+        <div class="services-row section-row">
+            <div class="services-col-12">
+                <div class="provider-header services-mb-1">
+                    <div class="services-row services-align-center">
+                        <div class="services-col-md-10">
                             <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2>
                             @if(isset($provider['companyName']))
                                 <h4>{{ $provider['companyName'] }}</h4>
@@ -47,7 +47,7 @@
                     <div class="provider-image">
                                 <img src="{{ isset($provider['profileImg']) && $provider['profileImg'] ? $provider['profileImg'] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
                                      alt="{{ $provider['name'] }}" 
-                                     class="img-fluid"
+                                     class="services-img-fluid"
                                      onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                             </div>
                 </div>
@@ -68,20 +68,20 @@
         ->sortKeys();
 @endphp
 
-    <div class="row">
-        <div class="col-lg-8">
+    <div class="services-row">
+        <div class="services-col-lg-8">
                 @if(count($services) > 0)
                 @foreach($groupedServices as $categoryName => $servicesInCategory)
-                    <div class="section-title" style="margin-bottom:initial; margin-top: 20px;">
+                    <div class="section-title" style="display: flex;margin-bottom: 25px;margin-top: 20px;">
                         {{-- Display category name --}}
                         <h3 class="wow" style="font-size:30px; font-weight:600;">{{ $categoryName ?: 'Uncategorized' }}</h3>
                     </div>
                     <div class="custom-service-list">
                         @foreach($servicesInCategory as $service)
-                            <div class="service-row d-flex justify-content-between flex-wrap">
+                            <div class="service-row services-d-flex services-justify-between services-flex-wrap">
                                 
                                 <!-- Left -->
-                                <div class="service-info" style="display: flex;align-items: center;">
+                                <div class="service-info services-d-flex services-align-center">
                                     {{-- <div class="section-title" style="margin-bottom:initial;">
                                         <h3 class="wow fadeInUp">{{ $service['category']['name'] }}</h3>
                                     </div> --}}
@@ -90,16 +90,16 @@
                                     <div class="service-image">
                                         <img src="{{ (isset($service['images']) && count($service['images']) > 0) ? $service['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
                                             alt="{{ $service['service_name'] }}" 
-                                            class="img-fluid rounded-circle"
+                                            class="services-img-fluid services-rounded-circle"
                                             onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                                     </div>
                                     <div class="service-list-details" style="margin-left: 35px;">
-                                        <div class="service-name fw-semibold">
+                                        <div class="service-name services-fw-semibold">
                                         {{-- {{ $service['service_name'] }} --}}
                                         {{ \Illuminate\Support\Str::limit($service['service_name'], 50, '...') }}
                                     </div>
                                     @if(!empty($service['service_details']))
-                                        <div class="service-desc text-muted">
+                                        <div class="service-desc services-text-muted">
                                             {{ \Illuminate\Support\Str::limit($service['service_details'], 50, '...') }}
                                         </div>
                                     @endif
@@ -108,8 +108,8 @@
                                 </div>
 
                                 <!-- Right -->
-                                <div class="service-meta text-end">
-                                    <div class="text-muted small mb-1">
+                                <div class="service-meta services-text-end">
+                                    <div class="services-text-muted services-small services-mb-1">
                                         {{ $service['duration_minutes'] ?? 0 }} min 
                                         &bull; 
                                         from €{{ $service['service_price'] ?? '0' }}
@@ -126,7 +126,7 @@
                 @endforeach 
                 @else
                     <div class="custom-service-list">
-                    <div class="text-center py-4">
+                    <div class="services-text-center services-py-4">
                         <h5>No services available from this provider.</h5>
                     </div>
                     </div>
@@ -134,7 +134,7 @@
 
                 
         </div>
-<div class="col-lg-4">
+<div class="services-col-lg-4">
     <div class="section-title" style="margin-bottom:initial; margin-top: 20px;">
         <h3 class="wow" style="font-size:30px; font-weight:600;">Hours of operation</h3>
     </div>
@@ -154,7 +154,7 @@
                 @endphp
 
                 @foreach($dayNames as $shortDay => $fullDay)
-                    <div class="d-flex justify-content-between py-4 {{ !$loop->last ? 'border-bottom' : '' }}">
+                    <div class="services-d-flex services-justify-between services-py-4 {{ !$loop->last ? 'services-border-bottom' : '' }}">
                         <span>{{ $fullDay }}</span>
 
                         @if(isset($provider['timing'][$shortDay]) && count($provider['timing'][$shortDay]) === 2)
@@ -182,8 +182,8 @@
 
 
         
-        <div class="row mt-4">
-            <div class="col-12">
+        <div class="services-row services-mt-4">
+            <div class="services-col-12">
                 <a href="{{ url()->previous() }}" class="btn-default">
                     <i></i> Back to Search Results
                 </a>
@@ -196,6 +196,77 @@
 
 @section('styles')
 <style>
+/* Bootstrap-free grid system scoped to provider-services */
+.provider-services .services-container,
+.page-header .services-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.page-header .services-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.page-header .services-col-12 {
+    padding: 0 15px;
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+.provider-services .services-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.provider-services .services-col-12,
+.provider-services .services-col-md-10,
+.provider-services .services-col-lg-8,
+.provider-services .services-col-lg-4 {
+    padding: 0 15px;
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .provider-services .services-col-md-10 {
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+}
+
+@media (min-width: 992px) {
+    .provider-services .services-col-lg-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+    }
+    .provider-services .services-col-lg-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+}
+
+/* Utility classes scoped to provider-services */
+.provider-services .services-d-flex { display: flex; }
+.provider-services .services-align-center { align-items: center; }
+.provider-services .services-justify-between { justify-content: space-between; }
+.provider-services .services-flex-wrap { flex-wrap: wrap; }
+.provider-services .services-text-center { text-align: center; }
+.provider-services .services-text-end { text-align: right; }
+.provider-services .services-text-muted { color: #6c757d; }
+.provider-services .services-small { font-size: 0.875rem; }
+.provider-services .services-fw-semibold { font-weight: 600; }
+.provider-services .services-img-fluid { max-width: 100%; display: block; }
+.provider-services .services-rounded-circle { border-radius: 50%; }
+.provider-services .services-mb-1 { margin-bottom: 0.25rem; }
+.provider-services .services-mt-4 { margin-top: 1.5rem; }
+.provider-services .services-py-4 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+.provider-services .services-border-bottom { border-bottom: 1px solid #dee2e6; }
+
 .choose-button{
     margin-top: 20px;
 }
