@@ -342,7 +342,7 @@
 
     /* Provider card redesign */
     .search-results .provider-card {
-        background: #fff;
+        background: #fff6f8;
         border-radius: 40px;
         overflow: hidden;
         box-shadow: 0 8px 24px rgba(16,24,40,0.08);
@@ -408,8 +408,8 @@
     .availability-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; flex-wrap: wrap; }
     .time-of-day { color:rgba(118, 33, 62, 1); font-weight: 500; font-size: 16px; width: 80px; }
     .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
-    .date-chip { background: #ffe6ee; color: #d81b60; border: 1px solid #ffd1df; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 800; }
-    .date-chip b { font-weight: 800; }
+    .date-chip { background: rgba(229, 0, 80, 1); color: #ffffffff; border: 1px solid #ffd1df; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+    .date-chip b { font-weight: 500; }
     .date-chip.outline { background: #fff; color: #6b7280; border-color: #e5e7eb; }
 
     /* Book now button */
