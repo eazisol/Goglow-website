@@ -25,16 +25,16 @@
         <div class="services-row section-row">
             <div class="services-col-12">
                 <div class="provider-header services-mb-1">
-                    <div class="services-row services-align-center">
+                    <div class="services-row services-align-center service-proivder-desktop-view">
                         <div class="services-col-md-10 service-page-header-text">
                             <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2>
                             @if(isset($provider['companyName']))
                                 <h4 class="service-name-heading">{{ $provider['companyName'] }}</h4>
                             @endif
                             <div class="provider-info">
+                                <div class="provider-ratting-review">
                                 @if(isset($provider['avg_ratting']) && $provider['avg_ratting'] > 0)
                                     <p>
-                                        
                                         <div class="provider-info-ratting">{{ $provider['avg_ratting'] }}</div>
                                         <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
                                         <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
@@ -45,12 +45,15 @@
                                         <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} reviews)</div>
                                     </p>
                                 @endif
+                                </div>
+                                <div class="provider-service-address">
                                 @if(isset($provider['address']))
                                     <p>
                                         <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
                                         <div class="provider-info-address"> {{ $provider['address'] }} </div>
                                     </p>
                                 @endif
+                                </div>
                             </div>
                         </div>
                             <div class="desktop-image-controls">
@@ -142,11 +145,11 @@
                     <!-- Mobile Carousel View -->
                     <div class="provider-images-carousel">
                         <div class="carousel-controls-top">
-                            <button class="carousel-btn share-btn" aria-label="Share">
-                                <i class="fas fa-share-alt"></i>
+                            <button class="carousel-btn-mobile share-btn" aria-label="Share">
+                                <img src="images/images/share-icon.svg" alt="Location" width="25" height="25">
                             </button>
-                            <button class="carousel-btn heart-btn" aria-label="Favorite">
-                                <i class="fas fa-heart"></i>
+                            <button class="carousel-btn-mobile heart-btn" aria-label="Favorite">
+                                <img src="images/images/si_heart-line.svg" alt="Location" width="25" height="25">
                             </button>
                         </div>
                         <div class="carousel-container">
@@ -169,6 +172,46 @@
                                 <span class="carousel-dot {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}"></span>
                             @endforeach
                         </div>
+                    </div>
+                    <div class="services-row services-align-center service-proivder-mobile-view">
+                        <div class="services-col-md-10 service-page-header-text">
+                            <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2>
+                            @if(isset($provider['companyName']))
+                                <h4 class="service-name-heading">{{ $provider['companyName'] }}</h4>
+                            @endif
+                            <div class="provider-info">
+                                <div class="provider-ratting-review">
+                                @if(isset($provider['avg_ratting']) && $provider['avg_ratting'] > 0)
+                                    <p>
+                                        <div class="provider-info-ratting">{{ $provider['avg_ratting'] }}</div>
+                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                                        
+                                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} reviews)</div>
+                                    </p>
+                                @endif
+                                </div>
+                                <div class="provider-service-address">
+                                @if(isset($provider['address']))
+                                    <p>
+                                        <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
+                                        <div class="provider-info-address"> {{ $provider['address'] }} </div>
+                                    </p>
+                                @endif
+                                </div>
+                            </div>
+                        </div>
+                            <div class="desktop-image-controls">
+                                <button class="desktop-control-btn share-btn" aria-label="Share">
+                                    <img src="images/images/share-icon.svg" alt="Location" width="25" height="25">
+                                </button>
+                                <button class="desktop-control-btn heart-btn" aria-label="Favorite">
+                                    <img src="images/images/si_heart-line.svg" alt="Location" width="25" height="25">
+                                </button>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -317,6 +360,15 @@
 @section('styles')
 <style>
 /* Bootstrap-free grid system scoped to provider-services */
+.service-proivder-mobile-view{
+    display: none!important;
+}
+.provider-ratting-review{
+    display: flex;
+}
+.provider-service-address{
+    display: flex;
+}
 .provider-services .services-container,
 .page-header .services-container {
     width: 100%;
@@ -624,6 +676,38 @@
     
     .provider-images-carousel {
         display: block;
+    }
+    .service-proivder-desktop-view{
+        display: none!important;
+    }
+    .service-proivder-mobile-view{
+        display: block!important;
+    }
+    .desktop-image-controls{
+        display: none;
+    }
+    .service-name-heading{
+        font-size: 35px;
+        letter-spacing: 0px;
+    }
+    .provider-info{
+        display: block!important;
+    }
+    .provider-ratting-review{
+        gap: 7px;
+    }
+    .carousel-btn-mobile{
+        width: 50px;
+        height: 50px;
+        border-radius: 40px;
+        background-color: rgb(255 255 255);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 }
 
