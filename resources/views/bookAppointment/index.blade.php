@@ -14,7 +14,7 @@
         display: flex;
         justify-content: center;
         padding: 60px 0 80px;
-        background: #fdeff4;
+        background: rgba(255, 244, 248, 1);
     }
 
     .page-book-appointment > .container {
@@ -429,9 +429,9 @@
     }
 
     .form-label {
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 8px;
+        font-weight: 700;
+        color: rgba(44, 13, 24, 1);
+        margin-bottom: 18px;
         display: block;
     }
 
@@ -594,7 +594,7 @@
     .day-column {
         min-width: 84px;
         background: #fff;
-        border-radius: 24px;
+        border-radius: 10px;
         padding: 40px 0 40px;
         text-align: center;
         transition: all 0.25s ease;
@@ -626,7 +626,7 @@
         width: 28px;
         height: 6px;
         border-radius: 999px;
-        background: rgba(255, 45, 139, 0.25);
+        background: rgba(229, 0, 80, 1);
         transition: all 0.2s ease;
     }
 
@@ -637,8 +637,8 @@
     }
 
     .day-column.active {
-        background: #ff2d8b;
-        border-color: #ff2d8b;
+        background: rgba(229, 0, 80, 1);
+        border-color: rgba(229, 0, 80, 1);
         color: #fff;
         transform: translateY(-2px);
     }
@@ -680,8 +680,10 @@
     /* Align 7 vertical columns of slots under the 7 days */
     .time-slots-container {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-        gap: 5px;
+        grid-template-columns: repeat(auto-fit, minmax(0, 85px));
+        justify-content: center;
+        column-gap: 10px;
+        row-gap: 8px;
         margin-top: 24px;
         align-items: start;
     }
@@ -690,16 +692,17 @@
     .day-slots-column {
         display: flex;
         flex-direction: column;
-        gap: 8px;
-        min-height: 60px;
+        gap: 6px;
+        min-height: 48px;
+        width: 85px;
     }
     
     .time-slot {
-        padding: 8px 4px;
+        padding: 6px 4px;
         text-align: center;
         background-color: #f8f9fa;
         border-radius: 6px;
-        font-size: 13px;
+        font-size: 12px;
         cursor: pointer;
         transition: all 0.2s ease;
         border: 1px solid #e9ecef;
@@ -735,14 +738,14 @@
         color: rgba(255, 45, 139, 0.85);
     } */
 
-    .day-column.today:not(.active)::after {
+    /* .day-column.today:not(.active)::after {
         background: rgba(255, 45, 139, 0.4);
     }
 
     .day-column.today:not(.active) .day-name,
     .day-column.today:not(.active) .day-date {
         color: rgba(255, 45, 139, 0.85);
-    }
+    } */
 /* 
     .day-slots-column.today {
         background-color: rgba(255, 45, 139, 0.06);
@@ -813,7 +816,8 @@
                                 @endif
                             </p>
                             @if(!empty($selectedService['service_details']))
-                                <p class="service-summary-desc">{{ $selectedService['service_details'] }}</p>
+                                <p class="service-summary-desc">{{ \Illuminate\Support\Str::limit($selectedService['service_details'], 150, '.....') }}</p>
+                                
                             @endif
                         </div>
                     </div>
@@ -833,7 +837,7 @@
                                     </div>
 
                                     <div id="agentSchedule" class="mt-3" style="display:none;">
-                            <h5 style="margin-bottom: 10px;">Schedule</h5>
+                            <h5 style="margin-bottom: 10px;font-size:18px;font-weight:700;">Schedule</h5>
 
                             <!-- Selected slot info (moved directly under heading) -->
                             <div id="selectedSlotInfo" class="alert alert-info mb-3" style="display: none;">
