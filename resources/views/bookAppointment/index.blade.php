@@ -10,22 +10,30 @@
 @endonce
 <style>
     /* Bootstrap compatibility layer for inner pages */
+    .page-book-appointment {
+        display: flex;
+        justify-content: center;
+        padding: 60px 0 80px;
+        background: #fdeff4;
+    }
+
     .page-book-appointment > .container {
-        max-width: 1200px;
+        max-width: 900px;
         margin: 0 auto;
-        padding: 0 15px;
+        padding: 0 24px;
+        width: 100%;
     }
 
     .page-book-appointment .row {
         display: flex;
         flex-wrap: wrap;
-        margin-left: -15px;
-        margin-right: -15px;
+        margin-left: -16px;
+        margin-right: -16px;
     }
 
     .page-book-appointment .row > [class*="col-"] {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 16px;
+        padding-right: 16px;
         width: 100%;
     }
 
@@ -287,7 +295,7 @@
         }
 
         .page-book-appointment > .container {
-            padding: 0 12px;
+            padding: 0 18px;
         }
     }
 
@@ -435,32 +443,37 @@
 
     /* Service summary card (left side) */
     .service-summary-card {
-        background: #fff;
-        border: 1px solid #e9ecef;
-        border-radius: 12px;
+        border: 1px solid rgba(213, 190, 198, 1);
+        border-radius: 20px;
         overflow: hidden;
         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         /* previously sticky; make it normal so it scrolls with the page */
         position: static;
     }
     .service-summary-card .card-cover img {
+        border-radius : 20px;
         display: block;
         width: 100%;
         height: 220px; /* fixed so it doesn't stretch with form */
         object-fit: cover;
     }
+    .card-cover{
+        padding: 30px 30px 0 30px;
+    }
     .service-summary-card .card-body {
-        padding: 16px;
+        padding: 10px 30px 10px;
     }
     .service-summary-title {
         margin: 0 0 6px 0;
-        font-size: 20px;
-        font-weight: 600;
+        font-size: 30px;
+        font-weight: 700;
+        text-transform: capitalize;
         color: #1c1c1c;
     }
     .service-summary-price {
+        font-size:18px;
         margin: 0 0 10px 0;
-        font-weight: 600;
+        font-weight: 700;
         color: #1c1c1c;
     }
     .service-summary-price .old-price {
@@ -478,6 +491,7 @@
     /* Agents horizontal avatars */
     .agent-avatars {
         display: flex;
+        justify-content: center;
         gap: 16px;
         align-items: center;
         flex-wrap: nowrap;
@@ -502,12 +516,13 @@
         transition: border-color 0.2s ease, transform 0.2s ease;
     }
     .agent-avatar.active .avatar-img {
-        border-color: var(--theme-color);
+        border-color: #e50050;
         transform: translateY(-2px);
     }
     .agent-avatar .agent-name {
         margin-top: 8px;
-        font-size: 12px;
+        font-size: 14px;
+        font-weight:500;
         color: #333;
         text-align: center;
         max-width: 80px;
@@ -699,7 +714,7 @@
     <div class="page-book-appointment">
         <div class="container">
             <div class="row">
-                <div class="col-lg-7 col-xl-8">
+                <div class="col-12">
                     <!-- Service summary card Start -->
                     <div class="service-summary-card">
                         <div class="card-cover">
@@ -724,8 +739,8 @@
 
                                 @if(!empty($agents))
                     <!-- Agent & Schedule (moved here) -->
-                    <div class="mt-4">
-                                    <label class="form-label">Select Agent</label>
+                    <div class="mt-4" style="justify-content: center;display: grid;">
+                                    <label class="form-label" style="justify-content: center;display: flex;">Select Agent</label>
                                     <div id="agentList" class="agent-avatars">
                                         @foreach($agents as $agent)
                                             <div class="agent-avatar" data-agent='@json($agent)'>
@@ -767,7 +782,7 @@
                                 @endif
                 </div>
 
-                <div class="col-lg-5 col-xl-4">
+                <div class="col-12">
                     <!-- Book Appointment Form Start -->
                     <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
                         <form id="appointmentForm" action="{{ route('checkout.session') }}" method="POST" data-toggle="validator">
