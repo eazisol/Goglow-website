@@ -1,8 +1,223 @@
-@extends('layouts.main')
+@extends('layouts.mainInnerPages')
 {{-- Title --}}
 @section('title', 'Payment Successful')
 
 {{-- Content --}}
+@section('styles')
+<style>
+    :root {
+        --success-bg: #fff4f8;
+        --success-card: #ffffff;
+        --success-border: #f1d6e2;
+        --success-primary: #e50050;
+        --success-primary-dark: #c00040;
+        --success-text: #4d263f;
+        --success-muted: #8d5f78;
+    }
+
+    .success-page {
+        background: var(--success-bg);
+        padding: 60px 0 90px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .success-wrapper {
+        max-width: 880px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    .success-card {
+        background: var(--success-card);
+        border: 1px solid var(--success-border);
+        border-radius: 28px;
+        box-shadow: 0 28px 60px rgba(229, 0, 80, 0.08);
+        padding: 50px 48px;
+        text-align: center;
+    }
+
+    .success-icon {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: rgba(229, 0, 80, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 28px;
+        color: var(--success-primary);
+        font-size: 42px;
+    }
+
+    .success-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--success-text);
+        margin-bottom: 12px;
+    }
+
+    .success-subtitle {
+        font-size: 16px;
+        color: var(--success-muted);
+        margin-bottom: 40px;
+    }
+
+    .details-card {
+        background: var(--success-card);
+        border: 1px solid rgba(229, 0, 80, 0.12);
+        border-radius: 22px;
+        padding: 32px 36px;
+        text-align: left;
+    }
+
+    .loading-card {
+        background: rgba(229, 0, 80, 0.05);
+        border: 1px solid rgba(229, 0, 80, 0.1);
+        border-radius: 18px;
+        padding: 28px;
+        text-align: center;
+        color: var(--success-muted);
+        margin-bottom: 28px;
+    }
+
+    .info-section + .info-section {
+        margin-top: 30px;
+        padding-top: 24px;
+        border-top: 1px dashed rgba(229, 0, 80, 0.2);
+    }
+
+    .info-section h5 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--success-text);
+        margin-bottom: 18px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 18px 24px;
+    }
+
+    .info-item .label {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--success-muted);
+        margin-bottom: 6px;
+    }
+
+    .info-item .value {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--success-text);
+        word-break: break-word;
+    }
+
+    .info-item code {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 12px;
+        background: rgba(229, 0, 80, 0.08);
+        color: var(--success-primary);
+        font-size: 13px;
+        word-break: break-all;
+    }
+
+    .status-banner {
+        background: rgba(229, 0, 80, 0.08);
+        border: 1px solid rgba(229, 0, 80, 0.2);
+        border-radius: 16px;
+        padding: 18px 22px;
+        /* display: flex; */
+        align-items: flex-start;
+        gap: 14px;
+        margin-top: 28px;
+        color: var(--success-text);
+    }
+
+    .status-banner .icon {
+        font-size: 20px;
+        color: var(--success-primary);
+        margin-top: 2px;
+    }
+
+    .status-banner strong {
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .status-banner small {
+        display: block;
+        color: var(--success-muted);
+        margin-top: 4px;
+    }
+
+    .success-actions {
+        margin-top: 32px;
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .success-btn-primary {
+        background: var(--success-primary);
+        color: #fff;
+        border: none;
+        border-radius: 28px;
+        padding: 12px 28px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .success-btn-primary:hover {
+        background: var(--success-primary-dark);
+        transform: translateY(-1px);
+    }
+
+    .success-btn-secondary {
+        border-radius: 28px;
+        padding: 12px 28px;
+        border: 1px solid var(--success-primary);
+        color: var(--success-primary);
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .success-btn-secondary:hover {
+        background: rgba(229, 0, 80, 0.08);
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+        .success-card {
+            padding: 36px 26px;
+        }
+
+        .details-card {
+            padding: 26px 24px;
+        }
+
+        .success-title {
+            font-size: 26px;
+        }
+
+        .success-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+@endsection
+
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -430,133 +645,115 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <!-- Page Header End -->
 	
-	<!-- Success Section Start -->
-    <div class="page-book-appointment">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="text-center mb-5">
-                        <i class="fas fa-check-circle text-success" style="font-size: 80px;"></i>
-                        <h2 class="mt-4">Payment Successful!</h2>
-                        <p class="lead">Your appointment has been booked successfully.</p>
+    <!-- Success Section Start -->
+    <div class="success-page">
+        <div class="success-wrapper">
+            <div class="success-card">
+                <div class="success-icon"><i class="fas fa-check"></i></div>
+                <h2 class="success-title">Payment Successful!</h2>
+                <p class="success-subtitle">Your appointment has been booked successfully. Below are the full details of your reservation.</p>
+
+                <div id="booking-details-loading" class="loading-card">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                    
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="mb-4">Booking Details</h4>
-                            
-                            <div id="booking-details-loading" class="text-center py-4">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                <p class="mt-2">Loading booking details...</p>
+                    <p class="mt-3">Loading booking details...</p>
+                </div>
+
+                <div id="booking-details" class="details-card" style="display:none;">
+                    <div class="info-section">
+                        <h5>Service Information</h5>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <p class="label">Service Name</p>
+                                <p class="value" id="service-name">{{ $serviceName }}</p>
                             </div>
-                            
-                            <div id="booking-details" style="display: none;">
-                                <!-- Service Information -->
-                                <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <h5 class="border-bottom pb-2 mb-3">Service Information</h5>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Service Name</p>
-                                                <h6 id="service-name">{{ $serviceName }}</h6>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Service Provider</p>
-                                                <h6 id="service-provider">Loading...</h6>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Agent Name</p>
-                                                <h6 id="agent-name">Loading...</h6>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Duration</p>
-                                                <h6 id="service-duration">Loading...</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Appointment Information -->
-                                <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <h5 class="border-bottom pb-2 mb-3">Appointment Information</h5>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Date</p>
-                                                <h6 id="appointment-date">Loading...</h6>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Time</p>
-                                                <h6 id="appointment-time">Loading...</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Payment Information -->
-                                <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <h5 class="border-bottom pb-2 mb-3">Payment Information</h5>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Payment Type</p>
-                                                <h6>{{ $paymentType === 'deposit' ? '15% Deposit' : 'Full Payment' }}</h6>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Transaction ID</p>
-                                                <p><code id="transactionId">{{ $transactionId }}</code></p>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Amount Paid</p>
-                                                <h6 id="amount-paid">Loading...</h6>
-                                            </div>
-                                            <div class="col-md-6 mb-3" id="remaining-amount-container" style="display: none;">
-                                                <p class="mb-1 text-muted">Remaining Amount</p>
-                                                <h6 id="remaining-amount">Loading...</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Customer Information -->
-                                <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <h5 class="border-bottom pb-2 mb-3">Customer Information</h5>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Name</p>
-                                                <h6 id="customer-name">Loading...</h6>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Email</p>
-                                                <h6 id="customer-email">Loading...</h6>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <p class="mb-1 text-muted">Phone</p>
-                                                <h6 id="customer-phone">Loading...</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="info-item">
+                                <p class="label">Service Provider</p>
+                                <p class="value" id="service-provider">Loading...</p>
                             </div>
-                            
-                            <div class="alert alert-success" id="bookingConfirmation">
-                                <i class="fas fa-check-circle mr-2"></i>
-                                <strong>Booking Confirmed!</strong> Your appointment has been scheduled and payment processed successfully.
-                                <div class="mt-2">
-                                    <small>Server Response: <span id="apiResponseStatus">Booking sent to server</span></small>
-                                </div>
+                            <div class="info-item">
+                                <p class="label">Agent Name</p>
+                                <p class="value" id="agent-name">Loading...</p>
                             </div>
-                            <button id="download-receipt" class="btn-alt me-2"><span><i class="fas fa-download"></i> Download Receipt</span></button>
+                            <div class="info-item">
+                                <p class="label">Duration</p>
+                                <p class="value" id="service-duration">Loading...</p>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="text-center mt-4">
-                        
-                        <a href="/" class="btn-default"><span>Return to Home</span></a>
+
+                    <div class="info-section">
+                        <h5>Appointment Information</h5>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <p class="label">Date</p>
+                                <p class="value" id="appointment-date">Loading...</p>
+                            </div>
+                            <div class="info-item">
+                                <p class="label">Time</p>
+                                <p class="value" id="appointment-time">Loading...</p>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="info-section">
+                        <h5>Payment Information</h5>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <p class="label">Payment Type</p>
+                                <p class="value">{{ $paymentType === 'deposit' ? '15% Deposit' : 'Full Payment' }}</p>
+                            </div>
+                            <div class="info-item">
+                                <p class="label">Transaction ID</p>
+                                <p><code id="transactionId">{{ $transactionId }}</code></p>
+                            </div>
+                            <div class="info-item">
+                                <p class="label">Amount Paid</p>
+                                <p class="value" id="amount-paid">Loading...</p>
+                            </div>
+                            <div class="info-item" id="remaining-amount-container" style="display:none;">
+                                <p class="label">Remaining Amount</p>
+                                <p class="value" id="remaining-amount">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h5>Customer Information</h5>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <p class="label">Name</p>
+                                <p class="value" id="customer-name">Loading...</p>
+                            </div>
+                            <div class="info-item">
+                                <p class="label">Email</p>
+                                <p class="value" id="customer-email">Loading...</p>
+                            </div>
+                            <div class="info-item">
+                                <p class="label">Phone</p>
+                                <p class="value" id="customer-phone">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bookingConfirmation" class="status-banner">
+                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+                    <div>
+                        <strong>Booking Confirmed!</strong>
+                        <span>Your appointment has been scheduled and payment processed successfully.</span>
+                        <small>Server Response: <span id="apiResponseStatus">Booking sent to server</span></small>
+                    </div>
+                </div>
+
+                <div class="success-actions">
+                    <button id="download-receipt" class="success-btn-primary">
+                        <i class="fas fa-download"></i>Download Receipt
+                    </button>
+                    <a href="/" class="success-btn-secondary">
+                        <i class="fas fa-home"></i>Return to Home
+                    </a>
                 </div>
             </div>
         </div>
