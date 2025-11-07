@@ -43,7 +43,7 @@
     height: auto;
     min-height: auto;
     padding: 40px;
-    background-color: var(--secondary-color);
+    background-color: white;
 }
 
 .modal .section-title h3 {

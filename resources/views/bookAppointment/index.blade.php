@@ -4,6 +4,10 @@
 
 {{-- Style Files --}}
 @section('styles')
+@once
+    <!-- Bootstrap CSS for modals -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+@endonce
 <style>
     /* Bootstrap compatibility layer for inner pages */
     .page-book-appointment > .container {
@@ -285,6 +289,24 @@
         .page-book-appointment > .container {
             padding: 0 12px;
         }
+    }
+
+    /* Prevent Bootstrap CSS from affecting header/footer */
+    .nav-header-section,
+    .nav-header-section *,
+    footer,
+    footer * {
+        box-sizing: border-box !important;
+    }
+
+    /* Ensure modals work properly */
+    .modal {
+        z-index: 1055;
+    }
+
+    .modal-backdrop {
+        z-index: 1050;
+        background-color: rgba(0, 0, 0, 0.5);
     }
 
     .service-details-box {
@@ -811,18 +833,24 @@
     <!-- Why Choose Us Section Start -->
 
     <!-- Why Choose Us Section End -->
+    @include('partials.auth-modals')
 @endsection
 
 
 {{-- Scripts --}}
 @section('scripts')
+@once
+    <!-- Bootstrap JS for modals -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+@endonce
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM fully loaded - initializing booking form');
     // Check if Stripe is loaded
     console.log('Stripe object availability:', typeof Stripe !== 'undefined' ? 'Available' : 'Not available');
     
-    const bootstrap = {
+    // Renamed to avoid namespace collision with Bootstrap JS
+    const bookingBootstrap = {
         service: @json($selectedService ?? null),
         category: @json($selectedCategory ?? null),
         agents: @json($agents ?? []),
@@ -833,8 +861,8 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     
     // Log logged-in user data at page load
-    console.log('Logged-in user ID:', bootstrap.userId);
-    console.log('Logged-in user data:', bootstrap.userData);
+    console.log('Logged-in user ID:', bookingBootstrap.userId);
+    console.log('Logged-in user data:', bookingBootstrap.userData);
     const dayButtons = document.querySelectorAll('.day-btn');
     const selectedDayInput = document.getElementById('selected_day');
     const selectedDateInput = document.getElementById('selected_date');
@@ -1212,7 +1240,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Agent timing:', agent.timing);
             
             // Log logged-in user data
-            console.log('Logged-in user data:', bootstrap.userData);
+            console.log('Logged-in user data:', bookingBootstrap.userData);
             
             
             // Show the schedule section
@@ -1262,15 +1290,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-                 // Get user data from bootstrap
-         const userData = bootstrap.userData || {};
+                 // Get user data from bookingBootstrap
+         const userData = bookingBootstrap.userData || {};
          const name = userData.name || '';
          const email = userData.email || '';
          const phone = userData.phone || '';
          
          // Log user data being used for the booking
          console.log('User data for booking:', {
-             id: bootstrap.userId,
+             id: bookingBootstrap.userId,
              name: name,
              email: email,
              phone: phone,
@@ -1282,8 +1310,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Get params from URL (fallback) and from server (preferred)
         const urlParams = new URLSearchParams(window.location.search);
-        const serviceId = bootstrap.serviceId || urlParams.get('serviceId');
-        const serviceProviderId = bootstrap.serviceProviderId || urlParams.get('service_provider_id');
+        const serviceId = bookingBootstrap.serviceId || urlParams.get('serviceId');
+        const serviceProviderId = bookingBootstrap.serviceProviderId || urlParams.get('service_provider_id');
 
         // Build booking date object from selected date and time
         const [year, month, day] = selectedDateInput.value.split('-').map(Number);
@@ -1314,24 +1342,46 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const bookingTime = formatForApi(localDate);
-        const serviceName = bootstrap.service?.service_name || 'Selected Service';
-        const servicePrice = (bootstrap.service?.discounted_price ?? bootstrap.service?.service_price ?? 0);
-        const durationMinutes = (bootstrap.service?.duration_minutes ?? 0);
-        const userId = bootstrap.userId;
+        const serviceName = bookingBootstrap.service?.service_name || 'Selected Service';
+        const servicePrice = (bookingBootstrap.service?.discounted_price ?? bookingBootstrap.service?.service_price ?? 0);
+        const durationMinutes = (bookingBootstrap.service?.duration_minutes ?? 0);
+        const userId = bookingBootstrap.userId;
         if (!userId) {
             // Store the current URL for redirection after login
             localStorage.setItem('book_appointment_url', window.location.href);
             
             // Show the login modal instead of alert
-            if (typeof $ !== 'undefined') {
-                $('#loginModal').modal('show');
-            } else if (typeof bootstrap !== 'undefined') {
+            const showLoginModal = () => {
                 const loginModalElement = document.getElementById('loginModal');
-                if (loginModalElement) {
-                    const modal = new bootstrap.Modal(loginModalElement);
-                    modal.show();
+                if (!loginModalElement) {
+                    console.error('Login modal element not found');
+                    return;
                 }
-            }
+                
+                // Try Bootstrap 5 first
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    try {
+                        const modal = new bootstrap.Modal(loginModalElement);
+                        modal.show();
+                        return;
+                    } catch (e) {
+                        console.error('Error creating Bootstrap modal:', e);
+                    }
+                }
+                
+                // Fallback to jQuery if available
+                if (typeof $ !== 'undefined' && $.fn.modal) {
+                    $('#loginModal').modal('show');
+                    return;
+                }
+                
+                // Fallback: try again after a short delay
+                console.warn('Bootstrap not loaded yet, retrying...');
+                setTimeout(showLoginModal, 100);
+            };
+            
+            // Wait a bit for Bootstrap to be ready
+            setTimeout(showLoginModal, 50);
             return;
         }
 
@@ -1453,8 +1503,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
     
-    // Add test button functionality
-    document.getElementById('testStripeBtn').addEventListener('click', async function() {
+    // Add test button functionality (if button exists)
+    const testStripeBtn = document.getElementById('testStripeBtn');
+    if (testStripeBtn) {
+        testStripeBtn.addEventListener('click', async function() {
         try {
             // Initialize Stripe with the publishable key
             const stripe = Stripe('pk_test_YvIcG9lWoxs6ITHB264wNchO');
@@ -1526,7 +1578,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Test button error:', err);
             alert('Test failed: ' + err.message);
         }
-    });
+        });
+    }
 });
 </script>
 
