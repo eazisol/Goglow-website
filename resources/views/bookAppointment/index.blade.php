@@ -531,66 +531,158 @@
         text-overflow: ellipsis;
     }
     
-    /* Weekly Calendar Styles */
-    .weekly-calendar {
-        background: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    
-    .days-header {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 5px;
-        margin-bottom: 10px;
-    }
-    
-    @media (max-width: 768px) {
-        .days-header {
-            overflow-x: auto;
-            display: flex;
-            padding-bottom: 10px;
-        }
-        
-        .day-column {
-            min-width: 60px;
-        }
-    }
-    
-    .day-column {
-        flex: 1;
+    /* Weekly calendar header */
+    #weekDisplay {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: rgba(77, 38, 64, 0.85);
         text-align: center;
-        padding: 10px 0;
-        font-weight: 500;
+        font-size: 18px;
+        margin-bottom: 18px;
     }
-    
-    .day-name {
+
+    /* .calendar-strip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-bottom: 24px;
+    } */
+
+    .calendar-arrow {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        color: #ff2d2dff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .calendar-arrow:hover:not(:disabled) {
+        color: #c71a6a;
+        transform: translateY(-1px);
+    }
+
+    .calendar-arrow:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .calendar-strip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 55px;
+        margin-bottom: 24px;
+    }
+
+    .days-header {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: center;
+        overflow-x: auto;
+        padding: 6px 2px 10px;
+    }
+
+    .day-column {
+        min-width: 84px;
+        background: #fff;
+        border-radius: 24px;
+        padding: 40px 0 40px;
+        text-align: center;
+        transition: all 0.25s ease;
+        color: rgba(77, 38, 64, 0.75);
         font-weight: 600;
-        display: block;
-        font-size: 14px;
+        border: 2px solid rgba(213, 190, 198, 0.9);
+        position: relative;
     }
-    
-    .day-date {
+
+    .day-column .day-name {
         font-size: 12px;
-        color: #666;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
     }
-    
+
+    .day-column .day-date {
+        font-size: 16px;
+        font-weight: 700;
+        color: rgba(77, 38, 64, 0.85);
+    }
+
+    .day-column::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 12px;
+        transform: translateX(-50%);
+        width: 28px;
+        height: 6px;
+        border-radius: 999px;
+        background: rgba(255, 45, 139, 0.25);
+        transition: all 0.2s ease;
+    }
+
+    .day-column:hover {
+        border-color: rgba(255, 45, 139, 0.35);
+        transform: translateY(-1px);
+        color: rgba(77, 38, 64, 0.95);
+    }
+
     .day-column.active {
-        background-color: black;
-        color: white;
-        border-radius: 8px;
+        background: #ff2d8b;
+        border-color: #ff2d8b;
+        color: #fff;
+        transform: translateY(-2px);
     }
-    
+
+    .day-column.active .day-name,
     .day-column.active .day-date {
-        color: rgba(255, 255, 255, 0.8);
+        color: #fff;
+    }
+
+    .day-column.active::after {
+        background: #fff;
+        width: 30px;
+    }
+
+    @media (max-width: 768px) {
+        .calendar-strip {
+            width: 100%;
+            gap: 14px;
+        }
+
+        .calendar-strip .calendar-arrow {
+            flex-shrink: 0;
+        }
+
+        .days-header {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            padding: 0;
+            overflow: visible;
+        }
+
+        .day-column {
+            min-width: 0;
+        }
     }
     
     /* Align 7 vertical columns of slots under the 7 days */
     .time-slots-container {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 8px;
-        margin-top: 15px;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 5px;
+        margin-top: 24px;
         align-items: start;
     }
 
@@ -629,21 +721,6 @@
     .time-slot.unavailable {
         display: none;
     }
-    
-    #weekDisplay {
-        font-size: 16px;
-        padding: 0 15px;
-    }
-    
-    .calendar-navigation button {
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-    }
 
     /* Layout fixes: ensure right form column doesn't get vertically centered
        or add large top/bottom whitespace when left column grows */
@@ -652,22 +729,27 @@
     .appointment-form { min-height: unset !important; height: auto !important; display: block !important; padding: 24px !important; }
     
     /* Highlight today's date in the schedule */
-    .day-column.today {
-        background-color: rgba(28, 28, 28, 0.05);
-        border-bottom-color: var(--theme-color);
+    /* .day-column.today:not(.active) {
+        border-color: rgba(255, 45, 139, 0.35);
+        background: rgba(255, 45, 139, 0.08);
+        color: rgba(255, 45, 139, 0.85);
+    } */
+
+    .day-column.today:not(.active)::after {
+        background: rgba(255, 45, 139, 0.4);
     }
-    
-    .day-column.today .day-date {
-        color: var(--theme-color);
-        font-weight: 700;
+
+    .day-column.today:not(.active) .day-name,
+    .day-column.today:not(.active) .day-date {
+        color: rgba(255, 45, 139, 0.85);
     }
-    
+/* 
     .day-slots-column.today {
-        background-color: rgba(28, 28, 28, 0.03);
-        border-left: 2px solid var(--theme-color);
-        border-right: 2px solid var(--theme-color);
+        background-color: rgba(255, 45, 139, 0.06);
+        border-left: 2px solid rgba(255, 45, 139, 0.25);
+        border-right: 2px solid rgba(255, 45, 139, 0.25);
     }
-    
+     */
     /* User info summary styling */
     .user-info-summary {
         background-color: #f8f9fa;
@@ -759,24 +841,19 @@
                                 Selected: <span id="selectedDateTimeDisplay"></span>
                                             </div>
 
-                            <!-- Calendar Navigation -->
-                            <div class="calendar-navigation mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <button type="button" id="prevWeek" class="btn btn-sm btn-secondary">
-                                        <i class="fa fa-chevron-left"></i>
-                                    </button>
-                                    <div id="weekDisplay" class="fw-bold text-center"></div>
-                                    <button type="button" id="nextWeek" class="btn btn-sm btn-secondary">
-                                        <i class="fa fa-chevron-right"></i>
-                                    </button>
-                                            </div>
-                                        </div>
+                            <div id="weekDisplay"></div>
 
-                            <!-- Weekly Calendar View -->
-                            <div id="weeklyCalendar" class="weekly-calendar mb-4">
-                                <div class="days-header d-flex justify-content-between mb-2"></div>
-                                <div id="timeSlotGrid" class="time-slots-container"></div>
+                            <div class="calendar-strip">
+                                <button type="button" id="prevWeek" class="calendar-arrow">
+                                    <img src="images/images/leftarrow_days.svg" alt="" width="16" height="16">
+                                </button>
+                                <div class="days-header"></div>
+                                <button type="button" id="nextWeek" class="calendar-arrow">
+                                    <img src="images/images/rightarrow_days.svg" alt="" width="16" height="16">
+                                </button>
                             </div>
+
+                            <div id="timeSlotGrid" class="time-slots-container"></div>
                                     </div>
                                 </div>
                                 @endif
