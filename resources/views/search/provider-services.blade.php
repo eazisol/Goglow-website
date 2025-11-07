@@ -47,12 +47,12 @@
                                 @endif
                                 </div>
                                 <div class="provider-service-address">
-                                @if(isset($provider['address']))
-                                    <p>
-                                        <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
-                                        <div class="provider-info-address"> {{ $provider['address'] }} </div>
-                                    </p>
-                                @endif
+                                    @if(isset($provider['address']))
+                                        <p>
+                                            <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
+                                            <div class="provider-info-address"> {{ $provider['address'] }} </div>
+                                        </p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -237,7 +237,7 @@
                 @foreach($groupedServices as $categoryName => $servicesInCategory)
                     <div class="section-title" style="display: flex;margin-bottom: 25px;margin-top: 20px;">
                         {{-- Display category name --}}
-                        <h3 class="wow" style="font-size:30px; font-weight:600;">{{ $categoryName ?: 'Uncategorized' }}</h3>
+                        <h3 class="wow" style="font-size:30px; font-weight:500; letter-spacing: -1px; color:rgba(229, 0, 80, 1)">{{ $categoryName ?: 'Uncategorized' }}</h3>
                     </div>
                     <div class="custom-service-list">
                         @foreach($servicesInCategory as $service)
@@ -298,44 +298,100 @@
                 
         </div>
 <div class="services-col-lg-4">
-    <div class="section-title" style="margin-bottom:initial; margin-top: 20px;">
-        <h3 class="wow" style="font-size:30px; font-weight:600;">Hours of operation</h3>
-    </div>
-    <div class="custom-service-list" style="padding: 30px;">
-        <div class="provider-details" style="color: #00000085;font-style: normal;font-size: 20px;">
-            @if(isset($provider['timing']))
-                @php
-                    $dayNames = [
-                        'Mon' => 'Monday',
-                        'Tue' => 'Tuesday',
-                        'Wed' => 'Wednesday',
-                        'Thu' => 'Thursday',
-                        'Fri' => 'Friday',
-                        'Sat' => 'Saturday',
-                        'Sun' => 'Sunday',
-                    ];
-                @endphp
-
-                @foreach($dayNames as $shortDay => $fullDay)
-                    <div class="services-d-flex services-justify-between services-py-4 {{ !$loop->last ? 'services-border-bottom' : '' }}">
-                        <span>{{ $fullDay }}</span>
-
-                        @if(isset($provider['timing'][$shortDay]) && count($provider['timing'][$shortDay]) === 2)
-                        @php
-                            $openTime  = \Carbon\Carbon::createFromTimestamp($provider['timing'][$shortDay][0], 'Europe/Paris')->format('H:i');
-                            $closeTime = \Carbon\Carbon::createFromTimestamp($provider['timing'][$shortDay][1], 'Europe/Paris')->format('H:i');
-                        @endphp
-
-                            @if($openTime === $closeTime || $openTime > $closeTime)
-                                <span>Farm</span>
-                            @else
-                                <span>{{ $openTime }} - {{ $closeTime }}</span>
+    <div class="provider-info-card">
+        <!-- Header Section -->
+        <div class="provider-card-header">
+                            @if(isset($provider['companyName']))
+                                <h4 class="provider-card-company-name">{{ $provider['companyName'] }}</h4>
                             @endif
-                        @else
-                            <span>Farm</span>
-                        @endif
-                    </div>
-                @endforeach
+            {{-- <h2 class="provider-card-name">{{ $provider['storeName'] ?? $provider['name'] }}</h2> --}}
+            @if(isset($provider['avg_ratting']) && $provider['avg_ratting'] > 0)
+                <div class="provider-ratting-review">
+                @if(isset($provider['avg_ratting']) && $provider['avg_ratting'] > 0)
+                    <p>
+                        <div class="provider-info-ratting">{{ $provider['avg_ratting'] }}</div>
+                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                        
+                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} reviews)</div>
+                    </p>
+                @endif
+                </div>
+            @endif
+            <a href="#" class="to-book-btn">To Book</a>
+        </div>
+        
+        <!-- Separator -->
+        <div class="provider-card-separator"></div>
+        
+        <!-- Hours of Operation Section -->
+        <div class="hours-section">
+            @php
+                $dayNames = [
+                    'Mon' => 'Monday',
+                    'Tue' => 'Tuesday',
+                    'Wed' => 'Wednesday',
+                    'Thu' => 'Thursday',
+                    'Fri' => 'Friday',
+                    'Sat' => 'Saturday',
+                    'Sun' => 'Sunday',
+                ];
+                
+                // Get current day and closing time for "Open until" display
+                $now = \Carbon\Carbon::now('Europe/Paris');
+                $todayKey = $now->format('D');
+                $openUntil = '';
+                if (isset($provider['timing'][$todayKey]) && count($provider['timing'][$todayKey]) === 2) {
+                    $closeTime = \Carbon\Carbon::createFromTimestamp($provider['timing'][$todayKey][1], 'Europe/Paris');
+                    $openTime = \Carbon\Carbon::createFromTimestamp($provider['timing'][$todayKey][0], 'Europe/Paris');
+                    if ($openTime->format('H:i') !== $closeTime->format('H:i') && $openTime->format('H:i') < $closeTime->format('H:i')) {
+                        $openUntil = $closeTime->format('ga');
+                    }
+                }
+            @endphp
+            
+            <div class="hours-toggle-header" id="hoursToggle">
+                <div class="hours-toggle-left">
+                    <img src="images/images/iconoir_clock.svg" alt="Location" width="24" height="24">
+                    <span class="open-until-text">@if($openUntil)Open <span class="until-text-time">until {{ $openUntil }}</span>@else Hours of operation @endif</span>
+                </div>
+                <i class="fas fa-chevron-up hours-chevron" id="hoursChevron"></i>
+            </div>
+            
+            <div class="hours-list" id="hoursList">
+                @if(isset($provider['timing']))
+                    @foreach($dayNames as $shortDay => $fullDay)
+                        <div class="hours-row">
+                            <span class="hours-day">{{ $fullDay }}</span>
+                            @if(isset($provider['timing'][$shortDay]) && count($provider['timing'][$shortDay]) === 2)
+                                @php
+                                    $openTime  = \Carbon\Carbon::createFromTimestamp($provider['timing'][$shortDay][0], 'Europe/Paris')->format('H:i');
+                                    $closeTime = \Carbon\Carbon::createFromTimestamp($provider['timing'][$shortDay][1], 'Europe/Paris')->format('H:i');
+                                @endphp
+                                @if($openTime === $closeTime || $openTime > $closeTime)
+                                    <span class="hours-time">Closed</span>
+                                @else
+                                    <span class="hours-time">{{ $openTime }} - {{ $closeTime }}</span>
+                                @endif
+                            @else
+                                <span class="hours-time">Closed</span>
+                            @endif
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+        
+        <!-- Location Section -->
+        <div class="provider-service-address">
+            @if(isset($provider['address']))
+                <p>
+                    <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
+                    <div class="provider-info-address"> {{ $provider['address'] }} </div>
+                </p>
             @endif
         </div>
     </div>
@@ -348,7 +404,7 @@
         <div class="services-row services-mt-4">
             <div class="services-col-12">
                 <a href="{{ url()->previous() }}" class="btn-default">
-                    <i></i> Back to Search Results
+                     Back to Search Results
                 </a>
             </div>
         </div>
@@ -365,6 +421,7 @@
 }
 .provider-ratting-review{
     display: flex;
+    gap: 7px;
 }
 .provider-service-address{
     display: flex;
@@ -439,7 +496,7 @@
 .provider-services .services-img-fluid { max-width: 100%; display: block; }
 .provider-services .services-rounded-circle { border-radius: 50%; }
 .provider-services .services-mb-1 { margin-bottom: 0.25rem; }
-.provider-services .services-mt-4 { margin-top: 1.5rem; }
+.provider-services .services-mt-4 { margin-top: 2.5rem; }
 .provider-services .services-py-4 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
 .provider-services .services-border-bottom { border-bottom: 1px solid #dee2e6; }
 
@@ -709,6 +766,13 @@
         transition: all 0.3s ease;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
+    .provider-card-company-name{
+        letter-spacing: 0px!important;
+        font-size: 30px!important;
+    }
+    .hours-row{
+        padding:initial!important;
+    }
 }
 
 @media (min-width: 768px) {
@@ -797,53 +861,305 @@
 }
 /* SCOPED to .custom-service-list */
 .custom-service-list {
-    background: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .custom-service-list .service-row {
-    padding: 15px 0;
-    border-bottom: 1px solid #eee;
+    padding: 7px 20px;
+    border: 1px solid rgba(213, 190, 198, 1);
+    border-radius: 20px;
+    background: rgba(255, 240, 245, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
 }
 
 .custom-service-list .service-row:last-child {
-    border-bottom: none;
+    border-bottom: 1px solid rgba(229, 0, 80, 0.2);
 }
 
 .custom-service-list .service-info {
     max-width: 70%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+.custom-service-list .service-image {
+    flex-shrink: 0;
+    position: relative;
+}
+
+.custom-service-list .service-image img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #f5f5dc;
+    border: none;
+}
+
+.custom-service-list .service-image-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #f5f5dc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: #8b7355;
+    text-align: center;
+    line-height: 1.2;
+    padding: 5px;
+    word-break: break-word;
+}
+
+.custom-service-list .service-list-details {
+    flex: 1;
+    margin-left: 0 !important;
 }
 
 .custom-service-list .service-name {
     font-size: 16px;
-    margin-bottom: 4px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #1a1a1a;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .custom-service-list .service-desc {
     font-size: 14px;
-    color: #666;
+    color: rgba(26, 26, 26, 0.65);
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .custom-service-list .service-meta {
-    min-width: 120px;
+    /* display: flex; */
+    flex-direction: column;
+    align-items: flex-end;
+    /* gap: 12px; */
+    min-width: 140px;
+}
+
+.custom-service-list .service-meta > div:first-child {
+    color: rgba(44, 13, 24, 0.5);
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .custom-service-list .choose-btn {
-    background-color: #1c1c1c;
+    background: linear-gradient(90deg, #e50050 0%, #ff6b35 100%);
     color: white;
     border: none;
-    border-radius: 10px;
-    padding: 6px 14px;
+    border-radius: 40px;
+    padding: 10px 24px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .custom-service-list .choose-btn:hover {
-    background-color: #333;
+    background: linear-gradient(90deg, #cc0046 0%, #e55a2b 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(229, 0, 80, 0.3);
+}
+
+/* Provider Info Card Styles */
+.provider-info-card {
+    border: 1px solid rgba(213, 190, 198, 1);
+    background: rgba(255, 240, 245, 0.5);
+    border-radius: 20px;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.provider-card-header {
+    margin-bottom: 20px;
+}
+.provider-card-company-name{
+    letter-spacing: -2px;
+    font-weight: 700;
+    font-size: 50px;
+}
+
+.provider-card-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+.provider-card-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.rating-number {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 2px;
+}
+
+.rating-stars i {
+    color: #ffa500;
+    font-size: 14px;
+}
+
+.review-count-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(233, 93, 142, 1);
+}
+
+.to-book-btn {
+    display: block;
+    width: 100%;
+    background: rgba(229, 0, 80, 1);
+    color: white;
+    text-align: center;
+    padding: 12px 20px;
+    border-radius: 45px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.to-book-btn:hover {
+    background: #e55a9f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(255, 105, 180, 0.3);
+}
+
+.provider-card-separator {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+.hours-section {
+    margin-bottom: 20px;
+}
+
+.hours-toggle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 0;
+    user-select: none;
+}
+
+.hours-toggle-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hours-icon {
+    color: rgba(233, 93, 142, 1);
+    font-size: 16px;
+}
+
+.open-until-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(233, 93, 142, 1);
+}
+.until-text-time{
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(118, 33, 62, 1);
+}
+
+.hours-chevron {
+    color: rgba(233, 93, 142, 1);
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.hours-chevron.rotated {
+    transform: rotate(180deg);
+}
+
+.hours-list {
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.hours-list.collapsed {
+    max-height: 0;
+    overflow: hidden;
+}
+
+.hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: none;
+}
+
+.hours-day {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+
+.hours-time {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.provider-card-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.location-pin {
+    color: #e50050;
+    font-size: 14px;
+}
+
+.location-address {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.5);
+    line-height: 1.4;
 }
 
 </style>
@@ -937,6 +1253,18 @@ document.addEventListener('DOMContentLoaded', function() {
     if (desktopHeartBtn) {
         desktopHeartBtn.addEventListener('click', function() {
             this.classList.toggle('active');
+        });
+    }
+    
+    // Hours toggle functionality
+    const hoursToggle = document.getElementById('hoursToggle');
+    const hoursList = document.getElementById('hoursList');
+    const hoursChevron = document.getElementById('hoursChevron');
+    
+    if (hoursToggle && hoursList && hoursChevron) {
+        hoursToggle.addEventListener('click', function() {
+            hoursList.classList.toggle('collapsed');
+            hoursChevron.classList.toggle('rotated');
         });
     }
     
