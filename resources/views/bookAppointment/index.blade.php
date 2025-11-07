@@ -675,6 +675,10 @@
         .day-column {
             min-width: 0;
         }
+
+        .days-header .day-column:nth-child(n + 4) {
+            display: none;
+        }
     }
     
     /* Align 7 vertical columns of slots under the 7 days */
@@ -695,6 +699,12 @@
         gap: 6px;
         min-height: 48px;
         width: 85px;
+    }
+
+    @media (max-width: 768px) {
+        .time-slots-container .day-slots-column:nth-child(n + 4) {
+            display: none;
+        }
     }
     
     .time-slot {
@@ -863,7 +873,7 @@
                                 @endif
                 </div>
 
-                <div class="col-12">
+                <div class="col-12" style="display: grid;justify-content: center;">
                     <!-- Book Appointment Form Start -->
                     <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
                         <form id="appointmentForm" action="{{ route('checkout.session') }}" method="POST" data-toggle="validator">
