@@ -193,7 +193,7 @@ return [
 
         'become_a_glowee_button' => 'Become a Glower',
         'go_smart' => 'Glow Smarter with ',
-        'go_glow' => 'GoGlow',
+        'go_glow' => 'Glow',
         'hero_section_trending_paragraph' => 'from trending beauty content to trusted local pros, your next glow-up is just a scroll away.',
 
         // Benefits section (figmaDesign)

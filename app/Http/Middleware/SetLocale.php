@@ -36,10 +36,10 @@ class SetLocale
                 App::setLocale($locale);
             }
         }
-        // Default to English
+        // Default to French
         else {
-            App::setLocale('en');
-            Session::put('locale', 'en');
+            App::setLocale('fr');
+            Session::put('locale', 'fr');
         }
 
         return $next($request);

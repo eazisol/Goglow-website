@@ -139,7 +139,7 @@
                   <div class="search-row">
                       <div class="search-item">
                           <div class="search-icon">
-                              <img src="images/images/Vector.svg" alt="Search" width="32" height="32" aria-hidden="true">
+                              <img src="images/images/Vector.svg" alt="Search" width="24" height="24" aria-hidden="true">
                           </div>
                           <div class="search-content">
                               <h3 class="search-title">{{ __('app.home.search_input_text') }}</h3>
