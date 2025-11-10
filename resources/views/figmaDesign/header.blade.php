@@ -6,18 +6,18 @@
     </div>
 
     <div class="menu">
-      <a href="#" class="active">Home</a>
+      <a href="#" class="active">{{ __('app.nav.home') }}</a>
       <span class="plus">+</span>
-      <a href="#">About Us</a>
+      <a href="#">{{ __('app.nav.about_us') }}</a>
       <span class="plus">+</span>
-      <a href="#">Services</a>
+      <a href="#">{{ __('app.nav.services') }}</a>
       <span class="plus">+</span>
-      <a href="#">Book Appointments</a>
+      <a href="{{ url('/search') }}">{{ __('app.nav.book_service') }}</a>
       <span class="plus">+</span>
-      <a href="#">Reviews</a>
+      <a href="#">{{ __('app.nav.reviews') }}</a>
     </div>
     @include('partials.language-switcher')
-    <a href="{{ url('/beauty-professional') }}" class="cta-btn">BECOME A GLOWER <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></a>
+    <a href="#" class="cta-btn">{{ __('app.nav.hero_section_button') }}<img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></a>
     {{-- <button class="cta-btn">BECOME A GLOWER <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></button> --}}
     <button class="menu-icon" id="menu-toggle">
       <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">

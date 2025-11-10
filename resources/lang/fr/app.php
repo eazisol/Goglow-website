@@ -8,10 +8,11 @@ return [
         'services' => 'Services',
         'book_service' => 'Réserver un rendez-vous',
         'contact_us' => 'Nous contacter',
+        'reviews' => 'Avis',
         'login' => 'Connexion',
         'logout' => 'Déconnexion',
         'register' => 'S\'inscrire',
-        'hero_section_button' => "Devenir Une Fleur",
+        'hero_section_button' => "DEVENEZ UN ÉCLATANT",
     ],
 
     // Authentication

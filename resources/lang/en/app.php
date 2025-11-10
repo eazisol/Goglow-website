@@ -7,11 +7,12 @@ return [
         'about_us' => 'About us',
         'services' => 'Services',
         'book_service' => 'Book Appointment',
+        'reviews' => 'Reviews',
         'contact_us' => 'Contact us',
         'login' => 'Login',
         'logout' => 'Logout',
         'register' => 'Register',
-        'hero_section_button' => "Become a Glower",
+        'hero_section_button' => "BECOME A GLOWER ",
     ],
 
     // Authentication

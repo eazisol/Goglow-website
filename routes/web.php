@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // figma
-Route::get('/home', function () {return view('figmaDesign.index');});
+Route::get('/', function () {return view('figmaDesign.index');});
 Route::get('/header', function () {return view('figmaDesign.header');});
 Route::get('/slider', function () {return view('figmaDesign.slider');});
 
 Route::get('/testing', function () {return view('figmaDesign.testing');});
 
 // home
-Route::get('/', function () {return view('home.indexImage');});
+Route::get('/testing', function () {return view('home.indexImage');});
 // Route::get('/home-image', function () {return view('home.indexImage');});
 Route::get('/home-video', function () {return view('home.indexVideo');});
 
