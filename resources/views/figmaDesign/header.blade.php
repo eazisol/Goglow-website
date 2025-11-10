@@ -6,7 +6,7 @@
     </div>
 
     <div class="menu">
-      <a href="#" class="active">{{ __('app.nav.home') }}</a>
+      <a href="{{ url('/') }}" class="active">{{ __('app.nav.home') }}</a>
       <span class="plus">+</span>
       <a href="#">{{ __('app.nav.about_us') }}</a>
       <span class="plus">+</span>

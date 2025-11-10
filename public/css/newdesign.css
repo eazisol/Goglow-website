@@ -97,6 +97,68 @@
       padding: 40px 0 0 0;
     }
 
+.hero-visual-wrapper{
+  position: relative;
+  margin-top: 15px;
+}
+
+.hero-left-card{
+  position: absolute;
+  left: 118px;
+  bottom: 0;
+  width: 308px;
+  z-index: 3;
+}
+
+.hero-left-card-inner{
+  line-height: 1;
+  background: rgba(255, 244, 248, 0.8);
+  border-radius: 0 90px 0 0;
+  padding: 28px 26px;
+  margin-bottom: 419px;
+}
+
+.hero-left-card-text{
+  font-size: 21px;
+  font-weight: 700;
+  color: #75213e;
+  text-align: center;
+  margin-top: 196px;
+}
+
+.hero-left-card-text span{
+  color: rgba(44, 13, 24, 0.5);
+  display: block;
+}
+
+.hero-left-card-image{
+  width: 305px;
+  position: absolute;
+  top: -180px;
+  left: 0;
+}
+
+.hero-center-mockup{
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-center-image{
+  width: 100%;
+  max-width: 644px;
+  height: auto;
+}
+
+.hero-right-card{
+  position: absolute;
+  right: 140px;
+  top: 285px;
+  width: 306px;
+  z-index: 3;
+}
+
     /* Header */
     .header {
       background: rgba(255, 244, 248, 0.95);
@@ -1997,6 +2059,175 @@
         font-size: 343px;
       }
     }
+
+@media (min-width: 1024px) and (max-width: 1440px) {
+  .container{
+    max-width: 1170px;
+  }
+  .language-name{
+    display: none;
+  }
+  .lang-switcher{
+    left: 45px!important;
+  }
+  .logo img {
+    height: 45px!important;
+    width: 80px!important;
+  }
+  .hero-buttons{
+    bottom: 130px!important;
+  }
+  .search-section{
+    padding: 22px;
+  }
+  .search-icon{
+    width: 60px;
+    height: 60px;
+  }
+  .searchInput{
+    font-size: 16px;
+  }
+  .hero-title{
+    font-size: 96px;
+  }
+  .hero-subtitle{
+    font-size: 20px;
+    max-width: 620px;
+  }
+  .hero-left-card{
+    width: 260px;
+  }
+  .hero-left-card-inner{
+    padding: 24px 22px;
+    margin-bottom: 360px;
+  }
+  .hero-left-card-text{
+    margin-top: 150px;
+    font-size: 19px;
+  }
+  .hero-left-card-image{
+    width: 240px;
+    top: -150px;
+  }
+  .hero-center-mockup img{
+    max-width: 540px;
+  }
+  .hero-right-card{
+    top: 240px;
+    width: 260px;
+  }
+  .hero-right-card .hero-phone{
+    transform: scale(0.9);
+    transform-origin: top right;
+  }
+  .hero-buttons{
+    bottom: 150px;
+  }
+  .benefits-carousel-container{
+    margin-left: 105px;
+    /* margin-right: 40px; */
+  }
+  .badge-text{
+    font-size: 17px;
+  }
+  .how-it-work-heading{
+    font-size: 70px;
+    line-height: 70px!important;
+  }
+  .how-it-work-subtitle{
+    font-size: 18px;
+  }
+  .step-content h3{
+    font-size: 20px;
+  }
+  .step-content p{
+    font-size: 16px;
+  }
+  .how-it-work-buttons{
+    margin-top: 155px!important;
+  }
+  .reviews-carousel-container .carousel-track{
+    transform: translateX(-576px)!important;
+  }
+  .partner-section-subtitle{
+    font-size: 19px;
+  }
+  .pricing-section-header{
+    font-size: 60px;
+  }
+  .app-section-title{
+    font-size: 60px;
+  }
+  .app-section-subtitle{
+    font-size: 19px;
+  }
+  .pricing-title{
+    font-size: 25px;
+  }
+  .partner-section-title{
+    font-size: 70px;
+  }
+  .benefits-title,
+  .benefits-title2{
+    font-size: 60px;
+  }
+  .benefits-subtitle{
+    max-width: 520px;
+  }
+  .steps-container{
+    gap: 30px;
+  }
+  .steps-list{
+    max-width: 520px;
+  }
+  .review-card{
+    min-width: 420px;
+    padding: 60px 40px;
+  }
+  .pricing-cards{
+    gap: 24px;
+  }
+  .pricing-card,
+  .pricing-card2{
+    min-width: 340px;
+  }
+  .pricing-header{
+    padding: 0 24px;
+  }
+  .pricing-features,
+  .pricing-cta{
+    padding: 0 24px;
+  }
+  .app-section-background-image{
+    top: -210px;
+    height: 330px;
+  }
+  .download-text{
+    font-size: 14px!important;
+    
+  }
+  .store-text{
+    font-size: 20px!important;
+  }
+  .app-buttons{
+    top: 170px;
+  }
+  .footer-bg-text{
+    font-size: 294px;
+  }
+  .footer-section h3{
+    font-size: 16px;
+  }
+  .footer-content{
+    gap: 356px;
+  }
+  .footer-links{
+    gap: 79px;
+  }
+  .footer-section a{
+    font-size: 15px;
+  }
+}
 
     @media (min-width: 1280px) {
       .hero-title {

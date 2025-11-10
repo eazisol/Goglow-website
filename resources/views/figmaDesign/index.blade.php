@@ -34,24 +34,24 @@
         </div>
 
         <!-- Hero Visual Elements -->
-        <div style="position: relative; margin-top: 15px;">
+        <div class="hero-visual-wrapper">
           <!-- Left side content -->
-          <div style="position: absolute; left: 118px; bottom: 0; width: 308px; z-index: 3;" class="desktop-only">
-            <div style="line-height: 1;background: rgba(255, 244, 248, 0.8);border-radius: 0 90px 0 0;padding: 28px 26px;margin-bottom: 419px;">
-              <p style="font-size: 21px; font-weight: 700; color: #75213e; text-align: center; margin-top: 196px;">
-                {{ __('app.home.figma_design_hero_450_salons') }}<br><span style="color: rgba(44, 13, 24, 0.5);">{{ __('app.home.have joined Glow') }}<br></span>{{ __('app.home.figma_design_already') }}
+          <div class="hero-left-card desktop-only">
+            <div class="hero-left-card-inner">
+              <p class="hero-left-card-text">
+                {{ __('app.home.figma_design_hero_450_salons') }}<br><span>{{ __('app.home.have joined Glow') }}<br></span>{{ __('app.home.figma_design_already') }}
               </p>
             </div>
-            <img src="images/images/47abffa77278693eaa65f93217cd9d6a2ea127b5.png" alt="Beauty glove" style="width: 305px; position: absolute; top: -180px; left: 0;">
+            <img src="images/images/47abffa77278693eaa65f93217cd9d6a2ea127b5.png" alt="Beauty glove" class="hero-left-card-image">
           </div>
 
           <!-- Center phone mockup -->
-          <div style="display: flex; justify-content: center; position: relative; z-index: 2;">
-            <img src="images/images/img_image.png" alt="GoGlow App Interface" style="width: 100%; max-width: 644px; height: auto;">
+          <div class="hero-center-mockup">
+            <img src="images/images/img_image.png" alt="GoGlow App Interface" class="hero-center-image">
           </div>
 
           <!-- Right side phone -->
-          <div style="position: absolute; right: 140px; top: 285px; width: 306px; z-index: 3;" class="desktop-only">
+          <div class="hero-right-card desktop-only">
             <div class="hero-phone">
               <div class="phone-bg"></div>
               <div class="phone-image">
@@ -652,7 +652,7 @@
             <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
           </div>
           
-          <h2 class="section-title" style="background: linear-gradient(90deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+          <h2 class="section-title app-section-title" style="background: linear-gradient(90deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
             {{ __('app.home.as_title_first') }}<br><span style="font-family: Raflesia;">{{ __('app.home.as_title_second') }}</span>
           </h2>
           
