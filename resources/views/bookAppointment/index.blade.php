@@ -734,6 +734,9 @@
     .time-slot.unavailable {
         display: none;
     }
+    .footer-section ul{
+        padding-left:initial!important;
+    }
 
     /* Layout fixes: ensure right form column doesn't get vertically centered
        or add large top/bottom whitespace when left column grows */
@@ -836,7 +839,7 @@
                                 @if(!empty($agents))
                     <!-- Agent & Schedule (moved here) -->
                     <div class="mt-4" style="justify-content: center;display: grid;">
-                                    <label class="form-label" style="justify-content: center;display: flex;">Select Agent</label>
+                                    <label class="form-label" style="justify-content: center;display: flex;">{{ __('app.agent_page.select_agent') }}</label>
                                     <div id="agentList" class="agent-avatars">
                                         @foreach($agents as $agent)
                                             <div class="agent-avatar" data-agent='@json($agent)'>
@@ -847,12 +850,12 @@
                                     </div>
 
                                     <div id="agentSchedule" class="mt-3" style="display:none;">
-                            <h5 style="margin-bottom: 10px;font-size:18px;font-weight:700;">Schedule</h5>
+                            <h5 style="margin-bottom: 10px;font-size:18px;font-weight:700;">{{ __('app.agent_page.schedule') }}</h5>
 
                             <!-- Selected slot info (moved directly under heading) -->
                             <div id="selectedSlotInfo" class="alert alert-info mb-3" style="display: none;">
                                 <i class="fa fa-info-circle"></i>
-                                Selected: <span id="selectedDateTimeDisplay"></span>
+                                {{ __('app.agent_page.selected') }}: <span id="selectedDateTimeDisplay"></span>
                                             </div>
 
                             <div id="weekDisplay"></div>
@@ -897,18 +900,18 @@
                                 
                                 <!-- Payment Options -->
                                 <div class="form-group col-md-12 mb-4">
-                                    <label class="form-label">Payment Options</label>
+                                    <label class="form-label">{{ __('app.agent_page.payment_options') }}</label>
                                     <div class="payment-options">
                                         <div class="form-check mb-3">
                                             <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
                                             <label class="form-check-label" for="payDeposit">
-                                                Pay 15% deposit now (${{ number_format(($selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0)) * 0.15, 2) }})
+                                                {{ __('app.agent_page.pay_15%_deposit_now') }} (${{ number_format(($selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0)) * 0.15, 2) }})
                                             </label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
                                             <label class="form-check-label" for="payFull">
-                                                Pay full amount now (${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }})
+                                                {{ __('app.agent_page.pay_full_amount_now') }} (${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }})
                                             </label>
                                         </div>
                                     </div>
@@ -921,7 +924,7 @@
                                 </div> --}}
     
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn-default"><span>Book an appointment</span></button>
+                                    <button type="submit" class="btn-default"><span>{{ __('app.agent_page.book_an_appointment') }}</span></button>
                                     {{-- <button type="button" id="testStripeBtn" class="btn-alt" style="margin-left: 10px;"><span>Test Stripe Connection</span></button> --}}
                                     <div id="msgSubmit" class="h3 hidden"></div>
                                 </div>

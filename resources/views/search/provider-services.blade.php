@@ -275,11 +275,11 @@
                                     <div class="services-text-muted services-small services-mb-1">
                                         {{ $service['duration_minutes'] ?? 0 }} min 
                                         &bull; 
-                                        from €{{ $service['service_price'] ?? '0' }}
+                                        {{ __('app.service.from') }} €{{ $service['service_price'] ?? '0' }}
                                     </div>
                                     <div class="choose-button">
                                         <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . ($provider['id'] ?? '')) }}" 
-                                        class="choose-btn">Choose</a>
+                                        class="choose-btn">{{ __('app.service.choose') }}</a>
                                     </div>
 
                                 </div>
@@ -321,7 +321,7 @@
                 @endif
                 </div>
             @endif
-            <a href="#" class="to-book-btn">To Book</a>
+            <a href="#" class="to-book-btn">{{ __('app.service.to_book') }}</a>
         </div>
         
         <!-- Separator -->
@@ -356,7 +356,7 @@
             <div class="hours-toggle-header" id="hoursToggle">
                 <div class="hours-toggle-left">
                     <img src="images/images/iconoir_clock.svg" alt="Location" width="24" height="24">
-                    <span class="open-until-text">@if($openUntil)Open <span class="until-text-time">until {{ $openUntil }}</span>@else Hours of operation @endif</span>
+                    <span class="open-until-text">@if($openUntil){{ __('app.service.open') }} <span class="until-text-time">{{ __('app.service.until') }} {{ $openUntil }}</span>@else Hours of operation @endif</span>
                 </div>
                 <i class="fas fa-chevron-up hours-chevron" id="hoursChevron"></i>
             </div>
@@ -404,7 +404,7 @@
         <div class="services-row services-mt-4">
             <div class="services-col-12">
                 <a href="{{ url()->previous() }}" class="btn-default">
-                     Back to Search Results
+                     {{ __('app.service.back_to_search_page') }}
                 </a>
             </div>
         </div>

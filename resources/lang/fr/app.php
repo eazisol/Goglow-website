@@ -101,8 +101,11 @@ return [
 
     // Footer
     'footer' => [
-        'about_description' => 'Découvrez et réservez des services de salon de confiance en toute simplicité. Des cheveux à la peau, nous vous connectons avec des professionnels qui vous aident à vous sentir et à paraître au mieux.',
-        'urgent_support' => 'Support urgent ?',
+        'footer_description' => 'Découvrez et réservez des services de salon de confiance en toute simplicité. Des cheveux à la peau, nous vous connectons avec des professionnels qui vous aident à vous sentir et à paraître au mieux.',
+        'menus'=>'Menus',
+        'how_it_works'=>'Comment ça marche',
+        'help_support'=>'Aide et assistance',
+        'contact' => 'Contact',
         'email_us' => 'Nous envoyer un e-mail',
         'enter_email' => 'Entrez votre e-mail',
         'subscribe' => 's\'abonner',
@@ -114,6 +117,7 @@ return [
         'terms_conditions' => 'Termes et conditions',
         'privacy_policy' => 'Politique de confidentialité',
         'copyright' => 'Copyright © 2025 Tous droits réservés.',
+        'follow_us' => 'Follow Us',
     ],
 
     // Home Page
@@ -281,4 +285,23 @@ return [
         'searchbar_section_heading' => 'Trouvez des salons de confiance et réservez instantanémentueil',
         'searchbar_section_paragraph' => 'Découvrez les salons les mieux notés près de chez vous. Comparez les services, lisez les avis et inversez en quelques secondes'
     ],
+        // service page
+    'service' => [
+        'choose' => 'Choisir',
+        'from' => 'depuis',
+        'to_book' => 'Pour réserver',
+        'open' => 'Ouvrir',
+        'until' => 'jusquà',
+        'back_to_search_page' => 'Retour aux résultats de recherche',
+    ],
+        // Agent Page
+    'agent_page' => [
+        'select_agent' => 'Sélectionnez un agent',
+        'schedule' => 'Calendrier',
+        'selected' => 'Choisi',
+        'payment_options' => 'Options de paiement',
+        'pay_15%_deposit_now' => 'Versez un acompte de 15 % dès maintenant',
+        'pay_full_amount_now' => 'Payez le montant total maintenant',
+        'book_an_appointment' => 'Prendre rendez-vous'
+    ]
 ];

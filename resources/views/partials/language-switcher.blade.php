@@ -9,7 +9,7 @@
         <button class="language-btn lang-toggle" type="button" aria-haspopup="true" aria-expanded="false">
             <span class="language-flag">{!! LanguageHelper::getLocaleFlag($currentLocale) !!}</span>
             <span class="language-name">{{ LanguageHelper::getLocaleName($currentLocale) }}</span>
-            <i class="fas fa-chevron-down" style="color:white;" aria-hidden="true"></i>
+            <i class="fas fa-chevron-down" style="color:black;" aria-hidden="true"></i>
         </button>
 
         <ul class="lang-dropdown-menu" role="menu">

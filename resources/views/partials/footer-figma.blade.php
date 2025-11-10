@@ -9,24 +9,24 @@
           <div class="footer-brand">
             <img src="images/images/img_footer_logo.png" alt="GoGlow Logo" class="footer-logo">
             <p class="footer-description">
-              Discover and book trusted salon services with ease. From hair to skin, we connect you with professionals who help you look and feel your best.
+              {{ __('app.footer.footer_description') }}
             </p>
           </div>
 
           <div class="footer-links">
             <div class="footer-section">
-              <h3>menus</h3>
+              <h3>{{ __('app.footer.menus') }}</h3>
               <ul>
-                <li><a href="#">how it works</a></li>
-                <li><a href="#">help & support</a></li>
-                <li><a href="#">contact</a></li>
-                <li><a href="#">privacy & policy</a></li>
-                <li><a href="#">terms & conditions</a></li>
+                <li><a href="#">{{ __('app.footer.how_it_works') }}</a></li>
+                <li><a href="#">{{ __('app.footer.help_support') }}</a></li>
+                <li><a href="#">{{ __('app.footer.contact') }}</a></li>
+                <li><a href="#">{{ __('app.footer.privacy_policy') }}</a></li>
+                <li><a href="#">{{ __('app.footer.terms_conditions') }}</a></li>
               </ul>
             </div>
 
             <div class="footer-section">
-              <h3>follow us</h3>
+              <h3>{{ __('app.footer.follow_us') }}</h3>
               <ul>
                 <li><a href="#">Facebook</a></li>
                 <li><a href="#">instagram</a></li>
@@ -40,7 +40,7 @@
 
       <div class="footer-copyright">
         <p class="copyright-text">
-          copyright © 2025 all rights reserved. <span class="copyright-go">Go</span><span class="copyright-glow">Glow</span><span class="copyright-com">.com</span>
+          {{ __('app.footer.copyright') }} <span class="copyright-go"></span><span class="copyright-glow">goglow</span><span class="copyright-com">.fr</span>
         </p>
       </div>
     </footer>

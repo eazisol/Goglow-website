@@ -101,7 +101,11 @@ return [
 
     // Footer
     'footer' => [
-        'about_description' => 'Discover and book trusted salon services with ease. From hair to skin, we connect you with professionals who help you look and feel your best.',
+        'footer_description' => 'Discover and book trusted salon services with ease. From hair to skin, we connect you with professionals who help you look and feel your best.',
+        'menus'=>'Menus',
+        'how_it_works'=>'How It Works',
+        'help_support'=>'Help & Support',
+        'contact' => 'Contact',
         'urgent_support' => 'Urgent Support?',
         'email_us' => 'E-mail Us',
         'enter_email' => 'Enter your email',
@@ -112,8 +116,9 @@ return [
         'services' => 'services',
         'contact_us' => 'contact us',
         'terms_conditions' => 'Terms & Conditions',
-        'privacy_policy' => 'Privacy Policy',
+        'privacy_policy' => 'Privacy & Policy',
         'copyright' => 'Copyright © 2025 All Rights Reserved.',
+        'follow_us' => 'Follow Us',
     ],
 
     // Home Page
@@ -275,4 +280,24 @@ return [
         'searchbar_section_heading' => 'Find trusted salons & book instantly',
         'searchbar_section_paragraph' => 'Discover best-rated salons near you.Compare services, read reviews, and reverse in seconds'
     ],
+
+    // service page
+    'service' => [
+        'choose' => 'Choose',
+        'from' => 'from',
+        'to_book' => 'To Book',
+        'open' => 'Open',
+        'until' => 'until',
+        'back_to_search_page' => 'Back to Search Results',
+    ],
+    // Agent Page
+    'agent_page' => [
+        'select_agent' => 'Select Agent',
+        'schedule' => 'Schedule',
+        'selected' => 'Selected',
+        'payment_options' => 'Payment Options',
+        'pay_15%_deposit_now' => 'Pay 15% deposit now',
+        'pay_full_amount_now' => 'Pay full amount now',
+        'book_an_appointment' => 'Book an appointment'
+    ]
 ];

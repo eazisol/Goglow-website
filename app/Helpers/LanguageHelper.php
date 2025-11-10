@@ -35,8 +35,8 @@ class LanguageHelper
     public static function getLocaleName($locale)
     {
         $names = [
-            'en' => 'English',
-            'fr' => 'Français',
+            'en' => 'EN',
+            'fr' => 'FR',
         ];
 
         return $names[$locale] ?? $locale;
