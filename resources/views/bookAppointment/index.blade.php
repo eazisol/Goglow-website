@@ -461,7 +461,7 @@
         padding: 30px 30px 0 30px;
     }
     .service-summary-card .card-body {
-        padding: 10px 30px 10px;
+        padding: 20px 30px 20px;
     }
     .service-summary-title {
         margin: 0 0 6px 0;
@@ -815,11 +815,11 @@
                 <div class="col-12">
                     <!-- Service summary card Start -->
                     <div class="service-summary-card">
-                        <div class="card-cover">
+                        {{-- <div class="card-cover">
                             <img src="{{ (isset($selectedService['images']) && count($selectedService['images']) > 0) ? $selectedService['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}"
                                  alt="{{ $selectedService['service_name'] ?? 'Service' }}"
                                  onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
-                        </div>
+                        </div> --}}
                         <div class="card-body">
                             <h4 class="service-summary-title">{{ $selectedService['service_name'] ?? 'Selected Service' }}</h4>
                             <p class="service-summary-price">

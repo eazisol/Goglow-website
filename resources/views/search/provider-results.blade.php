@@ -117,9 +117,9 @@
                 <div class="col-lg-12">
                     <!-- Page Header Box Start -->
                     <div class="page-header-box">
-                        <h2 class="text-anime-style-2" style="color:white;" >Search Results for "{{ $search }}"
+                        {{-- <h2 class="text-anime-style-2" style="color:#e50050;" >Search Results for "{{ $search }}"
                         @if($location) in "{{ $location }}" @endif
-                        </h2>
+                        </h2> --}}
                         {{-- <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
@@ -135,6 +135,12 @@
 <!-- Search Results Section Start -->
 <div class="search-results" style="margin: 0 0 50px 0;">
     <div class="container">
+                            <div class="service-filter-pills" role="tablist" aria-label="Service categories">
+                                <button type="button" class="filter-pill active" aria-current="true">All</button>
+                                <button type="button" class="filter-pill">Nails</button>
+                                <button type="button" class="filter-pill">Massage</button>
+                                <button type="button" class="filter-pill">Hair</button>
+                            </div>
         
 
         <div class="results-grid">
@@ -359,7 +365,7 @@
     .search-results .provider-image { padding: 16px 16px 0 16px; }
     .search-results .provider-image-inner { position: relative; border-radius: 25px; overflow: hidden; }
     .search-results .provider-image img { width: 100%; height: 251px; object-fit: cover; display: block; }
-    .search-results .image-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%); }
+    .search-results .image-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 17px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%); }
     .overlay-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .overlay-title { color: #fff; font-weight: 700; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
     .overlay-meta { color: #e6e6e6; font-size: 14px; }
@@ -368,7 +374,7 @@
 
     .search-results .provider-details { color: #111827; }
     /* emulate Bootstrap p-4 utility locally */
-    .search-results .p-4 { padding: 0.3rem 1.5rem 1.5rem 1.5rem; }
+    .search-results .p-4 { padding: 0.3rem 1.5rem 1.5rem 2.0rem; }
     /* emulate common Bootstrap utilities locally */
     .search-results .text-center { text-align: center; }
     .search-results .img-fluid { max-width: 100%; height: auto; display: block; }

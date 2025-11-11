@@ -1514,6 +1514,40 @@
       gap: 10px;
       margin-bottom: 50px;
     }
+        .service-filter-pills {
+    margin-bottom: 30px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 75px;
+    }
+    .service-filter-pills .filter-pill {
+        appearance: none;
+        border: 1px solid rgba(213, 190, 198, 1);
+        border-radius: 999px;
+        background: rgb(255 246 248);
+        color: rgba(118, 33, 62, 1);
+        font-size: 17px;
+        font-weight: 500;
+        padding: 10px 26px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(229, 0, 80, 0.05);
+    }
+    .service-filter-pills .filter-pill:hover {
+        border-color: rgba(229, 0, 80, 0.6);
+        color: rgba(229, 0, 80, 1);
+        background: rgba(255, 255, 255, 0.6);
+    }
+    .service-filter-pills .filter-pill.active {
+        background: rgba(229, 0, 80, 1);
+        color: #ffffff;
+        border-color: rgba(229, 0, 80, 1);
+    }
+    .service-filter-pills .filter-pill:focus-visible {
+        outline: 2px solid rgba(229, 0, 80, 0.75);
+        outline-offset: 2px;
+    }
 
 
 
@@ -2360,6 +2394,13 @@
       .mobile-menu-nav a {
         font-size: 16px;
         padding: 12px 0;
+      }
+      .service-filter-pills{
+        gap: 10px;
+      }
+      .service-filter-pills .filter-pill{
+        padding: 10px 22px;
+        font-size: 15px;
       }
     }
 

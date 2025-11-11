@@ -231,6 +231,15 @@
         ->sortKeys();
 @endphp
 
+                            <div class="service-filter-pills" role="tablist" aria-label="Service categories">
+                                <button type="button" class="filter-pill active" aria-current="true">Category Name</button>
+                                <button type="button" class="filter-pill">Category Name</button>
+                                <button type="button" class="filter-pill">Category Name</button>
+                                <button type="button" class="filter-pill">Category Name</button>
+                                <button type="button" class="filter-pill">Category Name</button>
+                                <button type="button" class="filter-pill">Category Name</button>
+                            </div>
+
     <div class="services-row">
         <div class="services-col-lg-8">
                 @if(count($services) > 0)
@@ -398,7 +407,6 @@
 </div>
 
     </div>
-
 
         
         <div class="services-row services-mt-4">
