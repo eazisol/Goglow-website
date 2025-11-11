@@ -154,13 +154,13 @@
                                              onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                                         <div class="image-overlay">
                                             <div class="overlay-left">
-                                                <span class="overlay-title">
+                                                {{-- <span class="overlay-title">
                                                     {{ !empty($provider['storeName']) 
                                                         ? $provider['storeName'] 
                                                         : (!empty($provider['name']) 
                                                             ? $provider['name'] 
                                                             : 'No Name') }}
-                                                </span>
+                                                </span> --}}
                                                 @if(isset($provider['companyName']) && $provider['companyName'])
                                                     <span class="overlay-meta">{{ $provider['companyName'] }}</span>
                                                 @endif
@@ -174,8 +174,13 @@
                                 </div>
                                 <div class="provider-details p-4">
                                     <h3 class="card-title">
-                                        {{ !empty($provider['storeName']) 
+                                        {{-- {{ !empty($provider['storeName']) 
                                             ? $provider['storeName'] 
+                                            : (!empty($provider['name']) 
+                                                ? $provider['name'] 
+                                                : 'No Name') }} --}}
+                                        {{ !empty($provider['companyName']) 
+                                            ? $provider['companyName'] 
                                             : (!empty($provider['name']) 
                                                 ? $provider['name'] 
                                                 : 'No Name') }}
