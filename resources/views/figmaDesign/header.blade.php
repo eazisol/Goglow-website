@@ -6,13 +6,13 @@
     </div>
 
     <div class="menu">
-      <a href="{{ url('/') }}" class="active">{{ __('app.nav.home') }}</a>
+      <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}" @if(request()->is('/')) aria-current="page" @endif>{{ __('app.nav.home') }}</a>
       <span class="plus">+</span>
       <a href="#">{{ __('app.nav.about_us') }}</a>
       <span class="plus">+</span>
       <a href="#">{{ __('app.nav.services') }}</a>
       <span class="plus">+</span>
-      <a href="{{ url('/search') }}">{{ __('app.nav.book_service') }}</a>
+      <a href="{{ url('/search') }}" class="{{ request()->is('search*') ? 'active' : '' }}" @if(request()->is('search*')) aria-current="page" @endif>{{ __('app.nav.book_service') }}</a>
       <span class="plus">+</span>
       <a href="#">{{ __('app.nav.reviews') }}</a>
     </div>
@@ -30,11 +30,11 @@
     <button class="close-btn" id="close-btn">
       <img src="images/images/Close.svg" alt="close" style="width: 30px;">
     </button>
-    <a href="{{ url('/') }}">Home</a>
+    <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">{{ __('app.nav.home') }}</a>
     <a href="#">About Us</a>
     <a href="#">Services</a>
-    <a href="#">Book Appointments</a>
-    <a href="#">Reviews</a>
+    <a href="{{ url('/search') }}" class="{{ request()->is('search*') ? 'active' : '' }}">{{ __('app.nav.book_service') }}</a>
+    <a href="#">{{ __('app.nav.reviews') }}</a>
         <a href="{{ url('/beauty-professional') }}" class="mobile-sidebar-button">BECOME A GLOWER <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16"></a>
     {{-- <button class="mobile-sidebar-button">BECOME A GLOWER <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16"></button> --}}
     <button class="cta-btn">BECOME A GLOWER →</button>

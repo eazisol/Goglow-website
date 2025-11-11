@@ -66,6 +66,7 @@
 
     .menu a.active {
       font-weight: 600;
+      color: black;
     }
 
     .plus {
