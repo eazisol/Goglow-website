@@ -23,17 +23,22 @@
           <!-- Hero Content -->
           <div class="flex-col hero-content-top" style="align-items: center; text-align: center;">
             <div class="badge">
-              <span class="badge-text">{{ __('app.home.go_smart') }}<span class="badge-highlight">{{ __('app.home.go_glow') }}</span></span>
+              <span class="badge-text">447 pros & Salons Have <span class="badge-highlight">Already Joined Us</span></span>
               <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
+
+            <div class='bag-hero-title'>
+              <h1>Too Much Talent - Not Enough</h1>
+              <span class="shine-word">Appointments ?</span>
+            </div>
             
-            <h1 class="hero-title">{{ __('app.home.figma_design_hero_heading') }}<span class="shine-word">{{ __('app.home.figma_design_hero_shine') }}</span>.</h1>
+            {{-- <h1 class="hero-title">Too Much Talent -Not Enough<span class="shine-word">Appointments ?</span>.</h1> --}}
             
-            <p class="hero-subtitle">{{ __('app.home.hero_section_trending_paragraph') }}</p>
+            <p class="hero-subtitle">Get new clients with your videos for real</p>
           </div>
         </div>
 
-        <!-- Hero Visual Elements -->
+        {{-- <!-- Hero Visual Elements -->
         <div class="hero-visual-wrapper">
           <!-- Left side content -->
           <div class="hero-left-card desktop-only">
@@ -71,10 +76,18 @@
               </div>
             </div>
           </div>
+        </div> --}}
+
+        {{-- hero-section-carosal --}}
+        <div class='bag-hero-carosal'>
+          <img src="images/images/Frame 1618873910.png" width="300">
+          <img src="images/images/5be29f16096eab1a9c203a2fd6fef9b6990d690a.jpg" width="300">
+          <img src="images/images/Frame 1618873910.png" width="300">
+          <img src="images/images/5be29f16096eab1a9c203a2fd6fef9b6990d690a.jpg" width="300">
         </div>
 
            <!-- App Store Buttons -->
-           <div class="hero-buttons">
+           <div class="bag-hero-buttons">
              <a href="#" class="app-store-btn">
                <div class="app-store-content">
                  <div class="apple-logo">
@@ -91,85 +104,9 @@
                <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
              </a>
            </div>
-          {{-- button design --}}
-          <div class="hero-button-design">
-            <img src="images/images/Rectangle 34.png" alt="Button Design">
-          </div>
-
       </div>
     </section>
 
-    <!-- Search Section -->
-    <section class="section">
-      <div class="container">
-        {{-- <div class="search-section">
-          <div class="search-row">
-            <div class="search-item">
-              <div class="search-icon">
-                <img src="images/images/Vector.svg" alt="Search" width="32" height="32">
-              </div>
-              <div class="search-content">
-                <h3 class="search-title">What are you looking for ?</h3>
-                <p class="search-placeholder">Search by service or provider name</p>
-              </div>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="search-item">
-              <div class="search-icon">
-                <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="32" height="32">
-              </div>
-              <div class="search-content">
-                <h3 class="search-title">Add</h3>
-                <p class="search-placeholder">Locations required for service search</p>
-              </div>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <a href="#" class="btn-primary" style="margin-left: auto;">
-              search
-              <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
-            </a>
-          </div>
-        </div> --}}
-        <div class="search-section">
-              <form action="{{ route('search') }}" method="GET">
-                  <div class="search-row">
-                      <div class="search-item">
-                          <div class="search-icon">
-                              <img src="images/images/Vector.svg" alt="Search" width="24" height="24" aria-hidden="true">
-                          </div>
-                          <div class="search-content">
-                              <h3 class="search-title">{{ __('app.home.search_input_text') }}</h3>
-                              <input type="search" class="searchInput" id="searchInput" name="search" placeholder="{{ __('app.home.search_service_placeholder') }}" required>
-                          </div>
-                      </div>
-
-                      <div class="divider"></div>
-
-                      <div class="search-item">
-                          <div class="search-icon">
-                              <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="32" height="32" aria-hidden="true">
-                          </div>
-                          <div class="search-content">
-                              <h3 class="search-title">{{ __('app.home.search_or_text') ?? 'Location' }}</h3>
-                              <input type="text" class="searchInput" id="locationInput" name="location" placeholder="{{ __('app.home.search_location_placeholder') }}">
-                          </div>
-                      </div>
-
-                      <div class="divider"></div>
-
-                      <button type="submit" class="btn-primary" style="margin-left: auto;">
-                          {{ __('app.home.search_button') }}
-                          <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
-                      </button>
-                  </div>
-              </form>
-        </div>
-      </div>
-    </section>
 
     <!-- Benefits Section -->
     <section class="benefits-section">
@@ -483,258 +420,7 @@
 
     </section>
 
-    <!-- Partners Section -->
-    <section class="section">
-      <div class="container">
-        <div class="flex-col partner-section-header" style="align-items: center; text-align: center; margin-top: 70px;">
-          <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
-            <span class="badge-text">{{ __('app.home.partners_badge_our') }} <span class="badge-highlight">{{ __('app.home.partners_badge_partners') }}</span></span>
-            <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
-          </div>
-          
-          <h2 class="section-title partner-section-title" style="line-height: 80px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-            {{ __('app.home.partners_title_trusted') }}<br><span style="font-family: Raflesia; font-weight: 400;">{{ __('app.home.partners_title_partners') }}</span>
-          </h2>
-          
-          <p class="section-subtitle partner-section-subtitle">{{ __('app.home.partners_subtitle_text') }}</p>
-        </div>
 
-
-      </div>
-              <div class="partners-grid">
-                <div class="partners-marquee">
-                  <img src="images/images/img_rectangle_35.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_36.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_39.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_41.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_42.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_43.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_44.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_38.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_45.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_40.png" alt="Partner Logo" class="partner-logo">
-                  <!-- Duplicate logos for seamless looping -->
-                  <img src="images/images/img_rectangle_35.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_36.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_39.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_41.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_42.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_43.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_44.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_38.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_45.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_40.png" alt="Partner Logo" class="partner-logo">
-                </div>
-              </div>
-
-        <div class="partner-section-button" style="text-align: center; margin-top: 35px; margin-bottom: 60px;">
-          <a href="#" class="btn-gradient">
-            {{ __('app.home.become_a_glowee_button') }}
-            <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
-          </a>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section class="pricing-section">
-      <div style="background-image: url('images/images/img_group_33524.png'); background-size: cover; background-position: center; position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
-      <div class="container" style="position: relative; z-index: 2;">
-        <div class="flex-col" style="align-items: flex-start;">
-          <div class="badge">
-            <span class="badge-text" style="color: #e50050;">{{ __('app.home.pricing_title') }}</span>
-            <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
-          </div>
-          
-          <h2 class="section-title pricing-section-header" style="color: #fff4f8; text-align: left;">
-            {{ __('app.home.want_to_shine_title_first') }}<br>{{ __('app.home.want_to_shine_title_second') }}<span style="font-family: Raflesia; font-weight: 400;">{{ __('app.home.want_to_shine_title_third') }}</span>
-          </h2>
-          
-          <p style="font-size: 22px; font-weight: 500; color: #fff4f8; margin-bottom: 40px;">{{ __('app.home.discover_trends_subtitle') }}</p>
-        </div>
-
-        <div class="pricing-cards">
-          <div class="pricing-card">
-            <div class="pricing-badge">{{ __('app.home.pricing_reviews') }}</div>
-            <div class="pricing-header">
-              <h3 class="pricing-title">{{ __('app.home.pricing_card_title') }}</h3>
-              <p class="pricing-price">$32</p>
-            </div>
-            <div class="pricing-features">
-              <div class="pricing-feature">
-                <div class="feature-dot"></div>
-                <p class="feature-text">{{ __('app.home.pricing_feature_full_body_scrub') }}</p>
-              </div>
-              <div class="pricing-feature">
-                <div class="feature-dot"></div>
-                <p class="feature-text">{{ __('app.home.pricing_feature_detox_body_wrap') }}</p>
-              </div>
-              <div class="pricing-feature">
-                <div class="feature-dot"></div>
-                <p class="feature-text">{{ __('app.home.pricing_feature_hydrating_body_wrap') }}</p>
-              </div>
-            </div>
-            <div class="pricing-cta">
-              <a href="#" class="btn-gradient">
-                {{ __('app.home.pricing_book_now') }}
-                <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
-              </a>
-            </div>
-          </div>
-
-          <div class="pricing-card2">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div class="pricing-badge">{{ __('app.home.pricing_reviews') }}</div>
-              <div class="pricing-badge popular">popular 🔥</div>
-            </div>
-            <div class="pricing-header">
-              <h3 class="pricing-title">{{ __('app.home.pricing_card_title') }}</h3>
-              <p class="pricing-price">$32</p>
-            </div>
-            <div class="pricing-features">
-              <div class="pricing-feature">
-                <div class="feature-dot"></div>
-                <p class="feature-text">{{ __('app.home.pricing_feature_full_body_scrub') }}</p>
-              </div>
-              <div class="pricing-feature">
-                <div class="feature-dot"></div>
-                <p class="feature-text">{{ __('app.home.pricing_feature_detox_body_wrap') }}</p>
-              </div>
-              <div class="pricing-feature">
-                <div class="feature-dot"></div>
-                <p class="feature-text">{{ __('app.home.pricing_feature_hydrating_body_wrap') }}</p>
-              </div>
-            </div>
-            <div class="pricing-cta">
-              <a href="#" class="btn-primary">
-                {{ __('app.home.pricing_book_now') }}
-                <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
-              </a>
-            </div>
-          </div>
-
-          <div class="pricing-card">
-            <div class="pricing-badge">{{ __('app.home.pricing_reviews') }}</div>
-            <div class="pricing-header">
-              <h3 class="pricing-title">{{ __('app.home.pricing_card_title') }}</h3>
-              <p class="pricing-price">$32</p>
-            </div>
-            <div class="pricing-features">
-              <div class="pricing-feature">
-                <div class="feature-dot"></div>
-                <p class="feature-text">{{ __('app.home.pricing_feature_full_body_scrub') }}</p>
-              </div>
-              <div class="pricing-feature">
-                <div class="feature-dot"></div>
-                <p class="feature-text">{{ __('app.home.pricing_feature_detox_body_wrap') }}</p>
-              </div>
-              <div class="pricing-feature">
-                <div class="feature-dot"></div>
-                <p class="feature-text">{{ __('app.home.pricing_feature_hydrating_body_wrap') }}</p>
-              </div>
-            </div>
-            <div class="pricing-cta">
-              <a href="#" class="btn-gradient">
-                {{ __('app.home.pricing_book_now') }}
-                <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- App Section -->
-    <section class="app-section">
-      <div class="container">
-        <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 40px;">
-          <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
-            <span class="badge-text">{{ __('app.home.as_section_our') }} <span class="badge-highlight">{{ __('app.home.as_section_app') }}</span></span>
-            <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
-          </div>
-          
-          <h2 class="section-title app-section-title" style="background: linear-gradient(90deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-            {{ __('app.home.as_title_first') }}<br><span style="font-family: Raflesia;">{{ __('app.home.as_title_second') }}</span>
-          </h2>
-          
-          <p class="section-subtitle app-section-subtitle">{{ __('app.home.as_section_paragraph') }}</p>
-        </div>
-
-        <div class="app-mockup">
-          <img src="images/images/Group 36125.png" alt="App Mockup" class="app-mockup-image">
-          {{-- <div style="position: relative; background-color: #fff4f8; border-radius: 74px 74px 0 0; padding: 100px 56px; box-shadow: 0px 4px 100px rgba(136, 136, 136, 1);">
-            <div style="position: relative; max-width: 716px; margin: 0 auto;">
-              <img src="images/images/img_0d51a4231806639_6890ab39dc7b2.png" alt="Phone Mockup Background" style="width: 100%; height: 528px; object-fit: cover;">
-              
-              <!-- Phone UI Elements -->
-              <div style="position: absolute; top: 60px; left: 50%; transform: translateX(-50%); width: 80%;">
-                <!-- Status Bar -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 62px;">
-                  <img src="images/images/img_vector_gray_50.svg" alt="Signal" width="50" height="18">
-                  <img src="images/images/img_clip_path_group.svg" alt="Battery" width="116" height="22">
-                </div>
-                
-                <!-- App Icons -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                  <div style="background: linear-gradient(180deg, #fff4f8 0%, #e50050 100%); border-radius: 22px; width: 106px; height: 106px; position: relative;">
-                    <img src="images/images/img_screenshot_2025_10_15.png" alt="GoGlow App" style="width: 100%; height: 100%; border-radius: 22px; object-fit: cover;">
-                    <img src="images/images/img_star_3.svg" alt="Star" width="48" height="48" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                  </div>
-                  <div style="background-color: #d5bec6; border-radius: 22px; padding: 22px;">
-                    <img src="images/images/img_group.png" alt="App Icon" width="60" height="60">
-                  </div>
-                  <div style="background-color: #2c0d18; border-radius: 22px; padding: 22px;">
-                    <img src="images/images/img_logos_tiktok_icon.svg" alt="TikTok" width="52" height="60">
-                  </div>
-                  <div style="background-color: #60d669; border-radius: 22px; padding: 22px;">
-                    <img src="images/images/img_logos_whatsapp_icon.png" alt="WhatsApp" width="62" height="62">
-                  </div>
-                </div>
-                
-                <!-- App Names -->
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 30px;">
-                  <p style="font-size: 20px; font-weight: 500; color: #ffffff;">glow</p>
-                  <p style="font-size: 20px; font-weight: 500; color: #ffffff;">--</p>
-                  <p style="font-size: 20px; font-weight: 500; color: #ffffff;">--</p>
-                  <p style="font-size: 20px; font-weight: 500; color: #ffffff;">--</p>
-                </div>
-              </div>
-            </div>
-          </div> --}}
-
-          {{-- <div class="app-icons">
-            <img src="images/images/img_app_button_68x252.png" alt="Download on App Store" class="app-store-btn">
-            <img src="images/images/img_app_button_68x252.png" alt="Get it on Google Play" class="google-play-btn">
-          </div> --}}
-
-        </div>
-        <div class="app-section-background-image">
-                      <div class="app-buttons">
-             <a href="#" class="app-store-btn">
-               <div class="app-store-content">
-                 <div class="apple-logo">
-                   <img src="images/images/apple.svg" alt="Apple" width="36">
-                 </div>
-                 <div class="app-store-text">
-                   <span class="download-text">Download on the</span>
-                   <span class="store-text">App Store</span>
-                 </div>
-               </div>
-             </a>
-              <a href="#" class="app-store-btn">
-               <div class="app-store-content">
-                 <div class="apple-logo">
-                   <img src="images/images/googleplay.svg" alt="Apple" width="36">
-                 </div>
-                 <div class="app-store-text">
-                   <span class="download-text">Get it on</span>
-                   <span class="store-text">Google Play</span>
-                 </div>
-               </div>
-             </a>
-           </div>
-        </div>
-      </div>
-    </section>
 
 
   </main>

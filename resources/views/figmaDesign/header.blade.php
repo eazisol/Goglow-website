@@ -17,7 +17,7 @@
       <a href="#">{{ __('app.nav.reviews') }}</a>
     </div>
     @include('partials.language-switcher')
-    <a href="#" class="cta-btn">{{ __('app.nav.hero_section_button') }}<img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></a>
+    <a href="{{ url('/become-glower') }}" class="cta-btn">{{ __('app.nav.hero_section_button') }}<img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></a>
     {{-- <button class="cta-btn">BECOME A GLOWER <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></button> --}}
     <button class="menu-icon" id="menu-toggle">
       <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">
@@ -30,7 +30,7 @@
     <button class="close-btn" id="close-btn">
       <img src="images/images/Close.svg" alt="close" style="width: 30px;">
     </button>
-    <a href="#">Home</a>
+    <a href="{{ url('/') }}">Home</a>
     <a href="#">About Us</a>
     <a href="#">Services</a>
     <a href="#">Book Appointments</a>

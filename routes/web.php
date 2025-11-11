@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {return view('figmaDesign.index');});
 Route::get('/header', function () {return view('figmaDesign.header');});
 Route::get('/slider', function () {return view('figmaDesign.slider');});
+Route::get('/become-glower', function () {return view('figmaDesign.becomeAglower');});
+
 
 Route::get('/testing', function () {return view('figmaDesign.testing');});
 

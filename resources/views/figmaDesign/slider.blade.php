@@ -30,6 +30,7 @@
     justify-content: center !important;
     transform-origin: center !important;
     filter: blur(3px) !important;
+    margin: 0 30px !important;
   }
 
   .reviews-carousel-container .card-inner {
@@ -326,11 +327,12 @@
 
   <script>
 (function() {
-  const track = document.querySelector(".reviews-carousel-container #carousel-track");
-  let cards = Array.from(document.querySelectorAll(".reviews-carousel-container .card"));
-  const prevBtn = document.querySelector(".reviews-carousel-container .arrow-left");
-  const nextBtn = document.querySelector(".reviews-carousel-container .arrow-right");
-  const dotsContainer = document.querySelector(".reviews-carousel-container .dots");
+  const container = document.querySelector(".reviews-carousel-container");
+  const track = container.querySelector("#carousel-track");
+  let cards = Array.from(container.querySelectorAll(".card"));
+  const prevBtn = container.querySelector(".arrow-left");
+  const nextBtn = container.querySelector(".arrow-right");
+  const dotsContainer = container.querySelector(".dots");
 
   let index = 1; // Start at first real card after cloning
     let autoPlayInterval;
@@ -364,24 +366,30 @@
   }
 
   function updateCarousel(transition = true) {
-      const cardWidth = cards[0].offsetWidth;
-      const visibleCards = window.innerWidth <= 480 ? 1 : 3;
-      const offset = visibleCards === 3 ? 1 : 0;
+    const activeCard = cards[index];
+    if (!activeCard) return;
 
-    // Handle smooth transition toggle
+    const containerCenter = container.offsetWidth / 2;
+    const cardCenter = activeCard.offsetLeft + activeCard.offsetWidth / 2;
+    const translateX = cardCenter - containerCenter;
+
     track.style.transition = transition ? "transform 0.7s ease" : "none";
-      track.style.transform = `translateX(-${index * cardWidth}px)`;
+    track.style.transform = `translateX(-${translateX}px)`;
 
-    // Update active state for cards
-      cards.forEach((card, i) => {
-        card.classList.remove("active");
-        if (i === index + offset) card.classList.add("active");
-      });
+    cards.forEach((card, i) => {
+      card.classList.toggle("active", i === index && !card.classList.contains("clone"));
+    });
 
-    // Update dots (ignore cloned ones)
-      dots.forEach((dot, i) => {
-      dot.classList.toggle("active", i === index - 1);
-      });
+    let dotIndex = index - 1;
+    if (index === 0) {
+      dotIndex = dots.length - 1;
+    } else if (index === cards.length - 1) {
+      dotIndex = 0;
+    }
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("active", i === dotIndex);
+    });
     }
 
     function nextSlide() {
@@ -419,15 +427,22 @@
       resetAutoPlay();
     });
 
-    // function autoPlay() {
-    // autoPlayInterval = setInterval(() => {
-    //   nextSlide();
-    // }, 7000);
-    // }
-    function resetAutoPlay() {
+    function autoPlay() {
+      autoPlayInterval = setInterval(() => {
+        nextSlide();
+      }, 7000);
+    }
+    function stopAutoPlay() {
       clearInterval(autoPlayInterval);
+    }
+    function resetAutoPlay() {
+      stopAutoPlay();
       autoPlay();
     }
+
+    window.addEventListener("resize", () => {
+      updateCarousel(false);
+    });
 
   // 🟢 Initialize
   updateCarousel(false);
