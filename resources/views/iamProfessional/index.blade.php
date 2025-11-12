@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.main2')
 {{-- Title --}}
 @section('title', 'home')
 
@@ -7,6 +7,263 @@
 <style>
     .hero.hero-bg-image{
         padding: 35px 0 0 !important;
+    }
+    
+    /* Custom CSS to replace Bootstrap classes */
+    /* Container */
+    .bw-wizard.container {
+        max-width: 860px;
+        margin: 40px auto;
+        padding-left: 15px;
+        padding-right: 15px;
+        box-sizing: border-box;
+    }
+    
+    /* Form Group - replaces .form-group */
+    .bw-wizard .form-group {
+        margin-bottom: 1rem;
+        display: block;
+    }
+    
+    /* Margin utilities - replaces Bootstrap mb-3, mb-4, mt-2, mt-3 */
+    .bw-wizard .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+    .bw-wizard .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    .bw-wizard .mt-2 {
+        margin-top: 0.5rem !important;
+    }
+    .bw-wizard .mt-3 {
+        margin-top: 1rem !important;
+    }
+    
+    /* Form Control - replaces .form-control */
+    .bw-wizard .form-control {
+        display: block;
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #d6d6d6;
+        border-radius: 12px;
+        box-sizing: border-box;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    .bw-wizard .form-control:focus {
+        outline: 0;
+        border-color: #111;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+    }
+    
+    .bw-wizard .form-control::placeholder {
+        color: #6c757d;
+        opacity: 1;
+    }
+    
+    /* Form Check - replaces .form-check */
+    .bw-wizard .form-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0;
+    }
+    
+    /* Form Check Input - replaces .form-check-input */
+    .bw-wizard .form-check-input {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        vertical-align: middle;
+        appearance: none;
+        background-color: #fff;
+        border: 1px solid #d6d6d6;
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+        flex-shrink: 0;
+    }
+    
+    .bw-wizard .form-check-input:checked {
+        background-color: #111;
+        border-color: #111;
+    }
+    
+    .bw-wizard .form-check-input:checked::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 5px;
+        width: 4px;
+        height: 8px;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+    
+    /* Form Check Label - replaces .form-check-label */
+    .bw-wizard .form-check-label {
+        margin: 0;
+        line-height: 1.2;
+        cursor: pointer;
+        color: #ffffff;
+    }
+    
+    /* Button Default - already exists but ensure it works */
+    .bw-wizard .btn-default {
+        display: inline-block;
+        padding: 12px 18px;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.5;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid #111;
+        border-radius: 999px;
+        background: #fff;
+        color: #000000;
+        transition: all 0.2s ease;
+    }
+    
+    .bw-wizard .btn-default:hover {
+        background: #ce0048;
+        color: #fff;
+        border-color: #111;
+    }
+    
+    .bw-wizard .btn-default:active {
+        transform: scale(0.98);
+    }
+    
+    .bw-wizard .btn-default:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+    
+    /* Button Outline - replaces .btn-outline */
+    .bw-wizard .btn-default.btn-outline {
+        background: #fff;
+        color: #000000;
+        border: 1px solid #111;
+    }
+    
+    .bw-wizard .btn-default.btn-outline:hover {
+        background: #ce0048;
+        color: #fff;
+        border-color: #111;
+    }
+    
+    /* Submit button specific styling */
+    .bw-wizard .wizard-actions button[type="submit"].btn-default {
+        background: #fff;
+        color: #000000;
+        border: 1px solid #111;
+    }
+    
+    .bw-wizard .wizard-actions button[type="submit"].btn-default:hover {
+        background: #111;
+        color: #fff;
+        border-color: #111;
+    }
+    
+    /* Hidden utility */
+    .bw-wizard .hidden {
+        display: none !important;
+    }
+    
+    /* Progress Bar UI - Matching Image Design */
+    .bw-wizard .wizard-progressbar {
+        margin-bottom: 20px;
+        position: relative;
+        padding: 5px 0; /* Add padding to accommodate dots */
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .bw-wizard .wizard-progressbar-track {
+        position: relative;
+        height: 2px;
+        background: #d3d3d3; /* Light grey line */
+        border-radius: 999px;
+        width: 100%;
+        margin: 0;
+        --progress: 0%; /* CSS variable for progress fill */
+    }
+    
+    /* Fill effect - pink/red line up to current step */
+    .bw-wizard .wizard-progressbar-track::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 2px;
+        background: #e50050; /* Same pink/red color as active dots */
+        border-radius: 999px;
+        width: var(--progress);
+        transition: width 0.35s ease;
+        z-index: 1;
+    }
+    
+    /* Make dots visible and style them - centered on the line */
+    .bw-wizard .wizard-dot {
+        display: block !important;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        background: #d3d3d3; /* Light grey for inactive dots */
+        border: none;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        z-index: 3;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Active dot - vibrant pink/red */
+    .bw-wizard .wizard-dot.active {
+        background: #e50050; /* Vibrant pink/red */
+        border: none;
+        width: 12px;
+        height: 12px;
+    }
+    
+    /* Completed dots - also pink/red */
+    .bw-wizard .wizard-dot.completed {
+        background: #e50050; /* Pink/red for completed steps */
+        border: none;
+    }
+    
+    /* Position dots evenly along the line - centered on the line */
+    .bw-wizard .wizard-dot[data-step="1"] {
+        left: 0%;
+        transform: translate(-50%, -50%);
+    }
+    .bw-wizard .wizard-dot[data-step="2"] {
+        left: 25%;
+        transform: translate(-50%, -50%);
+    }
+    .bw-wizard .wizard-dot[data-step="3"] {
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .bw-wizard .wizard-dot[data-step="4"] {
+        left: 75%;
+        transform: translate(-50%, -50%);
+    }
+    .bw-wizard .wizard-dot[data-step="5"] {
+        left: 100%;
+        transform: translate(-50%, -50%);
     }
 </style>
 
@@ -34,14 +291,14 @@
 </style>
     <!-- Professional Application Wizard (header/footer hidden for this route) -->
     <div class="hero hero-bg-image bg-section dark-section parallaxie pro-wizard-hero" style="background-image: url('images/image (13).png');">
-    {{-- <div class="container">
+    <div class="container">
         @include('figmaDesign.header')
-    </div> --}}
+    </div>
     <div class="container bw-wizard" style="max-width: 860px; margin: 40px auto;">
         <div class="beauty-form-center">
             <div class="wizard-card">
-                    <div class="section-title section-title-center">
-                        <h2>Become A Glower</h2>
+                    <div class="become-glower-step1-heading">
+                        <h2 class="heading">Become A <span class="shining-word">Glower</span></h2>
                     </div>
             <div class="wizard-progress" id="wizardProgress">Step 1 of 5</div>
             <div class="wizard-progressbar" id="wizardProgressbar" aria-hidden="true">
@@ -53,7 +310,7 @@
                     <span class="wizard-dot" data-step="5"></span>
                 </div>
             </div>
-            <form id="appointmentForm" action="#" method="POST" data-toggle="validator">
+            <form id="appointmentForm" action="#" method="POST">
                 <!-- Step 1 – Work Type -->
                 <section class="wizard-step active" data-step="1">
                     <h2 class="wizard-title">Do you work independently or in a team?</h2>

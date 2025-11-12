@@ -1811,6 +1811,26 @@
         }
 
 
+        /* become a glower form  */
+        .become-glower-step1-heading{
+          display: flex;
+          justify-content: center;
+          
+        }
+        .become-glower-step1-heading .heading{
+          background: linear-gradient(90deg, #2C0D18 0%, #E50050 54.33%, #FF8C00 86.54%);
+          -webkit-text-fill-color: transparent;
+          -webkit-background-clip: text;
+          font-size: 60px;
+          font-weight: 500;
+        }
+
+        .become-glower-step1-heading .shining-word{
+          font-family: Raflesia;
+          font-weight: 500;
+        }
+
+
 
 
 
