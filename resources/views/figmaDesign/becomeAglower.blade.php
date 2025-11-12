@@ -107,6 +107,158 @@
       </div>
     </section>
 
+    {{-- Welcome to Future Beauty Booking --}}
+        <div class="future-section">
+        <div class="future-section__container">
+            <!-- Header -->
+            <div class="future-section__header">
+                <div class="future-section__dark">
+                                  <h1>Welcome To The Future Of</h1>
+                <h2 class="future-section-raflesia-text">Beauty Booking</h2>
+                </div>
+
+                <p class="future-section__subtitle">manage everything more simply from your phone or computer. automatic appointments, secure payments, zero hassle.</p>
+            </div>
+
+            <!-- Content Sections -->
+            <div class="future-section__content">
+                <!-- Reality Today -->
+                <div class="future-section__section future-section__section--reality">
+                    <div class="future-section__section-header">YOUR REALITY TODAY</div>
+                    <div class="future-section__stat-box">
+                        <div class="future-section__stat-icon">
+                          <img src="images/images/streamline-color_graph-bar-decrease.svg" alt="" width="23" height="23">
+                        </div>
+                        <span>Result: 18 Empty Slots This Month, ≈ €1,080 Lost.</span>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/cross.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>You reply to instagram dms 3 hours a day</h3>
+                            <p>never knowing if it'll convert to a booking.</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/cross.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>"How Much?" → No Response → Lost</h3>
+                            <p>never knowing if it'll convert to a booking.</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/cross.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>Someone Books → Doesn't Show → Empty Slot</h3>
+                            <p>never knowing if it'll convert to a booking.</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/cross.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>You Post Your Best Work → 47 Views</h3>
+                            <p>never knowing if it'll convert to a booking.</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/cross.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>you pay plainly €89/month → 0 bookings</h3>
+                            <p>never knowing if it'll convert to a booking.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What Could Be -->
+                <div class="future-section__section future-section__section--future">
+                    <div class="future-section__section-header">WHAT COULD BE</div>
+                    <div class="future-section__stat-box">
+                        <div class="future-section__stat-icon">
+                          <img src="images/images/right-future-svg.svg" alt="" width="23" height="23">
+                        </div>
+                        <span>Result: +€1,500/Month In Additional Revenue.</span>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/green_tick.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>Your Videos In Front Of Thousands Of People Ready To Book</h3>
+                            <p>algorithm that targets active clients in your area.</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/green_tick.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>They Love Your Work → Tap "Book" → Done</h3>
+                            <p>algorithm that targets active clients in your area.</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/green_tick.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>Calendar Full At 85% (vs 60% Today)</h3>
+                            <p>algorithm that targets active clients in your area.</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/green_tick.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>Secure Upfront Payment → No More No-Shows</h3>
+                            <p>algorithm that targets active clients in your area.</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/green_tick.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>15 Bookings Per Video Posted</h3>
+                            <p>algorithm that targets active clients in your area.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- CTA Buttons -->
+            <div class="future-section__cta-section">
+                <a href="#" class="future-section__btn future-section__btn--download">
+                  {{ __('app.home.hiw_download_app') }}
+                  <img src="images/images/downlaod.svg" alt="" width="16" height="16">
+                </a>
+                <a href="#" class="future-section__btn future-section__btn--glower">
+                  {{ __('app.home.hiw_book_a_service') }}
+                  <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
+                </a>
+            </div>
+        </div>
+    </div>   
+    {{-- Welcome to Future Beauty Booking End --}}
+
 
     <!-- Benefits Section -->
     <section class="benefits-section">
@@ -115,7 +267,7 @@
         <div class="container">
           <div class="flex-col" style="align-items: flex-start; margin-bottom: 40px;">
             <div class="badge">
-              <span class="badge-text">{{ __('app.home.benefits_badge_our') }} <span class="badge-highlight">{{ __('app.home.benefits_badge_benefits') }}</span></span>
+              <span class="badge-text">Why <span class="badge-highlight">Choose Us</span></span>
               <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
             
@@ -123,7 +275,7 @@
             <h2 class="benefits-title2">{{ __('app.home.benefits_title_love') }} <span style="font-family: Raflesia; font-weight:500;">{{ __('app.home.benefits_title_glowApp') }} </span></h2>
             
             
-            <p class="benefits-subtitle">{{ __('app.home.benefits_subtitle_text') }} </p>
+            <p class="benefits-subtitle">More than a booking app. Your all-in-one beauty business system </p>
           </div>
         </div>
         <div class="container-fluid benefits-carousel-container">
