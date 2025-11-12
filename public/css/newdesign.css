@@ -1504,15 +1504,26 @@
       font-weight: 400;
     }
     .bag-hero-buttons{
+      margin-bottom: 70px;
       display: flex;
       justify-content: center;
       gap: 16px;
     }
     .bag-hero-carosal{
+      margin-top: 60px;
       justify-content: center;
       display: flex;
       gap: 10px;
       margin-bottom: 50px;
+    }
+    .bag-hero-carosal .image-center{
+      margin-top: 35px;
+      width:420px;
+      height:710px;
+    }
+    .bag-hero-carosal .image-left{
+      width:420px;
+      height:787px;
     }
         .service-filter-pills {
     margin-bottom: 30px;
@@ -1641,11 +1652,11 @@
       .hero-content-top{
         margin-top: 0;
       }
-      .searchInput {
-        font-size: 14px;
-        font-weight: 400;
-        text-transform: lowercase;
-    }
+        .searchInput {
+          font-size: 14px;
+          font-weight: 400;
+          text-transform: lowercase;
+      }
       .mobile-menu-nav a.active::before{
         display: none;
       }
@@ -1954,6 +1965,31 @@
       }
       .app-section-background-image{
         top: -191px;
+      }
+      .bag-hero-carosal .image-center{
+        margin-top: 17px;
+        width: 139px;
+        height: 250px;
+      }
+      .bag-hero-carosal .image-left{
+        width: 110px;
+        height: 290px;
+      }
+      .bag-hero-title .shine-word{
+        font-size: 46px;
+
+      }
+      .bag-hero-title{
+        font-size: 23px;
+      }
+      .become-glower-hero-heading{
+        gap: 3px;
+      }
+      .become-glower-hero-heading .badge-text{
+        font-size: 15px;
+      }
+      .bag-hero-carosal{
+        margin-top: 40px;
       }
       
 

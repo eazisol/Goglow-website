@@ -22,7 +22,7 @@
 
           <!-- Hero Content -->
           <div class="flex-col hero-content-top" style="align-items: center; text-align: center;">
-            <div class="badge">
+            <div class="badge become-glower-hero-heading">
               <span class="badge-text">447 pros & Salons Have <span class="badge-highlight">Already Joined Us</span></span>
               <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
@@ -80,10 +80,10 @@
 
         {{-- hero-section-carosal --}}
         <div class='bag-hero-carosal'>
-          <img src="images/images/Frame 1618873910.png" width="300">
-          <img src="images/images/5be29f16096eab1a9c203a2fd6fef9b6990d690a.jpg" width="300">
-          <img src="images/images/Frame 1618873910.png" width="300">
-          <img src="images/images/5be29f16096eab1a9c203a2fd6fef9b6990d690a.jpg" width="300">
+          <img src="images/images/Frame 1618873912 (1).png" class="image-left">
+          <img src="images/images/Frame 1618873910.png" class="image-center">
+          <img src="images/images/Frame 1618873911 (1).png" class="image-center">
+          <img src="images/images/Frame 1618873914.png" class="image-left">
         </div>
 
            <!-- App Store Buttons -->
