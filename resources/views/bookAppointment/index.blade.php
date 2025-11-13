@@ -514,6 +514,15 @@
         overflow-x: auto;
         padding: 10px 0;
         margin-top: 6px;
+        /* Hide scrollbar but keep scrolling functionality */
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    .agent-avatars::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
     }
     .agent-avatar {
         display: flex;
@@ -1079,35 +1088,37 @@
                                 <input type="hidden" name="email" id="email" value="{{ $userData['email'] ?? '' }}">
                                 <input type="hidden" name="phone" id="phone" value="{{ $userData['phone'] ?? '' }}">
                                 
-                                <!-- Payment Options -->
-                                <div class="form-group col-md-12 mb-4">
-                                    <label class="form-label">{{ __('app.agent_page.payment_options') }}</label>
-                                    <div class="payment-options">
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
-                                            <label class="form-check-label" for="payDeposit">
-                                                {{ __('app.agent_page.pay_15%_deposit_now') }} (${{ number_format(($selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0)) * 0.15, 2) }})
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
-                                            <label class="form-check-label" for="payFull">
-                                                {{ __('app.agent_page.pay_full_amount_now') }} (${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }})
-                                            </label>
+                                <!-- Payment Options (hidden initially, shown after time slot selection) -->
+                                <div id="paymentOptionsSection" class="col-12" style="display: none;">
+                                    <div class="form-group col-md-12 mb-4">
+                                        <label class="form-label">{{ __('app.agent_page.payment_options') }}</label>
+                                        <div class="payment-options">
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
+                                                <label class="form-check-label" for="payDeposit">
+                                                    {{ __('app.agent_page.pay_15%_deposit_now') }} (${{ number_format(($selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0)) * 0.15, 2) }})
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
+                                                <label class="form-check-label" for="payFull">
+                                                    {{ __('app.agent_page.pay_full_amount_now') }} (${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }})
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Notes Section -->
-                                {{-- <div class="form-group col-md-12 mb-4">
-                                    <label for="notes">Additional Notes</label>
-                                    <textarea name="notes" id="notes" class="form-control" rows="4" placeholder="Any special requests or notes for your appointment"></textarea>
-                                </div> --}}
-    
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn-default"><span>{{ __('app.agent_page.book_an_appointment') }}</span></button>
-                                    {{-- <button type="button" id="testStripeBtn" class="btn-alt" style="margin-left: 10px;"><span>Test Stripe Connection</span></button> --}}
-                                    <div id="msgSubmit" class="h3 hidden"></div>
+                                    <!-- Notes Section -->
+                                    {{-- <div class="form-group col-md-12 mb-4">
+                                        <label for="notes">Additional Notes</label>
+                                        <textarea name="notes" id="notes" class="form-control" rows="4" placeholder="Any special requests or notes for your appointment"></textarea>
+                                    </div> --}}
+        
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn-default"><span>{{ __('app.agent_page.book_an_appointment') }}</span></button>
+                                        {{-- <button type="button" id="testStripeBtn" class="btn-alt" style="margin-left: 10px;"><span>Test Stripe Connection</span></button> --}}
+                                        <div id="msgSubmit" class="h3 hidden"></div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -1182,6 +1193,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const timeSlotsStrip = document.getElementById('timeSlotsStrip');
     const prevTimeSlotBtn = document.getElementById('prevTimeSlot');
     const nextTimeSlotBtn = document.getElementById('nextTimeSlot');
+    const paymentOptionsSection = document.getElementById('paymentOptionsSection');
     
     let chosenAgent = null;
     let chosenAgentSlots = null;
@@ -1369,6 +1381,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 selectedSlotInfo.style.display = 'none';
                 selectedTimeInput.value = '';
+                
+                // Hide payment options section when day changes
+                if (paymentOptionsSection) {
+                    paymentOptionsSection.style.display = 'none';
+                }
             });
         }
     }
@@ -1490,6 +1507,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 selectedSlotInfo.style.display = '';
                 // Ensure hidden selected day reflects the clicked slot's day
                 selectedDayInput.value = this.dataset.day;
+                
+                // Show payment options section after time slot selection
+                if (paymentOptionsSection) {
+                    paymentOptionsSection.style.display = '';
+                }
             });
 
             timeSlotGrid.appendChild(timeSlot);
@@ -1574,6 +1596,11 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedSlotInfo.style.display = 'none';
             selectedTimeInput.value = '';
             
+            // Hide payment options section when week navigation changes
+            if (paymentOptionsSection) {
+                paymentOptionsSection.style.display = 'none';
+            }
+            
             // Clear day selection
             document.querySelectorAll('.day-column').forEach(col => col.classList.remove('active'));
             selectedDayInput.value = '';
@@ -1645,6 +1672,11 @@ document.addEventListener('DOMContentLoaded', function () {
             timeSlotGrid.innerHTML = '';
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = 'none';
+            }
+            
+            // Hide payment options section when agent changes
+            if (paymentOptionsSection) {
+                paymentOptionsSection.style.display = 'none';
             }
             
             // Reset period selector active states
