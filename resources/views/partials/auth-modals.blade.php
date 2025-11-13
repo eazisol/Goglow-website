@@ -21,12 +21,12 @@
                         <input type="hidden" name="redirect" id="login-redirect" value="">
                         <div class="row">
                             <div class="form-group col-md-12 mb-4">
-                                <input type="email" name="email" class="form-control" id="login-email" placeholder="Email Address" required>
+                                <input type="email" name="email" class="form-control-login" id="login-email" placeholder="Email Address" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                             
                             <div class="form-group col-md-12 mb-4">
-                                <input type="password" name="password" class="form-control" id="login-password" placeholder="Password" required>
+                                <input type="password" name="password" class="form-control-login" id="login-password" placeholder="Password" required>
                                 <div class="help-block with-errors"></div>
                             </div>
 
