@@ -24,9 +24,16 @@
             <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">
           </button>
           @if(session('firebase_uid'))
-              <a href="#" class="logout-icon" onclick="event.preventDefault(); document.getElementById('logout-form-figma').submit();" title="{{ __('app.nav.logout') }}">
-                  <img src="images/images/logout.png" alt="Logout" style="cursor: pointer; width:33px; margin-left: 5px;">
-              </a>
+              <div class="profile-dropdown-container">
+                  <button class="profile-icon-btn" id="profile-dropdown-toggle" aria-label="Profile menu" aria-expanded="false">
+                      <img src="images/images/flowbite_user-solid.svg" alt="Profile" style="width:33px; margin-left: 5px; cursor: pointer;">
+                  </button>
+                  <div class="profile-dropdown-menu" id="profile-dropdown-menu">
+                      <a href="#" class="dropdown-item logout-item" onclick="event.preventDefault(); document.getElementById('logout-form-figma').submit();">
+                          <span>{{ __('app.nav.logout') }}</span>
+                      </a>
+                  </div>
+              </div>
               <form id="logout-form-figma" action="{{ route('logout') }}" method="POST" style="display:none;">
                   @csrf
               </form>
@@ -64,5 +71,46 @@
     closeBtn.addEventListener('click', () => {
       sidebar.classList.remove('active');
     });
+
+    // Profile Dropdown Toggle
+    const profileDropdownContainer = document.querySelector('.profile-dropdown-container');
+    const profileDropdownToggle = document.getElementById('profile-dropdown-toggle');
+    const profileDropdownMenu = document.getElementById('profile-dropdown-menu');
+
+    if (profileDropdownToggle && profileDropdownMenu && profileDropdownContainer) {
+      profileDropdownToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = profileDropdownMenu.classList.contains('show');
+        
+        // Close all dropdowns first
+        document.querySelectorAll('.profile-dropdown-menu').forEach(menu => {
+          menu.classList.remove('show');
+        });
+        
+        // Toggle this dropdown
+        if (!isOpen) {
+          profileDropdownMenu.classList.add('show');
+          profileDropdownToggle.setAttribute('aria-expanded', 'true');
+        } else {
+          profileDropdownToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!profileDropdownContainer.contains(e.target)) {
+          profileDropdownMenu.classList.remove('show');
+          profileDropdownToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Close dropdown on Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && profileDropdownMenu.classList.contains('show')) {
+          profileDropdownMenu.classList.remove('show');
+          profileDropdownToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
   </script>
 

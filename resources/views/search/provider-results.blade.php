@@ -81,7 +81,7 @@
                                             </div>
                                             <div class="search-content">
                                                 <h3 class="search-title">{{ __('app.home.search_input_text') }}</h3>
-                                                <input type="search" class="searchInput" id="searchInput" name="search" placeholder="{{ __('app.home.search_service_placeholder') }}" required>
+                                                <input type="search" class="searchInput" id="searchInput" name="search" placeholder="{{ __('app.home.search_service_placeholder') }}" value="{{ $search ?? '' }}" required>
                                             </div>
                                         </div>
 
@@ -93,7 +93,7 @@
                                             </div>
                                             <div class="search-content">
                                                 <h3 class="search-title">{{ __('app.home.search_or_text') ?? 'Location' }}</h3>
-                                                <input type="text" class="searchInput" id="locationInput" name="location" placeholder="{{ __('app.home.search_location_placeholder') }}">
+                                                <input type="text" class="searchInput" id="locationInput" name="location" placeholder="{{ __('app.home.search_location_placeholder') }}" value="{{ $location ?? '' }}">
                                             </div>
                                         </div>
 
