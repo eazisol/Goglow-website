@@ -193,6 +193,7 @@ return [
         'have joined Glow' => 'Have Joined Glow',
         'figma_design_already' => ' Already!!',
         'figma_design_Download' => 'Download on the ',
+        'figma_design_git_it_on' => 'Get it on',
         
         ////figma design end//////
 
@@ -278,7 +279,12 @@ return [
     // providers Page
     'provider' => [
         'searchbar_section_heading' => 'Find trusted salons & book instantly',
-        'searchbar_section_paragraph' => 'Discover best-rated salons near you.Compare services, read reviews, and reverse in seconds'
+        'searchbar_section_paragraph' => 'Discover best-rated salons near you.Compare services, read reviews, and reverse in seconds',
+        'provider_open' => 'Open',
+        'provider_close' => 'Closed',
+        'next_availability' => 'Next Availability',
+        'morning' => 'Morning',
+        'evening' => 'Evening',
     ],
 
     // service page
@@ -289,6 +295,14 @@ return [
         'open' => 'Open',
         'until' => 'until',
         'back_to_search_page' => 'Back to Search Results',
+        'reviews' => 'Reviews',
+        'monday' => 'Monday',
+        'tuesday' => 'Tuesday',
+        'wednesday' => 'Wednesday',
+        'thursday' => 'Thursday',
+        'friday' => 'Friday',
+        'saturday' => 'Saturday',
+        'sunday' => 'Sunday',
     ],
     // Agent Page
     'agent_page' => [
@@ -298,6 +312,9 @@ return [
         'payment_options' => 'Payment Options',
         'pay_15%_deposit_now' => 'Pay 15% deposit now',
         'pay_full_amount_now' => 'Pay full amount now',
-        'book_an_appointment' => 'Book an appointment'
+        'book_an_appointment' => 'Book an appointment',
+        'the_morning' => 'The Morning',
+        'in_the_afternoon' => 'In The Afternoon',
+        'in_the_evening' => 'In The Evening',
     ]
 ];

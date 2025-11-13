@@ -42,7 +42,7 @@
                                         <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
                                         <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
                                         
-                                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} reviews)</div>
+                                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} {{ __('app.service.reviews') }})</div>
                                     </p>
                                 @endif
                                 </div>
@@ -190,7 +190,7 @@
                                         <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
                                         <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
                                         
-                                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} reviews)</div>
+                                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} {{ __('app.service.reviews') }})</div>
                                     </p>
                                 @endif
                                 </div>
@@ -330,7 +330,7 @@
                         <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
                         <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
                         
-                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} reviews)</div>
+                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} {{ __('app.service.reviews') }})</div>
                     </p>
                 @endif
                 </div>
@@ -344,15 +344,15 @@
         <!-- Hours of Operation Section -->
         <div class="hours-section">
             @php
-                $dayNames = [
-                    'Mon' => 'Monday',
-                    'Tue' => 'Tuesday',
-                    'Wed' => 'Wednesday',
-                    'Thu' => 'Thursday',
-                    'Fri' => 'Friday',
-                    'Sat' => 'Saturday',
-                    'Sun' => 'Sunday',
-                ];
+$dayNames = [
+    'Mon' => __('app.service.monday'),
+    'Tue' => __('app.service.tuesday'),
+    'Wed' => __('app.service.wednesday'),
+    'Thu' => __('app.service.thursday'),
+    'Fri' => __('app.service.friday'),
+    'Sat' => __('app.service.saturday'),
+    'Sun' => __('app.service.sunday'),
+];
                 
                 // Get current day and closing time for "Open until" display
                 $now = \Carbon\Carbon::now('Europe/Paris');

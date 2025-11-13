@@ -267,9 +267,9 @@
                                                 </span>
                                         <span class="status-text">
                                             @if($isOpenToday)
-                                                Open · {{ $todayRangeText }}
+                                                {{ __('app.provider.provider_open') }} · {{ $todayRangeText }}
                                             @else
-                                                Closed · {{ $nextOpenText ?: 'Hours unavailable' }}
+                                                {{ __('app.provider.provider_close') }} · {{ $nextOpenText ?: 'Hours unavailable' }}
                                             @endif
                                         </span>
                                     </div>
@@ -287,7 +287,7 @@
                                     </div>
 
                                     <div class="availability-section">
-                                        <div class="availability-title">Next Availability</div>
+                                        <div class="availability-title">{{ __('app.provider.next_availability') }}</div>
                                         @php
                                             // Check time slot availability for each day
                                             $chipDaysWithAvailability = [];
@@ -314,7 +314,7 @@
                                         @endphp
                                         <div class="availability-row">
                                             <span class="time-of-day">
-                                                Morning
+                                                {{ __('app.provider.morning') }}
                                             </span>
                                             <div class="chip-group">
                                                 @foreach($chipDaysWithAvailability as $cd)
@@ -328,7 +328,7 @@
                                         </div>
                                         <div class="availability-row">
                                             <span class="time-of-day">
-                                                Evening
+                                                {{ __('app.provider.evening') }}
                                             </span>
                                             <div class="chip-group">
                                                 @foreach($chipDaysWithAvailability as $cd)

@@ -715,7 +715,7 @@
                    <img src="images/images/apple.svg" alt="Apple" width="36">
                  </div>
                  <div class="app-store-text">
-                   <span class="download-text">Download on the</span>
+                   <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
                    <span class="store-text">App Store</span>
                  </div>
                </div>
@@ -726,7 +726,7 @@
                    <img src="images/images/googleplay.svg" alt="Apple" width="36">
                  </div>
                  <div class="app-store-text">
-                   <span class="download-text">Get it on</span>
+                   <span class="download-text">{{ __('app.home.figma_design_git_it_on') }}</span>
                    <span class="store-text">Google Play</span>
                  </div>
                </div>

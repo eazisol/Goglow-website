@@ -194,6 +194,7 @@ return [
         'figma_design_already' => ' Déjà!!',
         'figma_design_Download' => 'Télécharger sur le ',
         'figma_design_become_a_glower' => 'Devenir un Glowee',
+        'figma_design_git_it_on' => 'Mettez-le',
         
 
         ////figma design end//////
@@ -283,7 +284,12 @@ return [
         // providers Page
     'provider' => [
         'searchbar_section_heading' => 'Trouvez des salons de confiance et réservez instantanémentueil',
-        'searchbar_section_paragraph' => 'Découvrez les salons les mieux notés près de chez vous. Comparez les services, lisez les avis et inversez en quelques secondes'
+        'searchbar_section_paragraph' => 'Découvrez les salons les mieux notés près de chez vous. Comparez les services, lisez les avis et inversez en quelques secondes',
+        'provider_open' => 'Ouvrir',
+        'provider_close' => 'Fermée',
+        'next_availability' => 'Disponibilité suivante',
+        'morning' => 'Matin',
+        'evening' => 'Soirée',
     ],
         // service page
     'service' => [
@@ -293,6 +299,14 @@ return [
         'open' => 'Ouvrir',
         'until' => 'jusquà',
         'back_to_search_page' => 'Retour aux résultats de recherche',
+        'reviews' => 'Avis',
+        'monday' => 'Lundi',
+        'tuesday' => 'Mardi',
+        'wednesday' => 'Mercredi',
+        'thursday' => 'Jeudi',
+        'friday' => 'Vendredi',
+        'saturday' => 'Samedi',
+        'sunday' => 'Dimanche',
     ],
         // Agent Page
     'agent_page' => [
@@ -302,6 +316,9 @@ return [
         'payment_options' => 'Options de paiement',
         'pay_15%_deposit_now' => 'Versez un acompte de 15 % dès maintenant',
         'pay_full_amount_now' => 'Payez le montant total maintenant',
-        'book_an_appointment' => 'Prendre rendez-vous'
+        'book_an_appointment' => 'Prendre rendez-vous',
+        'the_morning' => 'Le Matin',
+        'in_the_afternoon' => 'Dans L\'Après-midi',
+        'in_the_evening' => 'Dans La Soirée',
     ]
 ];

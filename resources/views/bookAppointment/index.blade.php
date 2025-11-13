@@ -1046,9 +1046,9 @@
 
                             <!-- Period Selector (hidden initially) -->
                             <div id="periodSelector" class="period-selector" style="display: none;">
-                                <button type="button" class="period-btn" data-period="morning">The Morning</button>
-                                <button type="button" class="period-btn" data-period="afternoon">In The Afternoon</button>
-                                <button type="button" class="period-btn" data-period="evening">In The Evening</button>
+                                <button type="button" class="period-btn" data-period="morning">{{ __('app.agent_page.the_morning') }}</button>
+                                <button type="button" class="period-btn" data-period="afternoon">{{ __('app.agent_page.in_the_afternoon') }}</button>
+                                <button type="button" class="period-btn" data-period="evening">{{ __('app.agent_page.in_the_evening') }}</button>
                             </div>
 
                             <!-- Time Slots with Navigation (hidden initially) -->
