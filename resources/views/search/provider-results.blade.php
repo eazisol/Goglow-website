@@ -281,21 +281,42 @@
 
                                     <div class="availability-section">
                                         <div class="availability-title">Next Availability</div>
+                                        @php
+                                            $isAvailable = isset($provider['available']) && $provider['available'] === true;
+                                        @endphp
                                         <div class="availability-row">
-                                            <span class="time-of-day">Morning</span>
+                                            <span class="time-of-day">
+                                                Morning
+                                            </span>
+                                             @if(!$isAvailable)
+                                             <div class="chip-group">
+                                                    Not Available 
+                                             </div>
+                                                @endif
+                                            @if($isAvailable)
                                             <div class="chip-group">
                                                 @foreach($chipDays as $cd)
                                                     <span class="date-chip outline">{{ $cd['label'] }} <b>{{ $cd['day'] }}</b></span>
                                                 @endforeach
                                             </div>
+                                            @endif
                                         </div>
                                         <div class="availability-row">
-                                            <span class="time-of-day">Evening</span>
+                                            <span class="time-of-day">
+                                                Evening
+                                            </span>
+                                                @if(!$isAvailable)
+                                                <div class="chip-group">
+                                                    Not Available 
+                                                </div>
+                                                @endif
+                                            @if($isAvailable)
                                             <div class="chip-group">
                                                 @foreach($chipDays as $cd)
                                                     <span class="date-chip">{{ $cd['label'] }} <b>{{ $cd['day'] }}</b></span>
                                                 @endforeach
                                             </div>
+                                            @endif
                                         </div>
                                     </div>
 
