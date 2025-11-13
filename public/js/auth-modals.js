@@ -92,6 +92,23 @@ document.addEventListener('DOMContentLoaded', function() {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Check if user is already logged in
+            if (window.isAuthenticated) {
+                const successElement = document.getElementById('login-success');
+                successElement.textContent = 'You are already logged in. Redirecting...';
+                successElement.classList.remove('d-none');
+                
+                // Get the stored book appointment URL from localStorage if available
+                const storedUrl = localStorage.getItem('book_appointment_url');
+                
+                // Redirect immediately
+                setTimeout(() => {
+                    window.location.href = storedUrl || '/';
+                    localStorage.removeItem('book_appointment_url');
+                }, 500);
+                return;
+            }
+            
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             const redirect = document.getElementById('login-redirect').value;
@@ -131,29 +148,39 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                // Hide loader and re-enable button
-                if (submitBtn && btnText && btnLoader) {
-                    btnText.style.display = 'inline';
-                    btnLoader.style.display = 'none';
-                    submitBtn.disabled = false;
-                }
-                
                 if (data.success) {
-                    // Show success message
-                    successElement.textContent = data.message;
+                    // Keep loader showing "Processing..." during redirect
+                    if (submitBtn && btnText && btnLoader) {
+                        btnLoader.style.display = 'inline-block';
+                        btnText.style.display = 'none';
+                        submitBtn.disabled = true;
+                    }
+                    
+                    // Show success message with redirect indicator
+                    successElement.textContent = 'Login successful! Redirecting...';
                     successElement.classList.remove('d-none');
+                    
+                    // Update window.isAuthenticated to prevent duplicate logins
+                    window.isAuthenticated = true;
                     
                     // Get the stored book appointment URL from localStorage if available
                     const storedUrl = localStorage.getItem('book_appointment_url');
                     
-                    // Redirect after a short delay
+                    // Redirect immediately
                     setTimeout(() => {
                         // Use stored URL, then data.redirect, then default to home
                         window.location.href = storedUrl || data.redirect || '/';
                         // Clear stored URL after using it
                         localStorage.removeItem('book_appointment_url');
-                    }, 1000);
+                    }, 300);
                 } else {
+                    // Hide loader and re-enable button on error
+                    if (submitBtn && btnText && btnLoader) {
+                        btnText.style.display = 'inline';
+                        btnLoader.style.display = 'none';
+                        submitBtn.disabled = false;
+                    }
+                    
                     // Show error message
                     errorElement.textContent = data.message || 'Login failed';
                     errorElement.classList.remove('d-none');
@@ -185,6 +212,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const confirmPassword = document.getElementById('signup-password-confirmation').value;
             const errorElement = document.getElementById('signup-error');
             const successElement = document.getElementById('signup-success');
+            const submitBtn = document.getElementById('signup-submit-btn');
+            const btnText = document.getElementById('signup-btn-text');
+            const btnLoader = document.getElementById('signup-btn-loader');
             
             // Reset messages
             errorElement.classList.add('d-none');
@@ -194,6 +224,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 errorElement.textContent = 'Passwords do not match';
                 errorElement.classList.remove('d-none');
                 return;
+            }
+            
+            // Show loader and disable button
+            if (submitBtn && btnText && btnLoader) {
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline-block';
+                submitBtn.disabled = true;
             }
             
             // Form data
@@ -224,6 +261,13 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
+                // Hide loader and re-enable button
+                if (submitBtn && btnText && btnLoader) {
+                    btnText.style.display = 'inline';
+                    btnLoader.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+                
                 if (data.success) {
                     // Show success message
                     successElement.textContent = data.message;
@@ -245,6 +289,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
+                // Hide loader and re-enable button
+                if (submitBtn && btnText && btnLoader) {
+                    btnText.style.display = 'inline';
+                    btnLoader.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+                
                 errorElement.textContent = 'An error occurred. Please try again.';
                 errorElement.classList.remove('d-none');
                 console.error('Signup error:', error);

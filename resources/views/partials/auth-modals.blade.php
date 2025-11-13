@@ -117,7 +117,12 @@
                             </div>
 
                             <div class="col-md-12">
-                                <button type="submit" class="btn-default"><span>Create account</span></button>
+                                <button type="submit" class="btn-default" id="signup-submit-btn">
+                                    <span id="signup-btn-text">Create account</span>
+                                    <span id="signup-btn-loader" class="signup-loader" style="display: none;">
+                                        <i class="fa fa-spinner fa-spin"></i> Processing...
+                                    </span>
+                                </button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
                                 <p class="mt-3 mb-0" style="text-align: center;">Already have an account? <a href="#" id="show-login-modal">Login</a></p>
                             </div>
