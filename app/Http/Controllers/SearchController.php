@@ -56,11 +56,51 @@ class SearchController extends Controller
             return $matchesSearch;
         })->values();
 
+        // Get all services to extract categories
+        $allServices = Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider')->json();
+        
+        // Handle API failure or null response
+        if (!is_array($allServices)) {
+            $allServices = [];
+        }
+        
+        // Extract unique categories from all services
+        $allCategories = collect($allServices)
+            ->pluck('category.name')
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+        
+        // Map each provider to their categories
+        $providerCategories = [];
+        foreach ($matchingProviders as $provider) {
+            $providerId = $provider['id'] ?? null;
+            if (!$providerId) {
+                continue;
+            }
+            
+            $categories = collect($allServices)
+                ->filter(function ($service) use ($providerId) {
+                    return isset($service['ownerId']) && $service['ownerId'] === $providerId;
+                })
+                ->pluck('category.name')
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+            
+            $providerCategories[$providerId] = $categories;
+        }
+
         // Return the list of matching providers
         return view('search.provider-results', [
             'providers' => $matchingProviders,
             'search' => $search,
-            'location' => $location
+            'location' => $location,
+            'categories' => $allCategories,
+            'providerCategories' => $providerCategories
         ]);
     }
     public function showProviderServices($providerId)

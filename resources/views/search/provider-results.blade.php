@@ -136,17 +136,24 @@
 <div class="search-results" style="margin: 0 0 50px 0;">
     <div class="container">
                             <div class="service-filter-pills" role="tablist" aria-label="Service categories">
-                                <button type="button" class="filter-pill active" aria-current="true">All</button>
-                                <button type="button" class="filter-pill">Nails</button>
-                                <button type="button" class="filter-pill">Massage</button>
-                                <button type="button" class="filter-pill">Hair</button>
+                                <button type="button" class="filter-pill active" data-category="all" aria-current="true">All</button>
+                                @if(isset($categories) && count($categories) > 0)
+                                    @foreach($categories as $category)
+                                        <button type="button" class="filter-pill" data-category="{{ $category }}">{{ $category }}</button>
+                                    @endforeach
+                                @endif
                             </div>
         
 
         <div class="results-grid">
             @if(count($providers) > 0)
                 @foreach($providers as $provider)
-                    <div class="results-item">
+                    @php
+                        $providerId = $provider['id'] ?? '';
+                        $providerCategoriesList = isset($providerCategories[$providerId]) ? $providerCategories[$providerId] : [];
+                        $categoriesString = implode(',', $providerCategoriesList);
+                    @endphp
+                    <div class="results-item" data-categories="{{ $categoriesString }}">
                         <div class="provider-card">
                             <a href="{{ url('/search?provider_id=' . $provider['id']) }}" class="provider-link">
                                 @php
@@ -595,6 +602,43 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.addEventListener('scroll', function(){ if(tooltip.style.display==='block') positionTooltip(); });
     window.addEventListener('resize', function(){ if(tooltip.style.display==='block') positionTooltip(); });
+  });
+
+  // Category filtering functionality
+  const filterPills = document.querySelectorAll('.filter-pill');
+  const providerItems = document.querySelectorAll('.results-item');
+
+  filterPills.forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      const selectedCategory = this.getAttribute('data-category');
+      
+      // Update active state
+      filterPills.forEach(function(p) {
+        p.classList.remove('active');
+        p.removeAttribute('aria-current');
+      });
+      this.classList.add('active');
+      this.setAttribute('aria-current', 'true');
+      
+      // Filter providers
+      providerItems.forEach(function(item) {
+        if (selectedCategory === 'all') {
+          item.style.display = '';
+        } else {
+          const categories = item.getAttribute('data-categories');
+          if (categories && categories.trim() !== '') {
+            const categoryList = categories.split(',').map(function(cat) { return cat.trim(); });
+            if (categoryList.includes(selectedCategory)) {
+              item.style.display = '';
+            } else {
+              item.style.display = 'none';
+            }
+          } else {
+            item.style.display = 'none';
+          }
+        }
+      });
+    });
   });
 });
 </script>
