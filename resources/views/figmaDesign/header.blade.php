@@ -23,6 +23,14 @@
           <button class="menu-icon" id="menu-toggle">
             <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">
           </button>
+          @if(session('firebase_uid'))
+              <a href="#" class="logout-icon" onclick="event.preventDefault(); document.getElementById('logout-form-figma').submit();" title="{{ __('app.nav.logout') }}">
+                  <img src="images/images/logout.png" alt="Logout" style="cursor: pointer; width:33px; margin-left: 5px;">
+              </a>
+              <form id="logout-form-figma" action="{{ route('logout') }}" method="POST" style="display:none;">
+                  @csrf
+              </form>
+          @endif
     </div>
   </nav>
 

@@ -31,6 +31,7 @@
 /* Namespaced so it won't clash with Bootstrap */
 .switcher-button{
     display:flex;
+    align-items:center;
 }
 .lang-switcher { position: relative; display: flex ; align-items: center; }
 .lang-dropdown { position: relative; }
