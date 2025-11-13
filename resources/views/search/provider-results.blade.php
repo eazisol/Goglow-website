@@ -179,6 +179,7 @@
                                     </div>
                                 </div>
                                 <div class="provider-details p-4">
+                                    <div class="provider-card-heading-section">
                                     <h3 class="card-title">
                                         {{-- {{ !empty($provider['storeName']) 
                                             ? $provider['storeName'] 
@@ -191,6 +192,13 @@
                                                 ? $provider['name'] 
                                                 : 'No Name') }}
                                     </h3>
+                                    <div class="rating-row">
+                                        <img src="images/images/star_cards.svg" alt="Location" width="15" height="15">
+                                        <span class="rating-value">{{ number_format($avgRating, 1) }}</span>
+                                        <span class="rating-count">({{ $provider['total_review'] ?? 0 }})</span>
+                                    </div>
+
+                                    </div>
                                     <div class="provider-meta">
                                         @if(isset($provider['address']))
                                             <div class="address">
@@ -271,12 +279,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="rating-row">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="15" height="15">
-                                        <span class="rating-value">{{ number_format($avgRating, 1) }}</span>
-                                        <span class="rating-count">({{ $provider['total_review'] ?? 0 }})</span>
-                                    </div>
-
                                     <div class="availability-section">
                                         <div class="availability-title">Next Availability</div>
                                         <div class="availability-row">
@@ -297,10 +299,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="card-footer-row">
+                                    {{-- <div class="card-footer-row">
                                         <div class="reviews-text">{{ $provider['total_review'] ?? 0 }} reviews</div>
                                         <span class="book-now-btn">BOOK NOW</span>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </a>
                         </div>
@@ -321,6 +323,10 @@
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/search.css') }}">
 <style>
+    .provider-card-heading-section{
+        justify-content: space-between;
+        display: flex;
+    }
     /* Outer layout around existing search bar */
     .search-outer-layout {
         margin: 45px 0 30px 0;
@@ -382,8 +388,8 @@
     .search-results .provider-meta .address { color: #6b7280; font-size: 14px; display: flex; align-items: center; gap: 8px; }
     .search-results .provider-meta .address i { color: #ef4444; }
     /* reuse search-icon with a small variant for address */
-    .search-results .search-icon { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; background: #ffe6ee; }
-    .search-results .search-icon img { width: 20px; height: 20px; display: block; }
+    .search-results .search-icon { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; }
+    .search-results .search-icon img { width: 17px; height: 17px; display: block; }
     .search-results .search-icon-sm { width: 30px; height: 30px; border-radius: 16px; }
 
     .search-results .tag-list { margin: 12px 0; display: flex; gap: 8px; flex-wrap: wrap; }
@@ -419,7 +425,7 @@
     .availability-row { display: flex; align-items: center; gap: 10px; margin: 4px 0; flex-wrap: wrap; }
     .time-of-day { color:rgba(118, 33, 62, 1); font-weight: 500; font-size: 15px; width: 80px; }
     .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
-    .date-chip { background: rgba(229, 0, 80, 1); color: #ffffffff; border: 1px solid #ffd1df; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+    .date-chip { background: rgba(229, 0, 80, 1); color: #ffffffff; border: 1px solid #ffd1df; padding: 4px 18px; border-radius: 10px; font-size: 14px; font-weight: 500; }
     .date-chip b { font-weight: 500; }
     .date-chip.outline { background: #fff; color: #6b7280; border-color: #e5e7eb; }
 
