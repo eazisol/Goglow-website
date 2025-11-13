@@ -31,7 +31,12 @@
                             </div>
 
                             <div class="col-md-12">
-                                <button type="submit" class="btn-default"><span>Sign in</span></button>
+                                <button type="submit" class="btn-default" id="login-submit-btn">
+                                    <span id="login-btn-text">Sign in</span>
+                                    <span id="login-btn-loader" class="login-loader" style="display: none;">
+                                        <i class="fa fa-spinner fa-spin"></i> Processing...
+                                    </span>
+                                </button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
                                 <p class="mt-3 mb-0" style="text-align: center;">No account? <a href="#" id="show-signup-modal">Create one</a></p>
                             </div>
@@ -67,28 +72,28 @@
                         @csrf
                         <div class="row">
                             <div class="form-group col-md-6 mb-4">
-                                <input type="text" name="name" class="form-control" id="signup-name" placeholder="Full Name" required>
+                                <input type="text" name="name" class="form-control-login" id="signup-name" placeholder="Full Name" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                             
                             <div class="form-group col-md-6 mb-4">
-                                <input type="email" name="email" class="form-control" id="signup-email" placeholder="Email Address" required>
+                                <input type="email" name="email" class="form-control-login" id="signup-email" placeholder="Email Address" required>
                                 <div class="help-block with-errors"></div>
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <input type="text" name="phone" class="form-control" id="signup-phone" placeholder="Phone Number (with country code)" required>
+                                <input type="text" name="phone" class="form-control-login" id="signup-phone" placeholder="Phone Number (with country code)" required>
                                 <div class="help-block with-errors"></div>
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <input type="text" name="location" class="form-control" id="signup-location" placeholder="Location (City, Country)" required>
+                                <input type="text" name="location" class="form-control-login" id="signup-location" placeholder="Location (City, Country)" required>
                                 <div class="help-block with-errors"></div>
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
                                 <div class="input-group">
-                                    <input type="password" name="password" id="signup-password" class="form-control" placeholder="Password (at least 6 characters)" required minlength="6">
+                                    <input type="password" name="password" id="signup-password" class="form-control-login" placeholder="Password (at least 6 characters)" required minlength="6">
                                     <span class="input-group-text password-toggle" onclick="togglePassword('signup-password')">
                                         <i class="fa fa-eye"></i>
                                     </span>
@@ -97,7 +102,7 @@
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <input type="password" name="password_confirmation" id="signup-password-confirmation" class="form-control" placeholder="Confirm Password" required minlength="6">
+                                <input type="password" name="password_confirmation" id="signup-password-confirmation" class="form-control-login" placeholder="Confirm Password" required minlength="6">
                                 <div class="help-block with-errors"></div>
                             </div>
 

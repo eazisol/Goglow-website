@@ -97,10 +97,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const redirect = document.getElementById('login-redirect').value;
             const errorElement = document.getElementById('login-error');
             const successElement = document.getElementById('login-success');
+            const submitBtn = document.getElementById('login-submit-btn');
+            const btnText = document.getElementById('login-btn-text');
+            const btnLoader = document.getElementById('login-btn-loader');
             
             // Reset messages
             errorElement.classList.add('d-none');
             successElement.classList.add('d-none');
+            
+            // Show loader and disable button
+            if (submitBtn && btnText && btnLoader) {
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline-block';
+                submitBtn.disabled = true;
+            }
             
             // Submit via AJAX
             const csrfToken = document.querySelector('meta[name="csrf-token"]');
@@ -121,6 +131,13 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
+                // Hide loader and re-enable button
+                if (submitBtn && btnText && btnLoader) {
+                    btnText.style.display = 'inline';
+                    btnLoader.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+                
                 if (data.success) {
                     // Show success message
                     successElement.textContent = data.message;
@@ -143,6 +160,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
+                // Hide loader and re-enable button
+                if (submitBtn && btnText && btnLoader) {
+                    btnText.style.display = 'inline';
+                    btnLoader.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+                
                 errorElement.textContent = 'An error occurred. Please try again.';
                 errorElement.classList.remove('d-none');
                 console.error('Login error:', error);

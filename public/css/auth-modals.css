@@ -87,7 +87,7 @@
 .modal .password-toggle {
     cursor: pointer;
     background: transparent;
-    border-left: none;
+    border: none;
 }
 
 .modal .input-group .form-control {
