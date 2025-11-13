@@ -445,7 +445,7 @@
         <div class="beauty-form-center">
             <div class="wizard-card">
                     <div class="become-glower-step1-heading">
-                        <h2 class="heading">Become A <span class="shining-word">Glower</span></h2>
+                        <h2 class="heading">{!! __('app.iam_professional.page_title') !!}</h2>
                     </div>
             {{-- <div class="wizard-progress" id="wizardProgress">Step 1 of 5</div> --}}
             <div class="wizard-progressbar" id="wizardProgressbar" aria-hidden="true">
@@ -460,19 +460,19 @@
             <form id="appointmentForm" action="#" method="POST">
                 <!-- Step 1 – Work Type -->
                 <section class="wizard-step active" data-step="1">
-                    <h2 class="wizard-title">Do you work independently or in a team?</h2>
+                    <h2 class="wizard-title">{{ __('app.iam_professional.step1_title') }}</h2>
                     <div class="wizard-options">
                         <button type="button" class="wizard-option" data-worktype="Independent" data-next="2">
                             <span class="wizard-option-icon">
                                 <img src="images/images/flowbite_user-solid.svg" alt="" width="25" height="25">
                             </span>
-                            <span class="wizard-option-text">Independent</span>
+                            <span class="wizard-option-text">{{ __('app.iam_professional.work_type_independent') }}</span>
                         </button>
                         <button type="button" class="wizard-option" data-worktype="Team" data-next="2">
                             <span class="wizard-option-icon">
                                 <img src="images/images/fluent_people-team-16-filled.svg" alt="" width="25" height="25">
                             </span>
-                            <span class="wizard-option-text">Team</span>
+                            <span class="wizard-option-text">{{ __('app.iam_professional.work_type_team') }}</span>
                         </button>
                     </div>
                     <input type="hidden" name="work_type" id="work_type">
@@ -480,80 +480,80 @@
 
                 <!-- Step 2 – Basic Info -->
                 <section class="wizard-step" data-step="2">
-                    <h2 class="wizard-title">Basic Info</h2>
+                    <h2 class="wizard-title">{{ __('app.iam_professional.step2_title') }}</h2>
                     <div class="form-row-two">
                         <div class="form-group mb-3">
                             {{-- <label for="brand_name">Name / Brand Name</label> --}}
-                            <input type="text" name="brand_name" class="form-control" id="brand_name" placeholder="enter your name or brand name" required>
+                            <input type="text" name="brand_name" class="form-control" id="brand_name" placeholder="{{ __('app.iam_professional.placeholder_name_brand') }}" required>
                         </div>
                         <div class="form-group mb-3">
                             {{-- <label for="whatsapp">WhatsApp Number</label> --}}
-                            <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="enter your phone" required>
+                            <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="{{ __('app.iam_professional.placeholder_phone') }}" required>
                         </div>
                     </div>
                     <div class="form-row-two">
                         <div class="form-group mb-4">
                             {{-- <label for="email">Email Address</label> --}}
-                            <input type="email" name="email" class="form-control" id="email" placeholder="enter your email" required>
+                            <input type="email" name="email" class="form-control" id="email" placeholder="{{ __('app.iam_professional.placeholder_email') }}" required>
                         </div>
                     </div>
                     <div class="wizard-actions">
-                        <button type="button" class="btn-default btn-outline" data-prev="1">Back</button>
-                        <button type="button" class="btn-default" data-next="3">Next</button>
+                        <button type="button" class="btn-default btn-outline" data-prev="1">{{ __('app.common.back') }}</button>
+                        <button type="button" class="btn-default" data-next="3">{{ __('app.common.next') }}</button>
                     </div>
                 </section>
 
                 <!-- Step 3 – Social Media (optional fields) -->
                 <section class="wizard-step" data-step="3">
-                    <h2 class="wizard-title">Social Media</h2>
+                    <h2 class="wizard-title">{{ __('app.iam_professional.step3_title') }}</h2>
                     <div class="form-row-two">
                         <div class="form-group mb-3">
                             {{-- <label for="instagram">Instagram Handle</label> --}}
-                            <input type="text" name="instagram" class="form-control" id="instagram" placeholder="@Instagram Handle">
+                            <input type="text" name="instagram" class="form-control" id="instagram" placeholder="{{ __('app.iam_professional.placeholder_instagram') }}">
                         </div>
                         <div class="form-group mb-4">
                             {{-- <label for="tiktok">TikTok Handle</label> --}}
-                            <input type="text" name="tiktok" class="form-control" id="tiktok" placeholder="@TikTok Handle">
+                            <input type="text" name="tiktok" class="form-control" id="tiktok" placeholder="{{ __('app.iam_professional.placeholder_tiktok') }}">
                         </div>
                     </div>
                     <div class="wizard-actions">
-                        <button type="button" class="btn-default btn-outline" data-prev="2">Back</button>
-                        <button type="button" class="btn-default" data-next="4">Next</button>
+                        <button type="button" class="btn-default btn-outline" data-prev="2">{{ __('app.common.back') }}</button>
+                        <button type="button" class="btn-default" data-next="4">{{ __('app.common.next') }}</button>
                     </div>
                 </section>
 
                 <!-- Step 4 – Current Platform -->
                 <section class="wizard-step" data-step="4">
-                    <h2 class="wizard-title">Which platform are you using now?</h2>
+                    <h2 class="wizard-title">{{ __('app.iam_professional.step4_title') }}</h2>
                     <div class="wizard-checkbox">
-                        <label><input type="checkbox" name="platform_choice" value="Planity"> Planity</label>
-                        <label><input type="checkbox" name="platform_choice" value="The treatwell stop"> The treatwell stop</label>
-                        <label><input type="checkbox" name="platform_choice" value="Fresha"> Fresha</label>
+                        <label><input type="checkbox" name="platform_choice" value="Planity"> {{ __('app.iam_professional.platform_planity') }}</label>
+                        <label><input type="checkbox" name="platform_choice" value="The treatwell stop"> {{ __('app.iam_professional.platform_treatwell') }}</label>
+                        <label><input type="checkbox" name="platform_choice" value="Fresha"> {{ __('app.iam_professional.platform_fresha') }}</label>
                         <label class="mt-2">
-                            <input type="checkbox" name="platform_choice" value="Other" id="platform_other_checkbox"> Other
+                            <input type="checkbox" name="platform_choice" value="Other" id="platform_other_checkbox"> {{ __('app.iam_professional.platform_other') }}
                         </label>
-                        <input type="text" class="form-control mt-2" id="platform_other_input" placeholder="Please specify" style="display:none;">
+                        <input type="text" class="form-control mt-2" id="platform_other_input" placeholder="{{ __('app.iam_professional.placeholder_platform_other') }}" style="display:none;">
                     </div>
                     <input type="hidden" name="current_platform" id="current_platform" required>
                     <div class="wizard-actions">
-                        <button type="button" class="btn-default btn-outline" data-prev="3">Back</button>
-                        <button type="button" class="btn-default" data-next="5">Next</button>
+                        <button type="button" class="btn-default btn-outline" data-prev="3">{{ __('app.common.back') }}</button>
+                        <button type="button" class="btn-default" data-next="5">{{ __('app.common.next') }}</button>
                     </div>
                 </section>
 
                 <!-- Step 5 – Review & Submit -->
                 <section class="wizard-step" data-step="5">
-                    <h2 class="wizard-title">Review & Submit</h2>
+                    <h2 class="wizard-title">{{ __('app.iam_professional.step5_title') }}</h2>
                     <div id="review_summary" class="wizard-summary"></div>
                     <div class="form-group mt-3">
                         <div class="form-check">
                             <input type="checkbox" name="terms" class="form-check-input" id="terms" required>
-                            <label class="form-check-label" for="terms">I agree to the <a href="{{ url('/terms_condition') }}" target="_blank">Terms & Conditions</a></label>
+                            <label class="form-check-label" for="terms">{{ __('app.iam_professional.terms_agree') }} <a href="{{ url('/terms_condition') }}" target="_blank">{{ __('app.iam_professional.terms_conditions') }}</a></label>
                         </div>
                     </div>
                     <div class="wizard-actions">
-                        <button type="button" class="btn-default btn-outline" data-prev="4">Back</button>
-                        <button type="submit" class="btn-default"><span>Submit</span></button>
+                        <button type="button" class="btn-default btn-outline" data-prev="4">{{ __('app.common.back') }}</button>
+                        <button type="submit" class="btn-default"><span>{{ __('app.iam_professional.button_submit') }}</span></button>
                     </div>
                     <div id="msgSubmit" class="h3 hidden"></div>
                 </section>
@@ -568,6 +568,29 @@
 {{-- Scripts --}}
 @section('scripts')
 <script>
+// Pass translations to JavaScript
+const translations = {
+    validation_missing_info_title: @json(__('app.iam_professional.validation_missing_info_title')),
+    validation_missing_info_text: @json(__('app.iam_professional.validation_missing_info_text')),
+    validation_platform_required_title: @json(__('app.iam_professional.validation_platform_required_title')),
+    validation_platform_required_text: @json(__('app.iam_professional.validation_platform_required_text')),
+    validation_platform_details_title: @json(__('app.iam_professional.validation_platform_details_title')),
+    validation_platform_details_text: @json(__('app.iam_professional.validation_platform_details_text')),
+    validation_error_title: @json(__('app.iam_professional.validation_error_title')),
+    validation_error_text: @json(__('app.iam_professional.validation_error_text')),
+    success_title: @json(__('app.iam_professional.success_title')),
+    success_text: @json(__('app.iam_professional.success_text')),
+    response_received_title: @json(__('app.iam_professional.response_received_title')),
+    submission_failed_title: @json(__('app.iam_professional.submission_failed_title')),
+    submission_failed_text: @json(__('app.iam_professional.submission_failed_text')),
+    submission_failed_response: @json(__('app.iam_professional.submission_failed_response')),
+    error_title: @json(__('app.iam_professional.error_title')),
+    error_network: @json(__('app.iam_professional.error_network')),
+    error_network_connection: @json(__('app.iam_professional.error_network_connection')),
+    loading_submitting: @json(__('app.iam_professional.loading_submitting')),
+    button_submit_application: @json(__('app.iam_professional.button_submit_application'))
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('appointmentForm');
     const steps = Array.from(document.querySelectorAll('.wizard-step'));
@@ -669,8 +692,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!name || !email || !whatsapp) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Missing Information',
-                        text: 'Please fill in all required fields: Name, Email, and WhatsApp number.'
+                        title: translations.validation_missing_info_title,
+                        text: translations.validation_missing_info_text
                     });
                     return false;
                 }
@@ -685,8 +708,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (selectedPlatforms.length === 0) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Platform Required',
-                        text: 'Please select at least one platform you are currently using.'
+                        title: translations.validation_platform_required_title,
+                        text: translations.validation_platform_required_text
                     });
                     return false;
                 }
@@ -695,8 +718,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (platformOtherCheckbox && platformOtherCheckbox.checked && (!platformOtherInput || !platformOtherInput.value.trim())) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Platform Details Required',
-                        text: 'Please specify which platform you are using in the text field.'
+                        title: translations.validation_platform_details_title,
+                        text: translations.validation_platform_details_text
                     });
                     return false;
                 }
@@ -745,10 +768,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const submitBtn = form.querySelector('button[type="submit"]');
         if (isLoading) {
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span><i class="fa fa-spinner fa-spin"></i> Submitting...</span>';
+            submitBtn.innerHTML = '<span><i class="fa fa-spinner fa-spin"></i> ' + translations.loading_submitting + '</span>';
         } else {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<span>Submit Application</span>';
+            submitBtn.innerHTML = '<span>' + translations.button_submit_application + '</span>';
         }
     }
     
@@ -777,8 +800,8 @@ document.addEventListener('DOMContentLoaded', function() {
             showLoading(false);
             Swal.fire({
                 icon: 'error',
-                title: 'Validation Error',
-                text: 'Please fill in all required fields'
+                title: translations.validation_error_title,
+                text: translations.validation_error_text
             });
             return;
         }
@@ -816,14 +839,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     form.reset();
                     Swal.fire({
                         icon: 'success',
-                        title: 'Success!',
-                        text: 'Your application has been submitted successfully!'
+                        title: translations.success_title,
+                        text: translations.success_text
                     }).then(() => { window.location.href = '/'; });
                 } else {
                     // If not a success message, show the response text
                     Swal.fire({
                         icon: 'success',
-                        title: 'Response Received',
+                        title: translations.response_received_title,
                         text: responseText
                     }).then(() => { window.location.href = '/'; });
                 }
@@ -834,7 +857,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const errorText = await response.text();
                     console.log('Error response (text):', errorText);
                     
-                    let errorMessage = 'An error occurred while submitting your application';
+                    let errorMessage = translations.submission_failed_text;
                     
                     // Try to parse as JSON if possible
                     try {
@@ -847,14 +870,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     Swal.fire({
                         icon: 'error',
-                        title: 'Submission Failed',
+                        title: translations.submission_failed_title,
                         text: errorMessage
                     });
                 } catch (parseError) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Submission Failed',
-                        text: 'Could not process server response'
+                        title: translations.submission_failed_title,
+                        text: translations.submission_failed_response
                     });
                 }
             }
@@ -862,8 +885,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error submitting form:', error);
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                text: 'Network error: ' + (error.message || 'Could not connect to server')
+                title: translations.error_title,
+                text: translations.error_network + (error.message || translations.error_network_connection)
             });
         } finally {
             // Reset loading state

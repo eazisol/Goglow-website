@@ -1115,7 +1115,12 @@
                                     </div> --}}
         
                                     <div class="col-md-12">
-                                        <button type="submit" class="btn-default"><span>{{ __('app.agent_page.book_an_appointment') }}</span></button>
+                                        <button type="submit" class="btn-default" id="bookAppointmentBtn">
+                                            <span id="bookAppointmentBtnText">{{ __('app.agent_page.book_an_appointment') }}</span>
+                                            <span id="bookAppointmentBtnLoader" style="display: none;">
+                                                <i class="fa fa-spinner fa-spin" style="margin-right: 8px;"></i>{{ __('app.common.loading') }}
+                                            </span>
+                                        </button>
                                         {{-- <button type="button" id="testStripeBtn" class="btn-alt" style="margin-left: 10px;"><span>Test Stripe Connection</span></button> --}}
                                         <div id="msgSubmit" class="h3 hidden"></div>
                                     </div>
@@ -1777,6 +1782,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Function to show/hide loading state on button
+    function setButtonLoading(isLoading) {
+        const submitBtn = document.getElementById('bookAppointmentBtn');
+        const btnText = document.getElementById('bookAppointmentBtnText');
+        const btnLoader = document.getElementById('bookAppointmentBtnLoader');
+        
+        if (submitBtn && btnText && btnLoader) {
+            if (isLoading) {
+                submitBtn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline';
+            } else {
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoader.style.display = 'none';
+            }
+        }
+    }
+
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
@@ -1788,6 +1812,9 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Please select a time slot');
             return;
         }
+
+        // Show loading state after validation passes
+        setButtonLoading(true);
 
                  // Get user data from bookingBootstrap
          const userData = bookingBootstrap.userData || {};
@@ -1846,6 +1873,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const durationMinutes = (bookingBootstrap.service?.duration_minutes ?? 0);
         const userId = bookingBootstrap.userId;
         if (!userId) {
+            setButtonLoading(false);
             // Store the current URL for redirection after login
             localStorage.setItem('book_appointment_url', window.location.href);
             
@@ -1885,6 +1913,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (!serviceId || !serviceProviderId) {
+            setButtonLoading(false);
             alert("Missing 'serviceId' or 'service_provider_id' in URL.");
             return;
         }
@@ -1970,6 +1999,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             
             if (!response.ok) {
+                setButtonLoading(false);
                 const errorText = await response.text();
                 console.error('Error response:', response.status, errorText);
                 throw new Error(`Server responded with ${response.status}: ${errorText}`);
@@ -1979,6 +2009,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Received session:', session);
             
             if (session.error) {
+                setButtonLoading(false);
                 alert('Error: ' + session.error);
                 return;
             }
@@ -1994,10 +2025,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             if (result.error) {
+                setButtonLoading(false);
                 alert('Error: ' + result.error.message);
             }
+            // Note: If redirect is successful, the page will navigate away, so we don't need to reset loading state
         } catch (err) {
             console.error('Error in form submission:', err);
+            setButtonLoading(false);
             alert('An error occurred: ' + err.message);
         }
     });

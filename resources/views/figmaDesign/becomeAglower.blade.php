@@ -23,18 +23,18 @@
           <!-- Hero Content -->
           <div class="flex-col hero-content-top" style="align-items: center; text-align: center;">
             <div class="badge become-glower-hero-heading">
-              <span class="badge-text">447 pros & Salons Have <span class="badge-highlight">Already Joined Us</span></span>
+              <span class="badge-text">{!! __('app.home.bag_hero_badge') !!}</span>
               <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
 
             <div class='bag-hero-title'>
-              <h1>Too Much Talent - Not Enough</h1>
-              <span class="shine-word">Appointments ?</span>
+              <h1>{{ __('app.home.bag_hero_title_first') }}</h1>
+              <span class="shine-word">{{ __('app.home.bag_hero_title_second') }}</span>
             </div>
             
             {{-- <h1 class="hero-title">Too Much Talent -Not Enough<span class="shine-word">Appointments ?</span>.</h1> --}}
             
-            <p class="hero-subtitle">Get new clients with your videos for real</p>
+            <p class="hero-subtitle">{{ __('app.home.bag_hero_subtitle') }}</p>
           </div>
         </div>
 
@@ -93,10 +93,10 @@
                  <div class="apple-logo">
                    <img src="images/images/apple.svg" alt="Apple" width="36">
                  </div>
-                 <div class="app-store-text">
-                   <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
-                   <span class="store-text">App Store</span>
-                 </div>
+                <div class="app-store-text">
+                  <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
+                  <span class="store-text">{{ __('app.home.bag_app_store') }}</span>
+                </div>
                </div>
              </a>
              <a href="{{ url('/beauty-professional') }}" class="btn-secondary">
@@ -113,23 +113,23 @@
             <!-- Header -->
             <div class="future-section__header">
                 <div class="future-section__dark">
-                                  <h1>Welcome To The Future Of</h1>
-                <h2 class="future-section-raflesia-text">Beauty Booking</h2>
+                                  <h1>{{ __('app.home.bag_future_welcome') }}</h1>
+                <h2 class="future-section-raflesia-text">{{ __('app.home.bag_future_beauty_booking') }}</h2>
                 </div>
 
-                <p class="future-section__subtitle">manage everything more simply from your phone or computer. automatic appointments, secure payments, zero hassle.</p>
+                <p class="future-section__subtitle">{{ __('app.home.bag_future_subtitle') }}</p>
             </div>
 
             <!-- Content Sections -->
             <div class="future-section__content">
                 <!-- Reality Today -->
                 <div class="future-section__section future-section__section--reality">
-                    <div class="future-section__section-header">YOUR REALITY TODAY</div>
+                    <div class="future-section__section-header">{{ __('app.home.bag_reality_header') }}</div>
                     <div class="future-section__stat-box">
                         <div class="future-section__stat-icon">
                           <img src="images/images/streamline-color_graph-bar-decrease.svg" alt="" width="23" height="23">
                         </div>
-                        <span>Result: 18 Empty Slots This Month, ≈ €1,080 Lost.</span>
+                        <span>{{ __('app.home.bag_reality_result') }}</span>
                     </div>
 
                     <div class="future-section__item">
@@ -137,18 +137,8 @@
                           <img src="images/images/cross.svg" alt="">
                         </div>
                         <div class="future-section__item-content">
-                            <h3>You reply to instagram dms 3 hours a day</h3>
-                            <p>never knowing if it'll convert to a booking.</p>
-                        </div>
-                    </div>
-
-                    <div class="future-section__item">
-                        <div class="future-section__item-icon">
-                          <img src="images/images/cross.svg" alt="">
-                        </div>
-                        <div class="future-section__item-content">
-                            <h3>"How Much?" → No Response → Lost</h3>
-                            <p>never knowing if it'll convert to a booking.</p>
+                            <h3>{{ __('app.home.bag_reality_item1_title') }}</h3>
+                            <p>{{ __('app.home.bag_reality_item1_desc') }}</p>
                         </div>
                     </div>
 
@@ -157,8 +147,8 @@
                           <img src="images/images/cross.svg" alt="">
                         </div>
                         <div class="future-section__item-content">
-                            <h3>Someone Books → Doesn't Show → Empty Slot</h3>
-                            <p>never knowing if it'll convert to a booking.</p>
+                            <h3>{{ __('app.home.bag_reality_item2_title') }}</h3>
+                            <p>{{ __('app.home.bag_reality_item2_desc') }}</p>
                         </div>
                     </div>
 
@@ -167,8 +157,8 @@
                           <img src="images/images/cross.svg" alt="">
                         </div>
                         <div class="future-section__item-content">
-                            <h3>You Post Your Best Work → 47 Views</h3>
-                            <p>never knowing if it'll convert to a booking.</p>
+                            <h3>{{ __('app.home.bag_reality_item3_title') }}</h3>
+                            <p>{{ __('app.home.bag_reality_item3_desc') }}</p>
                         </div>
                     </div>
 
@@ -177,20 +167,30 @@
                           <img src="images/images/cross.svg" alt="">
                         </div>
                         <div class="future-section__item-content">
-                            <h3>you pay plainly €89/month → 0 bookings</h3>
-                            <p>never knowing if it'll convert to a booking.</p>
+                            <h3>{{ __('app.home.bag_reality_item4_title') }}</h3>
+                            <p>{{ __('app.home.bag_reality_item4_desc') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/cross.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>{{ __('app.home.bag_reality_item5_title') }}</h3>
+                            <p>{{ __('app.home.bag_reality_item5_desc') }}</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- What Could Be -->
                 <div class="future-section__section future-section__section--future">
-                    <div class="future-section__section-header">WHAT COULD BE</div>
+                    <div class="future-section__section-header">{{ __('app.home.bag_future_header') }}</div>
                     <div class="future-section__stat-box">
                         <div class="future-section__stat-icon">
                           <img src="images/images/right-future-svg.svg" alt="" width="23" height="23">
                         </div>
-                        <span>Result: +€1,500/Month In Additional Revenue.</span>
+                        <span>{{ __('app.home.bag_future_result') }}</span>
                     </div>
 
                     <div class="future-section__item">
@@ -198,18 +198,8 @@
                           <img src="images/images/green_tick.svg" alt="">
                         </div>
                         <div class="future-section__item-content">
-                            <h3>Your Videos In Front Of Thousands Of People Ready To Book</h3>
-                            <p>algorithm that targets active clients in your area.</p>
-                        </div>
-                    </div>
-
-                    <div class="future-section__item">
-                        <div class="future-section__item-icon">
-                          <img src="images/images/green_tick.svg" alt="">
-                        </div>
-                        <div class="future-section__item-content">
-                            <h3>They Love Your Work → Tap "Book" → Done</h3>
-                            <p>algorithm that targets active clients in your area.</p>
+                            <h3>{{ __('app.home.bag_future_item1_title') }}</h3>
+                            <p>{{ __('app.home.bag_future_item1_desc') }}</p>
                         </div>
                     </div>
 
@@ -218,8 +208,8 @@
                           <img src="images/images/green_tick.svg" alt="">
                         </div>
                         <div class="future-section__item-content">
-                            <h3>Calendar Full At 85% (vs 60% Today)</h3>
-                            <p>algorithm that targets active clients in your area.</p>
+                            <h3>{{ __('app.home.bag_future_item2_title') }}</h3>
+                            <p>{{ __('app.home.bag_future_item2_desc') }}</p>
                         </div>
                     </div>
 
@@ -228,8 +218,8 @@
                           <img src="images/images/green_tick.svg" alt="">
                         </div>
                         <div class="future-section__item-content">
-                            <h3>Secure Upfront Payment → No More No-Shows</h3>
-                            <p>algorithm that targets active clients in your area.</p>
+                            <h3>{{ __('app.home.bag_future_item3_title') }}</h3>
+                            <p>{{ __('app.home.bag_future_item3_desc') }}</p>
                         </div>
                     </div>
 
@@ -238,8 +228,18 @@
                           <img src="images/images/green_tick.svg" alt="">
                         </div>
                         <div class="future-section__item-content">
-                            <h3>15 Bookings Per Video Posted</h3>
-                            <p>algorithm that targets active clients in your area.</p>
+                            <h3>{{ __('app.home.bag_future_item4_title') }}</h3>
+                            <p>{{ __('app.home.bag_future_item4_desc') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="future-section__item">
+                        <div class="future-section__item-icon">
+                          <img src="images/images/green_tick.svg" alt="">
+                        </div>
+                        <div class="future-section__item-content">
+                            <h3>{{ __('app.home.bag_future_item5_title') }}</h3>
+                            <p>{{ __('app.home.bag_future_item5_desc') }}</p>
                         </div>
                     </div>
                 </div>
@@ -267,7 +267,7 @@
         <div class="container">
           <div class="flex-col" style="align-items: flex-start; margin-bottom: 40px;">
             <div class="badge">
-              <span class="badge-text">Why <span class="badge-highlight">Choose Us</span></span>
+              <span class="badge-text">{!! __('app.home.bag_benefits_badge') !!}</span>
               <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
             
@@ -275,7 +275,7 @@
             <h2 class="benefits-title2">{{ __('app.home.benefits_title_love') }} <span style="font-family: Raflesia; font-weight:500;">{{ __('app.home.benefits_title_glowApp') }} </span></h2>
             
             
-            <p class="benefits-subtitle">More than a booking app. Your all-in-one beauty business system </p>
+            <p class="benefits-subtitle">{{ __('app.home.bag_benefits_subtitle') }}</p>
           </div>
         </div>
         <div class="container-fluid benefits-carousel-container">
@@ -455,7 +455,7 @@
                 <img src="images/images/star_review.svg" alt="Star" class="star">
                 <img src="images/images/star_review.svg" alt="Star" class="star">
               </div>
-              <p class="rating-text">4.9 (29k reviews)</p>
+              <p class="rating-text">{{ __('app.home.bag_reviews_rating') }}</p>
             </div>
           </div>
         </div>

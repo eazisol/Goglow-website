@@ -1,6 +1,6 @@
 @extends('layouts.mainInnerPages')
 {{-- Title --}}
-@section('title', 'Payment Successful')
+@section('title', __('app.success.page_title'))
 
 {{-- Content --}}
 @section('styles')
@@ -220,6 +220,43 @@
 
 @section('scripts')
 <script>
+// Pass translations to JavaScript
+const successTranslations = {
+    not_available: @json(__('app.success.not_available')),
+    minutes: @json(__('app.success.minutes')),
+    sending_booking: @json(__('app.success.sending_booking')),
+    booking_confirmed_server: @json(__('app.success.booking_confirmed_server')),
+    error_submitting_booking: @json(__('app.success.error_submitting_booking')),
+    error_loading_details: @json(__('app.success.error_loading_details')),
+    label_name: @json(__('app.success.label_name')),
+    label_email: @json(__('app.success.label_email')),
+    label_phone: @json(__('app.success.label_phone')),
+    label_date: @json(__('app.success.label_date')),
+    label_time: @json(__('app.success.label_time')),
+    label_payment_type: @json(__('app.success.label_payment_type')),
+    label_transaction_id: @json(__('app.success.label_transaction_id')),
+    receipt_title: @json(__('app.success.receipt_title')),
+    receipt_for: @json(__('app.success.receipt_for')),
+    receipt_date: @json(__('app.success.receipt_date')),
+    receipt_customer_info: @json(__('app.success.receipt_customer_info')),
+    receipt_appointment_details: @json(__('app.success.receipt_appointment_details')),
+    receipt_service: @json(__('app.success.receipt_service')),
+    receipt_agent: @json(__('app.success.receipt_agent')),
+    receipt_description: @json(__('app.success.receipt_description')),
+    receipt_amount: @json(__('app.success.receipt_amount')),
+    receipt_total: @json(__('app.success.receipt_total')),
+    receipt_amount_paid: @json(__('app.success.receipt_amount_paid')),
+    receipt_remaining_balance: @json(__('app.success.receipt_remaining_balance')),
+    receipt_payment_info: @json(__('app.success.receipt_payment_info')),
+    receipt_payment_status: @json(__('app.success.receipt_payment_status')),
+    receipt_completed: @json(__('app.success.receipt_completed')),
+    receipt_thank_you: @json(__('app.success.receipt_thank_you')),
+    receipt_contact: @json(__('app.success.receipt_contact')),
+    error_generating_receipt: @json(__('app.success.error_generating_receipt')),
+    payment_type_deposit: @json(__('app.success.payment_type_deposit')),
+    payment_type_full: @json(__('app.success.payment_type_full')),
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Payment success page loaded');
     console.log('Transaction ID:', '{{ $transactionId }}');
@@ -254,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to format date
     function formatDate(dateString) {
-        if (!dateString) return 'Not available';
+        if (!dateString) return successTranslations.not_available;
         
         const date = new Date(dateString);
         if (isNaN(date.getTime())) {
@@ -278,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to format time
     function formatTime(dateString) {
-        if (!dateString) return 'Not available';
+        if (!dateString) return successTranslations.not_available;
         
         // Try to extract time from "Month Day, Year at HH:MM:SS AM/PM" format
         if (typeof dateString === 'string') {
@@ -308,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to format currency
     function formatCurrency(amount) {
-        if (amount === undefined || amount === null) return 'Not available';
+        if (amount === undefined || amount === null) return successTranslations.not_available;
         return '$' + parseFloat(amount).toFixed(2);
     }
     
@@ -320,14 +357,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 bookingPayload.services?.[0]?.serviceName || '{{ $serviceName }}';
             
             document.getElementById('service-provider').textContent = 
-                bookingPayload.service_provider_id || 'Not available';
+                bookingPayload.service_provider_id || successTranslations.not_available;
                 
             document.getElementById('agent-name').textContent = 
-                bookingPayload.agent_name || formData.agentName || 'Not available';
+                bookingPayload.agent_name || formData.agentName || successTranslations.not_available;
                 
             const duration = bookingPayload.services?.[0]?.durationMinutes || 0;
             document.getElementById('service-duration').textContent = 
-                duration ? `${duration} minutes` : 'Not available';
+                duration ? `${duration} ${successTranslations.minutes}` : successTranslations.not_available;
             
             // Appointment Information
             const bookingDate = bookingPayload.booking_time || formData.selectedDate;
@@ -356,9 +393,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Customer Information
             const userInfo = bookingPayload.userInfo?.[0] || {};
-            document.getElementById('customer-name').textContent = userInfo.name || 'Not available';
-            document.getElementById('customer-email').textContent = userInfo.email || 'Not available';
-            document.getElementById('customer-phone').textContent = userInfo.phone || 'Not available';
+            document.getElementById('customer-name').textContent = userInfo.name || successTranslations.not_available;
+            document.getElementById('customer-email').textContent = userInfo.email || successTranslations.not_available;
+            document.getElementById('customer-phone').textContent = userInfo.phone || successTranslations.not_available;
             
             // Hide loading and show details
             document.getElementById('booking-details-loading').style.display = 'none';
@@ -367,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Error populating booking details:', error);
             document.getElementById('booking-details-loading').innerHTML = 
-                '<div class="alert alert-danger">Error loading booking details</div>';
+                '<div class="alert alert-danger">' + successTranslations.error_loading_details + '</div>';
         }
     }
     
@@ -375,7 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function submitBooking(payload) {
         try {
             document.getElementById('apiResponseStatus').innerHTML = 
-                '<span class="text-warning">Sending booking to server...</span>';
+                '<span class="text-warning">' + successTranslations.sending_booking + '</span>';
             
             console.log('Submitting booking with payment info:', payload);
             
@@ -392,20 +429,20 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (response.ok) {
                 document.getElementById('apiResponseStatus').innerHTML = 
-                    '<strong class="text-success">✓ Booking confirmed on server</strong>';
+                    '<strong class="text-success">' + successTranslations.booking_confirmed_server + '</strong>';
                 
                 // Don't clear stored data until we've displayed all the information
                 // localStorage.removeItem('bookingFormData');
                 // localStorage.removeItem('bookingPayload');
             } else {
                 document.getElementById('apiResponseStatus').innerHTML = 
-                    '<span class="text-danger">Error submitting booking</span>';
+                    '<span class="text-danger">' + successTranslations.error_submitting_booking + '</span>';
                 console.error('Error submitting booking:', responseData);
             }
         } catch (error) {
             console.error('Error submitting booking:', error);
             document.getElementById('apiResponseStatus').innerHTML = 
-                '<span class="text-danger">Error submitting booking</span>';
+                '<span class="text-danger">' + successTranslations.error_submitting_booking + '</span>';
         }
     }
     
@@ -543,36 +580,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 <body>
                     <div class="receipt">
                         <div class="receipt-header">
-                            <h1>GoGlow Beauty Services</h1>
-                            <p>Receipt for ${serviceName}</p>
-                            <p>Date: ${receiptDate}</p>
+                            <h1>${successTranslations.receipt_title}</h1>
+                            <p>${successTranslations.receipt_for} ${serviceName}</p>
+                            <p>${successTranslations.receipt_date} ${receiptDate}</p>
                         </div>
                         
                         <div class="receipt-details">
-                            <h2>Customer Information</h2>
-                            <p><span class="label">Name:</span> ${customerName}</p>
-                            <p><span class="label">Email:</span> ${customerEmail}</p>
-                            <p><span class="label">Phone:</span> ${customerPhone}</p>
+                            <h2>${successTranslations.receipt_customer_info}</h2>
+                            <p><span class="label">${successTranslations.label_name}:</span> ${customerName}</p>
+                            <p><span class="label">${successTranslations.label_email}:</span> ${customerEmail}</p>
+                            <p><span class="label">${successTranslations.label_phone}:</span> ${customerPhone}</p>
                         </div>
                         
                         <div class="receipt-details">
-                            <h2>Appointment Details</h2>
-                            <p><span class="label">Service:</span> ${serviceName}</p>
-                            <p><span class="label">Date:</span> ${bookingDate}</p>
-                            <p><span class="label">Time:</span> ${bookingTime}</p>
-                            <p><span class="label">Agent:</span> ${agentName}</p>
+                            <h2>${successTranslations.receipt_appointment_details}</h2>
+                            <p><span class="label">${successTranslations.receipt_service}</span> ${serviceName}</p>
+                            <p><span class="label">${successTranslations.label_date}:</span> ${bookingDate}</p>
+                            <p><span class="label">${successTranslations.label_time}:</span> ${bookingTime}</p>
+                            <p><span class="label">${successTranslations.receipt_agent}</span> ${agentName}</p>
                         </div>
                         
                         <table class="receipt-table">
                             <thead>
                                 <tr>
-                                    <th>Description</th>
-                                    <th style="text-align: right;">Amount</th>
+                                    <th>${successTranslations.receipt_description}</th>
+                                    <th style="text-align: right;">${successTranslations.receipt_amount}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>${serviceName} ${paymentType === 'deposit' ? '(15% Deposit)' : ''}</td>
+                                    <td>${serviceName} ${paymentType === 'deposit' ? '(' + successTranslations.payment_type_deposit + ')' : ''}</td>
                                     <td style="text-align: right;">${formatCurrency(amountPaid)}</td>
                                 </tr>
                             </tbody>
@@ -580,31 +617,31 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         <div class="receipt-total">
                             <div class="total-row">
-                                <span class="total-label">Total:</span>
+                                <span class="total-label">${successTranslations.receipt_total}</span>
                                 <span class="total-value">${formatCurrency(servicePrice)}</span>
                             </div>
                             <div class="total-row">
-                                <span class="total-label">Amount Paid:</span>
+                                <span class="total-label">${successTranslations.receipt_amount_paid}</span>
                                 <span class="total-value">${formatCurrency(amountPaid)}</span>
                             </div>
                             ${paymentType === 'deposit' ? `
                             <div class="total-row">
-                                <span class="total-label">Remaining Balance:</span>
+                                <span class="total-label">${successTranslations.receipt_remaining_balance}</span>
                                 <span class="total-value">${formatCurrency(remainingAmount)}</span>
                             </div>
                             ` : ''}
                         </div>
                         
                         <div class="receipt-details">
-                            <h2>Payment Information</h2>
-                            <p><span class="label">Payment Type:</span> ${paymentType === 'deposit' ? '15% Deposit' : 'Full Payment'}</p>
-                            <p><span class="label">Transaction ID:</span> ${transactionId}</p>
-                            <p><span class="label">Payment Status:</span> Completed</p>
+                            <h2>${successTranslations.receipt_payment_info}</h2>
+                            <p><span class="label">${successTranslations.label_payment_type}:</span> ${paymentType === 'deposit' ? successTranslations.payment_type_deposit : successTranslations.payment_type_full}</p>
+                            <p><span class="label">${successTranslations.label_transaction_id}:</span> ${transactionId}</p>
+                            <p><span class="label">${successTranslations.receipt_payment_status}</span> ${successTranslations.receipt_completed}</p>
                         </div>
                         
                         <div class="receipt-footer">
-                            <p>Thank you for choosing GoGlow Beauty Services!</p>
-                            <p>For any questions regarding your appointment, please contact us.</p>
+                            <p>${successTranslations.receipt_thank_you}</p>
+                            <p>${successTranslations.receipt_contact}</p>
                         </div>
                     </div>
                 </body>
@@ -624,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (error) {
             console.error('Error generating receipt:', error);
-            alert('Error generating receipt. Please try again.');
+            alert(successTranslations.error_generating_receipt);
         }
     }
 });
@@ -650,89 +687,89 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="success-wrapper">
             <div class="success-card">
                 <div class="success-icon"><i class="fas fa-check"></i></div>
-                <h2 class="success-title">Payment Successful!</h2>
-                <p class="success-subtitle">Your appointment has been booked successfully. Below are the full details of your reservation.</p>
+                <h2 class="success-title">{{ __('app.success.title') }}</h2>
+                <p class="success-subtitle">{{ __('app.success.subtitle') }}</p>
 
                 <div id="booking-details-loading" class="loading-card">
                     <div class="spinner-border text-danger" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                        <span class="visually-hidden">{{ __('app.success.loading') }}</span>
                     </div>
-                    <p class="mt-3">Loading booking details...</p>
+                    <p class="mt-3">{{ __('app.success.loading_booking_details') }}</p>
                 </div>
 
                 <div id="booking-details" class="details-card" style="display:none;">
                     <div class="info-section">
-                        <h5>Service Information</h5>
+                        <h5>{{ __('app.success.service_information') }}</h5>
                         <div class="info-grid">
                             <div class="info-item">
-                                <p class="label">Service Name</p>
+                                <p class="label">{{ __('app.success.label_service_name') }}</p>
                                 <p class="value" id="service-name">{{ $serviceName }}</p>
                             </div>
                             <div class="info-item">
-                                <p class="label">Service Provider</p>
-                                <p class="value" id="service-provider">Loading...</p>
+                                <p class="label">{{ __('app.success.label_service_provider') }}</p>
+                                <p class="value" id="service-provider">{{ __('app.success.loading') }}</p>
                             </div>
                             <div class="info-item">
-                                <p class="label">Agent Name</p>
-                                <p class="value" id="agent-name">Loading...</p>
+                                <p class="label">{{ __('app.success.label_agent_name') }}</p>
+                                <p class="value" id="agent-name">{{ __('app.success.loading') }}</p>
                             </div>
                             <div class="info-item">
-                                <p class="label">Duration</p>
-                                <p class="value" id="service-duration">Loading...</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="info-section">
-                        <h5>Appointment Information</h5>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <p class="label">Date</p>
-                                <p class="value" id="appointment-date">Loading...</p>
-                            </div>
-                            <div class="info-item">
-                                <p class="label">Time</p>
-                                <p class="value" id="appointment-time">Loading...</p>
+                                <p class="label">{{ __('app.success.label_duration') }}</p>
+                                <p class="value" id="service-duration">{{ __('app.success.loading') }}</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="info-section">
-                        <h5>Payment Information</h5>
+                        <h5>{{ __('app.success.appointment_information') }}</h5>
                         <div class="info-grid">
                             <div class="info-item">
-                                <p class="label">Payment Type</p>
-                                <p class="value">{{ $paymentType === 'deposit' ? '15% Deposit' : 'Full Payment' }}</p>
+                                <p class="label">{{ __('app.success.label_date') }}</p>
+                                <p class="value" id="appointment-date">{{ __('app.success.loading') }}</p>
                             </div>
                             <div class="info-item">
-                                <p class="label">Transaction ID</p>
+                                <p class="label">{{ __('app.success.label_time') }}</p>
+                                <p class="value" id="appointment-time">{{ __('app.success.loading') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h5>{{ __('app.success.payment_information') }}</h5>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <p class="label">{{ __('app.success.label_payment_type') }}</p>
+                                <p class="value">{{ $paymentType === 'deposit' ? __('app.success.payment_type_deposit') : __('app.success.payment_type_full') }}</p>
+                            </div>
+                            <div class="info-item">
+                                <p class="label">{{ __('app.success.label_transaction_id') }}</p>
                                 <p><code id="transactionId">{{ $transactionId }}</code></p>
                             </div>
                             <div class="info-item">
-                                <p class="label">Amount Paid</p>
-                                <p class="value" id="amount-paid">Loading...</p>
+                                <p class="label">{{ __('app.success.label_amount_paid') }}</p>
+                                <p class="value" id="amount-paid">{{ __('app.success.loading') }}</p>
                             </div>
                             <div class="info-item" id="remaining-amount-container" style="display:none;">
-                                <p class="label">Remaining Amount</p>
-                                <p class="value" id="remaining-amount">Loading...</p>
+                                <p class="label">{{ __('app.success.label_remaining_amount') }}</p>
+                                <p class="value" id="remaining-amount">{{ __('app.success.loading') }}</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="info-section">
-                        <h5>Customer Information</h5>
+                        <h5>{{ __('app.success.customer_information') }}</h5>
                         <div class="info-grid">
                             <div class="info-item">
-                                <p class="label">Name</p>
-                                <p class="value" id="customer-name">Loading...</p>
+                                <p class="label">{{ __('app.success.label_name') }}</p>
+                                <p class="value" id="customer-name">{{ __('app.success.loading') }}</p>
                             </div>
                             <div class="info-item">
-                                <p class="label">Email</p>
-                                <p class="value" id="customer-email">Loading...</p>
+                                <p class="label">{{ __('app.success.label_email') }}</p>
+                                <p class="value" id="customer-email">{{ __('app.success.loading') }}</p>
                             </div>
                             <div class="info-item">
-                                <p class="label">Phone</p>
-                                <p class="value" id="customer-phone">Loading...</p>
+                                <p class="label">{{ __('app.success.label_phone') }}</p>
+                                <p class="value" id="customer-phone">{{ __('app.success.loading') }}</p>
                             </div>
                         </div>
                     </div>
@@ -741,18 +778,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div id="bookingConfirmation" class="status-banner">
                     <div class="icon"><i class="fas fa-check-circle"></i></div>
                     <div>
-                        <strong>Booking Confirmed!</strong>
-                        <span>Your appointment has been scheduled and payment processed successfully.</span>
-                        <small>Server Response: <span id="apiResponseStatus">Booking sent to server</span></small>
+                        <strong>{{ __('app.success.booking_confirmed') }}</strong>
+                        <span>{{ __('app.success.booking_confirmed_description') }}</span>
+                        <small>{{ __('app.success.server_response') }}<span id="apiResponseStatus">{{ __('app.success.booking_sent_to_server') }}</span></small>
                     </div>
                 </div>
 
                 <div class="success-actions">
                     <button id="download-receipt" class="success-btn-primary">
-                        <i class="fas fa-download"></i>Download Receipt
+                        <i class="fas fa-download"></i>{{ __('app.success.button_download_receipt') }}
                     </button>
                     <a href="/" class="success-btn-secondary">
-                        <i class="fas fa-home"></i>Return to Home
+                        <i class="fas fa-home"></i>{{ __('app.success.button_return_home') }}
                     </a>
                 </div>
             </div>
