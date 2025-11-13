@@ -234,7 +234,7 @@
     $categories = $groupedServices->keys()->all();
 @endphp
 
-                            <div class="service-filter-pills" role="tablist" aria-label="Service categories">
+                            <div class="service-filter-pills" role="tablist" aria-label="Service categories" style="margin-bottom:0!important;">
                                 <button type="button" class="filter-pill active" data-category="all" aria-current="true">All</button>
                                 @if(count($categories) > 0)
                                     @foreach($categories as $category)

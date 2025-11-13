@@ -1526,6 +1526,7 @@
       height:787px;
     }
         .service-filter-pills {
+     margin-bottom: 30px;
     display: flex;
     gap: 12px;
     flex-wrap: wrap;

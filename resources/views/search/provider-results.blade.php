@@ -289,41 +289,56 @@
                                     <div class="availability-section">
                                         <div class="availability-title">Next Availability</div>
                                         @php
-                                            $isAvailable = isset($provider['available']) && $provider['available'] === true;
+                                            // Check time slot availability for each day
+                                            $chipDaysWithAvailability = [];
+                                            foreach ($chipDays as $cd) {
+                                                $dayKey = $cd['label'];
+                                                $hasTimeSlot = isset($weeklyTiming[$dayKey]) && 
+                                                               is_array($weeklyTiming[$dayKey]) && 
+                                                               count($weeklyTiming[$dayKey]) >= 2 &&
+                                                               !empty($weeklyTiming[$dayKey][0]) &&
+                                                               !empty($weeklyTiming[$dayKey][1]);
+                                                
+                                                $timeSlotText = 'No time availability';
+                                                if ($hasTimeSlot) {
+                                                    $timeSlotText = $formatRange($weeklyTiming[$dayKey]);
+                                                }
+                                                
+                                                $chipDaysWithAvailability[] = [
+                                                    'label' => $cd['label'],
+                                                    'day' => $cd['day'],
+                                                    'hasTimeSlot' => $hasTimeSlot,
+                                                    'timeSlotText' => $timeSlotText
+                                                ];
+                                            }
                                         @endphp
                                         <div class="availability-row">
                                             <span class="time-of-day">
                                                 Morning
                                             </span>
-                                             @if(!$isAvailable)
-                                             <div class="chip-group">
-                                                    Not Available 
-                                             </div>
-                                                @endif
-                                            @if($isAvailable)
                                             <div class="chip-group">
-                                                @foreach($chipDays as $cd)
-                                                    <span class="date-chip outline">{{ $cd['label'] }} <b>{{ $cd['day'] }}</b></span>
+                                                @foreach($chipDaysWithAvailability as $cd)
+                                                    <span class="date-chip {{ $cd['hasTimeSlot'] ? 'has-slot' : 'no-slot' }}" 
+                                                          data-tooltip="{{ $cd['timeSlotText'] }}">
+                                                        {{ $cd['label'] }} <b>{{ $cd['day'] }}</b>
+                                                        <span class="date-chip-tooltip">{{ $cd['timeSlotText'] }}</span>
+                                                    </span>
                                                 @endforeach
                                             </div>
-                                            @endif
                                         </div>
                                         <div class="availability-row">
                                             <span class="time-of-day">
                                                 Evening
                                             </span>
-                                                @if(!$isAvailable)
-                                                <div class="chip-group">
-                                                    Not Available 
-                                                </div>
-                                                @endif
-                                            @if($isAvailable)
                                             <div class="chip-group">
-                                                @foreach($chipDays as $cd)
-                                                    <span class="date-chip">{{ $cd['label'] }} <b>{{ $cd['day'] }}</b></span>
+                                                @foreach($chipDaysWithAvailability as $cd)
+                                                    <span class="date-chip {{ $cd['hasTimeSlot'] ? 'has-slot' : 'no-slot' }}" 
+                                                          data-tooltip="{{ $cd['timeSlotText'] }}">
+                                                        {{ $cd['label'] }} <b>{{ $cd['day'] }}</b>
+                                                        <span class="date-chip-tooltip">{{ $cd['timeSlotText'] }}</span>
+                                                    </span>
                                                 @endforeach
                                             </div>
-                                            @endif
                                         </div>
                                     </div>
 
@@ -453,9 +468,42 @@
     .availability-row { display: flex; align-items: center; gap: 10px; margin: 4px 0; flex-wrap: wrap; }
     .time-of-day { color:rgba(118, 33, 62, 1); font-weight: 500; font-size: 15px; width: 80px; }
     .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
-    .date-chip { background: rgba(229, 0, 80, 1); color: #ffffffff; border: 1px solid #ffd1df; padding: 4px 18px; border-radius: 10px; font-size: 14px; font-weight: 500; }
+    .date-chip { padding: 4px 18px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; position: relative; }
     .date-chip b { font-weight: 500; }
-    .date-chip.outline { background: #fff; color: #6b7280; border-color: #e5e7eb; }
+    .date-chip.has-slot { background: rgba(229, 0, 80, 1); color: #ffffffff; border: 1px solid #ffd1df; }
+    .date-chip.no-slot { background: #fff; color: #6b7280; border: 1px solid #e5e7eb; }
+    .date-chip:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+    
+    /* Date chip tooltip */
+    .date-chip-tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 8px;
+        padding: 6px 12px;
+        background: #333;
+        color: white;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 1000;
+    }
+    .date-chip-tooltip::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 5px solid transparent;
+        border-top-color: #333;
+    }
+    .date-chip:hover .date-chip-tooltip {
+        opacity: 1;
+    }
 
     /* Book now button */
     .book-now-btn { background: linear-gradient(270deg, #FF8C00 0%, #E50050 100%); color: #fff; border-radius: 999px; padding: 7px 18px; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: .3px; }
