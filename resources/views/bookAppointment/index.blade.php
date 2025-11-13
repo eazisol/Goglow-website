@@ -593,7 +593,7 @@
 
     .day-column {
         min-width: 84px;
-        background: #fff;
+        background: #fff4f8;
         border-radius: 10px;
         padding: 40px 0 40px;
         text-align: center;
@@ -653,54 +653,49 @@
         width: 30px;
     }
 
-    /* Period Selector */
+    /* Period Selector - Segmented Button Style */
     .period-selector {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 16px;
-        margin: 24px 0;
-        padding: 0;
+        gap: 0;
+        margin: 12px auto;
+        padding: 4px;
+        background: rgba(213, 190, 198, 0.5);
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        width: fit-content;
     }
 
     .period-btn {
         min-width: 140px;
-        padding: 15px 20px;
-        background: #fff;
-        border-radius: 10px;
+        padding: 12px 20px;
+        background: transparent;
+        border-radius: 8px;
         text-align: center;
         transition: all 0.25s ease;
         color: rgba(77, 38, 64, 0.75);
-        font-weight: 600;
+        font-weight: 500;
         font-size: 14px;
-        border: 2px solid rgba(213, 190, 198, 0.9);
+        border: none;
         cursor: pointer;
         position: relative;
+        outline: none;
     }
 
     .period-btn:hover {
-        border-color: rgba(255, 45, 139, 0.35);
-        transform: translateY(-1px);
         color: rgba(77, 38, 64, 0.95);
+        background: rgba(255, 255, 255, 0.5);
     }
 
     .period-btn.active {
-        background: rgba(229, 0, 80, 1);
-        border-color: rgba(229, 0, 80, 1);
-        color: #fff;
-        transform: translateY(-2px);
+        background: #fff4f8;
+        color: rgba(118, 33, 62, 1);
+        box-shadow: 0 2px 8px rgba(229, 0, 80, 0.2);
     }
 
     .period-btn.active::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        bottom: 8px;
-        transform: translateX(-50%);
-        width: 28px;
-        height: 6px;
-        border-radius: 999px;
-        background: #fff;
+        display: none;
     }
 
     @media (max-width: 768px) {
@@ -821,12 +816,12 @@
         min-width: 100px;
         padding: 10px 12px;
         text-align: center;
-        background-color: #f8f9fa;
+        background-color: #fff4f8;
         border-radius: 6px;
         font-size: 12px;
         cursor: pointer;
         transition: all 0.2s ease;
-        border: 1px solid #e9ecef;
+        border: 1px solid #d5bec6;
     }
     
     .time-slot:hover {
@@ -835,7 +830,7 @@
     }
     
     .time-slot.selected {
-        background-color: black;
+        background-color: rgba(229, 0, 80, 1);
         color: white;
         border-color: var(--theme-color);
         transform: translateY(-2px);
@@ -961,7 +956,7 @@
                                     </div>
 
                                     <div id="agentSchedule" class="mt-3" style="display:none;">
-                            <h5 style="margin-bottom: 10px;font-size:18px;font-weight:700;">{{ __('app.agent_page.schedule') }}</h5>
+                            <h5 style="margin-bottom: 10px;font-size:18px;font-weight:700;text-align:center;">{{ __('app.agent_page.schedule') }}</h5>
 
                             <!-- Selected slot info (moved directly under heading) -->
                             <div id="selectedSlotInfo" class="alert alert-info mb-3" style="display: none;">
