@@ -653,6 +653,68 @@
         width: 30px;
     }
 
+    /* Period Selector */
+    .period-selector {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        margin: 24px 0;
+        padding: 0;
+    }
+
+    .period-btn {
+        min-width: 140px;
+        padding: 15px 20px;
+        background: #fff;
+        border-radius: 10px;
+        text-align: center;
+        transition: all 0.25s ease;
+        color: rgba(77, 38, 64, 0.75);
+        font-weight: 600;
+        font-size: 14px;
+        border: 2px solid rgba(213, 190, 198, 0.9);
+        cursor: pointer;
+        position: relative;
+    }
+
+    .period-btn:hover {
+        border-color: rgba(255, 45, 139, 0.35);
+        transform: translateY(-1px);
+        color: rgba(77, 38, 64, 0.95);
+    }
+
+    .period-btn.active {
+        background: rgba(229, 0, 80, 1);
+        border-color: rgba(229, 0, 80, 1);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .period-btn.active::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 8px;
+        transform: translateX(-50%);
+        width: 28px;
+        height: 6px;
+        border-radius: 999px;
+        background: #fff;
+    }
+
+    @media (max-width: 768px) {
+        .period-selector {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .period-btn {
+            width: 100%;
+            max-width: 300px;
+        }
+    }
+
     @media (max-width: 768px) {
         .calendar-strip {
             width: 100%;
@@ -681,34 +743,45 @@
         }
     }
     
-    /* Align 7 vertical columns of slots under the 7 days */
+    /* Horizontal scrollable time slots container */
     .time-slots-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(0, 85px));
-        justify-content: center;
-        column-gap: 10px;
-        row-gap: 8px;
-        margin-top: 24px;
-        align-items: start;
-    }
-
-    /* Each day's vertical stack */
-    .day-slots-column {
         display: flex;
-        flex-direction: column;
-        gap: 6px;
-        min-height: 48px;
-        width: 85px;
+        flex-direction: row;
+        gap: 10px;
+        margin-top: 24px;
+        padding: 0 20px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        align-items: flex-start;
+        justify-content: flex-start;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
     }
 
-    @media (max-width: 768px) {
-        .time-slots-container .day-slots-column:nth-child(n + 4) {
-            display: none;
-        }
+    /* Hide scrollbar but keep functionality */
+    .time-slots-container::-webkit-scrollbar {
+        height: 8px;
     }
-    
+
+    .time-slots-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .time-slots-container::-webkit-scrollbar-thumb {
+        background: rgba(229, 0, 80, 0.5);
+        border-radius: 4px;
+    }
+
+    .time-slots-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(229, 0, 80, 0.7);
+    }
+
+    /* Horizontal time slot items */
     .time-slot {
-        padding: 6px 4px;
+        flex-shrink: 0;
+        min-width: 100px;
+        padding: 10px 12px;
         text-align: center;
         background-color: #f8f9fa;
         border-radius: 6px;
@@ -870,6 +943,13 @@
                                 </button>
                             </div>
 
+                            <!-- Period Selector (hidden initially) -->
+                            <div id="periodSelector" class="period-selector" style="display: none;">
+                                <button type="button" class="period-btn" data-period="morning">The Morning</button>
+                                <button type="button" class="period-btn" data-period="afternoon">In The Afternoon</button>
+                                <button type="button" class="period-btn" data-period="evening">In The Evening</button>
+                            </div>
+
                             <div id="timeSlotGrid" class="time-slots-container"></div>
                                     </div>
                                 </div>
@@ -997,8 +1077,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const nextWeekBtn = document.getElementById('nextWeek');
     const selectedSlotInfo = document.getElementById('selectedSlotInfo');
     const selectedDateTimeDisplay = document.getElementById('selectedDateTimeDisplay');
+    const periodSelector = document.getElementById('periodSelector');
     
     let chosenAgent = null;
+    let chosenAgentSlots = null;
+    let selectedPeriod = null;
     
     // Start with today's date as the reference point
     const today = new Date();
@@ -1162,15 +1245,23 @@ document.addEventListener('DOMContentLoaded', function () {
             dayCol.appendChild(dayDate);
             daysHeader.appendChild(dayCol);
             
-            // Add click event to focus the chosen day (no filtering – keep all slots visible)
+            // Add click event to select the day and show period selector
             dayCol.addEventListener('click', function() {
                 document.querySelectorAll('.day-column').forEach(col => col.classList.remove('active'));
                 this.classList.add('active');
                 const dayKey = dayKeys[date.getDay()];
                 selectedDayInput.value = dayKey;
-                // Smoothly scroll the corresponding column into view
-                const col = document.querySelector(`.day-slots-column[data-day="${dayKey}"]`);
-                col?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+                selectedDateInput.value = formatDateValue(date);
+                
+                // Reset period selection when day changes
+                selectedPeriod = null;
+                periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+                
+                // Show period selector and hide time slots
+                periodSelector.style.display = '';
+                timeSlotGrid.innerHTML = '';
+                selectedSlotInfo.style.display = 'none';
+                selectedTimeInput.value = '';
             });
         }
     }
@@ -1178,101 +1269,87 @@ document.addEventListener('DOMContentLoaded', function () {
     // Keep function unused (no filtering). Left in place for future use if needed.
     function filterTimeSlotsByDay(dayKey) {}
     
-    // Render time slots for the week
-    function renderTimeSlots(slots) {
-        console.log('Rendering time slots:', slots);
+    // Render time slots for selected day and period (horizontal layout)
+    function renderTimeSlots(slots, selectedDay, selectedPeriod, selectedDate) {
+        console.log('Rendering time slots:', { slots, selectedDay, selectedPeriod, selectedDate });
         timeSlotGrid.innerHTML = '';
         
-        if (!slots || Object.keys(slots).length === 0) {
+        if (!slots || !selectedDay || !selectedPeriod || !selectedDate) {
             timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No available time slots</div>';
             return;
         }
         
-        // Debug: Count total available slots
-        let totalSlots = 0;
-        Object.keys(slots).forEach(day => {
-            const availableSlots = Array.isArray(slots[day]) ? 
-                slots[day].filter(slot => slot.available).length : 0;
-            totalSlots += availableSlots;
-            console.log(`Day ${day}: ${availableSlots} available slots`);
-        });
-        console.log(`Total available slots: ${totalSlots}`);
+        // Get slots for the selected day
+        const daySlots = slots[selectedDay] || [];
         
-        // If no slots are available after filtering, show a message
-        if (totalSlots === 0) {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No available time slots for this week</div>';
+        if (!Array.isArray(daySlots) || daySlots.length === 0) {
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No available time slots for this day</div>';
             return;
         }
         
-        // Create a vertical column for each day and fill with that day's slots
-        for (let i = 0; i < 7; i++) {
-            const date = new Date(currentWeekStart);
-            date.setDate(date.getDate() + i);
-            
-            // Skip rendering if the date is before today
-            if (date < today) {
-                continue;
-            }
-            
-            const dayKey = dayKeys[date.getDay()];
-            const daySlots = slots[dayKey] || [];
-
-            // Create the column wrapper regardless, to keep alignment
-            const col = document.createElement('div');
-            col.className = 'day-slots-column';
-            col.dataset.day = dayKey;
-            
-            // Check if this is today
-            const isToday = date.getDate() === todayDate && 
-                           date.getMonth() === todayMonth && 
-                           date.getFullYear() === todayYear;
-            
-            if (isToday) {
-                col.classList.add('today');
-            }
-
-            if (Array.isArray(daySlots) && daySlots.length > 0) {
-                daySlots.forEach(slot => {
-                    if (!slot.available) return; // Skip unavailable slots
-
-                    const timeSlot = document.createElement('div');
-                    timeSlot.className = 'time-slot';
-                    timeSlot.dataset.day = dayKey;
-                    timeSlot.dataset.time = slot.time;
-                    timeSlot.dataset.date = formatDateValue(date);
-                    timeSlot.textContent = formatTimeDisplay(slot.time);
-
-                    // Add click handler for slot selection
-                    timeSlot.addEventListener('click', function() {
-                        // Deselect any previously selected slot
-                        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-
-                        // Select this slot
-                        this.classList.add('selected');
-
-                        // Update hidden inputs
-                        selectedDateInput.value = this.dataset.date;
-                        selectedTimeInput.value = this.dataset.time;
-
-                        // Show selected date/time info (parse as local to avoid UTC offset issues)
-                        const [yy, mm, dd] = this.dataset.date.split('-').map(Number);
-                        const selectedDate = new Date(yy, mm - 1, dd);
-                        const formattedDate = formatDate(selectedDate);
-                        const formattedTime = formatTimeDisplay(this.dataset.time);
-                        selectedDateTimeDisplay.textContent = `${formattedDate} at ${formattedTime}`;
-                        selectedSlotInfo.style.display = '';
-                        // Ensure hidden selected day reflects the clicked slot's day
-                        selectedDayInput.value = this.dataset.day;
-                    });
-
-                    col.appendChild(timeSlot);
-                });
-            }
-
-            timeSlotGrid.appendChild(col);
+        // Define time period ranges (hours)
+        const periodRanges = {
+            morning: { start: 6, end: 12 },      // 6:00 AM - 11:59 AM
+            afternoon: { start: 12, end: 17 },   // 12:00 PM - 4:59 PM
+            evening: { start: 17, end: 21 }      // 5:00 PM - 8:59 PM
+        };
+        
+        const period = periodRanges[selectedPeriod];
+        if (!period) {
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">Invalid time period</div>';
+            return;
         }
         
-        // Do not auto-select any day; show all columns with their slots by default
+        // Filter slots by period and availability
+        const filteredSlots = daySlots.filter(slot => {
+            if (!slot.available) return false;
+            
+            // Extract hour from time string (format: "HH:MM")
+            const [hours] = slot.time.split(':').map(Number);
+            
+            // Check if hour falls within the selected period range
+            return hours >= period.start && hours < period.end;
+        });
+        
+        if (filteredSlots.length === 0) {
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No available time slots for this period</div>';
+            return;
+        }
+        
+        // Create horizontal scrollable row of time slots
+        filteredSlots.forEach(slot => {
+            const timeSlot = document.createElement('div');
+            timeSlot.className = 'time-slot';
+            timeSlot.dataset.day = selectedDay;
+            timeSlot.dataset.time = slot.time;
+            timeSlot.dataset.date = selectedDate;
+            timeSlot.textContent = formatTimeDisplay(slot.time);
+
+            // Add click handler for slot selection
+            timeSlot.addEventListener('click', function() {
+                // Deselect any previously selected slot
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+
+                // Select this slot
+                this.classList.add('selected');
+
+                // Update hidden inputs
+                selectedDateInput.value = this.dataset.date;
+                selectedTimeInput.value = this.dataset.time;
+
+                // Show selected date/time info (parse as local to avoid UTC offset issues)
+                const [yy, mm, dd] = this.dataset.date.split('-').map(Number);
+                const selectedDateObj = new Date(yy, mm - 1, dd);
+                const formattedDate = formatDate(selectedDateObj);
+                const formattedTime = formatTimeDisplay(this.dataset.time);
+                selectedDateTimeDisplay.textContent = `${formattedDate} at ${formattedTime}`;
+                selectedSlotInfo.style.display = '';
+                // Ensure hidden selected day reflects the clicked slot's day
+                selectedDayInput.value = this.dataset.day;
+            });
+
+            timeSlotGrid.appendChild(timeSlot);
+        });
     }
     
     // Function to check if a date is in the past (before today)
@@ -1307,9 +1384,19 @@ document.addEventListener('DOMContentLoaded', function () {
             currentWeekStart = newWeekStart;
             updateWeekDisplay();
             renderDaysHeader();
-            if (chosenAgent && chosenAgent.slots) {
-                renderTimeSlots(chosenAgent.slots);
-            }
+            
+            // Reset period selection and hide time slots
+            selectedPeriod = null;
+            periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+            periodSelector.style.display = 'none';
+            timeSlotGrid.innerHTML = '';
+            selectedSlotInfo.style.display = 'none';
+            selectedTimeInput.value = '';
+            
+            // Clear day selection
+            document.querySelectorAll('.day-column').forEach(col => col.classList.remove('active'));
+            selectedDayInput.value = '';
+            selectedDateInput.value = '';
         }
         
         // Update button state
@@ -1321,9 +1408,19 @@ document.addEventListener('DOMContentLoaded', function () {
         currentWeekStart.setDate(currentWeekStart.getDate() + 7);
         updateWeekDisplay();
         renderDaysHeader();
-        if (chosenAgent && chosenAgent.slots) {
-            renderTimeSlots(chosenAgent.slots);
-        }
+        
+        // Reset period selection and hide time slots
+        selectedPeriod = null;
+        periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+        periodSelector.style.display = 'none';
+        timeSlotGrid.innerHTML = '';
+        selectedSlotInfo.style.display = 'none';
+        selectedTimeInput.value = '';
+        
+        // Clear day selection
+        document.querySelectorAll('.day-column').forEach(col => col.classList.remove('active'));
+        selectedDayInput.value = '';
+        selectedDateInput.value = '';
         
         // Update button state
         updatePrevWeekButtonState();
@@ -1360,6 +1457,14 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedDateInput.value = '';
             selectedTimeInput.value = '';
             selectedSlotInfo.style.display = 'none';
+            selectedPeriod = null;
+            
+            // Hide period selector and time slot grid initially
+            periodSelector.style.display = 'none';
+            timeSlotGrid.innerHTML = '';
+            
+            // Reset period selector active states
+            periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
             
             // Initialize the week display
             updateWeekDisplay();
@@ -1368,21 +1473,56 @@ document.addEventListener('DOMContentLoaded', function () {
             // Initialize the button state
             updatePrevWeekButtonState();
             
-            // If agent has timing data but no slots, convert timing to slots format
+            // Store agent slots data for later use (don't render immediately)
             if (!agent.slots && agent.timing) {
                 console.log('Converting timing to slots format');
-                const slots = convertTimingToSlots(agent.timing);
-                console.log('Generated slots:', slots);
-                renderTimeSlots(slots);
+                chosenAgentSlots = convertTimingToSlots(agent.timing);
+                console.log('Generated slots:', chosenAgentSlots);
             } else if (agent.slots) {
-                // Render time slots from agent data
-                renderTimeSlots(agent.slots);
+                // Store time slots from agent data
+                chosenAgentSlots = agent.slots;
             } else {
                 // No slots or timing data, create sample data for testing
                 console.log('No slots or timing data found, creating sample data');
-                const sampleSlots = createSampleSlots();
-                console.log('Sample slots:', sampleSlots);
-                renderTimeSlots(sampleSlots);
+                chosenAgentSlots = createSampleSlots();
+                console.log('Sample slots:', chosenAgentSlots);
+            }
+        });
+    }
+
+    // Period selector click handler
+    if (periodSelector) {
+        periodSelector.addEventListener('click', (e) => {
+            const periodBtn = e.target.closest('.period-btn');
+            if (!periodBtn) return;
+            
+            // Check if a day is selected
+            const activeDay = document.querySelector('.day-column.active');
+            if (!activeDay) {
+                alert('Please select a day first');
+                return;
+            }
+            
+            const dayKey = selectedDayInput.value;
+            if (!dayKey) {
+                alert('Please select a day first');
+                return;
+            }
+            
+            // Get selected period
+            const period = periodBtn.dataset.period;
+            selectedPeriod = period;
+            
+            // Highlight selection
+            periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+            periodBtn.classList.add('active');
+            
+            // Render time slots for selected day and period
+            if (chosenAgentSlots) {
+                const selectedDate = selectedDateInput.value;
+                renderTimeSlots(chosenAgentSlots, dayKey, period, selectedDate);
+            } else {
+                timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No time slots available</div>';
             }
         });
     }
