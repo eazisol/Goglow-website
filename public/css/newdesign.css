@@ -2506,7 +2506,7 @@
     display: none;
   } */
   .lang-switcher{
-    left: 37px!important;
+    /* left: 37px!important; */
   }
   .logo img {
     height: 45px!important;

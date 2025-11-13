@@ -8,20 +8,22 @@
     <div class="menu">
       <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}" @if(request()->is('/')) aria-current="page" @endif>{{ __('app.nav.home') }}</a>
       <span class="plus">+</span>
-      <a href="#">{{ __('app.nav.about_us') }}</a>
+      {{-- <a href="#">{{ __('app.nav.about_us') }}</a>
       <span class="plus">+</span>
       <a href="#">{{ __('app.nav.services') }}</a>
-      <span class="plus">+</span>
+      <span class="plus">+</span> --}}
       <a href="{{ url('/search') }}" class="{{ request()->is('search*') ? 'active' : '' }}" @if(request()->is('search*')) aria-current="page" @endif>{{ __('app.nav.book_service') }}</a>
       <span class="plus">+</span>
       <a href="#">{{ __('app.nav.reviews') }}</a>
     </div>
-    @include('partials.language-switcher')
-    <a href="{{ url('/become-glower') }}" class="cta-btn">{{ __('app.nav.hero_section_button') }}<img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></a>
-    {{-- <button class="cta-btn">BECOME A GLOWER <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></button> --}}
-    <button class="menu-icon" id="menu-toggle">
-      <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">
-    </button>
+    <div class="switcher-button">
+          @include('partials.language-switcher')
+          <a href="{{ url('/become-glower') }}" class="cta-btn">{{ __('app.nav.hero_section_button') }}<img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></a>
+          {{-- <button class="cta-btn">BECOME A GLOWER <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></button> --}}
+          <button class="menu-icon" id="menu-toggle">
+            <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">
+          </button>
+    </div>
   </nav>
 
 

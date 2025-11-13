@@ -511,7 +511,7 @@
         width: 64px;
         height: 64px;
         border-radius: 50%;
-        border: 3px solid #e9ecef;
+        border: 1px solid #e9ecef;
         object-fit: cover;
         transition: border-color 0.2s ease, transform 0.2s ease;
     }

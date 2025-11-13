@@ -29,7 +29,10 @@
 
 <style>
 /* Namespaced so it won't clash with Bootstrap */
-.lang-switcher { position: relative; display: inline-block;left: 59px; }
+.switcher-button{
+    display:flex;
+}
+.lang-switcher { position: relative; display: flex ; align-items: center; }
 .lang-dropdown { position: relative; }
 
 .language-btn {

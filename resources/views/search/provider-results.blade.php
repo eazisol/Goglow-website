@@ -272,7 +272,7 @@
                                     </div>
 
                                     <div class="rating-row">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="20" height="20">
+                                        <img src="images/images/star_cards.svg" alt="Location" width="15" height="15">
                                         <span class="rating-value">{{ number_format($avgRating, 1) }}</span>
                                         <span class="rating-count">({{ $provider['total_review'] ?? 0 }})</span>
                                     </div>
@@ -364,7 +364,7 @@
     .search-results .provider-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(16,24,40,0.12); }
     .search-results .provider-image { padding: 16px 16px 0 16px; }
     .search-results .provider-image-inner { position: relative; border-radius: 25px; overflow: hidden; }
-    .search-results .provider-image img { width: 100%; height: 251px; object-fit: cover; display: block; }
+    .search-results .provider-image img { width: 100%; height: 240px; object-fit: cover; display: block; }
     .search-results .image-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 17px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%); }
     .overlay-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .overlay-title { color: #fff; font-weight: 700; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
@@ -389,7 +389,7 @@
     .search-results .tag-list { margin: 12px 0; display: flex; gap: 8px; flex-wrap: wrap; }
     .search-results .tag-chip { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
 
-    .search-results .card-footer-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px;}
+    .search-results .card-footer-row { display: flex; align-items: center; justify-content: space-between; padding-top: 12px;}
     .search-results .reviews-text { color: #6b7280; font-weight: 700; font-size: 14px; }
     .provider-card .appointment-btn { background-color: #000000ff; color: #fff; border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: 700; border: none; }
     .provider-card .appointment-btn:hover { background-color: #727272ff; }
@@ -408,24 +408,23 @@
     .timing-hours { color: #111827; }
 
     /* Rating inline row */
-    .rating-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; color: #374151; font-weight: 600; }
+    .rating-row { display: flex; align-items: center; gap: 6px; margin-top: 5px; color: #374151; font-weight: 600; }
     .rating-row .fa-star { color: #ffb400; }
-    .rating-row .rating-value { font-weight: 700; color: #e50050;}
+    .rating-row .rating-value { font-weight: 400; color: #e50050;}
     .rating-row .rating-count { color: #e50050; font-weight: 600; }
 
     /* Availability section */
     .availability-section {}
-    .availability-title { color: #374151; font-size: 18px; font-weight: 700; margin-bottom: 6px; letter-spacing: 0px; }
-    .availability-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; flex-wrap: wrap; }
-    .time-of-day { color:rgba(118, 33, 62, 1); font-weight: 500; font-size: 16px; width: 80px; }
+    .availability-title { color: #374151; font-size: 16px; font-weight: 700; margin-bottom: 5px; letter-spacing: 0px; }
+    .availability-row { display: flex; align-items: center; gap: 10px; margin: 4px 0; flex-wrap: wrap; }
+    .time-of-day { color:rgba(118, 33, 62, 1); font-weight: 500; font-size: 15px; width: 80px; }
     .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
     .date-chip { background: rgba(229, 0, 80, 1); color: #ffffffff; border: 1px solid #ffd1df; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 500; }
     .date-chip b { font-weight: 500; }
     .date-chip.outline { background: #fff; color: #6b7280; border-color: #e5e7eb; }
 
     /* Book now button */
-    .book-now-btn { background: linear-gradient(270deg, #FF8C00 0%, #E50050 100%);
-; color: #fff; border-radius: 999px; padding: 10px 16px; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .3px; }
+    .book-now-btn { background: linear-gradient(270deg, #FF8C00 0%, #E50050 100%); color: #fff; border-radius: 999px; padding: 7px 18px; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: .3px; }
     .book-now-btn:hover { background: #ff9900; }
 
     .appointment-btn {
