@@ -743,38 +743,76 @@
         }
     }
     
+    /* Time slots strip wrapper with navigation arrows */
+    .time-slots-strip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    /* Time slot navigation arrows */
+    .time-slot-arrow {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        color: #ff2d2dff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .time-slot-arrow:hover:not(:disabled) {
+        color: #c71a6a;
+        transform: translateY(-1px);
+    }
+
+    .time-slot-arrow:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
     /* Horizontal scrollable time slots container */
     .time-slots-container {
         display: flex;
         flex-direction: row;
         gap: 10px;
-        margin-top: 24px;
-        padding: 0 20px;
+        padding: 0 10px;
         overflow-x: auto;
         overflow-y: hidden;
-        align-items: flex-start;
-        justify-content: flex-start;
+        align-items: center;
+        justify-content: center;
         scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch;
+        flex: 1;
+        /* Show approximately 6 slots at a time (6 * 110px + gaps) */
+        max-width: calc(6 * 110px + 5 * 10px);
+        width: calc(6 * 110px + 5 * 10px);
+        min-height: 60px;
+        /* Hide scrollbar completely but keep scrolling functionality */
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    
+    /* Center message when no slots (only affects non-slot divs) */
+    .time-slots-container > div:not(.time-slot) {
+        width: 100%;
+        text-align: center;
+        display: block;
     }
 
-    /* Hide scrollbar but keep functionality */
+    /* Hide scrollbar completely but keep scrolling functionality */
     .time-slots-container::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    .time-slots-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-
-    .time-slots-container::-webkit-scrollbar-thumb {
-        background: rgba(229, 0, 80, 0.5);
-        border-radius: 4px;
-    }
-
-    .time-slots-container::-webkit-scrollbar-thumb:hover {
-        background: rgba(229, 0, 80, 0.7);
+        display: none;
+        width: 0;
+        height: 0;
     }
 
     /* Horizontal time slot items */
@@ -950,7 +988,16 @@
                                 <button type="button" class="period-btn" data-period="evening">In The Evening</button>
                             </div>
 
-                            <div id="timeSlotGrid" class="time-slots-container"></div>
+                            <!-- Time Slots with Navigation (hidden initially) -->
+                            <div id="timeSlotsStrip" class="time-slots-strip" style="display: none;">
+                                <button type="button" id="prevTimeSlot" class="time-slot-arrow">
+                                    <img src="images/images/leftarrow_days.svg" alt="" width="16" height="16">
+                                </button>
+                                <div id="timeSlotGrid" class="time-slots-container"></div>
+                                <button type="button" id="nextTimeSlot" class="time-slot-arrow">
+                                    <img src="images/images/rightarrow_days.svg" alt="" width="16" height="16">
+                                </button>
+                            </div>
                                     </div>
                                 </div>
                                 @endif
@@ -1078,6 +1125,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedSlotInfo = document.getElementById('selectedSlotInfo');
     const selectedDateTimeDisplay = document.getElementById('selectedDateTimeDisplay');
     const periodSelector = document.getElementById('periodSelector');
+    const timeSlotsStrip = document.getElementById('timeSlotsStrip');
+    const prevTimeSlotBtn = document.getElementById('prevTimeSlot');
+    const nextTimeSlotBtn = document.getElementById('nextTimeSlot');
     
     let chosenAgent = null;
     let chosenAgentSlots = null;
@@ -1260,6 +1310,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Show period selector and hide time slots
                 periodSelector.style.display = '';
                 timeSlotGrid.innerHTML = '';
+                if (timeSlotsStrip) {
+                    timeSlotsStrip.style.display = 'none';
+                }
                 selectedSlotInfo.style.display = 'none';
                 selectedTimeInput.value = '';
             });
@@ -1274,8 +1327,19 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Rendering time slots:', { slots, selectedDay, selectedPeriod, selectedDate });
         timeSlotGrid.innerHTML = '';
         
+        // Hide time slots strip initially
+        if (timeSlotsStrip) {
+            timeSlotsStrip.style.display = 'none';
+        }
+        
         if (!slots || !selectedDay || !selectedPeriod || !selectedDate) {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No available time slots</div>';
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+            // Show strip to display message, but hide arrows
+            if (timeSlotsStrip) {
+                timeSlotsStrip.style.display = '';
+                if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
+                if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
+            }
             return;
         }
         
@@ -1283,7 +1347,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const daySlots = slots[selectedDay] || [];
         
         if (!Array.isArray(daySlots) || daySlots.length === 0) {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No available time slots for this day</div>';
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+            // Show strip to display message, but hide arrows
+            if (timeSlotsStrip) {
+                timeSlotsStrip.style.display = '';
+                if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
+                if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
+            }
             return;
         }
         
@@ -1296,7 +1366,13 @@ document.addEventListener('DOMContentLoaded', function () {
         
         const period = periodRanges[selectedPeriod];
         if (!period) {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">Invalid time period</div>';
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+            // Show strip to display message, but hide arrows
+            if (timeSlotsStrip) {
+                timeSlotsStrip.style.display = '';
+                if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
+                if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
+            }
             return;
         }
         
@@ -1312,8 +1388,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         
         if (filteredSlots.length === 0) {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No available time slots for this period</div>';
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+            // Show strip to display message, but hide arrows
+            if (timeSlotsStrip) {
+                timeSlotsStrip.style.display = '';
+                if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
+                if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
+            }
             return;
+        }
+        
+        // Show time slots strip when we have slots to display
+        if (timeSlotsStrip) {
+            timeSlotsStrip.style.display = '';
+            // Show arrows when we have slots
+            if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = '';
+            if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = '';
         }
         
         // Create horizontal scrollable row of time slots
@@ -1350,6 +1440,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
             timeSlotGrid.appendChild(timeSlot);
         });
+        
+        // Update arrow button states after rendering and center the view
+        setTimeout(() => {
+            updateTimeSlotArrows();
+            // Center scroll position to show middle slots (like days header)
+            if (timeSlotGrid && filteredSlots.length > 6) {
+                const scrollWidth = timeSlotGrid.scrollWidth;
+                const clientWidth = timeSlotGrid.clientWidth;
+                timeSlotGrid.scrollLeft = (scrollWidth - clientWidth) / 2;
+                updateTimeSlotArrows();
+            }
+        }, 100);
+    }
+    
+    // Helper function to update time slot arrow states
+    function updateTimeSlotArrows() {
+        if (!timeSlotGrid || !prevTimeSlotBtn || !nextTimeSlotBtn) return;
+        
+        const isAtStart = timeSlotGrid.scrollLeft <= 0;
+        const isAtEnd = timeSlotGrid.scrollLeft >= (timeSlotGrid.scrollWidth - timeSlotGrid.clientWidth - 1);
+        
+        prevTimeSlotBtn.disabled = isAtStart;
+        if (isAtStart) {
+            prevTimeSlotBtn.classList.add('disabled');
+        } else {
+            prevTimeSlotBtn.classList.remove('disabled');
+        }
+        
+        nextTimeSlotBtn.disabled = isAtEnd;
+        if (isAtEnd) {
+            nextTimeSlotBtn.classList.add('disabled');
+        } else {
+            nextTimeSlotBtn.classList.remove('disabled');
+        }
     }
     
     // Function to check if a date is in the past (before today)
@@ -1390,6 +1514,9 @@ document.addEventListener('DOMContentLoaded', function () {
             periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
             periodSelector.style.display = 'none';
             timeSlotGrid.innerHTML = '';
+            if (timeSlotsStrip) {
+                timeSlotsStrip.style.display = 'none';
+            }
             selectedSlotInfo.style.display = 'none';
             selectedTimeInput.value = '';
             
@@ -1462,6 +1589,9 @@ document.addEventListener('DOMContentLoaded', function () {
             // Hide period selector and time slot grid initially
             periodSelector.style.display = 'none';
             timeSlotGrid.innerHTML = '';
+            if (timeSlotsStrip) {
+                timeSlotsStrip.style.display = 'none';
+            }
             
             // Reset period selector active states
             periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
@@ -1522,9 +1652,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 const selectedDate = selectedDateInput.value;
                 renderTimeSlots(chosenAgentSlots, dayKey, period, selectedDate);
             } else {
-                timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3">No time slots available</div>';
+                timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+                // Show strip to display message, but hide arrows
+                if (timeSlotsStrip) {
+                    timeSlotsStrip.style.display = '';
+                    if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
+                    if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
+                }
             }
         });
+    }
+
+    // Time slot navigation arrows
+    if (prevTimeSlotBtn && nextTimeSlotBtn) {
+        // Previous time slot button
+        prevTimeSlotBtn.addEventListener('click', function() {
+            if (timeSlotGrid) {
+                timeSlotGrid.scrollBy({
+                    left: -150,
+                    behavior: 'smooth'
+                });
+            }
+        });
+
+        // Next time slot button
+        nextTimeSlotBtn.addEventListener('click', function() {
+            if (timeSlotGrid) {
+                timeSlotGrid.scrollBy({
+                    left: 150,
+                    behavior: 'smooth'
+                });
+            }
+        });
+
+        // Update arrow states on scroll
+        if (timeSlotGrid) {
+            timeSlotGrid.addEventListener('scroll', updateTimeSlotArrows);
+        }
     }
 
     form.addEventListener('submit', async function (e) {
