@@ -2310,7 +2310,28 @@
       .agent-avatars{
         justify-content: flex-start;
       }
+      .custom-service-list .service-row{
+        padding: 7px 13px;
+        display: block;
+      }
+      .custom-service-list .service-meta{
+        text-align: left;
+      }
+      .custom-service-list .service-info{
+        max-width: 100%;
+      }
+      .custom-service-list .service-image img{
+        width: 85px;
+        height: 85px;
+      }
+      .service-meta{
+        margin: 0;
+      }
+      .choose-button{
+        margin-top: 10px;
+      }
     }
+
 
     /* Interactive states */
     .btn-primary:hover,

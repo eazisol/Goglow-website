@@ -229,21 +229,25 @@
             return $service['category']['name'] ?? 'Uncategorized';
         })
         ->sortKeys();
+    
+    // Extract unique categories for filter pills
+    $categories = $groupedServices->keys()->all();
 @endphp
 
                             <div class="service-filter-pills" role="tablist" aria-label="Service categories">
-                                <button type="button" class="filter-pill active" aria-current="true">Category Name</button>
-                                <button type="button" class="filter-pill">Category Name</button>
-                                <button type="button" class="filter-pill">Category Name</button>
-                                <button type="button" class="filter-pill">Category Name</button>
-                                <button type="button" class="filter-pill">Category Name</button>
-                                <button type="button" class="filter-pill">Category Name</button>
+                                <button type="button" class="filter-pill active" data-category="all" aria-current="true">All</button>
+                                @if(count($categories) > 0)
+                                    @foreach($categories as $category)
+                                        <button type="button" class="filter-pill" data-category="{{ $category }}">{{ $category }}</button>
+                                    @endforeach
+                                @endif
                             </div>
 
     <div class="services-row">
         <div class="services-col-lg-8">
                 @if(count($services) > 0)
                 @foreach($groupedServices as $categoryName => $servicesInCategory)
+                    <div class="category-section" data-category="{{ $categoryName ?: 'Uncategorized' }}">
                     <div class="section-title" style="display: flex;margin-bottom: 25px;margin-top: 20px;">
                         {{-- Display category name --}}
                         <h3 class="wow" style="font-size:30px; font-weight:500; letter-spacing: -1px; color:rgba(229, 0, 80, 1)">{{ $categoryName ?: 'Uncategorized' }}</h3>
@@ -294,6 +298,7 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
                     </div>
                 @endforeach 
                 @else
@@ -907,8 +912,8 @@
 }
 
 .custom-service-list .service-image img {
-    width: 80px;
-    height: 80px;
+    width: 67px;
+    height: 67px;
     border-radius: 50%;
     object-fit: cover;
     background: #f5f5dc;
@@ -1290,6 +1295,38 @@ document.addEventListener('DOMContentLoaded', function() {
     //         updateCarousel(nextSlide);
     //     }, 5000);
     // });
+    
+    // Category filtering functionality
+    const filterPills = document.querySelectorAll('.filter-pill');
+    const categorySections = document.querySelectorAll('.category-section');
+    
+    filterPills.forEach(function(pill) {
+        pill.addEventListener('click', function() {
+            const selectedCategory = this.getAttribute('data-category');
+            
+            // Update active state
+            filterPills.forEach(function(p) {
+                p.classList.remove('active');
+                p.removeAttribute('aria-current');
+            });
+            this.classList.add('active');
+            this.setAttribute('aria-current', 'true');
+            
+            // Filter category sections
+            categorySections.forEach(function(section) {
+                if (selectedCategory === 'all') {
+                    section.style.display = '';
+                } else {
+                    const sectionCategory = section.getAttribute('data-category');
+                    if (sectionCategory === selectedCategory) {
+                        section.style.display = '';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
 });
 </script>
 @endsection
