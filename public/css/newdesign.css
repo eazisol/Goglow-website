@@ -2307,6 +2307,9 @@
       .become-glower-step1-heading .heading{
         font-size: 34px;
       }
+      .agent-avatars{
+        justify-content: flex-start;
+      }
     }
 
     /* Interactive states */

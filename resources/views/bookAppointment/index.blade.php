@@ -297,6 +297,22 @@
         .page-book-appointment > .container {
             padding: 0 18px;
         }
+
+        /* Ensure agent schedule container doesn't overflow on mobile */
+        #agentSchedule {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+
+        /* Ensure period selector fits on mobile */
+        .period-selector {
+            width: calc(100% - 36px);
+            max-width: 100%;
+            margin: 12px auto;
+            box-sizing: border-box;
+        }
     }
 
     /* Prevent Bootstrap CSS from affecting header/footer */
@@ -700,13 +716,19 @@
 
     @media (max-width: 768px) {
         .period-selector {
-            flex-direction: column;
-            gap: 12px;
+            flex-direction: row;
+            gap: 0;
+            width: 100%;
+            max-width: 100%;
+            padding: 3px;
+            margin: 12px 0;
         }
 
         .period-btn {
-            width: 100%;
-            max-width: 300px;
+            min-width: 0;
+            flex: 1;
+            padding: 10px 8px;
+            font-size: 12px;
         }
     }
 
@@ -745,6 +767,23 @@
         justify-content: center;
         gap: 12px;
         margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+        .time-slots-strip {
+            gap: 6px;
+            margin-top: 16px;
+            padding: 0;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .time-slot-arrow {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
     }
 
     /* Time slot navigation arrows */
@@ -795,6 +834,18 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
     }
+
+    @media (max-width: 768px) {
+        .time-slots-container {
+            max-width: calc(100% - 68px);
+            width: calc(100% - 68px);
+            padding: 0 4px;
+            gap: 6px;
+            flex: 1 1 auto;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+    }
     
     /* Center message when no slots (only affects non-slot divs) */
     .time-slots-container > div:not(.time-slot) {
@@ -822,6 +873,14 @@
         cursor: pointer;
         transition: all 0.2s ease;
         border: 1px solid #d5bec6;
+    }
+
+    @media (max-width: 768px) {
+        .time-slot {
+            min-width: 90px;
+            padding: 8px 10px;
+            font-size: 11px;
+        }
     }
     
     .time-slot:hover {
