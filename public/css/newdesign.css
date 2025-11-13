@@ -2304,6 +2304,9 @@
       .future-section__btn{
         max-width: 75%;
       }
+      .become-glower-step1-heading .heading{
+        font-size: 34px;
+      }
     }
 
     /* Interactive states */

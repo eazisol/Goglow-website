@@ -9,20 +9,54 @@
         padding: 35px 0 0 !important;
     }
     
+    /* Add spacing between form and footer */
+    .pro-wizard-hero {
+        padding-bottom: 40px !important;
+        margin-bottom: 20px !important;
+        min-height: auto !important;
+    }
+    
     /* Custom CSS to replace Bootstrap classes */
     /* Container */
     .bw-wizard.container {
         max-width: 860px;
-        margin: 40px auto;
+        margin: 40px auto 40px auto !important;
         padding-left: 15px;
         padding-right: 15px;
         box-sizing: border-box;
+    }
+    
+    /* Ensure hero section doesn't stick to footer */
+    .pro-wizard-hero::after {
+        content: '';
+        display: block;
+        height: 40px;
+        width: 100%;
     }
     
     /* Form Group - replaces .form-group */
     .bw-wizard .form-group {
         margin-bottom: 1rem;
         display: block;
+    }
+    /* Two-column layout for form fields */
+    .bw-wizard .form-row-two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    
+    /* Remove bottom margin from form-group inside form-row-two */
+    .bw-wizard .form-row-two .form-group {
+        margin-bottom: 0;
+    }
+    
+    /* Responsive: stack on smaller screens */
+    @media (max-width: 768px) {
+        .bw-wizard .form-row-two {
+            grid-template-columns: 1fr;
+            gap: 0rem;
+        }
     }
     
     /* Margin utilities - replaces Bootstrap mb-3, mb-4, mt-2, mt-3 */
@@ -47,11 +81,11 @@
         font-size: 16px;
         line-height: 1.5;
         color: #212529;
-        background-color: #fff;
-        border: 1px solid #d6d6d6;
-        border-radius: 12px;
+        background-color: #fff4f8;
+        border-radius: 2px;
         box-sizing: border-box;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     
     .bw-wizard .form-control:focus {
@@ -60,9 +94,25 @@
         box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
     }
     
+    /* Placeholder font to match theme */
     .bw-wizard .form-control::placeholder {
         color: #6c757d;
         opacity: 1;
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    /* Browser-specific placeholder styles */
+    .bw-wizard .form-control::-webkit-input-placeholder {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .bw-wizard .form-control::-moz-placeholder {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .bw-wizard .form-control:-ms-input-placeholder {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .bw-wizard .form-control::-ms-input-placeholder {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     
     /* Form Check - replaces .form-check */
@@ -110,13 +160,39 @@
         margin: 0;
         line-height: 1.2;
         cursor: pointer;
-        color: #ffffff;
+        color: rgba(118, 33, 62, 1);
+    }
+    
+    /* Wizard Checkbox container - similar to wizard-radio */
+    .bw-wizard .wizard-checkbox {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .bw-wizard .wizard-checkbox label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        color: rgba(118, 33, 62, 1);
+        font-weight: 500;
+        cursor: pointer;
+        gap: 8px;
+    }
+    
+    .bw-wizard .wizard-checkbox input[type="checkbox"] {
+        margin: 0;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        flex-shrink: 0;
     }
     
     /* Button Default - already exists but ensure it works */
     .bw-wizard .btn-default {
         display: inline-block;
-        padding: 12px 18px;
+        padding: 7px 25px;
         font-size: 16px;
         font-weight: 600;
         line-height: 1.5;
@@ -125,10 +201,10 @@
         vertical-align: middle;
         cursor: pointer;
         user-select: none;
-        border: 1px solid #111;
+        border: none;
         border-radius: 999px;
         background: #fff;
-        color: #000000;
+        color: #e50050;
         transition: all 0.2s ease;
     }
     
@@ -150,8 +226,8 @@
     /* Button Outline - replaces .btn-outline */
     .bw-wizard .btn-default.btn-outline {
         background: #fff;
-        color: #000000;
-        border: 1px solid #111;
+        color: #e50050;
+        border: none;
     }
     
     .bw-wizard .btn-default.btn-outline:hover {
@@ -163,8 +239,8 @@
     /* Submit button specific styling */
     .bw-wizard .wizard-actions button[type="submit"].btn-default {
         background: #fff;
-        color: #000000;
-        border: 1px solid #111;
+        /* color: #000000; */
+        border: none;
     }
     
     .bw-wizard .wizard-actions button[type="submit"].btn-default:hover {
@@ -178,12 +254,83 @@
         display: none !important;
     }
     
+    /* Wizard Options - Matching Image Design */
+    .bw-wizard .wizard-options {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 24px 0;
+    }
+    
+    .bw-wizard .wizard-option {
+        flex: 1 1 240px;
+        min-width: 200px;
+        background: #fff4f8;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+    
+    .bw-wizard .wizard-option:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    
+    .bw-wizard .wizard-option:active {
+        transform: translateY(0);
+    }
+    
+    /* Icon container - circular outline */
+    .bw-wizard .wizard-option-icon {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 50%;
+        border: 2px solid #f3d9e2; /* Light reddish-pink outline */
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .bw-wizard .wizard-option-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+    
+    /* Text styling */
+    .bw-wizard .wizard-option-text {
+        font-size: 15px;
+        font-weight: 500;
+        color: #75213e; /* Dark reddish-pink */
+        flex: 1;
+    }
+    
+    /* Active/Selected state */
+    .bw-wizard .wizard-option.selected {
+        border: 2px solid #e50050;
+        box-shadow: 0 4px 12px rgba(229, 0, 80, 0.2);
+    }
+    
+    .bw-wizard .wizard-option.selected .wizard-option-icon {
+        border-color: #e50050;
+        background: #fff5f8;
+    }
+    
     /* Progress Bar UI - Matching Image Design */
     .bw-wizard .wizard-progressbar {
         margin-bottom: 20px;
         position: relative;
         padding: 5px 0; /* Add padding to accommodate dots */
-        width: 60%;
+        width: 85%;
         margin-left: auto;
         margin-right: auto;
     }
@@ -283,24 +430,24 @@
         text-align: center;
     }
     .beauty-form-center{
-        background:rgba(0, 0, 0, 0.58);
+        background: rgba(255, 244, 248, 0.9);
         border-radius:12px;
         box-shadow:0 8px 24px rgba(0,0,0,.2);
-        backdrop-filter: blur(3px)
+        backdrop-filter: blur(10px)
     }
 </style>
     <!-- Professional Application Wizard (header/footer hidden for this route) -->
-    <div class="hero hero-bg-image bg-section dark-section parallaxie pro-wizard-hero" style="background-image: url('images/image (13).png');">
+    <div class="hero hero-bg-image bg-section dark-section parallaxie pro-wizard-hero" style="background-image: url('images/images/9d496329fa0876e9cdbdb7fd5a40a93b3058a588.jpg');">
     <div class="container">
         @include('figmaDesign.header')
     </div>
-    <div class="container bw-wizard" style="max-width: 860px; margin: 40px auto;">
+    <div class="container bw-wizard" style="max-width: 860px; margin: 40px auto 40px auto;">
         <div class="beauty-form-center">
             <div class="wizard-card">
                     <div class="become-glower-step1-heading">
                         <h2 class="heading">Become A <span class="shining-word">Glower</span></h2>
                     </div>
-            <div class="wizard-progress" id="wizardProgress">Step 1 of 5</div>
+            {{-- <div class="wizard-progress" id="wizardProgress">Step 1 of 5</div> --}}
             <div class="wizard-progressbar" id="wizardProgressbar" aria-hidden="true">
                 <div class="wizard-progressbar-track">
                     <span class="wizard-dot" data-step="1"></span>
@@ -315,8 +462,18 @@
                 <section class="wizard-step active" data-step="1">
                     <h2 class="wizard-title">Do you work independently or in a team?</h2>
                     <div class="wizard-options">
-                        <button type="button" class="wizard-option" data-worktype="Independent" data-next="2">👤 Independent</button>
-                        <button type="button" class="wizard-option" data-worktype="Team" data-next="2">👥 Team</button>
+                        <button type="button" class="wizard-option" data-worktype="Independent" data-next="2">
+                            <span class="wizard-option-icon">
+                                <img src="images/images/flowbite_user-solid.svg" alt="" width="25" height="25">
+                            </span>
+                            <span class="wizard-option-text">Independent</span>
+                        </button>
+                        <button type="button" class="wizard-option" data-worktype="Team" data-next="2">
+                            <span class="wizard-option-icon">
+                                <img src="images/images/fluent_people-team-16-filled.svg" alt="" width="25" height="25">
+                            </span>
+                            <span class="wizard-option-text">Team</span>
+                        </button>
                     </div>
                     <input type="hidden" name="work_type" id="work_type">
                 </section>
@@ -324,18 +481,21 @@
                 <!-- Step 2 – Basic Info -->
                 <section class="wizard-step" data-step="2">
                     <h2 class="wizard-title">Basic Info</h2>
-                    <div class="form-group mb-3">
-                        {{-- <label for="brand_name">Name / Brand Name</label> --}}
-                        <input type="text" name="brand_name" class="form-control" id="brand_name" placeholder="Enter your name or brand name" required>
+                    <div class="form-row-two">
+                        <div class="form-group mb-3">
+                            {{-- <label for="brand_name">Name / Brand Name</label> --}}
+                            <input type="text" name="brand_name" class="form-control" id="brand_name" placeholder="enter your name or brand name" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            {{-- <label for="whatsapp">WhatsApp Number</label> --}}
+                            <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="enter your phone" required>
+                        </div>
                     </div>
-                    <div class="form-group mb-3">
-                        {{-- <label for="whatsapp">WhatsApp Number</label> --}}
-                        <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="Enter phone number (e.g., +33 612345678)" required style="margin-bottom: 5px;">
-                        {{-- <small class="text-muted">Enter with country code (e.g., +1 for US). Special characters are removed automatically.</small> --}}
-                    </div>
-                    <div class="form-group mb-4">
-                        {{-- <label for="email">Email Address</label> --}}
-                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email address" required>
+                    <div class="form-row-two">
+                        <div class="form-group mb-4">
+                            {{-- <label for="email">Email Address</label> --}}
+                            <input type="email" name="email" class="form-control" id="email" placeholder="enter your email" required>
+                        </div>
                     </div>
                     <div class="wizard-actions">
                         <button type="button" class="btn-default btn-outline" data-prev="1">Back</button>
@@ -346,13 +506,15 @@
                 <!-- Step 3 – Social Media (optional fields) -->
                 <section class="wizard-step" data-step="3">
                     <h2 class="wizard-title">Social Media</h2>
-                    <div class="form-group mb-3">
-                        {{-- <label for="instagram">Instagram Handle</label> --}}
-                        <input type="text" name="instagram" class="form-control" id="instagram" placeholder="@Instagram Handle">
-                    </div>
-                    <div class="form-group mb-4">
-                        {{-- <label for="tiktok">TikTok Handle</label> --}}
-                        <input type="text" name="tiktok" class="form-control" id="tiktok" placeholder="@TikTok Handle">
+                    <div class="form-row-two">
+                        <div class="form-group mb-3">
+                            {{-- <label for="instagram">Instagram Handle</label> --}}
+                            <input type="text" name="instagram" class="form-control" id="instagram" placeholder="@Instagram Handle">
+                        </div>
+                        <div class="form-group mb-4">
+                            {{-- <label for="tiktok">TikTok Handle</label> --}}
+                            <input type="text" name="tiktok" class="form-control" id="tiktok" placeholder="@TikTok Handle">
+                        </div>
                     </div>
                     <div class="wizard-actions">
                         <button type="button" class="btn-default btn-outline" data-prev="2">Back</button>
@@ -363,12 +525,12 @@
                 <!-- Step 4 – Current Platform -->
                 <section class="wizard-step" data-step="4">
                     <h2 class="wizard-title">Which platform are you using now?</h2>
-                    <div class="wizard-radio">
-                        <label><input type="radio" name="platform_choice" value="Planity"> Planity</label>
-                        <label><input type="radio" name="platform_choice" value="The treatwell stop"> The treatwell stop</label>
-                        <label><input type="radio" name="platform_choice" value="Fresha"> Fresha</label>
+                    <div class="wizard-checkbox">
+                        <label><input type="checkbox" name="platform_choice" value="Planity"> Planity</label>
+                        <label><input type="checkbox" name="platform_choice" value="The treatwell stop"> The treatwell stop</label>
+                        <label><input type="checkbox" name="platform_choice" value="Fresha"> Fresha</label>
                         <label class="mt-2">
-                            <input type="radio" name="platform_choice" value="Other"> Other
+                            <input type="checkbox" name="platform_choice" value="Other" id="platform_other_checkbox"> Other
                         </label>
                         <input type="text" class="form-control mt-2" id="platform_other_input" placeholder="Please specify" style="display:none;">
                     </div>
@@ -391,7 +553,7 @@
                     </div>
                     <div class="wizard-actions">
                         <button type="button" class="btn-default btn-outline" data-prev="4">Back</button>
-                        <button type="submit" class="btn-default"><span>Submit Application</span></button>
+                        <button type="submit" class="btn-default"><span>Submit</span></button>
                     </div>
                     <div id="msgSubmit" class="h3 hidden"></div>
                 </section>
@@ -464,23 +626,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Platform choice wiring
+    // Platform choice wiring - handle checkboxes
     const platformOtherInput = document.getElementById('platform_other_input');
-    document.querySelectorAll('input[name="platform_choice"]').forEach(r=>{
-        r.addEventListener('change', ()=>{
-            const chosen = r.value;
-            if(chosen==='Other'){
+    const platformOtherCheckbox = document.getElementById('platform_other_checkbox');
+    
+    // Function to update current_platform hidden field with all selected platforms
+    function updatePlatformValue() {
+        const selected = Array.from(document.querySelectorAll('input[name="platform_choice"]:checked'))
+            .map(cb => cb.value === 'Other' && platformOtherInput.value.trim() 
+                ? platformOtherInput.value.trim() 
+                : cb.value);
+        document.getElementById('current_platform').value = selected.join(', ') || '';
+    }
+    
+    // Handle checkbox changes
+    document.querySelectorAll('input[name="platform_choice"]').forEach(cb=>{
+        cb.addEventListener('change', ()=>{
+            if(cb.value === 'Other' && cb.checked){
                 platformOtherInput.style.display='block';
-                document.getElementById('current_platform').value = platformOtherInput.value || 'Other';
-            } else {
+            } else if(cb.value === 'Other' && !cb.checked){
                 platformOtherInput.style.display='none';
-                document.getElementById('current_platform').value = chosen;
+                platformOtherInput.value = '';
             }
+            updatePlatformValue();
         });
     });
+    
+    // Handle "Other" text input
     platformOtherInput && platformOtherInput.addEventListener('input', ()=>{
-        const val = platformOtherInput.value.trim();
-        document.getElementById('current_platform').value = val || 'Other';
+        updatePlatformValue();
     });
 
     // Step validation function
@@ -503,21 +677,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 return true;
                 
             case '4':
-                // Step 4: Platform choice - require platform selection
-                const platform = document.getElementById('current_platform').value.trim();
+                // Step 4: Platform choice - require at least one platform selection
+                const selectedPlatforms = Array.from(document.querySelectorAll('input[name="platform_choice"]:checked'));
                 const platformOtherInput = document.getElementById('platform_other_input');
+                const platformOtherCheckbox = document.getElementById('platform_other_checkbox');
                 
-                if (!platform) {
+                if (selectedPlatforms.length === 0) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Platform Required',
-                        text: 'Please select which platform you are currently using.'
+                        text: 'Please select at least one platform you are currently using.'
                     });
                     return false;
                 }
                 
                 // If "Other" is selected, require text input
-                if (platform === 'Other' && (!platformOtherInput || !platformOtherInput.value.trim())) {
+                if (platformOtherCheckbox && platformOtherCheckbox.checked && (!platformOtherInput || !platformOtherInput.value.trim())) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Platform Details Required',
