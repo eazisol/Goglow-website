@@ -424,6 +424,34 @@
     </div>
 </div>
 <!-- Provider Services Section End -->
+
+<!-- Share Popup Modal -->
+<div id="sharePopup" class="share-popup" style="display: none;">
+    <div class="share-popup-overlay"></div>
+    <div class="share-popup-content">
+        <div class="share-popup-header">
+            <h3>Share this page</h3>
+            <button class="share-popup-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="share-popup-body">
+            <div class="share-url-container">
+                <input type="text" id="shareUrlInput" class="share-url-input" readonly value="{{ url()->current() }}">
+                <button class="share-copy-btn" id="copyUrlBtn">Copy</button>
+                <a href="#" class="share-social-btn share-whatsapp-btn" id="whatsappShareBtn" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="currentColor"/>
+                    </svg>
+                </a>
+                <a href="#" class="share-social-btn share-instagram-btn" id="instagramShareBtn" target="_blank" rel="noopener noreferrer" aria-label="Share on Instagram">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="currentColor"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="share-copy-message" id="copyMessage" style="display: none;">URL copied to clipboard!</div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('styles')
@@ -1102,6 +1130,232 @@
     font-size: 16px;
 }
 
+/* Share Popup Styles */
+.share-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.share-popup-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.share-popup-content {
+    position: relative;
+    background: white;
+    border-radius: 16px;
+    padding: 0;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 10001;
+    animation: sharePopupSlideIn 0.3s ease-out;
+}
+
+@keyframes sharePopupSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.share-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(213, 190, 198, 0.3);
+}
+
+.share-popup-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.share-popup-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.share-popup-close:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #333;
+}
+
+.share-popup-body {
+    padding: 24px;
+}
+
+.share-url-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.share-url-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid rgba(213, 190, 198, 1);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    background: #f9f9f9;
+    outline: none;
+}
+
+.share-url-input:focus {
+    border-color: rgba(229, 0, 80, 1);
+    background: white;
+}
+
+.share-copy-btn {
+    padding: 12px 24px;
+    background: rgba(229, 0, 80, 1);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.share-copy-btn:hover {
+    background: #cc0046;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(229, 0, 80, 0.3);
+}
+
+.share-copy-btn:active {
+    transform: translateY(0);
+}
+
+.share-copy-message {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: #d4edda;
+    color: #155724;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.share-social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    flex-shrink: 0;
+}
+
+.share-social-btn svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.share-whatsapp-btn {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
+}
+
+.share-whatsapp-btn:hover {
+    background: #20BA5A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(37, 211, 102, 0.3);
+}
+
+.share-instagram-btn {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+    border-color: transparent;
+}
+
+.share-instagram-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(188, 24, 136, 0.3);
+    opacity: 0.9;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .share-popup-content {
+        width: 95%;
+        max-width: none;
+    }
+    
+    .share-url-container {
+        gap: 5px;
+        /* flex-direction: column; */
+    }
+    .share-url-input{
+        padding: 12px 2px;
+    }
+    .share-popup-body{
+        padding: 16px;
+    }
+    
+    .share-copy-btn {
+        width: 100%;
+    }
+    
+    .share-social-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .share-social-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
 .open-until-text {
     font-size: 14px;
     font-weight: 500;
@@ -1327,6 +1581,189 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+    
+    // Share popup functionality
+    const sharePopup = document.getElementById('sharePopup');
+    const shareButtons = document.querySelectorAll('.share-btn');
+    const sharePopupClose = document.querySelector('.share-popup-close');
+    const sharePopupOverlay = document.querySelector('.share-popup-overlay');
+    const copyUrlBtn = document.getElementById('copyUrlBtn');
+    const shareUrlInput = document.getElementById('shareUrlInput');
+    const copyMessage = document.getElementById('copyMessage');
+    const whatsappShareBtn = document.getElementById('whatsappShareBtn');
+    const instagramShareBtn = document.getElementById('instagramShareBtn');
+    
+    // Function to show popup
+    function showSharePopup() {
+        if (sharePopup) {
+            sharePopup.style.display = 'flex';
+            // Update URL in case it changed
+            if (shareUrlInput) {
+                shareUrlInput.value = window.location.href;
+            }
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    
+    // Function to hide popup
+    function hideSharePopup() {
+        if (sharePopup) {
+            sharePopup.style.display = 'none';
+            // Restore body scroll
+            document.body.style.overflow = '';
+            // Hide copy message if visible
+            if (copyMessage) {
+                copyMessage.style.display = 'none';
+            }
+        }
+    }
+    
+    // Add click handlers to all share buttons
+    shareButtons.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            showSharePopup();
+        });
+    });
+    
+    // Close button handler
+    if (sharePopupClose) {
+        sharePopupClose.addEventListener('click', hideSharePopup);
+    }
+    
+    // Overlay click handler
+    if (sharePopupOverlay) {
+        sharePopupOverlay.addEventListener('click', hideSharePopup);
+    }
+    
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sharePopup && sharePopup.style.display === 'flex') {
+            hideSharePopup();
+        }
+    });
+    
+    // Copy URL functionality
+    if (copyUrlBtn && shareUrlInput) {
+        copyUrlBtn.addEventListener('click', function() {
+            shareUrlInput.select();
+            shareUrlInput.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                // Use modern Clipboard API if available
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(shareUrlInput.value).then(function() {
+                        showCopyMessage();
+                    }).catch(function() {
+                        // Fallback to execCommand
+                        fallbackCopy();
+                    });
+                } else {
+                    // Fallback for older browsers
+                    fallbackCopy();
+                }
+            } catch (err) {
+                fallbackCopy();
+            }
+        });
+    }
+    
+    function fallbackCopy() {
+        try {
+            document.execCommand('copy');
+            showCopyMessage();
+        } catch (err) {
+            console.error('Failed to copy URL:', err);
+            alert('Failed to copy URL. Please copy it manually.');
+        }
+    }
+    
+    function showCopyMessage() {
+        if (copyMessage) {
+            copyMessage.style.display = 'block';
+            setTimeout(function() {
+                copyMessage.style.display = 'none';
+            }, 2000);
+        }
+    }
+    
+    // WhatsApp share functionality
+    if (whatsappShareBtn && shareUrlInput) {
+        whatsappShareBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = encodeURIComponent(shareUrlInput.value);
+            const text = encodeURIComponent('Check out this page: ');
+            const whatsappUrl = 'https://wa.me/?text=' + text + url;
+            window.open(whatsappUrl, '_blank');
+        });
+    }
+    
+    // Instagram share functionality
+    if (instagramShareBtn && shareUrlInput) {
+        instagramShareBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = shareUrlInput.value;
+            
+            // Check if mobile device
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // Try Instagram app URL scheme first, fallback to web
+                const instagramAppUrl = 'instagram://share?url=' + encodeURIComponent(url);
+                const instagramWebUrl = 'https://www.instagram.com/';
+                
+                // Try to open Instagram app, fallback to web after timeout
+                const startTime = Date.now();
+                window.location.href = instagramAppUrl;
+                
+                setTimeout(function() {
+                    // If still on page after 500ms, Instagram app didn't open, use web
+                    if (Date.now() - startTime < 600) {
+                        // Copy URL to clipboard and show message since Instagram doesn't support direct URL sharing
+                        shareUrlInput.select();
+                        shareUrlInput.setSelectionRange(0, 99999);
+                        
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(url).then(function() {
+                                showCopyMessage();
+                                // Optionally open Instagram web
+                                window.open(instagramWebUrl, '_blank');
+                            });
+                        } else {
+                            try {
+                                document.execCommand('copy');
+                                showCopyMessage();
+                                window.open(instagramWebUrl, '_blank');
+                            } catch (err) {
+                                alert('Please copy the URL manually and share it on Instagram.');
+                            }
+                        }
+                    }
+                }, 500);
+            } else {
+                // Desktop: Copy URL and open Instagram web
+                shareUrlInput.select();
+                shareUrlInput.setSelectionRange(0, 99999);
+                
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).then(function() {
+                        showCopyMessage();
+                        window.open('https://www.instagram.com/', '_blank');
+                    });
+                } else {
+                    try {
+                        document.execCommand('copy');
+                        showCopyMessage();
+                        window.open('https://www.instagram.com/', '_blank');
+                    } catch (err) {
+                        alert('Please copy the URL manually and share it on Instagram.');
+                    }
+                }
+            }
+        });
+    }
 });
 </script>
 @endsection
