@@ -15,11 +15,12 @@
         {{-- new figma design --}}
 
     <!-- Open Graph / Facebook -->
-    <!-- Add this line before the newdesign.css -->
+    {{-- CSS Files - Load in correct order --}}
     <link href="{{ asset('css/fonts.css') }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/newdesign.css') }}" rel="stylesheet" media="screen"> 
+    <link href="{{ asset('css/newdesign.css') }}" rel="stylesheet" media="screen">
     <link href="{{ asset('css/header.css') }}" rel="stylesheet" media="screen">
-        <link href="{{ asset('css/form.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/form.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/auth-modals.css') }}" rel="stylesheet" media="screen">
     <meta property="og:type" content="website">
     <meta property="og:title" content="GoGlow - Book Beauty Services | Discover Local Salons">
     <meta property="og:description" content="Discover and book trusted salon services with GoGlow. Connect with local beauty professionals for hair, nails, skincare, and wellness treatments.">
@@ -28,10 +29,15 @@
 
 
 
-    {{-- ////////////////////////////////////// --}}
-<link rel="preconnect" href="https://fonts.googleapis.com/">
-<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {{-- Preconnect to external domains for faster loading --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://js.stripe.com">
+    
+    {{-- External font-awesome CSS --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 {{-- <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> --}}
     {{-- <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" media="screen"> --}}
@@ -42,16 +48,9 @@
     {{-- <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/mousecursor.css') }}"> --}}
     {{-- <link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="screen"> --}}
-    <link href="{{ asset('css/auth-modals.css') }}" rel="stylesheet" media="screen">
     {{-- <link href="{{ asset('css/style.css') }}" rel="stylesheet" media="screen"> --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">
 
-{{-- datepicker --}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-{{-- Stripe.js --}}
-<script src="https://js.stripe.com/v3/"></script>
 
 <script>
     // Auth status for JS
@@ -101,25 +100,29 @@
 
 
 
-  {{-- new figma design scripts --}}
-  <script src="{{ asset('js/new-design.js') }}"></script>
-  <script src="{{ asset('js/header.js') }}"></script>
+  {{-- JavaScript Files - Load in correct order --}}
+  <script src="{{ asset('js/new-design.js') }}" defer></script>
+  <script src="{{ asset('js/header.js') }}" defer></script>
+  <script src="{{ asset('js/professional-form.js') }}" defer></script>
+  <script src="{{ asset('js/auth-modals.js') }}" defer></script>
+  <script src="{{ asset('js/book-appointment-auth.js') }}" defer></script>
 
+  {{-- External scripts - Moved to bottom and deferred for better performance --}}
+  <!-- Datepicker - Deferred -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
 
-  <!-- Add in the head section -->
-<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  {{-- Stripe.js - Deferred (loaded when needed) --}}
+  <script src="https://js.stripe.com/v3/" defer></script>
 
-<!-- Add before closing body tag -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{{ asset('js/professional-form.js') }}"></script>
+  {{-- SweetAlert2 - Non-critical, loaded at bottom --}}
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet"></noscript>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+
   @yield('scripts')
   
   {{-- @include('partials.auth-modals') --}}
-  
-  <!-- Auth modals script must be loaded after Bootstrap and modals are in the DOM -->
-  <script src="{{ asset('js/auth-modals.js') }}"></script>
-  <!-- Book appointment auth script -->
-  <script src="{{ asset('js/book-appointment-auth.js') }}"></script>
   
 </body>
 </html>

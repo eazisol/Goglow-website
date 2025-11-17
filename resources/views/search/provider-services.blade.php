@@ -119,24 +119,28 @@
                                 <img src="{{ $providerImages[1] }}" 
                                      alt="{{ $provider['name'] ?? 'Provider' }}" 
                                      class="services-img-fluid"
+                                     loading="lazy"
                                      onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                             </div>
                             <div class="provider-image-small">
                                 <img src="{{ $providerImages[2] }}" 
                                      alt="{{ $provider['name'] ?? 'Provider' }}" 
                                      class="services-img-fluid"
+                                     loading="lazy"
                                      onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                             </div>
                             <div class="provider-image-small">
                                 <img src="{{ $providerImages[3] }}" 
                                      alt="{{ $provider['name'] ?? 'Provider' }}" 
                                      class="services-img-fluid"
+                                     loading="lazy"
                                      onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                             </div>
                             <div class="provider-image-small">
                                 <img src="{{ $providerImages[4] }}" 
                                      alt="{{ $provider['name'] ?? 'Provider' }}" 
                                      class="services-img-fluid"
+                                     loading="lazy"
                                      onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                             </div>
                         </div>
@@ -159,6 +163,7 @@
                                         <img src="{{ $image }}" 
                                              alt="{{ $provider['name'] ?? 'Provider' }}" 
                                              class="services-img-fluid"
+                                             loading="lazy"
                                              onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                                     </div>
                                 @endforeach
@@ -267,6 +272,7 @@
                                         <img src="{{ (isset($service['images']) && count($service['images']) > 0) ? $service['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
                                             alt="{{ $service['service_name'] }}" 
                                             class="services-img-fluid services-rounded-circle"
+                                            loading="lazy"
                                             onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                                     </div>
                                     <div class="service-list-details" style="margin-left: 35px;">

@@ -164,6 +164,7 @@
                                         <img src="{{ isset($provider['profileImg']) && $provider['profileImg'] ? $provider['profileImg'] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
                                              alt="{{ $provider['name'] }}" 
                                              class="img-fluid"
+                                             loading="lazy"
                                              onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                                         <div class="image-overlay">
                                             <div class="overlay-left">

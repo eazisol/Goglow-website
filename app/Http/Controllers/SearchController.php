@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class SearchController extends Controller
 {
@@ -13,8 +14,10 @@ class SearchController extends Controller
         $location = $request->input('location');
         $providerId = $request->input('provider_id');
 
-        // Get all providers
-        $providers = Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json();
+        // Get all providers - cached for 15 minutes to improve performance
+        $providers = Cache::remember('all_providers', 900, function () {
+            return Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json() ?? [];
+        });
         
         // If provider_id is provided, show services for that provider
         if ($providerId) {
@@ -23,8 +26,10 @@ class SearchController extends Controller
                 return back()->with('error', 'Provider not found');
             }
 
-            // Get all services
-            $services = Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider')->json();
+            // Get all services - cached for 15 minutes to improve performance
+            $services = Cache::remember('all_services', 900, function () {
+                return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider')->json() ?? [];
+            });
             
             // Filter services for this provider
             $filteredServices = collect($services)
@@ -56,8 +61,10 @@ class SearchController extends Controller
             return $matchesSearch;
         })->values();
 
-        // Get all services to extract categories
-        $allServices = Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider')->json();
+        // Get all services to extract categories - cached for 15 minutes to improve performance
+        $allServices = Cache::remember('all_services', 900, function () {
+            return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider')->json() ?? [];
+        });
         
         // Handle API failure or null response
         if (!is_array($allServices)) {

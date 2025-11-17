@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Kreait\Firebase\Auth as FirebaseAuth;
 
 class BookAppointmentController extends Controller
@@ -59,16 +60,27 @@ class BookAppointmentController extends Controller
 
         if ($serviceId) {
             try {
-                $response = Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServiceById', [
-                    'service_id' => $serviceId,
-                ]);
+                // Cache service by ID for 10 minutes to improve performance
+                $json = Cache::remember("service_by_id_{$serviceId}", 600, function () use ($serviceId) {
+                    $response = Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServiceById', [
+                        'service_id' => $serviceId,
+                    ]);
 
-                if ($response->ok()) {
-                    $json = $response->json();
+                    if ($response->ok()) {
+                        return $response->json();
+                    }
+                    return null;
+                });
+
+                if ($json) {
                     // API returns keys: service, category, agents
                     $selectedService = $json['service'] ?? null;
                     $selectedCategory = $json['category'] ?? null;
                     $agents = $json['agents'] ?? [];
+                } else {
+                    $selectedService = null;
+                    $selectedCategory = null;
+                    $agents = [];
                 }
             } catch (\Throwable $e) {
                 // Silently ignore and render page without prefilled service
