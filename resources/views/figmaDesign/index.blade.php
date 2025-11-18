@@ -58,16 +58,16 @@
                 <img src="images/images/img_3a3ade2330872de.png" alt="App Screenshot" style="width: 100%; height: 100%; object-fit: cover;">
               </div>
               <div class="phone-stats">
-                <div style="position: relative;right: 5px;display: flex;align-items: center;gap: 10px;">
+                <div style="display: flex;align-items: center;gap: 10px;">
                   <img src="images/images/img_ellipse_230.png" alt="User" width="56" height="56" style="border-radius: 28px;">
                   <img src="images/images/c2ef25d185909c7d661066c1e158f63eb89ccbb9.jpg" alt="User" width="56" height="56" style="border-radius: 28px; margin-left: -35px;">
                   <div class="phone-states-plus-icon">
                     <img src="images/images/Group 33489.svg" alt="" width="18" height="18">
                   </div>
+                  <p style="line-height:1;font-size: 17px;font-weight: 700;color: #2c0d18;">
+                    {{ __('app.home.figma_design_2k') }}<br>{{ __('app.home.figma_design_salon_via') }}<span style="text-transform: uppercase;">{{ __('app.home.figma_design_g') }}</span>{{ __('app.home.figma_design_laura') }}
+                  </p>
                 </div>
-                <p style="right: 10px;position: relative;line-height:1;font-size: 17px;font-weight: 700;color: #2c0d18;">
-                  {{ __('app.home.figma_design_2k') }}<br>{{ __('app.home.figma_design_salon_via') }}<span style="text-transform: uppercase;">{{ __('app.home.figma_design_g') }}</span>{{ __('app.home.figma_design_laura') }}
-                </p>
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@
 
            <!-- App Store Buttons -->
            <div class="hero-buttons">
-             <a href="#" class="app-store-btn">
+             <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
                <div class="app-store-content">
                  <div class="apple-logo">
                    <img src="images/images/apple.svg" alt="Apple" width="36">
@@ -709,7 +709,7 @@
         </div>
         <div class="app-section-background-image">
                       <div class="app-buttons">
-             <a href="#" class="app-store-btn">
+             <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
                <div class="app-store-content">
                  <div class="apple-logo">
                    <img src="images/images/apple.svg" alt="Apple" width="36">
