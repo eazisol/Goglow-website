@@ -2,12 +2,12 @@
     <footer class="footer">
       <div style="background: linear-gradient(rgba(255, 244, 248, 0.5), rgba(255, 244, 248, 0.5)), url('images/images/img_0e336be1b021b9ad01fcd3c5382a05e7_1.png'); background-size: cover; background-position: center; position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1;"></div>
       
-      <div class="footer-bg-text">Glow App</div>
+      <div class="footer-bg-text">Glaura App</div>
       
       <div class="container" style="position: relative; z-index: 2;">
         <div class="footer-content">
           <div class="footer-brand">
-            <img src="images/images/img_footer_logo.png" alt="GoGlow Logo" class="footer-logo">
+            <img src="images/images/LOGO-glaura-horizontal-couleur.png" alt="GoGlow Logo" class="footer-logo">
             <p class="footer-description">
               {{ __('app.footer.footer_description') }}
             </p>

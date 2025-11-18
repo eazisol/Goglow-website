@@ -588,7 +588,14 @@ const translations = {
     error_network: @json(__('app.iam_professional.error_network')),
     error_network_connection: @json(__('app.iam_professional.error_network_connection')),
     loading_submitting: @json(__('app.iam_professional.loading_submitting')),
-    button_submit_application: @json(__('app.iam_professional.button_submit_application'))
+    button_submit_application: @json(__('app.iam_professional.button_submit_application')),
+    review_work_type: @json(__('app.iam_professional.review_work_type')),
+    review_brand_name: @json(__('app.iam_professional.review_brand_name')),
+    review_whatsapp: @json(__('app.iam_professional.review_whatsapp')),
+    review_email: @json(__('app.iam_professional.review_email')),
+    review_instagram: @json(__('app.iam_professional.review_instagram')),
+    review_tiktok: @json(__('app.iam_professional.review_tiktok')),
+    review_current_platform: @json(__('app.iam_professional.review_current_platform'))
 };
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -742,10 +749,26 @@ document.addEventListener('DOMContentLoaded', function() {
             tiktok: form.tiktok.value,
             current_platform: document.getElementById('current_platform').value
         };
+        const labelMap = {
+            work_type: translations.review_work_type,
+            brand_name: translations.review_brand_name,
+            whatsapp: translations.review_whatsapp,
+            email: translations.review_email,
+            instagram: translations.review_instagram,
+            tiktok: translations.review_tiktok,
+            current_platform: translations.review_current_platform
+        };
+        const valueMap = {
+            'Independent': @json(__('app.iam_professional.work_type_independent')),
+            'Team': @json(__('app.iam_professional.work_type_team'))
+        };
         let html = '<dl class="review-grid">';
         Object.keys(data).forEach(k=>{
-            const label = k.replace(/_/g,' ');
-            const value = data[k] || '-';
+            const label = labelMap[k] || k.replace(/_/g,' ');
+            let value = data[k] || '-';
+            if (k === 'work_type' && valueMap[value]) {
+                value = valueMap[value];
+            }
             html += `<dt>${label}</dt><dd>${value}</dd>`;
         });
         html += '</dl>';

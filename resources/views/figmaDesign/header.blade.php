@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div class="logo">
               <!-- Logo Section -->
-              <img src="images/images/WhatsApp_Image_2025-09-16_at_23.28.10_3ad6dde7-removebg-preview 1 (1).png" alt="GoGlow Logo" class="logo">
+              <img src="images/images/LOGO-glaura-horizontal-couleur.png" alt="GoGlow Logo" class="logo">
     </div>
 
     <div class="menu">

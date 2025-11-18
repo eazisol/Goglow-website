@@ -346,7 +346,7 @@
               <span class="badge-text">{{ __('app.home.rs_badge_our') }} <span class="badge-highlight">{{ __('app.home.rs_badge_reviews') }}</span></span>
               <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
             </div>
-            <h2 class="reviews-title">{{ __('app.home.rs_title_first') }}<br>G{{ __('app.home.rs_title_second') }} <span style="font-family: Raflesia; font-weight: 500;">{{ __('app.home.rs_title_third') }}</span></h2>
+            <h2 class="reviews-title">{{ __('app.home.rs_title_first') }}<br>{{ __('app.home.rs_title_second') }} <span style="font-family: Raflesia; font-weight: 500;">{{ __('app.home.rs_title_third') }}</span></h2>
           </div>
 
           <div class="reviews-stats">

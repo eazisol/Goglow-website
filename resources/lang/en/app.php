@@ -199,7 +199,7 @@ return [
 
         'become_a_glowee_button' => 'Become a Glower',
         'go_smart' => 'Glow Smarter with ',
-        'go_glow' => 'Glow',
+        'go_glow' => 'Glaura',
         'hero_section_trending_paragraph' => 'from trending beauty content to trusted local pros, your next glow-up is just a scroll away.',
 
         // Benefits section (figmaDesign)
@@ -207,7 +207,7 @@ return [
         'benefits_badge_benefits' => 'Benefits',
         'benefits_title_goglow' => 'Why Glowees',
         'benefits_title_love' => 'Love ',
-        'benefits_title_glowApp' => 'Glow App',
+        'benefits_title_glowApp' => 'Glaura App',
         'benefits_subtitle_text' => 'A revolutionary beauty experience that combines social inspiration smart booking',
         'benefit_1_title' => 'SCROLL LOOKS FROM REAL GLOWEES NEAR YOU',
         'benefit_1_desc' => 'get inspired by real local beauty content',
@@ -273,7 +273,7 @@ return [
         'as_section_our' => 'Our',
         'as_section_app' => 'App',
         'as_title_first' => 'Get Our App',
-        'as_title_second' => 'Glow',
+        'as_title_second' => 'Glaura',
         'as_section_paragraph' => 'Book beauty & wellness services with ease. Explore top-rated salons, schedule appointments, and glow on the go — all from your phone.',
 
         // Become A Glower Page

@@ -20,7 +20,7 @@
                         <h1 class="text-anime-style-2" >Page <span>not found</span></h1>
                         <nav class="wow fadeInUp">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index-2.html">home</a></li>
+                                <li class="breadcrumb-item"><a href="#">home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">404 Error page</li>
                             </ol>
                         </nav>
@@ -54,7 +54,7 @@
                         <!-- Error Page Content Body Start -->
                         <div class="error-page-content-body">
                             <p class="wow fadeInUp" data-wow-delay="0.2s">The page you are looking for does not exist.</p>
-                            <a class="btn-default wow fadeInUp" data-wow-delay="0.4s" href="index-2.html">back to home</a>
+                            <a class="btn-default wow fadeInUp" data-wow-delay="0.4s" href="#">back to home</a>
                         </div>
                         <!-- Error Page Content Body End -->
                     </div>
