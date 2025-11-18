@@ -99,7 +99,7 @@
                 </div>
                </div>
              </a>
-             <a href="{{ url('/beauty-professional') }}" class="btn-secondary">
+             <a href="{{ url('/contact-us') }}" class="btn-secondary">
                {{ __('app.home.become_a_glowee_button') }}
                <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
              </a>

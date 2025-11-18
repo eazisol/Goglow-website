@@ -123,7 +123,6 @@
   grid-template-columns: 1fr 2fr;
   gap: 8px 16px;
   background: #fff4f8;
-  border: 1px solid #e6cfd7;
   border-radius: 12px;
   padding: 16px;
 }

@@ -192,6 +192,10 @@ return [
         'figma_design_hero_450_salons' => 'More Than 200 Salons ',
         'have joined Glow' => 'Have Joined Glow',
         'figma_design_already' => ' Already!!',
+        'figma_design_2k'=> '2k+ users book',
+        'figma_design_salon_via' => 'salon via ',
+        'figma_design_g' => 'G',
+        'figma_design_laura' => 'laura',
         'figma_design_Download' => 'Download on the ',
         'figma_design_git_it_on' => 'Get it on',
         
@@ -397,6 +401,13 @@ return [
         'error_title' => 'Error',
         'error_network' => 'Network error: ',
         'error_network_connection' => 'Could not connect to server',
+        'review_work_type' => 'Work Type',
+        'review_brand_name' => 'Brand Name',
+        'review_whatsapp' => 'WhatsApp',
+        'review_email' => 'Email',
+        'review_instagram' => 'Instagram',
+        'review_tiktok' => 'TikTok',
+        'review_current_platform' => 'Current Platform',
     ],
 
     // Payment Success Page

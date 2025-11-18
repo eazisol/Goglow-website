@@ -19,9 +19,9 @@
               <ul>
                 <li><a href="#">{{ __('app.footer.how_it_works') }}</a></li>
                 <li><a href="#">{{ __('app.footer.help_support') }}</a></li>
-                <li><a href="#">{{ __('app.footer.contact') }}</a></li>
-                <li><a href="#">{{ __('app.footer.privacy_policy') }}</a></li>
-                <li><a href="#">{{ __('app.footer.terms_conditions') }}</a></li>
+                <li><a href="{{ url('/contact-us') }}">{{ __('app.footer.contact') }}</a></li>
+                <li><a href="{{ url('/privacy_policy') }}">{{ __('app.footer.privacy_policy') }}</a></li>
+                <li><a href="{{ url('/terms_condition') }}">{{ __('app.footer.terms_conditions') }}</a></li>
               </ul>
             </div>
 
@@ -40,7 +40,7 @@
 
       <div class="footer-copyright">
         <p class="copyright-text">
-          {{ __('app.footer.copyright') }} <span class="copyright-go"></span><span class="copyright-glow">goglow</span><span class="copyright-com">.fr</span>
+          {{ __('app.footer.copyright') }} <span class="copyright-go"></span><span class="copyright-glow">glaura</span><span class="copyright-com">.ai</span>
         </p>
       </div>
     </footer>

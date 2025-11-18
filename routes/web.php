@@ -49,7 +49,8 @@ Route::post('/create-checkout-session', [\App\Http\Controllers\PaymentController
 Route::get('/payment-success', [\App\Http\Controllers\PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
 
 // i am a beauty professional
-Route::get('/beauty-professional', function () {return view('iamProfessional.index');});
+// Route::get('/beauty-professional', function () {return view('iamProfessional.index');});
+Route::get('/contact-us', function () {return view('iamProfessional.index');});
 
 // term & conditions
 Route::get('/terms_condition', function () {return view('termsConditions.index');})->name('terms_condition');

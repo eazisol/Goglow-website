@@ -61,12 +61,12 @@
                 <div style="position: relative;right: 5px;display: flex;align-items: center;gap: 10px;">
                   <img src="images/images/img_ellipse_230.png" alt="User" width="56" height="56" style="border-radius: 28px;">
                   <img src="images/images/c2ef25d185909c7d661066c1e158f63eb89ccbb9.jpg" alt="User" width="56" height="56" style="border-radius: 28px; margin-left: -35px;">
-                  <div style="background-color: #e50050;border-radius: 28px;padding: 16px;margin-left: -33px;">
+                  <div class="phone-states-plus-icon">
                     <img src="images/images/Group 33489.svg" alt="" width="18" height="18">
                   </div>
                 </div>
                 <p style="right: 10px;position: relative;line-height:1;font-size: 17px;font-weight: 700;color: #2c0d18;">
-                  2k+ users book<br>salon via <span style="text-transform: uppercase;">g</span>low
+                  {{ __('app.home.figma_design_2k') }}<br>{{ __('app.home.figma_design_salon_via') }}<span style="text-transform: uppercase;">{{ __('app.home.figma_design_g') }}</span>{{ __('app.home.figma_design_laura') }}
                 </p>
               </div>
             </div>

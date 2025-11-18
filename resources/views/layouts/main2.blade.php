@@ -2,7 +2,7 @@
 <html>
 <head>
     
-  <title>GoGlow - @yield('title')</title>
+  <title>Glaura - @yield('title')</title>
   @yield('styles')
   <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
