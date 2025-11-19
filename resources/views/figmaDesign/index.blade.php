@@ -136,7 +136,10 @@
                           </div>
                           <div class="search-content">
                               <h3 class="search-title">{{ __('app.home.search_input_text') }}</h3>
-                              <input type="search" class="searchInput" id="searchInput" name="search" placeholder="{{ __('app.home.search_service_placeholder') }}" required>
+                              <div class="search-suggestions-container">
+                                  <input type="search" class="searchInput" id="searchInput" name="search" placeholder="{{ __('app.home.search_service_placeholder') }}" required>
+                                  <div class="search-suggestions-dropdown" id="searchSuggestionsDropdown"></div>
+                              </div>
                           </div>
                       </div>
 
@@ -811,6 +814,117 @@ function updateDots() {
 //   }
 //   scrollBenefitsCarousel(1);
 // }, 5000); // Auto-scroll every 5 seconds
+
+    // Search autocomplete functionality
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsDropdown = document.getElementById('searchSuggestionsDropdown');
+    let debounceTimer = null;
+    let currentSuggestions = [];
+
+    if (searchInput && suggestionsDropdown) {
+      // Debounce function to limit API calls
+      function debounce(func, wait) {
+        return function(...args) {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => func.apply(this, args), wait);
+        };
+      }
+
+      // Fetch suggestions from API
+      async function fetchSuggestions(query) {
+        if (!query || query.trim().length === 0) {
+          hideSuggestions();
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `https://us-central1-beauty-984c8.cloudfunctions.net/searchServiceSuggestions?query=${encodeURIComponent(query)}`
+          );
+          
+          if (response.ok) {
+            const suggestions = await response.json();
+            if (Array.isArray(suggestions) && suggestions.length > 0) {
+              displaySuggestions(suggestions);
+            } else {
+              hideSuggestions();
+            }
+          } else {
+            hideSuggestions();
+          }
+        } catch (error) {
+          // Silently handle errors - don't show dropdown on error
+          hideSuggestions();
+        }
+      }
+
+      // Display suggestions in dropdown
+      function displaySuggestions(suggestions) {
+        currentSuggestions = suggestions;
+        suggestionsDropdown.innerHTML = '';
+        
+        suggestions.forEach((suggestion) => {
+          const item = document.createElement('div');
+          item.className = 'search-suggestion-item';
+          item.textContent = suggestion.name;
+          item.addEventListener('click', () => {
+            searchInput.value = suggestion.name;
+            hideSuggestions();
+            searchInput.focus();
+          });
+          suggestionsDropdown.appendChild(item);
+        });
+
+        suggestionsDropdown.classList.add('show');
+      }
+
+      // Hide suggestions dropdown
+      function hideSuggestions() {
+        suggestionsDropdown.classList.remove('show');
+        suggestionsDropdown.innerHTML = '';
+        currentSuggestions = [];
+      }
+
+      // Debounced search function
+      const debouncedSearch = debounce((query) => {
+        fetchSuggestions(query);
+      }, 300);
+
+      // Listen for input events
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        debouncedSearch(query);
+      });
+
+      // Hide suggestions when input loses focus (with small delay to allow click on suggestion)
+      searchInput.addEventListener('blur', () => {
+        setTimeout(() => {
+          hideSuggestions();
+        }, 200);
+      });
+
+      // Show suggestions when input gains focus (if there's a value)
+      searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim().length > 0 && currentSuggestions.length > 0) {
+          displaySuggestions(currentSuggestions);
+        }
+      });
+
+      // Hide suggestions on form submit
+      const searchForm = searchInput.closest('form');
+      if (searchForm) {
+        searchForm.addEventListener('submit', () => {
+          hideSuggestions();
+        });
+      }
+
+      // Hide suggestions when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+          hideSuggestions();
+        }
+      });
+    }
   });
 </script>
 
