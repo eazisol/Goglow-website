@@ -843,9 +843,11 @@ function updateDots() {
           );
           
           if (response.ok) {
-            const suggestions = await response.json();
-            if (Array.isArray(suggestions) && suggestions.length > 0) {
-              displaySuggestions(suggestions);
+            const data = await response.json();
+            // Extract providers array from the response
+            const providers = data.providers || [];
+            if (Array.isArray(providers) && providers.length > 0) {
+              displaySuggestions(providers);
             } else {
               hideSuggestions();
             }
