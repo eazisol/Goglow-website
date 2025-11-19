@@ -515,6 +515,21 @@
       gap: 10px;
       transition: all 0.3s ease;
     }
+    .btn-secondary-hero-section {
+      background-color: #fff4f8;
+      color: #e50050;
+      padding: 18px 34px 18px 34px;
+      border-radius: 34px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
 
     .btn-gradient {
       background: linear-gradient(270deg, #ff8c00 0%, #e50050 100%);
@@ -530,7 +545,20 @@
       gap: 10px;
       transition: all 0.3s ease;
     }
-
+    .btn-gradient-hero-section {
+      background: linear-gradient(270deg, #ff8c00 0%, #e50050 100%);
+      color: #fff4f8;
+      padding: 18px 34px;
+      border-radius: 28px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s ease;
+    }
     /* Typography */
     .hero-title {
       font-size: 48px;
@@ -740,7 +768,7 @@
       font-size: 22px;
       font-weight: 400;
       color: #fff4f8;
-      max-width: 600px;
+      /* max-width: 640px; */
       line-height: 25px;
     }
 
@@ -1569,11 +1597,11 @@
     }
     /* become a glower future section */
             /* Added future-section namespace prefix to all classes to prevent CSS conflicts */
-        .future-section * {
+        /* .future-section * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
+        } */
 
         .future-section {
             background: linear-gradient(135deg, #fff5f7 0%, #ffe8ec 100%);
@@ -1837,6 +1865,17 @@
           font-family: Raflesia;
           font-weight: 500;
         }
+        .how-works-salon-page-button{
+          margin-top: 110px;
+          display: flex;
+          justify-content: center;
+          gap: 16px;
+        }
+        .future-button-section-app{
+          display: flex;
+          justify-content: center;
+          gap: 16px;
+        }
 
 
 
@@ -1993,16 +2032,11 @@
       .footer-description {
         font-size: 14px;
       }
-      .btn-secondary{
-            padding: 12px 20px;
-            font-size: 14px;
-            gap: 0px;
-      }
       .hero-buttons{
         bottom: 100px!important;
         flex-direction: row!important;
         flex-wrap: nowrap!important;
-        gap: 12px;
+        gap: 12px!important;
         justify-content: center;
         
       }
@@ -2018,6 +2052,17 @@
       .btn-secondary{
         min-width: 190px;
         padding: 10px 16px;
+        font-size: 14px;
+        gap: 0px;
+      }
+      .btn-secondary-hero-section{
+        min-width: 190px;
+        padding: 10px 16px;
+        font-size: 14px;
+        gap: 0px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
       }
 
       .footer-section h3 {
@@ -2085,12 +2130,14 @@
         min-width: 319px;
       }
       .benefits-title{
+        line-height: 1;
         font-size: 45px;
         margin-bottom: -28px;
       }
       .benefits-title2{
         font-size: 45px;
         margin-bottom: -7px;
+        margin-top: 18px;
       }
       .benefits-subtitle{
         font-size: 17px;
@@ -2159,6 +2206,11 @@
       .btn-gradient{
         padding: 13px 13px;
         font-size: 15px;
+      }
+      .btn-gradient-hero-section{
+        min-width: 52%;
+        padding: 13px 13px;
+        font-size: 12px;
       }
       .btn-primary img{
         display: none;
@@ -2338,6 +2390,9 @@
       .choose-button{
         margin-top: 10px;
       }
+      .how-works-salon-page-button{
+        margin-top: 300px;
+      }
 
     }
 
@@ -2345,6 +2400,7 @@
     /* Interactive states */
     .btn-primary:hover,
     .btn-secondary:hover,
+    .btn-gradient-hero-section:hover,
     .btn-gradient:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -2638,9 +2694,6 @@
   .benefits-title,
   .benefits-title2{
     font-size: 60px;
-  }
-  .benefits-subtitle{
-    max-width: 520px;
   }
   .steps-container{
     gap: 30px;

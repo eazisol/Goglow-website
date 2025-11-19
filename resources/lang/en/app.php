@@ -252,6 +252,7 @@ return [
         'rs_title_first' => 'What Our',
         'rs_title_second' => 'Glowees',
         'rs_title_third' => 'Say',
+        'rs_reviews' => 'reviews',
 
         // Pricing Section (figmaDesign)
         'pricing_title' => 'Pricing',
@@ -325,7 +326,7 @@ return [
         'provider_close' => 'Closed',
         'next_availability' => 'Next Availability',
         'morning' => 'Morning',
-        'evening' => 'Evening',
+        'evening' => 'Afternoon',
     ],
 
     // service page

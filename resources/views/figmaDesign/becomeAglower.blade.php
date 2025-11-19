@@ -88,7 +88,7 @@
 
            <!-- App Store Buttons -->
            <div class="bag-hero-buttons">
-             <a href="#" class="app-store-btn">
+             <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
                <div class="app-store-content">
                  <div class="apple-logo">
                    <img src="images/images/apple.svg" alt="Apple" width="36">
@@ -244,7 +244,7 @@
                     </div>
                 </div>
             </div>
-            <!-- CTA Buttons -->
+            {{-- <!-- CTA Buttons -->
             <div class="future-section__cta-section">
                 <a href="#" class="future-section__btn future-section__btn--download">
                   {{ __('app.home.hiw_download_app') }}
@@ -254,7 +254,25 @@
                   {{ __('app.home.hiw_book_a_service') }}
                   <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
                 </a>
-            </div>
+            </div> --}}
+                       <!-- App Store Buttons -->
+           <div class="future-button-section-app">
+             <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
+               <div class="app-store-content">
+                 <div class="apple-logo">
+                   <img src="images/images/apple.svg" alt="Apple" width="36">
+                 </div>
+                <div class="app-store-text">
+                  <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
+                  <span class="store-text">{{ __('app.home.bag_app_store') }}</span>
+                </div>
+               </div>
+             </a>
+             <a href="{{ url('/contact-us') }}" class="btn-secondary" style="background-color:white;">
+               {{ __('app.home.become_a_glowee_button') }}
+               <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
+             </a>
+           </div>
         </div>
     </div>   
     {{-- Welcome to Future Beauty Booking End --}}
@@ -360,7 +378,7 @@
         <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 48px;">
           <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
             <span class="badge-text">{{ __('app.home.hiw_badge_first') }} <span class="badge-highlight">{{ __('app.home.hiw_badge_second') }}</span></span>
-            <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
+            {{-- <img src="images/images/howitwork_star.svg" alt="" width="24" height="24"> --}}
           </div>
           
           <h2 class="section-title how-it-work-heading" style="margin-top: 10px; line-height:75px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
@@ -413,7 +431,7 @@
           </div>
         </div>
 
-        <div class="how-it-work-buttons" style="display: flex; justify-content: center; gap: 14px; margin-top: 110px; flex-wrap: wrap;">
+        {{-- <div class="how-it-work-buttons" style="display: flex; justify-content: center; gap: 14px; margin-top: 110px; flex-wrap: wrap;">
           <a href="#" class="btn-gradient">
             {{ __('app.home.hiw_download_app') }}
             <img src="images/images/downlaod.svg" alt="" width="16" height="16">
@@ -422,7 +440,24 @@
             {{ __('app.home.hiw_book_a_service') }}
             <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
           </a>
-        </div>
+        </div> --}}
+              <div class="how-works-salon-page-button">
+                <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
+                  <div class="app-store-content">
+                    <div class="apple-logo">
+                      <img src="images/images/apple.svg" alt="Apple" width="36">
+                    </div>
+                    <div class="app-store-text">
+                      <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
+                      <span class="store-text">{{ __('app.home.bag_app_store') }}</span>
+                    </div>
+                  </div>
+                </a>
+                <a href="{{ url('/contact-us') }}" class="btn-secondary" style="background-color:white;">
+                  {{ __('app.home.become_a_glowee_button') }}
+                  <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
+                </a>
+           </div>
       </div>
     </section>
 

@@ -278,7 +278,8 @@
                                     <div class="service-list-details" style="margin-left: 35px;">
                                         <div class="service-name services-fw-semibold">
                                         {{-- {{ $service['service_name'] }} --}}
-                                        {{ \Illuminate\Support\Str::limit($service['service_name'], 50, '...') }}
+                                       {{-- {{ \Illuminate\Support\Str::limit($service['service_name'], 50, '...') }} --}}
+                                        <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . ($provider['id'] ?? '')) }}">{{ \Illuminate\Support\Str::limit($service['service_name'], 50, '...') }}</a>
                                     </div>
                                     @if(!empty($service['service_details']))
                                         <div class="service-desc services-text-muted">
@@ -341,7 +342,7 @@
                 @endif
                 </div>
             @endif
-            <a href="#" class="to-book-btn">{{ __('app.service.to_book') }}</a>
+            {{-- <a href="#" class="to-book-btn">{{ __('app.service.to_book') }}</a> --}}
         </div>
         
         <!-- Separator -->
@@ -976,7 +977,8 @@ $dayNames = [
     margin-left: 0 !important;
 }
 
-.custom-service-list .service-name {
+.custom-service-list .service-name a{
+    text-decoration:none;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 6px;
@@ -1009,7 +1011,7 @@ $dayNames = [
 }
 
 .custom-service-list .choose-btn {
-    background: linear-gradient(90deg, #e50050 0%, #ff6b35 100%);
+    background-color: #E50050;
     color: white;
     border: none;
     border-radius: 40px;
@@ -1024,7 +1026,7 @@ $dayNames = [
 }
 
 .custom-service-list .choose-btn:hover {
-    background: linear-gradient(90deg, #cc0046 0%, #e55a2b 100%);
+    background: #c0104e;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(229, 0, 80, 0.3);
 }

@@ -75,18 +75,11 @@
 
            <!-- App Store Buttons -->
            <div class="hero-buttons">
-             <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
-               <div class="app-store-content">
-                 <div class="apple-logo">
-                   <img src="images/images/apple.svg" alt="Apple" width="36">
-                 </div>
-                 <div class="app-store-text">
-                   <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
-                   <span class="store-text">App Store</span>
-                 </div>
-               </div>
-             </a>
-             <a href="#" class="btn-secondary">
+              <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="btn-gradient-hero-section">
+                {{ __('app.home.hiw_download_app') }}
+                <img src="images/images/downlaod.svg" alt="" width="16" height="16">
+              </a>
+             <a href="{{ url('/become-glower') }}" class="btn-secondary-hero-section">
                {{ __('app.home.become_a_glowee_button') }}
                <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
              </a>
@@ -198,7 +191,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_1_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_1_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -207,7 +200,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_2_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_2_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -216,7 +209,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_3_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_3_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -225,7 +218,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_4_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_4_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -234,7 +227,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_5_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_5_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -243,7 +236,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_6_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_6_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
             </div>
           </div>
@@ -271,7 +264,7 @@
         <div class="flex-col" style="align-items: center; text-align: center; margin-bottom: 48px;">
           <div class="badge" style="background-color: rgba(233, 93, 142, 0.2);">
             <span class="badge-text">{{ __('app.home.hiw_badge_first') }} <span class="badge-highlight">{{ __('app.home.hiw_badge_second') }}</span></span>
-            <img src="images/images/howitwork_star.svg" alt="" width="24" height="24">
+            {{-- <img src="images/images/howitwork_star.svg" alt="" width="24" height="24"> --}}
           </div>
           
           <h2 class="section-title how-it-work-heading" style="margin-top: 10px; line-height:75px; background: linear-gradient(93deg, #2c0d18 0%, #e50050 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
@@ -325,11 +318,11 @@
         </div>
 
         <div class="how-it-work-buttons" style="display: flex; justify-content: center; gap: 14px; margin-top: 110px; flex-wrap: wrap;">
-          <a href="#" class="btn-gradient">
+          <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="btn-gradient">
             {{ __('app.home.hiw_download_app') }}
             <img src="images/images/downlaod.svg" alt="" width="16" height="16">
           </a>
-          <a href="#" class="btn-primary">
+          <a href="{{ url('/search') }}" class="btn-primary">
             {{ __('app.home.hiw_book_a_service') }}
             <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
           </a>
@@ -366,7 +359,7 @@
                 <img src="images/images/star_review.svg" alt="Star" class="star">
                 <img src="images/images/star_review.svg" alt="Star" class="star">
               </div>
-              <p class="rating-text">4.9 (29k reviews)</p>
+              <p class="rating-text">4.9 (29k {{ __('app.home.rs_reviews') }})</p>
             </div>
           </div>
         </div>

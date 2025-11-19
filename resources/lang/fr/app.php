@@ -6,13 +6,13 @@ return [
         'home' => 'Accueil',
         'about_us' => 'À propos',
         'services' => 'Services',
-        'book_service' => 'Réserver un rendez-vous',
+        'book_service' => 'Prendre un RDV',
         'contact_us' => 'Nous contacter',
         'reviews' => 'Avis',
         'login' => 'Connexion',
         'logout' => 'Déconnexion',
         'register' => 'S\'inscrire',
-        'hero_section_button' => "DEVENEZ UN ÉCLATANT",
+        'hero_section_button' => "JE SUIS PRO",
     ],
 
     // Authentication
@@ -124,7 +124,7 @@ return [
     'home' => [
         'hero_title' => 'Découvrez Réservez Brillez',
         'hero_subtitle' => 'Du contenu beauté tendance aux professionnels locaux de confiance — votre prochain glow-up est à un scroll de distance',
-        'search_service_placeholder' => 'Recherchez par nom de service ou de prestataire',
+        'search_service_placeholder' => 'Recherchez votre prestation',
         'search_input_text' => 'Que cherchez-vous ?',
         'search_or_text' => 'où ?',
         'search_location_placeholder' => 'Renseignez le lieu',
@@ -193,7 +193,7 @@ return [
         'have joined Glow' => 'ont déjà rejoint Glaura !',
         'figma_design_already' => '',
         'figma_design_2k'=> 'Des milliers de',
-        'figma_design_salon_via' => 'personnes glow avec',
+        'figma_design_salon_via' => 'personnes glow avec ',
         'figma_design_g' => 'G',
         'figma_design_laura' => 'laura',
         'figma_design_Download' => 'Télécharger sur le ',
@@ -202,9 +202,9 @@ return [
         
 
         ////figma design end//////
-        'become_a_glowee_button' => 'Inscrivez vous',
-        'go_smart' => 'Rayonne plus intelligemment avec ',
-        'go_glow' => 'Glaura.',
+        'become_a_glowee_button' => 'JE SUIS PRO',
+        'go_smart' => 'Rayonnez simplement avec ',
+        'go_glow' => 'Glaura',
         'hero_section_trending_paragraph' => 'Des vidéos beauté tendances aux pros de confiance près de chez toi, ton prochain glow-up n\'est qu\'à 3 clicks.',
         
         // Benefits section (figmaDesign)
@@ -213,8 +213,8 @@ return [
         'benefits_title' => 'Pourquoi les Glowees aiment lapplication Glow',
         'benefits_title_goglow' => 'Glaura révolutionne ',
         'benefits_title_love' => 'la ',
-        'benefits_title_glowApp' => 'beauté!',
-        'benefits_subtitle_text' => 'La beauté réinventée : inspiration vidéo et réservation en un clic.',
+        'benefits_title_glowApp' => 'beauté !',
+        'benefits_subtitle_text' => 'La beauté réinventée : Combinez l’inspiration vidéo et la réservation en un clic',
         'benefit_1_title' => 'Découvre le travail des pros de la beauté en vidéo',
         'benefit_1_desc' => 'Laissez vous inspirer par les vidéos avant/après des pros.',
         'benefit_learn_more' => 'EN SAVOIR PLUS',
@@ -231,17 +231,17 @@ return [
         
         // How It Works (figmaDesign)
         'hiw_badge_first' => 'Comment ça',
-        'hiw_badge_second' => 'marche',
+        'hiw_badge_second' => 'marche ?',
         'hiw_heading_first' => 'Votre Glow ',
         'hiw_heading_second' => 'plus ',
         'hiw_heading_third' => 'simplement',
-        'hiw_paragraph' => 'Trouvez les salons les mieux notés et réserve facilement : Glaura vous fait rayonner, tout simplement.',
+        'hiw_paragraph' => 'Trouvez les salons les mieux notés et réservez facilement : Glaura vous fait rayonner, tout simplement.',
 
         'hiw_step1_title' => 'Explorez les looks en vidéos',
         'hiw_step1_desc' => 'Découvrez des prestataires de confiance  — coiffure, manucure, cils, soins de la peau et bien plus encore.',
         'hiw_step2_title' => 'Réservez directement sur la vidéo',
         'hiw_step2_desc' => 'Choisissez votre créneau, puis bookez en un clic',
-        'hiw_step3_title' => 'Briller',
+        'hiw_step3_title' => 'Brillez tout simplement',
         'hiw_step3_desc' => 'Profitez de votre moment de beauté',
         'hiw_step4_title' => 'Partagez votre glow et  gagnez des récompenses.',
         'hiw_step4_desc' => 'Utilisez vos points de fidélité pour vous offrir des prestations beauté.',
@@ -267,6 +267,7 @@ return [
         'rs_title_first' => 'Elles En Parlent ',
         'rs_title_second' => 'Le ',
         'rs_title_third' => 'Mieux',
+        'rs_reviews' => 'avis',
 
         // Partners Section
         'partners_badge_our' => 'Nos',
@@ -325,9 +326,9 @@ return [
         'searchbar_section_paragraph' => 'Découvrez les salons les mieux notés près de chez vous. Comparez les services, lisez les avis et inversez en quelques secondes',
         'provider_open' => 'Ouvrir',
         'provider_close' => 'Fermée',
-        'next_availability' => 'Disponibilité suivante',
+        'next_availability' => 'Prochaines disponibilités',
         'morning' => 'Matin',
-        'evening' => 'Soirée',
+        'evening' => 'Après-midi',
     ],
         // service page
     'service' => [
@@ -354,7 +355,7 @@ return [
         'payment_options' => 'Options de paiement',
         'pay_15%_deposit_now' => 'Payer un acompte de 15 % maintenant',
         'pay_full_amount_now' => 'Payer le montant total maintenant',
-        'book_an_appointment' => 'Prendre rendez-vous',
+        'book_an_appointment' => 'confirmer le rendez-vous',
         'the_morning' => 'La Matinée',
         'in_the_afternoon' => 'L’après-midi',
         'in_the_evening' => 'La Soirée',
