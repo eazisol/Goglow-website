@@ -22,10 +22,10 @@
     {{-- search bar start (inner search preserved) --}}
 
         <div class="container">
-            <section class="search-outer-layout">
-                <div class="search-outer-box">
-                    <h3 class="search-outer-title">{{ __('app.provider.searchbar_section_heading')}}</h3>
-                    <p class="search-outer-subtitle">{{ __('app.provider.searchbar_section_paragraph')}}</p>
+            {{-- <section class="search-outer-layout">
+                <div class="search-outer-box"> --}}
+                    {{-- <h3 class="search-outer-title">{{ __('app.provider.searchbar_section_heading')}}</h3>
+                    <p class="search-outer-subtitle">{{ __('app.provider.searchbar_section_paragraph')}}</p> --}}
 
                     {{-- <div class="search-bar provider-search-bar">
                         <form action="{{ route('search') }}" method="GET" class="search-form">
@@ -72,7 +72,7 @@
                             </div>
                         </form>
                     </div> --}}
-                            <div class="search-section" style="margin: 30px 0!important;padding: 15px!important;">
+                            <div class="search-section" style="margin: 30px 0!important;padding: 15px!important;box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);">
                                 <form action="{{ route('search') }}" method="GET">
                                     <div class="search-row">
                                         <div class="search-item">
@@ -106,8 +106,8 @@
                                     </div>
                                 </form>
                             </div>
-                </div>
-            </section>
+                {{-- </div>
+            </section> --}}
         </div>
 
     {{-- search bar end --}}
