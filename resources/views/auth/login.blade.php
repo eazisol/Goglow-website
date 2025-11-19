@@ -1,6 +1,6 @@
 @extends('layouts.main')
 {{-- Title --}}
-@section('title', 'Login')
+@section('title', __('app.auth.login'))
 
 {{-- Style Files --}}
 @section('styles')
@@ -32,7 +32,7 @@
                     <!-- Login image Start -->
                     <div class="appointment-image">
                         <figure class="image-anime reveal">
-                            <img src="{{ asset('images/hayley-kim-studios-sRSRuxkOuzI-unsplash.jpg') }}" alt="Login">
+                            <img src="{{ asset('images/hayley-kim-studios-sRSRuxkOuzI-unsplash.jpg') }}" alt="{{ __('app.auth.login') }}">
                         </figure>
                     </div>
                     <!-- Login image End -->
@@ -42,8 +42,8 @@
                     <!-- Login Form Start -->
                     <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
                         <div class="section-title mb-4">
-                            <h3 class="wow fadeInUp">welcome back</h3>
-                            <h2 class="text-anime-style-2" >Sign in to <span>Glaura</span></h2>
+                            <h3 class="wow fadeInUp">{{ __('app.auth.welcome_back') }}</h3>
+                            <h2 class="text-anime-style-2" >{{ __('app.auth.sign_in_to') }} <span>Glaura</span></h2>
                         </div>
                         
                         @if(session('success'))
@@ -64,19 +64,19 @@
                             <input type="hidden" name="redirect" value="{{ request('redirect') }}">
                             <div class="row">
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="Email Address" value="{{ old('email') }}" required>
+                                    <input type="email" name="email" class="form-control" id="email" placeholder="{{ __('app.auth.email') }}" value="{{ old('email') }}" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+                                    <input type="password" name="password" class="form-control" id="password" placeholder="{{ __('app.auth.password') }}" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn-default"><span>Sign in</span></button>
+                                    <button type="submit" class="btn-default"><span>{{ __('app.auth.sign_in') }}</span></button>
                                     <div id="msgSubmit" class="h3 hidden"></div>
-                                    <p class="mt-3 mb-0">No account? <a href="{{ route('signup') }}">Create one</a></p>
+                                    <p class="mt-3 mb-0">{{ __('app.auth.dont_have_account') }} <a href="{{ route('signup') }}">{{ __('app.auth.create_one') }}</a></p>
                                 </div>
                             </div>
                         </form>

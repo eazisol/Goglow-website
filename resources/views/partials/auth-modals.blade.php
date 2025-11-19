@@ -9,8 +9,8 @@
                 <!-- Login Form Start -->
                 <div class="appointment-form">
                     <div class="section-title mb-4">
-                        <h3 class="wow fadeInUp">welcome</h3>
-                        <h2 class="text-anime-style-2" >Sign in</h2>
+                        <h3 class="wow fadeInUp">{{ __('app.auth.welcome_simple') }}</h3>
+                        <h2 class="text-anime-style-2" >{{ __('app.auth.sign_in_header') }}</h2>
                     </div>
                     
                     <div class="alert alert-danger d-none" id="login-error"></div>
@@ -21,24 +21,24 @@
                         <input type="hidden" name="redirect" id="login-redirect" value="">
                         <div class="row">
                             <div class="form-group col-md-12 mb-4">
-                                <input type="email" name="email" class="form-control-login" id="login-email" placeholder="Email Address" required>
+                                <input type="email" name="email" class="form-control-login" id="login-email" placeholder="{{ __('app.auth.email') }}" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                             
                             <div class="form-group col-md-12 mb-4">
-                                <input type="password" name="password" class="form-control-login" id="login-password" placeholder="Password" required>
+                                <input type="password" name="password" class="form-control-login" id="login-password" placeholder="{{ __('app.auth.password') }}" required>
                                 <div class="help-block with-errors"></div>
                             </div>
 
                             <div class="col-md-12">
                                 <button type="submit" class="btn-default" id="login-submit-btn">
-                                    <span id="login-btn-text">Sign in</span>
+                                    <span id="login-btn-text">{{ __('app.auth.sign_in') }}</span>
                                     <span id="login-btn-loader" class="login-loader" style="display: none;">
-                                        <i class="fa fa-spinner fa-spin"></i> Processing...
+                                        <i class="fa fa-spinner fa-spin"></i> {{ __('app.auth.processing') }}
                                     </span>
                                 </button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
-                                <p class="mt-3 mb-0" style="text-align: center;">No account? <a href="#" id="show-signup-modal">Create one</a></p>
+                                <p class="mt-3 mb-0" style="text-align: center;">{{ __('app.auth.dont_have_account') }} <a href="#" id="show-signup-modal">{{ __('app.auth.create_one') }}</a></p>
                             </div>
                         </div>
                     </form>
@@ -60,9 +60,9 @@
                 <!-- Signup Form Start -->
                 <div class="appointment-form">
                     <div class="section-title mb-4">
-                        <h3 class="wow fadeInUp">Create Account</h3>
-                        <h2 class="text-anime-style-2" >Join</h2>
-                        <p class="small-text">Sign up to book beauty services, track appointments, and enjoy member perks.</p>
+                        <h3 class="wow fadeInUp">{{ __('app.auth.create_account') }}</h3>
+                        <h2 class="text-anime-style-2" >{{ __('app.auth.join') }}</h2>
+                        <p class="small-text">{{ __('app.auth.signup_description') }}</p>
                     </div>
                     
                     <div class="alert alert-danger d-none" id="signup-error"></div>
@@ -72,28 +72,28 @@
                         @csrf
                         <div class="row">
                             <div class="form-group col-md-6 mb-4">
-                                <input type="text" name="name" class="form-control-login" id="signup-name" placeholder="Full Name" required>
+                                <input type="text" name="name" class="form-control-login" id="signup-name" placeholder="{{ __('app.auth.full_name') }}" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                             
                             <div class="form-group col-md-6 mb-4">
-                                <input type="email" name="email" class="form-control-login" id="signup-email" placeholder="Email Address" required>
+                                <input type="email" name="email" class="form-control-login" id="signup-email" placeholder="{{ __('app.auth.email') }}" required>
                                 <div class="help-block with-errors"></div>
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <input type="text" name="phone" class="form-control-login" id="signup-phone" placeholder="Phone Number (with country code)" required>
+                                <input type="text" name="phone" class="form-control-login" id="signup-phone" placeholder="{{ __('app.auth.phone_with_country_code') }}" required>
                                 <div class="help-block with-errors"></div>
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <input type="text" name="location" class="form-control-login" id="signup-location" placeholder="Location (City, Country)" required>
+                                <input type="text" name="location" class="form-control-login" id="signup-location" placeholder="{{ __('app.auth.location_city_country') }}" required>
                                 <div class="help-block with-errors"></div>
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
                                 <div class="input-group">
-                                    <input type="password" name="password" id="signup-password" class="form-control-login" placeholder="Password (at least 6 characters)" required minlength="6">
+                                    <input type="password" name="password" id="signup-password" class="form-control-login" placeholder="{{ __('app.auth.password_min_chars') }}" required minlength="6">
                                     <span class="input-group-text password-toggle" onclick="togglePassword('signup-password')">
                                         <i class="fa fa-eye"></i>
                                     </span>
@@ -102,7 +102,7 @@
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <input type="password" name="password_confirmation" id="signup-password-confirmation" class="form-control-login" placeholder="Confirm Password" required minlength="6">
+                                <input type="password" name="password_confirmation" id="signup-password-confirmation" class="form-control-login" placeholder="{{ __('app.auth.confirm_password') }}" required minlength="6">
                                 <div class="help-block with-errors"></div>
                             </div>
 
@@ -110,7 +110,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="1" id="signup-terms" name="terms" required>
                                     <label class="form-check-label" for="signup-terms">
-                                        I agree to the <a href="{{ url('/terms_condition') }}" target="_blank" class="policy-link">Terms</a> and <a href="{{ url('/privacy_policy') }}" target="_blank" class="policy-link">Privacy Policy</a>
+                                        {{ __('app.auth.i_agree_to') }} <a href="{{ url('/terms_condition') }}" target="_blank" class="policy-link">{{ __('app.auth.terms') }}</a> {{ __('app.auth.and') }} <a href="{{ url('/privacy_policy') }}" target="_blank" class="policy-link">{{ __('app.auth.privacy_policy') }}</a>
                                     </label>
                                     <div class="help-block with-errors"></div>
                                 </div>
@@ -118,13 +118,13 @@
 
                             <div class="col-md-12">
                                 <button type="submit" class="btn-default" id="signup-submit-btn">
-                                    <span id="signup-btn-text">Create account</span>
+                                    <span id="signup-btn-text">{{ __('app.auth.create_account') }}</span>
                                     <span id="signup-btn-loader" class="signup-loader" style="display: none;">
-                                        <i class="fa fa-spinner fa-spin"></i> Processing...
+                                        <i class="fa fa-spinner fa-spin"></i> {{ __('app.auth.processing') }}
                                     </span>
                                 </button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
-                                <p class="mt-3 mb-0" style="text-align: center;">Already have an account? <a href="#" id="show-login-modal">Login</a></p>
+                                <p class="mt-3 mb-0" style="text-align: center;">{{ __('app.auth.already_have_account') }} <a href="#" id="show-login-modal">{{ __('app.auth.login') }}</a></p>
                             </div>
                         </div>
                     </form>

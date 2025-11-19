@@ -1,6 +1,6 @@
 @extends('layouts.main')
 {{-- Title --}}
-@section('title', 'Sign Up')
+@section('title', __('app.auth.sign_up'))
 
 {{-- Style Files --}}
 @section('styles')
@@ -37,7 +37,7 @@
                     <!-- Signup image Start -->
                     <div class="appointment-image">
                         <figure class="image-anime reveal">
-                            <img src="{{ asset('images/kimia-kazemi-u93nTfWqR9w-unsplash.jpg') }}" alt="Sign Up">
+                            <img src="{{ asset('images/kimia-kazemi-u93nTfWqR9w-unsplash.jpg') }}" alt="{{ __('app.auth.sign_up') }}">
                         </figure>
                         
                         <!-- Feature List Start -->
@@ -62,9 +62,9 @@
                     <!-- Signup Form Start -->
                     <div class="appointment-form wow fadeInUp" data-wow-delay="0.2s">
                         <div class="section-title mb-4">
-                            <h3 class="wow fadeInUp">Create Account</h3>
-                            <h2 class="text-anime-style-2" >Join <span>Glaura</span></h2>
-                            <p class="small-text">Sign up to book beauty services, track appointments, and enjoy member perks.</p>
+                            <h3 class="wow fadeInUp">{{ __('app.auth.create_account') }}</h3>
+                            <h2 class="text-anime-style-2" >{{ __('app.auth.join') }} <span>Glaura</span></h2>
+                            <p class="small-text">{{ __('app.auth.signup_description') }}</p>
                         </div>
                         
                         @if(session('success'))
@@ -84,28 +84,28 @@
                             @csrf
                             <div class="row">
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Full Name" value="{{ old('name') }}" required>
+                                    <input type="text" name="name" class="form-control" id="name" placeholder="{{ __('app.auth.full_name') }}" value="{{ old('name') }}" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="Email Address" value="{{ old('email') }}" required>
+                                    <input type="email" name="email" class="form-control" id="email" placeholder="{{ __('app.auth.email') }}" value="{{ old('email') }}" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number (with country code)" value="{{ old('phone') }}" required>
+                                    <input type="text" name="phone" class="form-control" id="phone" placeholder="{{ __('app.auth.phone_with_country_code') }}" value="{{ old('phone') }}" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="text" name="location" class="form-control" id="location" placeholder="Location (City, Country)" value="{{ old('location') }}" required>
+                                    <input type="text" name="location" class="form-control" id="location" placeholder="{{ __('app.auth.location_city_country') }}" value="{{ old('location') }}" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
 
                                 <div class="form-group col-md-12 mb-4">
                                     <div class="input-group">
-                                        <input type="password" name="password" id="password" class="form-control" placeholder="Password (at least 6 characters)" required minlength="6">
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="{{ __('app.auth.password_min_chars') }}" required minlength="6">
                                         <span class="input-group-text password-toggle" onclick="const p=document.getElementById('password'); p.type=p.type==='password'?'text':'password'">
                                             <i class="fa fa-eye"></i>
                                         </span>
@@ -114,7 +114,7 @@
                                 </div>
 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password" required minlength="6">
+                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="{{ __('app.auth.confirm_password') }}" required minlength="6">
                                     <div class="help-block with-errors"></div>
                                 </div>
 
@@ -122,16 +122,16 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="1" id="terms" name="terms" {{ old('terms') ? 'checked' : '' }} required>
                                         <label class="form-check-label" for="terms">
-                                            I agree to the <a class="policy-link" href="{{ url('/terms_condition') }}">Terms</a> and <a class="policy-link" href="{{ url('/privacy_policy') }}">Privacy Policy</a>
+                                            {{ __('app.auth.i_agree_to') }} <a class="policy-link" href="{{ url('/terms_condition') }}">{{ __('app.auth.terms') }}</a> {{ __('app.auth.and') }} <a class="policy-link" href="{{ url('/privacy_policy') }}">{{ __('app.auth.privacy_policy') }}</a>
                                         </label>
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn-default"><span>Create account</span></button>
+                                    <button type="submit" class="btn-default"><span>{{ __('app.auth.create_account') }}</span></button>
                                     <div id="msgSubmit" class="h3 hidden"></div>
-                                    <p class="mt-3 mb-0">Already have an account? <a href="{{ route('login') }}">Login</a></p>
+                                    <p class="mt-3 mb-0">{{ __('app.auth.already_have_account') }} <a href="{{ route('login') }}">{{ __('app.auth.login') }}</a></p>
                                 </div>
                             </div>
                         </form>
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const confirm = document.getElementById('password_confirmation');
         if (password && confirm && password.value !== confirm.value) {
             e.preventDefault();
-            alert('Passwords do not match.');
+            alert('{{ __('app.auth.passwords_not_match') }}');
             confirm.focus();
         }
     });
