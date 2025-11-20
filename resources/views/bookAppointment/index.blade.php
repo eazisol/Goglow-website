@@ -1096,13 +1096,13 @@
                                             <div class="form-check mb-3">
                                                 <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
                                                 <label class="form-check-label" for="payDeposit">
-                                                    {{ __('app.agent_page.pay_15%_deposit_now') }} (${{ number_format(($selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0)) * 0.15, 2) }})
+                                                    {{ __('app.agent_page.pay_15%_deposit_now') }} (€{{ number_format(($selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0)) * 0.15, 2) }})
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
                                                 <label class="form-check-label" for="payFull">
-                                                    {{ __('app.agent_page.pay_full_amount_now') }} (${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }})
+                                                    {{ __('app.agent_page.pay_full_amount_now') }} (€{{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }})
                                                 </label>
                                             </div>
                                         </div>

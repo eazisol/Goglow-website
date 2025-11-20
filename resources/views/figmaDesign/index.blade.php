@@ -508,7 +508,7 @@
                   <img src="images/images/img_rectangle_44.png" alt="Partner Logo" class="partner-logo">
                   <img src="images/images/img_rectangle_38.png" alt="Partner Logo" class="partner-logo">
                   <img src="images/images/img_rectangle_45.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_40.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/velvety-paris.jpeg" alt="Partner Logo" class="partner-logo">
                   <!-- Duplicate logos for seamless looping -->
                   <img src="images/images/img_rectangle_35.png" alt="Partner Logo" class="partner-logo">
                   <img src="images/images/img_rectangle_36.png" alt="Partner Logo" class="partner-logo">
@@ -519,7 +519,7 @@
                   <img src="images/images/img_rectangle_44.png" alt="Partner Logo" class="partner-logo">
                   <img src="images/images/img_rectangle_38.png" alt="Partner Logo" class="partner-logo">
                   <img src="images/images/img_rectangle_45.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_40.png" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/velvety-paris.jpeg" alt="Partner Logo" class="partner-logo">
                 </div>
               </div>
 
