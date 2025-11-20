@@ -16,11 +16,11 @@
 
     <!-- Open Graph / Facebook -->
     {{-- CSS Files - Load in correct order --}}
-    <link href="{{ asset('css/fonts.css') }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/newdesign.css') }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/header.css') }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/form.css') }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/auth-modals.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/fonts.css') }}?v={{ filemtime(public_path('css/fonts.css')) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/newdesign.css') }}?v={{ filemtime(public_path('css/newdesign.css')) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/form.css') }}?v={{ filemtime(public_path('css/form.css')) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/auth-modals.css') }}?v={{ filemtime(public_path('css/auth-modals.css')) }}" rel="stylesheet" media="screen">
     <meta property="og:type" content="website">
     <meta property="og:title" content="GoGlow - Book Beauty Services | Discover Local Salons">
     <meta property="og:description" content="Discover and book trusted salon services with GoGlow. Connect with local beauty professionals for hair, nails, skincare, and wellness treatments.">

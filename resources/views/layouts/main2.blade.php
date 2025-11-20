@@ -34,11 +34,11 @@
 {{-- <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> --}}
     
     {{-- CSS Files - Load in correct order --}}
-    <link href="{{ asset('css/fonts.css') }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/newdesign.css') }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/header.css') }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/form.css') }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/auth-modals.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/fonts.css') }}?v={{ filemtime(public_path('css/fonts.css')) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/newdesign.css') }}?v={{ filemtime(public_path('css/newdesign.css')) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/header.css') }}?v={{ filemtime(public_path('css/header.css')) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/form.css') }}?v={{ filemtime(public_path('css/form.css')) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/auth-modals.css') }}?v={{ filemtime(public_path('css/auth-modals.css')) }}" rel="stylesheet" media="screen">
     
     {{-- External CSS (non-critical) --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">

@@ -345,7 +345,7 @@ return [
         'bag_reality_item3_desc' => 'never knowing if it\'ll convert to a booking.',
         'bag_reality_item4_title' => 'You Post Your Best Work → 47 Views',
         'bag_reality_item4_desc' => 'never knowing if it\'ll convert to a booking.',
-        'bag_reality_item5_title' => 'you pay plainly €89/month → 0 bookings',
+        'bag_reality_item5_title' => 'you pay planity €89/month → 0 bookings',
         'bag_reality_item5_desc' => 'never knowing if it\'ll convert to a booking.',
         'bag_future_header' => 'WHAT COULD BE',
         'bag_future_result' => 'Result: +€1,500/Month In Additional Revenue.',
@@ -513,5 +513,17 @@ return [
         'receipt_thank_you' => 'Thank you for choosing GoGlow Beauty Services!',
         'receipt_contact' => 'For any questions regarding your appointment, please contact us.',
         'error_generating_receipt' => 'Error generating receipt. Please try again.',
-    ]
+    ],
+                // Salon Page
+    'salon_page' => [
+        'become_glower' => 'BECOME A GLOWER',
+        'whychoose_bag_first_title' => 'VIDEO DISCOVERY',
+        'whychoose_bag_first_des' => 'your service videos reach beauty seekers instantly through our intelligent algorithm that puts you in front of the right eyes at the right time.',
+        'whychoose_bag_second_title' => 'BOOKING IN 3 CLICKS',
+        'whychoose_bag_second_des' => 'clients can book you work on a video they love. less “how much” messages, more real bookings from clients that don’t waste your time.',
+        'whychoose_bag_third_title' => 'MOBILE APP + WEB',
+        'whychoose_bag_third_des' => 'manage your calendar from your phone or after-hours on your computer. full access to your stats, payments, and work, however you like.',
+        'whychoose_bag_fourth_title' => 'INSTANT NOTIFICATIONS',
+        'whychoose_bag_fourth_des' => 'new booking? you receive an instant ping. no waiting, no missing a thing. this is how real beauty business should work.',
+    ],
 ];

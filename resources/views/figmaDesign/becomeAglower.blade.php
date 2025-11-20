@@ -100,7 +100,7 @@
                </div>
              </a>
              <a href="{{ url('/contact-us') }}" class="btn-secondary">
-               {{ __('app.home.become_a_glowee_button') }}
+               {{ __('app.salon_page.become_glower') }}
                <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
              </a>
            </div>
@@ -269,7 +269,7 @@
                </div>
              </a>
              <a href="{{ url('/contact-us') }}" class="btn-secondary" style="background-color:white;">
-               {{ __('app.home.become_a_glowee_button') }}
+               {{ __('app.salon_page.become_glower') }}
                <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
              </a>
            </div>
@@ -303,8 +303,8 @@
                 <div class="benefit-icon gradient">
                   <img src="images/images/video_icon.svg" alt="" width="23" height="23">
                 </div>
-                <h3 class="benefit-title">{{ __('app.home.benefit_1_title') }}</h3>
-                <p class="benefit-description">{{ __('app.home.benefit_1_desc') }}</p>
+                <h3 class="benefit-title">{{ __('app.salon_page.whychoose_bag_first_title') }}</h3>
+                <p class="benefit-description">{{ __('app.salon_page.whychoose_bag_first_des') }}</p>
                 {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
@@ -312,8 +312,8 @@
                 <div class="benefit-icon white">
                   <img src="images/images/Vector.svg" alt="" width="32" height="32">
                 </div>
-                <h3 class="benefit-title">{{ __('app.home.benefit_2_title') }}</h3>
-                <p class="benefit-description">{{ __('app.home.benefit_2_desc') }}</p>
+                <h3 class="benefit-title">{{ __('app.salon_page.whychoose_bag_second_title') }}</h3>
+                <p class="benefit-description">{{ __('app.salon_page.whychoose_bag_second_des') }}</p>
                 {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
@@ -321,8 +321,8 @@
                 <div class="benefit-icon white">
                   <img src="images/images/solar_calendar-date-bold.svg" alt="" width="32" height="32">
                 </div>
-                <h3 class="benefit-title">{{ __('app.home.benefit_3_title') }}</h3>
-                <p class="benefit-description">{{ __('app.home.benefit_3_desc') }}</p>
+                <h3 class="benefit-title">{{ __('app.salon_page.whychoose_bag_third_title') }}</h3>
+                <p class="benefit-description">{{ __('app.salon_page.whychoose_bag_third_des') }}</p>
                 {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
@@ -330,8 +330,8 @@
                 <div class="benefit-icon white">
                   <img src="images/images/hair_dryer.svg" alt="" width="32" height="32">
                 </div>
-                <h3 class="benefit-title">{{ __('app.home.benefit_4_title') }}</h3>
-                <p class="benefit-description">{{ __('app.home.benefit_4_desc') }}</p>
+                <h3 class="benefit-title">{{ __('app.salon_page.whychoose_bag_fourth_title') }}</h3>
+                <p class="benefit-description">{{ __('app.salon_page.whychoose_bag_fourth_des') }}</p>
                 {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
