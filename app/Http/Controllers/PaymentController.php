@@ -61,7 +61,7 @@ class PaymentController extends Controller
                         'name' => $serviceName ?: 'Beauty Service',
                         'description' => ($paymentType === 'deposit') ? '15% Deposit' : 'Full Payment',
                         'amount' => max(50, $amountInCents), // Minimum 50 cents
-                        'currency' => 'usd',
+                        'currency' => 'eur',
                         'quantity' => 1,
                     ]
                 ],

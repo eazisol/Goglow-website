@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to format currency
     function formatCurrency(amount) {
         if (amount === undefined || amount === null) return successTranslations.not_available;
-        return '$' + parseFloat(amount).toFixed(2);
+        return '€' + parseFloat(amount).toFixed(2);
     }
     
     // Function to populate booking details

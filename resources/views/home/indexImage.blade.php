@@ -691,7 +691,7 @@
                         <div class="pricing-content">
                             <div class="pricing-header" style="display: flex; justify-content: space-between;">
                                 <h3 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">Your very long heading text</h3>
-                                <p>$30</p>
+                                <p>€30</p>
                             </div>
                             <p>We believe great design is more than just visuals — it's a feeling. </p>
                         </div>

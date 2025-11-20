@@ -186,7 +186,7 @@
                                         </div>
                                         <div class="form-group mb-3">
                                             <label for="service_price">Service Price</label>
-                                            <input type="text" name="service_price" class="form-control" id="service_price" value="${{ $selectedService['service_price'] ?? '0' }}" readonly>
+                                            <input type="text" name="service_price" class="form-control" id="service_price" value="€{{ $selectedService['service_price'] ?? '0' }}" readonly>
                                         </div>
                                     </div>
                                 </div> --}}

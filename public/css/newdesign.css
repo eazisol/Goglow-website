@@ -2306,11 +2306,11 @@
         width: initial;
         height: inherit;
       }
-      .btn-primary{
+      /* .btn-primary{
         margin-right: auto;
         margin-left: initial!important;
         padding: 12px 25px;
-      }
+      } */
       /* benefit section  */
       .carousel-navigation {
         display: flex;
@@ -2394,7 +2394,7 @@
       }
       .how-it-work-buttons{
         margin-top: 300px!important;
-        justify-content: initial!important;
+        /* justify-content: initial!important; */
       }
       .btn-gradient img{
         display: none;

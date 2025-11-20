@@ -67,7 +67,7 @@
         margin-bottom: 1.5rem !important;
     }
     .bw-wizard .mt-2 {
-        margin-top: 0.5rem !important;
+        /* margin-top: 0.5rem !important; */
     }
     .bw-wizard .mt-3 {
         margin-top: 1rem !important;

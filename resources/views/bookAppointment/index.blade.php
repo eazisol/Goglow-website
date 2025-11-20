@@ -997,9 +997,9 @@
                         <div class="card-body">
                             <h4 class="service-summary-title">{{ $selectedService['service_name'] ?? 'Selected Service' }}</h4>
                             <p class="service-summary-price">
-                                ${{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }}
+                                €{{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }}
                                 @if(isset($selectedService['discounted_price']) && isset($selectedService['service_price']) && $selectedService['discounted_price'] < $selectedService['service_price'])
-                                    <span class="old-price">${{ $selectedService['service_price'] }}</span>
+                                    <span class="old-price">€{{ $selectedService['service_price'] }}</span>
                                 @endif
                             </p>
                             @if(!empty($selectedService['service_details']))
@@ -1244,6 +1244,10 @@ document.addEventListener('DOMContentLoaded', function () {
         '{{ __('app.schedule.month_december') }}'
     ];
     const dayKeys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    // Translation for "at" in date/time display
+    const dateTimeAt = '{{ __('app.schedule.at') }}';
+    // Current locale (fr or en)
+    const currentLocale = '{{ app()->getLocale() }}';
     
     // Convert timing data to slots format
     function convertTimingToSlots(timing) {
@@ -1308,7 +1312,13 @@ document.addEventListener('DOMContentLoaded', function () {
         return slots;
     }
     
-    // Format time from "HH:MM" to display format
+    // Format time from "HH:MM" to 24-hour format (for timeSlotsStrip)
+    function formatTimeDisplay24(timeStr) {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    }
+    
+    // Format time from "HH:MM" to 12-hour display format (for selectedDateTimeDisplay)
     function formatTimeDisplay(timeStr) {
         const [hours, minutes] = timeStr.split(':').map(Number);
         const ampm = hours >= 12 ? 'p.m.' : 'a.m.';
@@ -1316,9 +1326,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
     }
     
-    // Format date for display
+    // Format date for display (with locale support)
     function formatDate(date) {
-        return date.toLocaleDateString('en-US', { 
+        const locale = currentLocale === 'fr' ? 'fr-FR' : 'en-US';
+        return date.toLocaleDateString(locale, { 
             month: 'long', 
             day: 'numeric',
             year: 'numeric'
@@ -1514,7 +1525,7 @@ document.addEventListener('DOMContentLoaded', function () {
             timeSlot.dataset.day = selectedDay;
             timeSlot.dataset.time = slot.time;
             timeSlot.dataset.date = selectedDate;
-            timeSlot.textContent = formatTimeDisplay(slot.time);
+            timeSlot.textContent = formatTimeDisplay24(slot.time);
 
             // Add click handler for slot selection
             timeSlot.addEventListener('click', function() {
@@ -1533,7 +1544,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const selectedDateObj = new Date(yy, mm - 1, dd);
                 const formattedDate = formatDate(selectedDateObj);
                 const formattedTime = formatTimeDisplay(this.dataset.time);
-                selectedDateTimeDisplay.textContent = `${formattedDate} at ${formattedTime}`;
+                selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
                 selectedSlotInfo.style.display = '';
                 // Ensure hidden selected day reflects the clicked slot's day
                 selectedDayInput.value = this.dataset.day;

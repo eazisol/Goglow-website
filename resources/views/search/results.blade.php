@@ -59,9 +59,9 @@
                                 </div>
                                 <div class="service-meta">
                                     <div class="price">
-                                        <strong>Price:</strong> ${{ $service['service_price'] ?? '0' }}
+                                        <strong>Price:</strong> €{{ $service['service_price'] ?? '0' }}
                                         @if(isset($service['discounted_price']) && isset($service['service_price']) && $service['discounted_price'] < $service['service_price'])
-                                            <span class="discounted">${{ $service['discounted_price'] }}</span>
+                                            <span class="discounted">€{{ $service['discounted_price'] }}</span>
                                         @endif
                                     </div>
                                     @if(isset($service['duration_minutes']))

@@ -94,6 +94,7 @@ return [
         'prev_week' => 'Semaine précédente',
         'next_week' => 'Semaine suivante',
         'no_slots' => 'Aucun créneau disponible',
+        'at' => 'à',
     ],
 
     // Common

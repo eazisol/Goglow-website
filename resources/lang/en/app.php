@@ -94,6 +94,7 @@ return [
         'prev_week' => 'Previous Week',
         'next_week' => 'Next Week',
         'no_slots' => 'No available slots',
+        'at' => 'at',
     ],
 
     // Common

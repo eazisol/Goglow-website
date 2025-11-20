@@ -75,11 +75,18 @@
 
            <!-- App Store Buttons -->
            <div class="hero-buttons">
-              <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="btn-gradient-hero-section">
-                {{ __('app.home.hiw_download_app') }}
-                <img src="images/images/downlaod.svg" alt="" width="16" height="16">
-              </a>
-             <a href="{{ url('/become-glower') }}" class="btn-secondary-hero-section">
+             <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
+               <div class="app-store-content">
+                 <div class="apple-logo">
+                   <img src="images/images/apple.svg" alt="Apple" width="36">
+                 </div>
+                 <div class="app-store-text">
+                   <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
+                   <span class="store-text">App Store</span>
+                 </div>
+               </div>
+             </a>
+             <a href="{{ url('/contact-us') }}" class="btn-secondary-hero-section">
                {{ __('app.home.become_a_glowee_button') }}
                <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
              </a>
@@ -321,10 +328,17 @@
         </div>
 
         <div class="how-it-work-buttons" style="display: flex; justify-content: center; gap: 14px; margin-top: 110px; flex-wrap: wrap;">
-          <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="btn-gradient">
-            {{ __('app.home.hiw_download_app') }}
-            <img src="images/images/downlaod.svg" alt="" width="16" height="16">
-          </a>
+            <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
+               <div class="app-store-content">
+                 <div class="apple-logo">
+                   <img src="images/images/apple.svg" alt="Apple" width="36">
+                 </div>
+                 <div class="app-store-text">
+                   <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
+                   <span class="store-text">App Store</span>
+                 </div>
+               </div>
+            </a>
           <a href="{{ url('/search') }}" class="btn-primary">
             {{ __('app.home.hiw_book_a_service') }}
             <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
@@ -524,7 +538,7 @@
               </div>
 
         <div class="partner-section-button" style="text-align: center; margin-top: 35px; margin-bottom: 60px;">
-          <a href="#" class="btn-gradient">
+          <a href="{{ url('/contact-us') }}" class="btn-gradient">
             {{ __('app.home.become_a_glowee_button') }}
             <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
           </a>
@@ -553,7 +567,7 @@
             <div class="pricing-badge">{{ __('app.home.pricing_reviews') }}</div>
             <div class="pricing-header">
               <h3 class="pricing-title">{{ __('app.home.pricing_card_title') }}</h3>
-              <p class="pricing-price">$32</p>
+              <p class="pricing-price">€32</p>
             </div>
             <div class="pricing-features">
               <div class="pricing-feature">
@@ -584,7 +598,7 @@
             </div>
             <div class="pricing-header">
               <h3 class="pricing-title">{{ __('app.home.pricing_card_title') }}</h3>
-              <p class="pricing-price">$32</p>
+              <p class="pricing-price">€32</p>
             </div>
             <div class="pricing-features">
               <div class="pricing-feature">
@@ -612,7 +626,7 @@
             <div class="pricing-badge">{{ __('app.home.pricing_reviews') }}</div>
             <div class="pricing-header">
               <h3 class="pricing-title">{{ __('app.home.pricing_card_title') }}</h3>
-              <p class="pricing-price">$32</p>
+              <p class="pricing-price">€32</p>
             </div>
             <div class="pricing-features">
               <div class="pricing-feature">
