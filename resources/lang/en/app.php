@@ -270,6 +270,16 @@ return [
         'rs_title_second' => 'Glowees',
         'rs_title_third' => 'Say',
         'rs_reviews' => 'reviews',
+        'rs_first_review' => 'The before/after videos are so inspiring! I love scrolling, seeing the work of the pros, and booking immediately when I like a look. Its like TikTok, but for beauty.',
+        'rs_first_auther_name' => 'Sarah. M',
+        'rs_second_review' => 'I love Glaura! In just a few clicks, I find rated professionals near me and book without even sending a message. The app is smooth, fast, and availability updates in real time. A real time-saver!',
+        'rs_second_auther_name' => 'Anais D',
+        'rs_third_review' => 'I feel confident using Glaura. Payment is secure and processed directly through the app, and I no longer need to handle money on-site. Everything is simple and professional.',
+        'rs_third_auther_name' => 'Emilie J',
+        'rs_forth_review' => 'Thanks to its intelligent engine, Glaura always suggests salons that match my style. Thats how I discovered my favorite hairdresser! You can tell the app really understands my tastes.',
+        'rs_forth_auther_name' => 'Anita S',
+        'rs_fifth_review' => '',
+        'rs_fifth_auther_name' => '',
 
         // Pricing Section (figmaDesign)
         'pricing_title' => 'Pricing',

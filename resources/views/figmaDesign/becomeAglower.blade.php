@@ -305,7 +305,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_1_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_1_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -314,7 +314,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_2_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_2_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -323,7 +323,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_3_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_3_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -332,7 +332,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_4_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_4_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -341,7 +341,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_5_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_5_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
 
               <div class="benefit-card">
@@ -350,7 +350,7 @@
                 </div>
                 <h3 class="benefit-title">{{ __('app.home.benefit_6_title') }}</h3>
                 <p class="benefit-description">{{ __('app.home.benefit_6_desc') }}</p>
-                <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a>
+                {{-- <a href="#" class="benefit-link">{{ __('app.home.benefit_learn_more') }}</a> --}}
               </div>
             </div>
           </div>

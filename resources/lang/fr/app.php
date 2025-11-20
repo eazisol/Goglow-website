@@ -285,6 +285,16 @@ return [
         'rs_title_second' => 'Le ',
         'rs_title_third' => 'Mieux',
         'rs_reviews' => 'avis',
+        'rs_first_review' => 'Les vidéos avant/après sont trop inspirantes ! J’aime scroller, voir le travail des pros, et réserver tout de suite quand un look me plaît. C’est comme TikTok, mais pour la beauté.',
+        'rs_first_auther_name' => 'Sarah. M',
+        'rs_second_review' => 'J’adore Glaura ! En quelques clics, je trouve des pros notés près de chez moi et je réserve sans même envoyer un message. L’app est fluide, rapide, et les dispos se mettent à jour en temps réel. Un vrai gain de temps !',
+        'rs_second_auther_name' => 'Anais D',
+        'rs_third_review' => 'Je me sens en confiance avec Glaura. Le paiement est sécurisé directement dans l’app, et je n’ai plus besoin de gérer l’argent sur place. Tout est simple et pro.',
+        'rs_third_auther_name' => 'Emilie J',
+        'rs_forth_review' => 'Grâce au moteur intelligent, Glaura me propose toujours des salons qui correspondent à mon style. J’ai découvert ma coiffeuse préférée comme ça ! On sent que l’app comprend vraiment mes goûts.',
+        'rs_forth_auther_name' => 'Anita S',
+        'rs_fifth_review' => '',
+        'rs_fifth_auther_name' => '',
 
         // Partners Section
         'partners_badge_our' => 'Nos',

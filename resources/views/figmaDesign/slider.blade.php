@@ -201,14 +201,14 @@
         <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
-              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+              {{ __('app.home.rs_first_review') }}
             </p>
             <div class="review-author">
               <div class="author-info">
                 <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
                 <div class="author-details">
-                  <p class="author-name">emma loy</p>
-                  <p class="author-title">ceo of silo</p>
+                  <p class="author-name">{{ __('app.home.rs_first_auther_name') }}</p>
+                  {{-- <p class="author-title">ceo of silo</p> --}}
                 </div>
               </div>
               <div class="review-stars">
@@ -225,14 +225,14 @@
         <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
-              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            {{ __('app.home.rs_second_review') }}  
             </p>
             <div class="review-author">
               <div class="author-info">
                 <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
                 <div class="author-details">
-                  <p class="author-name">emma loy</p>
-                  <p class="author-title">ceo of silo</p>
+                  <p class="author-name">{{ __('app.home.rs_second_auther_name') }}</p>
+                  {{-- <p class="author-title">ceo of silo</p> --}}
                 </div>
               </div>
               <div class="review-stars">
@@ -249,14 +249,14 @@
         <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
-              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            {{ __('app.home.rs_third_review') }}  
             </p>
             <div class="review-author">
               <div class="author-info">
                 <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
                 <div class="author-details">
-                  <p class="author-name">emma loy</p>
-                  <p class="author-title">ceo of silo</p>
+                  <p class="author-name">{{ __('app.home.rs_third_auther_name') }}</p>
+                  {{-- <p class="author-title">ceo of silo</p> --}}
                 </div>
               </div>
               <div class="review-stars">
@@ -273,14 +273,14 @@
         <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
-              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            {{ __('app.home.rs_forth_review') }}  
             </p>
             <div class="review-author">
               <div class="author-info">
                 <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
                 <div class="author-details">
-                  <p class="author-name">emma loy</p>
-                  <p class="author-title">ceo of silo</p>
+                  <p class="author-name">{{ __('app.home.rs_forth_auther_name') }}</p>
+                  {{-- <p class="author-title">ceo of silo</p> --}}
                 </div>
               </div>
               <div class="review-stars">
@@ -297,14 +297,14 @@
         <div class="card-inner">
             <img src="images/images/coms.svg" alt="Quote" class="review-quote">
             <p class="review-text">
-              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
+            {{ __('app.home.rs_second_review') }}  
             </p>
             <div class="review-author">
               <div class="author-info">
                 <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
                 <div class="author-details">
-                  <p class="author-name">emma loy</p>
-                  <p class="author-title">ceo of silo</p>
+                  <p class="author-name">{{ __('app.home.rs_second_auther_name') }}</p>
+                  {{-- <p class="author-title">ceo of silo</p> --}}
                 </div>
               </div>
               <div class="review-stars">
@@ -427,11 +427,11 @@
       resetAutoPlay();
     });
 
-    function autoPlay() {
-      autoPlayInterval = setInterval(() => {
-        nextSlide();
-      }, 7000);
-    }
+    // function autoPlay() {
+    //   autoPlayInterval = setInterval(() => {
+    //     nextSlide();
+    //   }, 7000);
+    // }
     function stopAutoPlay() {
       clearInterval(autoPlayInterval);
     }

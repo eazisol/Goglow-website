@@ -37,6 +37,19 @@
     width: 100%;
 }
 
+    /* Remove cross/clear button from search input */
+    .searchInput::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
+        display: none;
+    }
+
+    .searchInput::-ms-clear {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+
     /* Placeholder color for all browsers, targeting the specific input */
     .searchInput::placeholder { color: #d5bec6 !important; opacity: 1; }
     .searchInput::-webkit-input-placeholder { color: #d5bec6 !important; opacity: 1; }
