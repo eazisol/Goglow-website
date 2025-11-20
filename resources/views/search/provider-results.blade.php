@@ -224,6 +224,16 @@
                                     @php
                                         $weeklyTiming = isset($provider['timing']) && is_array($provider['timing']) ? $provider['timing'] : [];
                                         $daysOrder = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+                                        // Map day abbreviations to translated short day names
+                                        $dayNamesMap = [
+                                            'Mon' => __('app.schedule.short_monday'),
+                                            'Tue' => __('app.schedule.short_tuesday'),
+                                            'Wed' => __('app.schedule.short_wednesday'),
+                                            'Thu' => __('app.schedule.short_thursday'),
+                                            'Fri' => __('app.schedule.short_friday'),
+                                            'Sat' => __('app.schedule.short_saturday'),
+                                            'Sun' => __('app.schedule.short_sunday'),
+                                        ];
                                         $now = \Carbon\Carbon::now();
                                         $todayKey = $now->format('D');
                                         $timezone = config('app.timezone') ?: 'UTC';
@@ -258,9 +268,11 @@
                                         $chipDays = [];
                                         for ($i = 0; $i < 3; $i++) {
                                             $d = $now->copy()->addDays($i);
+                                            $dayKey = $d->format('D');
                                             $chipDays[] = [
-                                                'label' => $d->format('D'),
+                                                'label' => $dayNamesMap[$dayKey] ?? $dayKey,
                                                 'day' => $d->format('d'),
+                                                'dayKey' => $dayKey, // Keep original key for timing lookup
                                             ];
                                         }
                                     @endphp
@@ -283,8 +295,8 @@
                                             @foreach($daysOrder as $dow)
                                                 @php $rangeText = $formatRange($weeklyTiming[$dow] ?? []); @endphp
                                                 <div class="timing-row {{ $todayKey === $dow ? 'today' : '' }}">
-                                                    <span class="timing-day">{{ $dow }}</span>
-                                                    <span class="timing-hours">{{ $rangeText ?: 'Closed' }}</span>
+                                                    <span class="timing-day">{{ $dayNamesMap[$dow] ?? $dow }}</span>
+                                                    <span class="timing-hours">{{ $rangeText ?: __('app.provider.provider_close') }}</span>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -296,7 +308,8 @@
                                             // Check time slot availability for each day
                                             $chipDaysWithAvailability = [];
                                             foreach ($chipDays as $cd) {
-                                                $dayKey = $cd['label'];
+                                                // Use dayKey (original Mon, Tue, etc.) for timing lookup, but label (translated) for display
+                                                $dayKey = $cd['dayKey'] ?? $cd['label'];
                                                 $hasTimeSlot = isset($weeklyTiming[$dayKey]) && 
                                                                is_array($weeklyTiming[$dayKey]) && 
                                                                count($weeklyTiming[$dayKey]) >= 2 &&
@@ -309,7 +322,7 @@
                                                 }
                                                 
                                                 $chipDaysWithAvailability[] = [
-                                                    'label' => $cd['label'],
+                                                    'label' => $cd['label'], // This is already translated
                                                     'day' => $cd['day'],
                                                     'hasTimeSlot' => $hasTimeSlot,
                                                     'timeSlotText' => $timeSlotText
@@ -471,8 +484,8 @@
     .availability-title { color: #374151; font-size: 16px; font-weight: 700; margin-bottom: 5px; letter-spacing: 0px; }
     .availability-row { display: flex; align-items: center; gap: 10px; margin: 4px 0; flex-wrap: wrap; }
     .time-of-day { color:rgba(118, 33, 62, 1); font-weight: 500; font-size: 15px; width: 80px; }
-    .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
-    .date-chip { padding: 4px 18px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; position: relative; }
+    .chip-group { display: flex; gap: 5px; flex-wrap: wrap; }
+    .date-chip { padding: 4px 18px; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; position: relative; }
     .date-chip b { font-weight: 500; }
     .date-chip.has-slot { background: rgba(229, 0, 80, 1); color: #ffffffff; border: 1px solid #ffd1df; }
     .date-chip.no-slot { background: #fff; color: #6b7280; border: 1px solid #e5e7eb; }

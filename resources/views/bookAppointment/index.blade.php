@@ -1216,9 +1216,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const todayMonth = today.getMonth();
     const todayYear = today.getFullYear();
     
-    // Day names mapping
+    // Day names mapping - using translations
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const shortDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    // Short day names from translations (Sunday=0, Monday=1, ..., Saturday=6)
+    const shortDayNames = [
+        '{{ __('app.schedule.short_sunday') }}',
+        '{{ __('app.schedule.short_monday') }}',
+        '{{ __('app.schedule.short_tuesday') }}',
+        '{{ __('app.schedule.short_wednesday') }}',
+        '{{ __('app.schedule.short_thursday') }}',
+        '{{ __('app.schedule.short_friday') }}',
+        '{{ __('app.schedule.short_saturday') }}'
+    ];
+    // Month names from translations (January=0, February=1, ..., December=11)
+    const monthNames = [
+        '{{ __('app.schedule.month_january') }}',
+        '{{ __('app.schedule.month_february') }}',
+        '{{ __('app.schedule.month_march') }}',
+        '{{ __('app.schedule.month_april') }}',
+        '{{ __('app.schedule.month_may') }}',
+        '{{ __('app.schedule.month_june') }}',
+        '{{ __('app.schedule.month_july') }}',
+        '{{ __('app.schedule.month_august') }}',
+        '{{ __('app.schedule.month_september') }}',
+        '{{ __('app.schedule.month_october') }}',
+        '{{ __('app.schedule.month_november') }}',
+        '{{ __('app.schedule.month_december') }}'
+    ];
     const dayKeys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     
     // Convert timing data to slots format
@@ -1314,12 +1338,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const endDate = new Date(currentWeekStart);
         endDate.setDate(endDate.getDate() + 6);
         
-        const startMonth = currentWeekStart.toLocaleString('default', { month: 'long' });
-        const endMonth = endDate.toLocaleString('default', { month: 'long' });
+        // Use translated month names
+        const startMonth = monthNames[currentWeekStart.getMonth()];
+        const endMonth = monthNames[endDate.getMonth()];
         
         if (startMonth === endMonth) {
             weekDisplay.textContent = `${startMonth} ${currentWeekStart.getDate()} - ${endDate.getDate()}`;
-                } else {
+        } else {
             weekDisplay.textContent = `${startMonth} ${currentWeekStart.getDate()} - ${endMonth} ${endDate.getDate()}`;
         }
     }
