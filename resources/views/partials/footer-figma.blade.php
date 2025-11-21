@@ -31,7 +31,7 @@
                 <li><a href="#">Facebook</a></li>
                 <li><a href="#">instagram</a></li>
                 <li><a href="#">twitter</a></li>
-                <li><a href="#">linkedin</a></li>
+                <li><a href="#">linkedIn</a></li>
               </ul>
             </div>
           </div>

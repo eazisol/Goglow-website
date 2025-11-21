@@ -487,13 +487,13 @@
                         </div>
                         <div class="form-group mb-3">
                             {{-- <label for="whatsapp">WhatsApp Number</label> --}}
-                            <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="{{ __('app.iam_professional.placeholder_phone') }}" required>
+                            <input type="tel" name="whatsapp" class="form-control" id="whatsapp" placeholder="{{ __('app.iam_professional.placeholder_phone') }}" pattern="^\+?[0-9]{1,15}$" title="Please enter a valid phone number (numbers only, + optional at start)" required>
                         </div>
                     </div>
                     <div class="form-row-two">
                         <div class="form-group mb-4">
                             {{-- <label for="email">Email Address</label> --}}
-                            <input type="email" name="email" class="form-control" id="email" placeholder="{{ __('app.iam_professional.placeholder_email') }}" required>
+                            <input type="email" name="email" class="form-control" id="email" placeholder="{{ __('app.iam_professional.placeholder_email') }}" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Please enter a valid email address (e.g., example@email.com)" required>
                         </div>
                     </div>
                     <div class="wizard-actions">
@@ -687,6 +687,66 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Step validation function
+    // Function to validate email format
+    function isValidEmail(email) {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    }
+    
+    // Function to validate phone number format
+    function isValidPhone(phone) {
+        // Allow + at start, then only numbers, 1-15 digits total
+        const phoneRegex = /^\+?[0-9]{1,15}$/;
+        return phoneRegex.test(phone);
+    }
+    
+    // Restrict phone input to numbers and + only
+    const whatsappInput = document.getElementById('whatsapp');
+    if (whatsappInput) {
+        whatsappInput.addEventListener('input', function(e) {
+            // Allow only numbers and + at the beginning
+            let value = e.target.value;
+            // Remove all characters except numbers and + at the start
+            value = value.replace(/[^0-9+]/g, '');
+            // Ensure + is only at the beginning
+            if (value.includes('+') && !value.startsWith('+')) {
+                value = value.replace(/\+/g, '');
+                value = '+' + value;
+            }
+            // Limit to one + sign
+            const plusCount = (value.match(/\+/g) || []).length;
+            if (plusCount > 1) {
+                value = '+' + value.replace(/\+/g, '');
+            }
+            e.target.value = value;
+        });
+        
+        // Also validate on blur
+        whatsappInput.addEventListener('blur', function(e) {
+            const value = e.target.value.trim();
+            if (value && !isValidPhone(value)) {
+                e.target.setCustomValidity('Please enter a valid phone number (numbers only, + optional at start)');
+                e.target.reportValidity();
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+    }
+    
+    // Validate email on blur
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+        emailInput.addEventListener('blur', function(e) {
+            const value = e.target.value.trim();
+            if (value && !isValidEmail(value)) {
+                e.target.setCustomValidity('Please enter a valid email address (e.g., example@email.com)');
+                e.target.reportValidity();
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+    }
+    
     function validateStep(step) {
         switch(step) {
             case '2':
@@ -703,6 +763,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     return false;
                 }
+                
+                // Validate email format
+                if (!isValidEmail(email)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: translations.validation_missing_info_title,
+                        text: 'Please enter a valid email address (e.g., example@email.com)'
+                    });
+                    form.email.focus();
+                    return false;
+                }
+                
+                // Validate phone format
+                if (!isValidPhone(whatsapp)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: translations.validation_missing_info_title,
+                        text: 'Please enter a valid phone number (numbers only, + optional at start)'
+                    });
+                    form.whatsapp.focus();
+                    return false;
+                }
+                
                 return true;
                 
             case '4':
@@ -825,6 +908,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: translations.validation_error_title,
                 text: translations.validation_error_text
             });
+            return;
+        }
+        
+        // Validate email format before submission
+        if (!isValidEmail(email)) {
+            showLoading(false);
+            Swal.fire({
+                icon: 'error',
+                title: translations.validation_error_title,
+                text: 'Please enter a valid email address (e.g., example@email.com)'
+            });
+            form.email.focus();
+            return;
+        }
+        
+        // Validate phone format before submission
+        if (!isValidPhone(whatsapp)) {
+            showLoading(false);
+            Swal.fire({
+                icon: 'error',
+                title: translations.validation_error_title,
+                text: 'Please enter a valid phone number (numbers only, + optional at start)'
+            });
+            form.whatsapp.focus();
             return;
         }
 
