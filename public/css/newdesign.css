@@ -28,14 +28,32 @@
       padding-right: 16px;
     }
     .searchInput {
-    color: #e50050 !important;
+    color: #75213e !important;
     background: transparent;
     border: none;
     outline: none;
     font-size: 20px;
     font-weight: 500;
     width: 100%;
+    transition: all 0.3s ease;
+    font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
 }
+
+    /* When input is focused, style it exactly like search-title */
+    .searchInput:focus {
+        color: #75213e !important;
+        font-weight: 700;
+        font-size: 20px;
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+    }
+
+    /* Hide search-title when input is focused or has value */
+    .search-content:has(.searchInput:focus) .search-title,
+    .search-content:has(.searchInput:not(:placeholder-shown)) .search-title {
+        display: none;
+    }
 
     /* Remove cross/clear button from search input */
     .searchInput::-webkit-search-cancel-button {
@@ -2186,9 +2204,9 @@
         margin-top: 0;
       }
         .searchInput {
-          font-size: 14px;
-          font-weight: 400;
-          text-transform: lowercase;
+          font-size: 19px;
+          font-weight: 700;
+          /* text-transform: lowercase; */
       }
       .mobile-menu-nav a.active::before{
         display: none;
@@ -2281,6 +2299,14 @@
       }
       /* search bar */
       .search-title{
+        font-size: 19px;
+        /* letter-spacing: -1px; */
+      }
+      .search-item input{
+        font-size: 15px;
+      }
+      /* Match input to title on mobile when focused */
+      .searchInput:focus {
         font-size: 19px;
         letter-spacing: -1px;
       }

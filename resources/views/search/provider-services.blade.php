@@ -253,11 +253,12 @@
                 @if(count($services) > 0)
                 @foreach($groupedServices as $categoryName => $servicesInCategory)
                     <div class="category-section" data-category="{{ $categoryName ?: 'Uncategorized' }}">
-                    <div class="section-title" style="display: flex;margin-bottom: 25px;margin-top: 20px;">
+                    <div class="section-title category-toggle-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; margin-top: 20px; cursor: pointer;" data-category-toggle="{{ $categoryName ?: 'Uncategorized' }}">
                         {{-- Display category name --}}
-                        <h3 class="wow" style="font-size:30px; font-weight:500; letter-spacing: -1px; color:rgba(229, 0, 80, 1)">{{ $categoryName ?: 'Uncategorized' }}</h3>
+                        <h3 class="wow" style="font-size:30px; font-weight:500; letter-spacing: -1px; color:rgba(229, 0, 80, 1); margin: 0;">{{ $categoryName ?: 'Uncategorized' }}</h3>
+                        <i class="fas fa-chevron-up category-chevron" style="color: rgba(229, 0, 80, 1); font-size: 16px; transition: transform 0.3s ease; margin-left: 15px;"></i>
                     </div>
-                    <div class="custom-service-list">
+                    <div class="custom-service-list category-services-list">
                         @foreach($servicesInCategory as $service)
                             <div class="service-row services-d-flex services-justify-between services-flex-wrap">
                                 
@@ -916,6 +917,21 @@ $dayNames = [
     display: flex;
     flex-direction: column;
     gap: 15px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 5000px;
+    opacity: 1;
+}
+
+.category-services-list.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.category-chevron.rotated {
+    transform: rotate(180deg);
 }
 
 .custom-service-list .service-row {
@@ -1587,6 +1603,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
+        });
+    });
+    
+    // Category expand/collapse functionality
+    const categoryToggleHeaders = document.querySelectorAll('.category-toggle-header');
+    
+    categoryToggleHeaders.forEach(function(toggleHeader) {
+        toggleHeader.addEventListener('click', function() {
+            const categorySection = this.closest('.category-section');
+            const servicesList = categorySection.querySelector('.category-services-list');
+            const chevron = this.querySelector('.category-chevron');
+            
+            if (servicesList && chevron) {
+                servicesList.classList.toggle('collapsed');
+                chevron.classList.toggle('rotated');
+            }
         });
     });
     

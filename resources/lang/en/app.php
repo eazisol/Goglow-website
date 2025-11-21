@@ -48,6 +48,7 @@ return [
         'terms' => 'Terms',
         'and' => 'and',
         'privacy_policy' => 'Privacy Policy',
+        'please_accept_terms' => 'Please accept the terms and conditions to continue.',
         'passwords_not_match' => 'Passwords do not match.',
     ],
 

@@ -232,6 +232,55 @@
         display: none !important;
     }
 
+    /* Terms and Conditions Checkbox - Distinct styling from payment options */
+    .terms-checkbox-wrapper {
+        margin-top: 10px;
+    }
+
+    .terms-checkbox-input {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 20px !important;
+        height: 20px !important;
+        border: 2px solid rgba(213, 190, 198, 1) !important;
+        border-radius: 4px !important;
+        background-color: #fff !important;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .terms-checkbox-input:hover {
+        border-color: rgba(229, 0, 80, 0.7) !important;
+    }
+
+    .terms-checkbox-input:checked {
+        background-color: rgba(229, 0, 80, 1) !important;
+        border-color: rgba(229, 0, 80, 1) !important;
+    }
+
+    .terms-checkbox-input:checked::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .terms-checkbox-input.is-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    .terms-checkbox-label {
+        user-select: none;
+    }
+
     .page-book-appointment .h3 {
         font-size: 1.35rem;
         font-weight: 600;
@@ -1114,6 +1163,21 @@
                                         <textarea name="notes" id="notes" class="form-control" rows="4" placeholder="Any special requests or notes for your appointment"></textarea>
                                     </div> --}}
         
+                                    <!-- Terms and Conditions Checkbox -->
+                                    <div class="form-group col-md-12 mb-4">
+                                        <div class="terms-checkbox-wrapper" style="padding: 15px; background: rgba(255, 244, 248, 0.5); border: 1px solid rgba(213, 190, 198, 0.5); border-radius: 12px;">
+                                            <div class="terms-checkbox-container" style="display: flex; align-items: flex-start; gap: 12px;">
+                                                <input type="checkbox" name="terms_conditions" id="termsConditions" class="terms-checkbox-input" required style="width: 20px; height: 20px; margin: 0; cursor: pointer; flex-shrink: 0; margin-top: 2px;">
+                                                <label class="terms-checkbox-label" for="termsConditions" style="font-size: 14px; line-height: 1.5; color: #2c0d18; cursor: pointer; margin: 0; flex: 1;">
+                                                    {{ __('app.auth.i_agree_to') }} <a href="#" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.terms') }}</a> {{ __('app.auth.and') }} <a href="#" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.privacy_policy') }}</a>
+                                                </label>
+                                            </div>
+                                            <div class="invalid-feedback" id="termsError" style="display: none; color: #dc3545; font-size: 13px; margin-top: 8px; margin-left: 32px;">
+                                                {{ __('app.auth.please_accept_terms') }}
+                                            </div>
+                                        </div>
+                                    </div>
+        
                                     <div class="col-md-12">
                                         <button type="submit" class="btn-default" id="bookAppointmentBtn">
                                             <span id="bookAppointmentBtnText">{{ __('app.agent_page.book_an_appointment') }}</span>
@@ -1174,6 +1238,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedDateInput = document.getElementById('selected_date');
     const selectedTimeInput = document.getElementById('selected_time');
     const form = document.getElementById('appointmentForm');
+    
+    // Terms and conditions checkbox handler
+    const termsCheckbox = document.getElementById('termsConditions');
+    const termsError = document.getElementById('termsError');
+    if (termsCheckbox && termsError) {
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                termsError.style.display = 'none';
+                this.classList.remove('is-invalid');
+            } else {
+                termsError.style.display = 'none';
+            }
+        });
+    }
 
     // Handle day button selection
     dayButtons.forEach(button => {
@@ -1847,6 +1925,31 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!selectedDateInput?.value || !selectedTimeInput?.value) {
             alert('Please select a time slot');
             return;
+        }
+
+        // Check terms and conditions
+        const termsCheckbox = document.getElementById('termsConditions');
+        const termsError = document.getElementById('termsError');
+        if (!termsCheckbox || !termsCheckbox.checked) {
+            if (termsError) {
+                termsError.style.display = 'block';
+            }
+            if (termsCheckbox) {
+                termsCheckbox.focus();
+                termsCheckbox.classList.add('is-invalid');
+            }
+            // Scroll to terms checkbox
+            if (termsCheckbox) {
+                termsCheckbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return;
+        } else {
+            if (termsError) {
+                termsError.style.display = 'none';
+            }
+            if (termsCheckbox) {
+                termsCheckbox.classList.remove('is-invalid');
+            }
         }
 
         // Show loading state after validation passes

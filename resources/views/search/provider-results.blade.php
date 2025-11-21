@@ -783,25 +783,84 @@ document.addEventListener('DOMContentLoaded', function () {
       fetchSuggestions(query);
     }, 300);
 
+    // Get the search-title element
+    const searchTitle = searchInput.closest('.search-content')?.querySelector('.search-title');
+    
+    // Function to toggle search-title visibility
+    function toggleSearchTitle() {
+      if (searchTitle) {
+        if (searchInput.value.trim().length > 0 || document.activeElement === searchInput) {
+          searchTitle.style.display = 'none';
+        } else {
+          searchTitle.style.display = '';
+        }
+      }
+    }
+
     // Listen for input events
     searchInput.addEventListener('input', (e) => {
       const query = e.target.value.trim();
       debouncedSearch(query);
+      toggleSearchTitle();
+    });
+
+    // Show/hide title on focus
+    searchInput.addEventListener('focus', () => {
+      if (searchTitle) {
+        searchTitle.style.display = 'none';
+      }
+      if (searchInput.value.trim().length > 0 && currentSuggestions.length > 0) {
+        displaySuggestions(currentSuggestions);
+      }
     });
 
     // Hide suggestions when input loses focus (with small delay to allow click on suggestion)
     searchInput.addEventListener('blur', () => {
       setTimeout(() => {
         hideSuggestions();
+        toggleSearchTitle();
       }, 200);
     });
+    
+    // Initial check for existing value
+    toggleSearchTitle();
+  }
 
-    // Show suggestions when input gains focus (if there's a value)
-    searchInput.addEventListener('focus', () => {
-      if (searchInput.value.trim().length > 0 && currentSuggestions.length > 0) {
-        displaySuggestions(currentSuggestions);
+  // Location input field - same functionality
+  const locationInput = document.getElementById('locationInput');
+  if (locationInput) {
+    const locationTitle = locationInput.closest('.search-content')?.querySelector('.search-title');
+    
+    // Function to toggle location title visibility
+    function toggleLocationTitle() {
+      if (locationTitle) {
+        if (locationInput.value.trim().length > 0 || document.activeElement === locationInput) {
+          locationTitle.style.display = 'none';
+        } else {
+          locationTitle.style.display = '';
+        }
+      }
+    }
+
+    // Listen for input events
+    locationInput.addEventListener('input', () => {
+      toggleLocationTitle();
+    });
+
+    // Show/hide title on focus
+    locationInput.addEventListener('focus', () => {
+      if (locationTitle) {
+        locationTitle.style.display = 'none';
       }
     });
+
+    // Show/hide title on blur
+    locationInput.addEventListener('blur', () => {
+      toggleLocationTitle();
+    });
+    
+    // Initial check for existing value
+    toggleLocationTitle();
 
     // Hide suggestions on form submit
     const searchForm = searchInput.closest('form');

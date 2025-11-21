@@ -48,6 +48,7 @@ return [
         'terms' => 'Conditions',
         'and' => 'et',
         'privacy_policy' => 'Politique de confidentialité',
+        'please_accept_terms' => 'Veuillez accepter les termes et conditions pour continuer.',
         'passwords_not_match' => 'Les mots de passe ne correspondent pas.',
     ],
 
