@@ -2090,12 +2090,10 @@
           justify-content: center;
           gap: 16px;
         }
-
-
-
-
-
-
+        .agent-scheduled-ui{
+          justify-content: center;
+          display: grid;
+        }
 
 
     /* Responsive Design */
@@ -2124,6 +2122,9 @@
     }
 
     @media (max-width: 768px) {
+      .agent-scheduled-ui{
+        display: block;
+      }
       .future-section__content {
           grid-template-columns: 1fr;
       }

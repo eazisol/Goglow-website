@@ -1061,7 +1061,7 @@
 
                                 @if(!empty($agents))
                     <!-- Agent & Schedule (moved here) -->
-                    <div class="mt-4" style="justify-content: center;display: grid;">
+                    <div class="mt-4 agent-scheduled-ui">
                                     <label class="form-label" style="justify-content: center;display: flex;">{{ __('app.agent_page.select_agent') }}</label>
                                     <div id="agentList" class="agent-avatars">
                                         @foreach($agents as $agent)
