@@ -7,7 +7,7 @@ return [
         'about_us' => 'About us',
         'services' => 'Services',
         'book_service' => 'Book Appointment',
-        'reviews' => 'Reviews',
+        'blogs' => 'Blog',
         'contact_us' => 'Contact us',
         'login' => 'Login',
         'logout' => 'Logout',

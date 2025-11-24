@@ -15,7 +15,7 @@
       <span class="plus">+</span> --}}
       <a href="{{ url('/search') }}" class="{{ request()->is('search*') ? 'active' : '' }}" @if(request()->is('search*')) aria-current="page" @endif>{{ __('app.nav.book_service') }}</a>
       <span class="plus">+</span>
-      <a href="#">{{ __('app.nav.reviews') }}</a>
+      <a href="{{ url('/blogs') }}">{{ __('app.nav.blogs') }}</a>
     </div>
     <div class="switcher-button">
           @include('partials.language-switcher')

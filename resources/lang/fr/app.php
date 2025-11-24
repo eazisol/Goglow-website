@@ -8,7 +8,7 @@ return [
         'services' => 'Services',
         'book_service' => 'Prendre un RDV',
         'contact_us' => 'Nous contacter',
-        'reviews' => 'Avis',
+        'blogs' => 'Blog',
         'login' => 'Connexion',
         'logout' => 'Déconnexion',
         'register' => 'S\'inscrire',

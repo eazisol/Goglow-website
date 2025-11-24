@@ -485,7 +485,7 @@
     .availability-row { display: flex; align-items: center; gap: 10px; margin: 4px 0; flex-wrap: wrap; }
     .time-of-day { color:rgba(118, 33, 62, 1); font-weight: 500; font-size: 15px; width: 80px; }
     .chip-group { display: flex; gap: 5px; flex-wrap: wrap; }
-    .date-chip { padding: 4px 18px; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; position: relative; }
+    .date-chip { padding: 4px 18px; border-radius: 10px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; position: relative; }
     .date-chip b { font-weight: 500; }
     .date-chip.has-slot { background: rgba(229, 0, 80, 1); color: #ffffffff; border: 1px solid #ffd1df; }
     .date-chip.no-slot { background: #fff; color: #6b7280; border: 1px solid #e5e7eb; }
