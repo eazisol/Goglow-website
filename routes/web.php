@@ -27,8 +27,9 @@ Route::get('/testing', function () {return view('home.indexImage');});
 // Search routes
 Route::get('/search', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
-// Blog Search routes
+// Blog routes
 Route::get('/blogs', function () {return view('blog.index');});
+Route::get('/blogs/{id}', function ($id) {return view('blog.show', ['id' => $id]);});
 
 // case study
 Route::get('/saloons', function () {return view('caseStudy.index');});
