@@ -21,7 +21,7 @@ async function fetchArticles(page = 1) {
     hidePagination();
     
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/outrank-articles?page=${page}`);
+        const response = await fetch(`https://backend.glaura.ai/api/outrank-articles?page=${page}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -287,7 +287,7 @@ async function fetchArticleDetail(id) {
     hideDetailContent();
     
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/outrank-articles/${id}`);
+        const response = await fetch(`https://backend.glaura.ai/api/outrank-articles/${id}`);
         
         if (!response.ok) {
             if (response.status === 404) {

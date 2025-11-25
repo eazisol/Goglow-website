@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div class="logo">
               <!-- Logo Section -->
-              <a href="{{ url('/') }}"><img src="images/images/LOGO-glaura-horizontal-couleur.png" alt="GoGlow Logo" class="logo"></a>
+              <a href="{{ url('/') }}"><img src="{{ asset('images/images/LOGO-glaura-horizontal-couleur.png') }}" alt="GoGlow Logo" class="logo"></a>
               
     </div>
 
@@ -19,15 +19,15 @@
     </div>
     <div class="switcher-button">
           @include('partials.language-switcher')
-          <a href="{{ url('/become-glower') }}" class="cta-btn">{{ __('app.nav.hero_section_button') }}<img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></a>
-          {{-- <button class="cta-btn">BECOME A GLOWER <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16"></button> --}}
+          <a href="{{ url('/become-glower') }}" class="cta-btn">{{ __('app.nav.hero_section_button') }}<img src="{{ asset('images/images/Arrow_Right.svg') }}" alt="" width="16" height="16"></a>
+          {{-- <button class="cta-btn">BECOME A GLOWER <img src="{{ asset('images/images/Arrow_Right.svg') }}" alt="" width="16" height="16"></button> --}}
           <button class="menu-icon" id="menu-toggle">
-            <img src="images/images/Frame 1618873824.svg" alt="Menu" class="menu-icon">
+            <img src="{{ asset('images/images/Frame 1618873824.svg') }}" alt="Menu" class="menu-icon">
           </button>
           @if(session('firebase_uid'))
               <div class="profile-dropdown-container">
                   <button class="profile-icon-btn" id="profile-dropdown-toggle" aria-label="Profile menu" aria-expanded="false">
-                      <img src="images/images/flowbite_user-solid.svg" alt="Profile" style="width:33px; margin-left: 5px; cursor: pointer;">
+                      <img src="{{ asset('images/images/flowbite_user-solid.svg') }}" alt="Profile" style="width:33px; margin-left: 5px; cursor: pointer;">
                   </button>
                   <div class="profile-dropdown-menu" id="profile-dropdown-menu">
                       <a href="#" class="dropdown-item logout-item" onclick="event.preventDefault(); document.getElementById('logout-form-figma').submit();">
@@ -46,15 +46,15 @@
   <!-- Sidebar for Mobile -->
   <div class="sidebar" id="sidebar">
     <button class="close-btn" id="close-btn">
-      <img src="images/images/Close.svg" alt="close" style="width: 30px;">
+      <img src="{{ asset('images/images/Close.svg') }}" alt="close" style="width: 30px;">
     </button>
     <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">{{ __('app.nav.home') }}</a>
     {{-- <a href="#">About Us</a>
     <a href="#">Services</a> --}}
     <a href="{{ url('/search') }}" class="{{ request()->is('search*') ? 'active' : '' }}">{{ __('app.nav.book_service') }}</a>
     <a href="#">{{ __('app.nav.reviews') }}</a>
-        <a href="{{ url('/contact-us') }}" class="mobile-sidebar-button">{{ __('app.nav.hero_section_button') }} <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16"></a>
-    {{-- <button class="mobile-sidebar-button">BECOME A GLOWER <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16"></button> --}}
+        <a href="{{ url('/contact-us') }}" class="mobile-sidebar-button">{{ __('app.nav.hero_section_button') }} <img src="{{ asset('images/images/Arrow_Right_white_color.svg') }}" alt="" width="16" height="16"></a>
+    {{-- <button class="mobile-sidebar-button">BECOME A GLOWER <img src="{{ asset('images/images/Arrow_Right_white_color.svg') }}" alt="" width="16" height="16"></button> --}}
     <button class="cta-btn">BECOME A GLOWER →</button>
   </div>
 
