@@ -833,7 +833,9 @@ function updateDots() {
     const searchInput = document.getElementById('searchInput');
     const suggestionsDropdown = document.getElementById('searchSuggestionsDropdown');
     let debounceTimer = null;
-    let currentSuggestions = [];
+    let currentSuggestions = { providers: [], services: [] };
+    let selectedIndex = -1;
+    let allSuggestions = []; // Flat array of all suggestion items for keyboard navigation
 
     if (searchInput && suggestionsDropdown) {
       // Debounce function to limit API calls
@@ -843,6 +845,9 @@ function updateDots() {
           debounceTimer = setTimeout(() => func.apply(this, args), wait);
         };
       }
+
+      // Store original input value for hover functionality
+      let originalInputValue = '';
 
       // Fetch suggestions from API
       async function fetchSuggestions(query) {
@@ -858,10 +863,12 @@ function updateDots() {
           
           if (response.ok) {
             const data = await response.json();
-            // Extract providers array from the response
+            // Extract both providers and services from the response
             const providers = data.providers || [];
-            if (Array.isArray(providers) && providers.length > 0) {
-              displaySuggestions(providers);
+            const services = data.services || [];
+            
+            if ((Array.isArray(providers) && providers.length > 0) || (Array.isArray(services) && services.length > 0)) {
+              displaySuggestions(providers, services);
             } else {
               hideSuggestions();
             }
@@ -874,31 +881,182 @@ function updateDots() {
         }
       }
 
-      // Display suggestions in dropdown
-      function displaySuggestions(suggestions) {
-        currentSuggestions = suggestions;
+      // Display suggestions in dropdown with section headings
+      function displaySuggestions(providers, services) {
+        currentSuggestions = { providers: providers || [], services: services || [] };
         suggestionsDropdown.innerHTML = '';
+        allSuggestions = [];
+        selectedIndex = -1;
         
-        suggestions.forEach((suggestion) => {
-          const item = document.createElement('div');
-          item.className = 'search-suggestion-item';
-          item.textContent = suggestion.name;
-          item.addEventListener('click', () => {
-            searchInput.value = suggestion.name;
+        let hasContent = false;
+
+        // Display Providers section
+        if (providers && providers.length > 0) {
+          hasContent = true;
+          
+          // Create section heading
+          const providerHeading = document.createElement('div');
+          providerHeading.className = 'search-suggestion-heading';
+          providerHeading.textContent = 'Salon';
+          suggestionsDropdown.appendChild(providerHeading);
+          
+          // Create provider items
+          providers.forEach((provider) => {
+            const item = createSuggestionItem(provider.name, 'provider', provider.id);
+            suggestionsDropdown.appendChild(item);
+            allSuggestions.push({ element: item, name: provider.name, type: 'provider', id: provider.id });
+          });
+        }
+
+        // Display Services section
+        if (services && services.length > 0) {
+          hasContent = true;
+          
+          // Create section heading (only if providers section exists)
+          if (providers && providers.length > 0) {
+            const divider = document.createElement('div');
+            divider.className = 'search-suggestion-divider';
+            suggestionsDropdown.appendChild(divider);
+          }
+          
+          const serviceHeading = document.createElement('div');
+          serviceHeading.className = 'search-suggestion-heading';
+          serviceHeading.textContent = 'Services';
+          suggestionsDropdown.appendChild(serviceHeading);
+          
+          // Create service items
+          services.forEach((service) => {
+            const item = createSuggestionItem(service.name, 'service', service.id, service.provider_id);
+            suggestionsDropdown.appendChild(item);
+            allSuggestions.push({ element: item, name: service.name, type: 'service', id: service.id, providerId: service.provider_id });
+          });
+        }
+
+        if (hasContent) {
+          suggestionsDropdown.classList.add('show');
+        } else {
+          hideSuggestions();
+        }
+      }
+
+      // Create a suggestion item with hover functionality
+      function createSuggestionItem(name, type, id, providerId = null) {
+        const item = document.createElement('div');
+        item.className = 'search-suggestion-item';
+        item.setAttribute('data-type', type);
+        item.setAttribute('data-id', id);
+        if (providerId) {
+          item.setAttribute('data-provider-id', providerId);
+        }
+        item.textContent = name;
+        
+        // Store original input value on first hover (only once)
+        let isFirstHover = true;
+        
+        // Fill input on hover (like Google search)
+        item.addEventListener('mouseenter', () => {
+          if (isFirstHover) {
+            originalInputValue = searchInput.value;
+            isFirstHover = false;
+          }
+          searchInput.value = name;
+          // Update selected index when hovering
+          const index = allSuggestions.findIndex(s => s.element === item);
+          if (index !== -1) {
+            setSelectedIndex(index);
+          }
+        });
+        
+        // Click handler - keep the value filled
+        item.addEventListener('click', () => {
+          searchInput.value = name;
+          originalInputValue = name; // Update original so blur doesn't restore
+          hideSuggestions();
+          // Optionally navigate or submit form
+          searchInput.focus();
+        });
+        
+        return item;
+      }
+
+      // Set selected index and update highlighting
+      function setSelectedIndex(index) {
+        // Remove previous selection
+        if (selectedIndex >= 0 && allSuggestions[selectedIndex]) {
+          allSuggestions[selectedIndex].element.classList.remove('selected');
+        }
+        
+        // Set new selection
+        selectedIndex = index;
+        if (selectedIndex >= 0 && selectedIndex < allSuggestions.length) {
+          allSuggestions[selectedIndex].element.classList.add('selected');
+          searchInput.value = allSuggestions[selectedIndex].name;
+          
+          // Scroll into view if needed
+          allSuggestions[selectedIndex].element.scrollIntoView({
+            block: 'nearest',
+            behavior: 'smooth'
+          });
+        }
+      }
+
+      // Handle keyboard navigation
+      function handleKeyboardNavigation(e) {
+        if (!suggestionsDropdown.classList.contains('show') || allSuggestions.length === 0) {
+          return;
+        }
+
+        switch(e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            if (selectedIndex < allSuggestions.length - 1) {
+              setSelectedIndex(selectedIndex + 1);
+            } else {
+              setSelectedIndex(0); // Loop to first
+            }
+            break;
+            
+          case 'ArrowUp':
+            e.preventDefault();
+            if (selectedIndex > 0) {
+              setSelectedIndex(selectedIndex - 1);
+            } else {
+              setSelectedIndex(allSuggestions.length - 1); // Loop to last
+            }
+            break;
+            
+          case 'Enter':
+            e.preventDefault();
+            if (selectedIndex >= 0 && selectedIndex < allSuggestions.length) {
+              const selected = allSuggestions[selectedIndex];
+              searchInput.value = selected.name;
+              originalInputValue = selected.name;
+              hideSuggestions();
+              // Optionally submit form or navigate
+              searchInput.focus();
+            }
+            break;
+            
+          case 'Escape':
+            e.preventDefault();
             hideSuggestions();
             searchInput.focus();
-          });
-          suggestionsDropdown.appendChild(item);
-        });
-
-        suggestionsDropdown.classList.add('show');
+            break;
+        }
       }
 
       // Hide suggestions dropdown
       function hideSuggestions() {
         suggestionsDropdown.classList.remove('show');
         suggestionsDropdown.innerHTML = '';
-        currentSuggestions = [];
+        currentSuggestions = { providers: [], services: [] };
+        allSuggestions = [];
+        selectedIndex = -1;
+        // Restore original input value if it was changed by hover
+        if (originalInputValue && searchInput.value !== originalInputValue) {
+          searchInput.value = originalInputValue;
+          originalInputValue = '';
+        }
       }
 
       // Debounced search function
@@ -925,7 +1083,12 @@ function updateDots() {
         const query = e.target.value.trim();
         debouncedSearch(query);
         toggleSearchTitle();
+        // Reset selection on new input
+        selectedIndex = -1;
       });
+
+      // Keyboard navigation
+      searchInput.addEventListener('keydown', handleKeyboardNavigation);
 
       // Show/hide title on focus
       searchInput.addEventListener('focus', () => {
@@ -984,8 +1147,10 @@ function updateDots() {
 
       // Show suggestions when input gains focus (if there's a value)
       searchInput.addEventListener('focus', () => {
-        if (searchInput.value.trim().length > 0 && currentSuggestions.length > 0) {
-          displaySuggestions(currentSuggestions);
+        if (searchInput.value.trim().length > 0 && 
+            ((currentSuggestions.providers && currentSuggestions.providers.length > 0) || 
+             (currentSuggestions.services && currentSuggestions.services.length > 0))) {
+          displaySuggestions(currentSuggestions.providers || [], currentSuggestions.services || []);
         }
       });
 
