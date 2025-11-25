@@ -1459,87 +1459,104 @@ $dayNames = [
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Carousel functionality (only run if carousel exists)
     const carousel = document.querySelector('.provider-images-carousel');
-    if (!carousel) return;
     
-    const slides = carousel.querySelectorAll('.carousel-slide');
-    const dots = carousel.querySelectorAll('.carousel-dot');
-    const currentSlideSpan = carousel.querySelector('.current-slide');
-    const totalSlidesSpan = carousel.querySelector('.total-slides');
-    const heartBtn = carousel.querySelector('.heart-btn');
-    
-    let currentSlide = 0;
-    const totalSlides = slides.length;
-    
-    if (totalSlidesSpan) {
-        totalSlidesSpan.textContent = totalSlides;
-    }
-    
-    // Function to update carousel
-    function updateCarousel(index) {
-        // Remove active class from all slides and dots
-        slides.forEach(slide => slide.classList.remove('active'));
-        dots.forEach(dot => dot.classList.remove('active'));
+    if (carousel) {
+        const slides = carousel.querySelectorAll('.carousel-slide');
+        const dots = carousel.querySelectorAll('.carousel-dot');
+        const currentSlideSpan = carousel.querySelector('.current-slide');
+        const totalSlidesSpan = carousel.querySelector('.total-slides');
+        const heartBtn = carousel.querySelector('.heart-btn');
         
-        // Add active class to current slide and dot
-        if (slides[index]) {
-            slides[index].classList.add('active');
-        }
-        if (dots[index]) {
-            dots[index].classList.add('active');
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+        
+        if (totalSlidesSpan) {
+            totalSlidesSpan.textContent = totalSlides;
         }
         
-        // Update counter
-        if (currentSlideSpan) {
-            currentSlideSpan.textContent = index + 1;
+        // Function to update carousel
+        function updateCarousel(index) {
+            // Remove active class from all slides and dots
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Add active class to current slide and dot
+            if (slides[index]) {
+                slides[index].classList.add('active');
+            }
+            if (dots[index]) {
+                dots[index].classList.add('active');
+            }
+            
+            // Update counter
+            if (currentSlideSpan) {
+                currentSlideSpan.textContent = index + 1;
+            }
+            
+            currentSlide = index;
         }
         
-        currentSlide = index;
-    }
-    
-    // Dot click handlers
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            updateCarousel(index);
+        // Dot click handlers
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                updateCarousel(index);
+            });
         });
-    });
-    
-    // Swipe functionality for mobile
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    carousel.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    });
-    
-    carousel.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    });
-    
-    function handleSwipe() {
-        const swipeThreshold = 50;
-        const diff = touchStartX - touchEndX;
         
-        if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0 && currentSlide < totalSlides - 1) {
-                // Swipe left - next slide
-                updateCarousel(currentSlide + 1);
-            } else if (diff < 0 && currentSlide > 0) {
-                // Swipe right - previous slide
-                updateCarousel(currentSlide - 1);
+        // Swipe functionality for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0 && currentSlide < totalSlides - 1) {
+                    // Swipe left - next slide
+                    updateCarousel(currentSlide + 1);
+                } else if (diff < 0 && currentSlide > 0) {
+                    // Swipe right - previous slide
+                    updateCarousel(currentSlide - 1);
+                }
             }
         }
+        
+        // Heart button toggle
+        if (heartBtn) {
+            heartBtn.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        }
+        
+        // Auto-play (optional - can be removed if not needed)
+        // let autoPlayInterval = setInterval(() => {
+        //     const nextSlide = (currentSlide + 1) % totalSlides;
+        //     updateCarousel(nextSlide);
+        // }, 5000);
+        
+        // Pause auto-play on hover/touch
+        // carousel.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+        // carousel.addEventListener('mouseleave', () => {
+        //     autoPlayInterval = setInterval(() => {
+        //         const nextSlide = (currentSlide + 1) % totalSlides;
+        //         updateCarousel(nextSlide);
+        //     }, 5000);
+        // });
     }
     
-    // Heart button toggle
-    if (heartBtn) {
-        heartBtn.addEventListener('click', function() {
-            this.classList.toggle('active');
-        });
-    }
-    
-    // Desktop heart button toggle
+    // Desktop heart button toggle (works independently of carousel)
     const desktopHeartBtn = document.querySelector('.provider-image-main .heart-btn');
     if (desktopHeartBtn) {
         desktopHeartBtn.addEventListener('click', function() {
@@ -1558,21 +1575,6 @@ document.addEventListener('DOMContentLoaded', function() {
             hoursChevron.classList.toggle('rotated');
         });
     }
-    
-    // Auto-play (optional - can be removed if not needed)
-    // let autoPlayInterval = setInterval(() => {
-    //     const nextSlide = (currentSlide + 1) % totalSlides;
-    //     updateCarousel(nextSlide);
-    // }, 5000);
-    
-    // Pause auto-play on hover/touch
-    // carousel.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
-    // carousel.addEventListener('mouseleave', () => {
-    //     autoPlayInterval = setInterval(() => {
-    //         const nextSlide = (currentSlide + 1) % totalSlides;
-    //         updateCarousel(nextSlide);
-    //     }, 5000);
-    // });
     
     // Category filtering functionality
     const filterPills = document.querySelectorAll('.filter-pill');
