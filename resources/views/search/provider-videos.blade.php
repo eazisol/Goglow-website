@@ -101,12 +101,84 @@
     </div>
     <!-- View Type Tabs Section End -->
 
-        <div class="videos-container">
-            <p>Videos content will be displayed here</p>
+        <!-- Loading State -->
+        <div id="videos-loading" class="videos-loading">
+            <div class="videos-spinner"></div>
+            <p>Loading videos...</p>
         </div>
+
+        <!-- Error State -->
+        <div id="videos-error" class="videos-error" style="display: none;">
+            <div class="videos-error-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3>Oops! Something went wrong</h3>
+            <p id="videos-error-message">Failed to load videos. Please try again later.</p>
+            <button class="videos-retry-btn" onclick="fetchVideos()">Try Again</button>
+        </div>
+
+        <!-- Empty State -->
+        <div id="videos-empty" class="videos-empty" style="display: none;">
+            <div class="videos-empty-icon">
+                <i class="fas fa-video-slash"></i>
+            </div>
+            <h3>No videos found</h3>
+            <p>There are no videos available at the moment.</p>
+        </div>
+
+        <!-- Videos Grid -->
+        <div id="videos-grid" class="videos-grid" style="display: none;"></div>
     </div>
 </div>
 <!-- Videos Section End -->
+
+<!-- Video Popup Modal -->
+<div id="videoModal" class="video-modal">
+    <div class="video-modal-content">
+        <!-- Video Player with Overlays -->
+        <div class="video-modal-player">
+            <video id="modalVideo" controls>
+                Your browser does not support the video tag.
+            </video>
+            
+            <!-- Close Button (Top Left) -->
+            <button class="video-modal-close" id="videoModalCloseBtn" aria-label="Close">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 5L5 15M5 5L15 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            
+            <!-- Navigation Arrows (Right Middle) -->
+            <div class="video-modal-navigation">
+                <button class="video-nav-btn video-nav-up" id="videoNavUpBtn" aria-label="Previous Video">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12.5L10 7.5L15 12.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button class="video-nav-btn video-nav-down" id="videoNavDownBtn" aria-label="Next Video">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 7.5L10 12.5L15 7.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- User Info Overlay (Bottom Left) -->
+            <div class="video-modal-user-overlay">
+                <img id="modalUserImage" src="" alt="User" class="video-modal-user-image">
+                <div class="video-modal-user-text">
+                    <div class="video-modal-username" id="modalUsername"></div>
+                    <div class="video-modal-hashtags" id="modalHashtags"></div>
+                </div>
+                <a id="modalBookingBtn" href="#" class="video-modal-booking-btn">
+                    RÉSERVER
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('styles')
@@ -198,6 +270,478 @@
         object-fit: contain;
         flex-shrink: 0;
     }
+
+    /* Videos Grid Styling */
+    .videos-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+        .videos-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+    }
+
+    /* Video Card */
+    .video-card {
+        position: relative;
+        width: 100%;
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+        background: #000;
+    }
+
+    .video-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .video-thumbnail-container {
+        position: relative;
+        width: 100%;
+        padding-top: 170%; /* Increased height for vertical videos */
+        overflow: hidden;
+        background: #f5f5f5;
+    }
+
+    .video-thumbnail {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Large circular play button overlay */
+    .video-play-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80px;
+        height: 80px;
+        background: rgba(245, 245, 240, 0.85); /* Semi-transparent beige */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(2px);
+    }
+
+    .video-card:hover .video-play-overlay {
+        background: rgba(245, 245, 240, 0.95);
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    .video-play-icon {
+        width: 0;
+        height: 0;
+        border-left: 24px solid rgba(0, 0, 0, 0.8);
+        border-top: 14px solid transparent;
+        border-bottom: 14px solid transparent;
+        margin-left: 6px;
+    }
+
+    /* User info container in bottom-left */
+    .video-user-info {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        z-index: 2;
+        padding: 12px;
+        border-radius: 0 0 12px 12px;
+    }
+
+    /* User image/logo in bottom-left */
+    .video-user-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        object-fit: cover;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        flex-shrink: 0;
+    }
+
+    /* User text info container */
+    .video-user-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* Username next to profile picture */
+    .video-username-overlay {
+        font-weight: 700;
+        font-size: 16px;
+        color: #fff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 4px;
+    }
+
+    /* Hashtags under username */
+    .video-hashtags-overlay {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.95);
+        word-break: break-word;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        line-height: 1.4;
+    }
+
+    /* Remove separate overlay content */
+    .video-overlay-content {
+        display: none;
+    }
+
+    /* Remove separate info section */
+    .video-card-info {
+        display: none;
+    }
+
+    /* Loading State */
+    .videos-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 20px;
+        min-height: 400px;
+    }
+
+    .videos-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #d5bec6;
+        border-top-color: rgba(229, 0, 80, 1);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .videos-loading p {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        color: rgba(229, 0, 80, 1);
+    }
+
+    /* Error State */
+    .videos-error {
+        text-align: center;
+        padding: 80px 20px;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .videos-error-icon {
+        font-size: 64px;
+        color: rgba(229, 0, 80, 1);
+        margin-bottom: 24px;
+        opacity: 0.6;
+    }
+
+    .videos-error h3 {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c0d18;
+        margin-bottom: 12px;
+    }
+
+    .videos-error p {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        color: #6b7280;
+        margin-bottom: 24px;
+    }
+
+    .videos-retry-btn {
+        background: rgba(229, 0, 80, 1);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .videos-retry-btn:hover {
+        background: #cc0046;
+    }
+
+    /* Empty State */
+    .videos-empty {
+        text-align: center;
+        padding: 80px 20px;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .videos-empty-icon {
+        font-size: 64px;
+        color: #75213e;
+        margin-bottom: 24px;
+        opacity: 0.6;
+    }
+
+    .videos-empty h3 {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c0d18;
+        margin-bottom: 12px;
+    }
+
+    .videos-empty p {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        color: #6b7280;
+    }
+
+    /* Video Popup Modal */
+    .video-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 10000;
+        overflow-y: auto;
+    }
+
+    .video-modal.active {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .video-modal-content {
+        position: relative;
+        max-width: 400px;
+        width: 100%;
+        background: transparent;
+        margin: auto;
+    }
+
+    /* Video Player - Portrait Aspect Ratio */
+    .video-modal-player {
+        position: relative;
+        width: 100%;
+        padding-top: 170%; /* Same as card aspect ratio */
+        background: #000;
+        border-radius: 30px;
+        overflow: hidden;
+    }
+
+    .video-modal-player video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Close Button - Top Left */
+    .video-modal-close {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.6);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(4px);
+    }
+
+    .video-modal-close:hover {
+        background: rgba(0, 0, 0, 0.8);
+        transform: scale(1.05);
+    }
+
+    /* Navigation Arrows - Right Middle */
+    .video-modal-navigation {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 10;
+    }
+
+    .video-nav-btn {
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.6);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(4px);
+    }
+
+    .video-nav-btn:hover {
+        background: rgba(0, 0, 0, 0.8);
+        transform: scale(1.05);
+    }
+
+    .video-nav-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    /* User Info Overlay - Bottom */
+    .video-modal-user-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+        z-index: 5;
+    }
+
+    .video-modal-user-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        object-fit: cover;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        flex-shrink: 0;
+    }
+
+    .video-modal-user-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .video-modal-username {
+        font-weight: 700;
+        font-size: 16px;
+        color: #fff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 4px;
+    }
+
+    .video-modal-hashtags {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.95);
+        word-break: break-word;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        line-height: 1.4;
+    }
+
+    /* Booking Button in Overlay */
+    .video-modal-booking-btn {
+        background: linear-gradient(270deg, #FF8C00 0%, #E50050 100%);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        white-space: nowrap;
+        flex-shrink: 0;
+        align-self: flex-end;
+    }
+
+    .video-modal-booking-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(229, 0, 80, 0.3);
+    }
+
+    @media (max-width: 480px) {
+        .video-modal-user-overlay {
+            flex-wrap: wrap;
+        }
+        
+        .video-modal-booking-btn {
+            width: 100%;
+            margin-top: 8px;
+            justify-content: center;
+        }
+    }
+
+    .video-modal-booking-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(229, 0, 80, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .video-thumbnail-container{
+            padding-top: 195%;
+        }
+        .video-modal.active {
+            padding: 0;
+        }
+
+        .video-modal-content {
+            max-width: 100%;
+        }
+
+        .video-modal-player {
+            border-radius: 0;
+        }
+
+    }
 </style>
 @endsection
 
@@ -206,6 +750,361 @@
 document.addEventListener('DOMContentLoaded', function () {
   // Fetch categories from API and display them
   fetchAndDisplayCategories();
+
+  // Video functionality
+  let videos = [];
+  let lastDocId = null;
+  let hasMore = true;
+  let isLoading = false;
+  let currentVideoIndex = -1;
+  const defaultThumbnail = '{{ asset("images/images/default-video-thumbnail.jpg") }}';
+  const defaultUserImage = '{{ asset("images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+
+  // Fetch videos from API
+  async function fetchVideos(lastDocIdParam = null) {
+    if (isLoading) return;
+    
+    isLoading = true;
+    const loadingEl = document.getElementById('videos-loading');
+    const errorEl = document.getElementById('videos-error');
+    const emptyEl = document.getElementById('videos-empty');
+    const gridEl = document.getElementById('videos-grid');
+    
+    // Show loading only on first load
+    if (lastDocIdParam === null) {
+      if (loadingEl) loadingEl.style.display = 'flex';
+      if (errorEl) errorEl.style.display = 'none';
+      if (emptyEl) emptyEl.style.display = 'none';
+      if (gridEl) gridEl.style.display = 'none';
+    }
+    
+    try {
+      let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllVideos';
+      if (lastDocIdParam) {
+        apiUrl += '?lastDocId=' + encodeURIComponent(lastDocIdParam);
+      }
+      
+      const response = await fetch(apiUrl);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (loadingEl) loadingEl.style.display = 'none';
+      
+      if (!data.videos || !Array.isArray(data.videos) || data.videos.length === 0) {
+        if (videos.length === 0) {
+          if (emptyEl) emptyEl.style.display = 'flex';
+        }
+        hasMore = false;
+        isLoading = false;
+        return;
+      }
+      
+      // Update pagination info
+      if (data.pagination) {
+        hasMore = data.pagination.hasMore === true;
+        lastDocId = data.pagination.lastDocId || null;
+      }
+      
+      // Append new videos
+      videos = [...videos, ...data.videos];
+      
+      // Render videos
+      renderVideos(data.videos);
+      
+      if (gridEl) gridEl.style.display = 'grid';
+      if (emptyEl) emptyEl.style.display = 'none';
+      
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) {
+        errorEl.style.display = 'flex';
+        const errorMsg = document.getElementById('videos-error-message');
+        if (errorMsg) {
+          errorMsg.textContent = 'Failed to load videos. Please check your connection and try again.';
+        }
+      }
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  // Render video cards
+  function renderVideos(videosArray) {
+    const gridEl = document.getElementById('videos-grid');
+    if (!gridEl) return;
+    
+    videosArray.forEach(video => {
+      const videoCard = createVideoCard(video);
+      gridEl.appendChild(videoCard);
+    });
+  }
+
+  // Create video card element
+  function createVideoCard(video) {
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.setAttribute('data-video-id', video.id || '');
+    
+    const thumbnail = video.thumbnail || defaultThumbnail;
+    const userImage = video.userImage || defaultUserImage;
+    const username = video.username || 'Unknown';
+    const hashtags = video.hashtags || '';
+    const videoUrl = video.videoUrl || '';
+    const serviceProviderId = video.serviceProviderId || '';
+    
+    card.innerHTML = `
+      <div class="video-thumbnail-container">
+        <img src="${escapeHtml(thumbnail)}" 
+             alt="Video thumbnail" 
+             class="video-thumbnail"
+             onerror="this.src='${defaultThumbnail}'">
+        <div class="video-play-overlay">
+          <div class="video-play-icon"></div>
+        </div>
+        <div class="video-user-info">
+          <img src="${escapeHtml(userImage)}" 
+               alt="${escapeHtml(username)}" 
+               class="video-user-image"
+               onerror="this.src='${defaultUserImage}'">
+          <div class="video-user-text">
+            <div class="video-username-overlay">${escapeHtml(username)}</div>
+            ${hashtags ? `<div class="video-hashtags-overlay">${escapeHtml(hashtags)}</div>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Add click handler to open modal
+    card.addEventListener('click', function() {
+      const videoIndex = videos.findIndex(v => v.id === video.id);
+      openVideoModal(video, videoIndex);
+    });
+    
+    return card;
+  }
+
+  // Escape HTML to prevent XSS
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Open video modal
+  function openVideoModal(video, videoIndex = -1) {
+    const modal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+    const modalUserImage = document.getElementById('modalUserImage');
+    const modalUsername = document.getElementById('modalUsername');
+    const modalHashtags = document.getElementById('modalHashtags');
+    const bookingBtn = document.getElementById('modalBookingBtn');
+    
+    if (!modal) return;
+    
+    // Store current video index
+    if (videoIndex >= 0) {
+      currentVideoIndex = videoIndex;
+    } else {
+      currentVideoIndex = videos.findIndex(v => v.id === video.id);
+    }
+    
+    // Set video source
+    if (modalVideo && video.videoUrl) {
+      modalVideo.src = video.videoUrl;
+      modalVideo.load();
+    }
+    
+    // Set user info
+    if (modalUserImage) {
+      modalUserImage.src = video.userImage || defaultUserImage;
+      modalUserImage.alt = video.username || 'User';
+      modalUserImage.onerror = function() {
+        this.src = defaultUserImage;
+      };
+    }
+    
+    if (modalUsername) {
+      modalUsername.textContent = video.username || 'Unknown';
+    }
+    
+    if (modalHashtags) {
+      modalHashtags.textContent = video.hashtags || '';
+      modalHashtags.style.display = video.hashtags ? 'block' : 'none';
+    }
+    
+    // Set booking button link
+    if (bookingBtn && video.serviceProviderId) {
+      bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+    }
+    
+    // Update navigation buttons
+    updateNavigationButtons();
+    
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Play video
+    if (modalVideo) {
+      modalVideo.play().catch(err => {
+        console.error('Error playing video:', err);
+      });
+    }
+  }
+
+  // Navigate to previous/next video
+  function navigateVideo(direction) {
+    if (currentVideoIndex < 0 || videos.length === 0) return;
+    
+    let newIndex = currentVideoIndex;
+    if (direction === 'prev') {
+      newIndex = currentVideoIndex - 1;
+      if (newIndex < 0) return; // Already at first video
+    } else if (direction === 'next') {
+      newIndex = currentVideoIndex + 1;
+      if (newIndex >= videos.length) return; // Already at last video
+    }
+    
+    if (newIndex >= 0 && newIndex < videos.length) {
+      openVideoModal(videos[newIndex], newIndex);
+    }
+  }
+
+  // Update navigation buttons state
+  function updateNavigationButtons() {
+    const navUp = document.querySelector('.video-nav-up');
+    const navDown = document.querySelector('.video-nav-down');
+    
+    if (navUp) {
+      navUp.disabled = currentVideoIndex <= 0;
+    }
+    
+    if (navDown) {
+      navDown.disabled = currentVideoIndex >= videos.length - 1;
+    }
+  }
+
+  // Close video modal
+  function closeVideoModal() {
+    const modal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+    
+    if (modal) {
+      modal.classList.remove('active');
+    }
+    
+    if (modalVideo) {
+      modalVideo.pause();
+      modalVideo.currentTime = 0;
+      modalVideo.src = '';
+    }
+    
+    document.body.style.overflow = '';
+  }
+
+  // Handle RÉSERVER button click - close modal and redirect
+  function handleReserverClick(event) {
+    event.preventDefault();
+    const bookingBtn = event.currentTarget;
+    const url = bookingBtn.href;
+    
+    // Close modal first
+    closeVideoModal();
+    
+    // Redirect after a short delay to allow modal to close
+    setTimeout(function() {
+      if (url && url !== '#') {
+        window.location.href = url;
+      }
+    }, 100);
+  }
+
+  // Make functions globally accessible
+  window.closeVideoModal = closeVideoModal;
+  window.navigateVideo = navigateVideo;
+  window.handleReserverClick = handleReserverClick;
+
+  // Attach event listeners to buttons
+  const closeBtn = document.getElementById('videoModalCloseBtn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeVideoModal);
+  }
+
+  const navUpBtn = document.getElementById('videoNavUpBtn');
+  if (navUpBtn) {
+    navUpBtn.addEventListener('click', function() {
+      navigateVideo('prev');
+    });
+  }
+
+  const navDownBtn = document.getElementById('videoNavDownBtn');
+  if (navDownBtn) {
+    navDownBtn.addEventListener('click', function() {
+      navigateVideo('next');
+    });
+  }
+
+  const bookingBtn = document.getElementById('modalBookingBtn');
+  if (bookingBtn) {
+    bookingBtn.addEventListener('click', handleReserverClick);
+  }
+
+  // Close modal when clicking outside
+  document.addEventListener('click', function(e) {
+    const modal = document.getElementById('videoModal');
+    if (modal && e.target === modal) {
+      closeVideoModal();
+    }
+  });
+
+  // Close modal on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('videoModal');
+      if (modal && modal.classList.contains('active')) {
+        closeVideoModal();
+      }
+    }
+  });
+
+  // Infinite scroll
+  let scrollTimeout = null;
+  window.addEventListener('scroll', function() {
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
+    
+    scrollTimeout = setTimeout(function() {
+      if (isLoading || !hasMore) return;
+      
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
+      const threshold = 200; // Load when 200px from bottom
+      
+      if (scrollPosition >= documentHeight - threshold) {
+        fetchVideos(lastDocId);
+      }
+    }, 100);
+  });
+
+  // Make fetchVideos available globally for retry button
+  window.fetchVideos = function() {
+    videos = [];
+    lastDocId = null;
+    hasMore = true;
+    const gridEl = document.getElementById('videos-grid');
+    if (gridEl) gridEl.innerHTML = '';
+    fetchVideos();
+  };
+
+  // Initial fetch
+  fetchVideos();
   
   // Search autocomplete functionality (same as provider-results)
   const searchInput = document.getElementById('searchInput');
