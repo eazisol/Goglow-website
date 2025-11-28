@@ -138,9 +138,9 @@
 <!-- Search Results Section Start -->
 <div class="search-results" style="margin: 0 0 50px 0;">
     <div class="container">
-                            <div class="service-filter-pills" role="tablist" aria-label="Service categories">
+                            <div class="service-filter-pills" role="tablist" aria-label="Service categories" id="categoryFilterPills">
                                 <button type="button" class="filter-pill active" data-category="all" aria-current="true">All</button>
-                                {{-- Categories will be added by JavaScript if needed --}}
+                                {{-- Categories will be loaded via JavaScript from API --}}
                             </div>
         
         <!-- Loading State -->
@@ -522,11 +522,30 @@
         font-size: 17px!important;
     }
 }
+
+/* Category filter pills with icons */
+.service-filter-pills .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-filter-pills .filter-pill .category-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    object-fit: contain;
+    flex-shrink: 0;
+}
 </style>
 @endsection
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  // Fetch categories from API and display them
+  fetchAndDisplayCategories();
+  
   // Fetch providers from API
   const searchParam = new URLSearchParams(window.location.search).get('search');
   const locationParam = new URLSearchParams(window.location.search).get('location');
@@ -535,6 +554,59 @@ document.addEventListener('DOMContentLoaded', function () {
   const providerIdParam = new URLSearchParams(window.location.search).get('provider_id');
   if (!providerIdParam) {
     fetchProviders(searchParam, locationParam);
+  }
+
+  // Function to fetch categories from API and display them
+  async function fetchAndDisplayCategories() {
+    const filterPillsContainer = document.getElementById('categoryFilterPills');
+    if (!filterPillsContainer) return;
+    
+    try {
+      const response = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/getSortedCategories');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const categories = await response.json();
+      
+      if (!Array.isArray(categories)) {
+        console.error('Categories API did not return an array');
+        return;
+      }
+      
+      // Filter only active categories and sort by sortOrder
+      const activeCategories = categories
+        .filter(cat => cat.isActive === true)
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+      
+      // Add category buttons to the filter pills container
+      activeCategories.forEach(category => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'filter-pill';
+        button.setAttribute('data-category', category.name);
+        button.setAttribute('aria-current', 'false');
+        
+        // Create icon image if imageUrl exists
+        if (category.imageUrl) {
+          const icon = document.createElement('img');
+          icon.src = category.imageUrl;
+          icon.alt = category.name;
+          icon.className = 'category-icon';
+          button.appendChild(icon);
+        }
+        
+        // Add category name
+        const textNode = document.createTextNode(category.name);
+        button.appendChild(textNode);
+        
+        filterPillsContainer.appendChild(button);
+      });
+      
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
   }
 
   // Function to fetch providers from API
