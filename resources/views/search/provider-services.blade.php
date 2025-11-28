@@ -227,95 +227,35 @@
                                 <h1 class="text-anime-style-2" >Book online for an appointment at<span> {{$provider['companyName']}}  </span></h1>
                                 <h3 class="wow fadeInUp">24/7 - Free - Payment on site - Immediate confirmation</h3>
                             </div> --}}
-@php
-    // Group services by category and sort by category name
-    $groupedServices = collect($services)
-        ->groupBy(function ($service) {
-            return $service['category']['name'] ?? 'Uncategorized';
-        })
-        ->sortKeys();
-    
-    // Extract unique categories for filter pills
-    $categories = $groupedServices->keys()->all();
-@endphp
-
+                            {{-- Category filter pills - will be populated by JavaScript --}}
                             <div class="service-filter-pills" role="tablist" aria-label="Service categories" style="margin-bottom:0!important;">
                                 <button type="button" class="filter-pill active" data-category="all" aria-current="true">All</button>
-                                @if(count($categories) > 0)
-                                    @foreach($categories as $category)
-                                        <button type="button" class="filter-pill" data-category="{{ $category }}">{{ $category }}</button>
-                                    @endforeach
-                                @endif
+                                {{-- Categories will be added here by JavaScript --}}
                             </div>
 
     <div class="services-row">
         <div class="services-col-lg-8">
-                @if(count($services) > 0)
-                @foreach($groupedServices as $categoryName => $servicesInCategory)
-                    <div class="category-section" data-category="{{ $categoryName ?: 'Uncategorized' }}">
-                    <div class="section-title category-toggle-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; margin-top: 20px; cursor: pointer;" data-category-toggle="{{ $categoryName ?: 'Uncategorized' }}">
-                        {{-- Display category name --}}
-                        <h3 class="wow" style="font-size:30px; font-weight:500; letter-spacing: -1px; color:rgba(229, 0, 80, 1); margin: 0;">{{ $categoryName ?: 'Uncategorized' }}</h3>
-                        <i class="fas fa-chevron-up category-chevron" style="color: rgba(229, 0, 80, 1); font-size: 16px; transition: transform 0.3s ease; margin-left: 15px;"></i>
+                {{-- Loading state --}}
+                <div id="servicesLoading" class="services-text-center services-py-4" style="display: none;">
+                    <p>Loading services...</p>
+                </div>
+                
+                {{-- Error state --}}
+                <div id="servicesError" class="custom-service-list" style="display: none;">
+                    <div class="services-text-center services-py-4">
+                        <h5>Failed to load services. Please try again later.</h5>
                     </div>
-                    <div class="custom-service-list category-services-list">
-                        @foreach($servicesInCategory as $service)
-                            <div class="service-row services-d-flex services-justify-between services-flex-wrap">
-                                
-                                <!-- Left -->
-                                <div class="service-info services-d-flex services-align-center">
-                                    {{-- <div class="section-title" style="margin-bottom:initial;">
-                                        <h3 class="wow fadeInUp">{{ $service['category']['name'] }}</h3>
-                                    </div> --}}
-                                    
-                                
-                                    <div class="service-image">
-                                        <img src="{{ (isset($service['images']) && count($service['images']) > 0) ? $service['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
-                                            alt="{{ $service['service_name'] }}" 
-                                            class="services-img-fluid services-rounded-circle"
-                                            loading="lazy"
-                                            onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
-                                    </div>
-                                    <div class="service-list-details" style="margin-left: 35px;">
-                                        <div class="service-name services-fw-semibold">
-                                        {{-- {{ $service['service_name'] }} --}}
-                                       {{-- {{ \Illuminate\Support\Str::limit($service['service_name'], 50, '...') }} --}}
-                                        <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . ($provider['id'] ?? '')) }}">{{ \Illuminate\Support\Str::limit($service['service_name'], 50, '...') }}</a>
-                                    </div>
-                                    @if(!empty($service['service_details']))
-                                        <div class="service-desc services-text-muted">
-                                            {{ \Illuminate\Support\Str::limit($service['service_details'], 50, '...') }}
-                                        </div>
-                                    @endif
-
-                                    </div>
-                                </div>
-
-                                <!-- Right -->
-                                <div class="service-meta services-text-end">
-                                    <div class="services-text-muted services-small services-mb-1">
-                                        {{ $service['duration_minutes'] ?? 0 }} min 
-                                        &bull; 
-                                        {{ __('app.service.from') }} €{{ $service['service_price'] ?? '0' }}
-                                    </div>
-                                    <div class="choose-button">
-                                        <a href="{{ url('/book-appointment?serviceId=' . $service['id'] . '&service_provider_id=' . ($provider['id'] ?? '')) }}" 
-                                        class="choose-btn">{{ __('app.service.choose') }}</a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    </div>
-                @endforeach 
-                @else
-                    <div class="custom-service-list">
+                </div>
+                
+                {{-- Services container - will be populated by JavaScript --}}
+                <div id="servicesContainer"></div>
+                
+                {{-- Empty state --}}
+                <div id="servicesEmpty" class="custom-service-list" style="display: none;">
                     <div class="services-text-center services-py-4">
                         <h5>No services available from this provider.</h5>
                     </div>
-                    </div>
-                @endif
+                </div>
 
                 
         </div>
@@ -1459,6 +1399,275 @@ $dayNames = [
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Fetch services for provider via API
+    const providerId = '{{ $providerId ?? '' }}';
+    const providerData = @json($provider ?? []);
+    
+    if (providerId) {
+        fetchProviderServices(providerId);
+    }
+    
+    async function fetchProviderServices(providerId) {
+        const loadingEl = document.getElementById('servicesLoading');
+        const errorEl = document.getElementById('servicesError');
+        const emptyEl = document.getElementById('servicesEmpty');
+        const containerEl = document.getElementById('servicesContainer');
+        
+        // Show loading
+        loadingEl.style.display = 'block';
+        errorEl.style.display = 'none';
+        emptyEl.style.display = 'none';
+        containerEl.innerHTML = '';
+        
+        try {
+            const apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider?provider_id=${encodeURIComponent(providerId)}`;
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch services');
+            }
+            
+            const services = await response.json();
+            
+            // Hide loading
+            loadingEl.style.display = 'none';
+            
+            if (!Array.isArray(services) || services.length === 0) {
+                emptyEl.style.display = 'block';
+                return;
+            }
+            
+            // Render services
+            renderServices(services);
+            
+            // Update provider images with service images
+            updateProviderImages(services);
+            
+        } catch (error) {
+            console.error('Error fetching services:', error);
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'block';
+        }
+    }
+    
+    function renderServices(services) {
+        // Group services by category
+        const groupedServices = {};
+        const categories = new Set();
+        
+        services.forEach(service => {
+            const categoryName = service.category?.name || 'Uncategorized';
+            categories.add(categoryName);
+            
+            if (!groupedServices[categoryName]) {
+                groupedServices[categoryName] = [];
+            }
+            groupedServices[categoryName].push(service);
+        });
+        
+        // Sort categories
+        const sortedCategories = Array.from(categories).sort();
+        
+        // Render category filter pills
+        renderCategoryFilters(sortedCategories);
+        
+        // Render services by category
+        const containerEl = document.getElementById('servicesContainer');
+        containerEl.innerHTML = '';
+        
+        sortedCategories.forEach(categoryName => {
+            const categorySection = createCategorySection(categoryName, groupedServices[categoryName]);
+            containerEl.appendChild(categorySection);
+        });
+        
+        // Re-initialize category filtering and toggle functionality
+        initializeCategoryFilters();
+        initializeCategoryToggles();
+    }
+    
+    function renderCategoryFilters(categories) {
+        const filterContainer = document.querySelector('.service-filter-pills');
+        if (!filterContainer) return;
+        
+        // Keep "All" button, remove others
+        const allButton = filterContainer.querySelector('[data-category="all"]');
+        filterContainer.innerHTML = '';
+        if (allButton) {
+            filterContainer.appendChild(allButton);
+        }
+        
+        // Add category buttons
+        categories.forEach(category => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'filter-pill';
+            button.setAttribute('data-category', category);
+            button.textContent = category;
+            filterContainer.appendChild(button);
+        });
+    }
+    
+    function createCategorySection(categoryName, services) {
+        const section = document.createElement('div');
+        section.className = 'category-section';
+        section.setAttribute('data-category', categoryName);
+        
+        const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+        const providerId = '{{ $providerId ?? "" }}';
+        
+        section.innerHTML = `
+            <div class="section-title category-toggle-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; margin-top: 20px; cursor: pointer;" data-category-toggle="${categoryName}">
+                <h3 class="wow" style="font-size:30px; font-weight:500; letter-spacing: -1px; color:rgba(229, 0, 80, 1); margin: 0;">${categoryName}</h3>
+                <i class="fas fa-chevron-up category-chevron" style="color: rgba(229, 0, 80, 1); font-size: 16px; transition: transform 0.3s ease; margin-left: 15px;"></i>
+            </div>
+            <div class="custom-service-list category-services-list">
+                ${services.map(service => {
+                    const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : defaultImage;
+                    const serviceName = service.service_name || 'Unnamed Service';
+                    const serviceDetails = service.service_details || '';
+                    const duration = service.duration_minutes || 0;
+                    const price = service.service_price || 0;
+                    const serviceId = service.id || '';
+                    const bookUrl = `/book-appointment?serviceId=${serviceId}&service_provider_id=${providerId}`;
+                    
+                    return `
+                        <div class="service-row services-d-flex services-justify-between services-flex-wrap">
+                            <div class="service-info services-d-flex services-align-center">
+                                <div class="service-image">
+                                    <img src="${serviceImage}" 
+                                         alt="${serviceName}" 
+                                         class="services-img-fluid services-rounded-circle"
+                                         loading="lazy"
+                                         onerror="this.src='${defaultImage}'">
+                                </div>
+                                <div class="service-list-details" style="margin-left: 35px;">
+                                    <div class="service-name services-fw-semibold">
+                                        <a href="${bookUrl}">${truncateText(serviceName, 50)}</a>
+                                    </div>
+                                    ${serviceDetails ? `<div class="service-desc services-text-muted">${truncateText(serviceDetails, 50)}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="service-meta services-text-end">
+                                <div class="services-text-muted services-small services-mb-1">
+                                    ${duration} min &bull; {{ __('app.service.from') }} €${price}
+                                </div>
+                                <div class="choose-button">
+                                    <a href="${bookUrl}" class="choose-btn">{{ __('app.service.choose') }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+        
+        return section;
+    }
+    
+    function truncateText(text, length) {
+        if (text.length <= length) return text;
+        return text.substring(0, length) + '...';
+    }
+    
+    function updateProviderImages(services) {
+        // Collect service images for provider gallery
+        const providerImages = [];
+        const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+        const providerProfileImg = providerData.profileImg || defaultImage;
+        
+        // First image is provider profile
+        providerImages.push(providerProfileImg);
+        
+        // Collect images from services
+        services.forEach(service => {
+            if (service.images && Array.isArray(service.images) && providerImages.length < 5) {
+                service.images.forEach(img => {
+                    if (img && providerImages.length < 5) {
+                        providerImages.push(img);
+                    }
+                });
+            }
+        });
+        
+        // Fill remaining slots with default image
+        while (providerImages.length < 5) {
+            providerImages.push(defaultImage);
+        }
+        
+        // Update desktop grid images
+        const mainImage = document.querySelector('.provider-image-main img');
+        if (mainImage) mainImage.src = providerImages[0];
+        
+        const smallImages = document.querySelectorAll('.provider-image-small img');
+        smallImages.forEach((img, index) => {
+            if (providerImages[index + 1]) {
+                img.src = providerImages[index + 1];
+            }
+        });
+        
+        // Update mobile carousel images
+        const carouselSlides = document.querySelectorAll('.carousel-slide img');
+        carouselSlides.forEach((img, index) => {
+            if (providerImages[index]) {
+                img.src = providerImages[index];
+            }
+        });
+    }
+    
+    function initializeCategoryFilters() {
+        const filterPills = document.querySelectorAll('.filter-pill');
+        const categorySections = document.querySelectorAll('.category-section');
+        
+        filterPills.forEach(function(pill) {
+            pill.addEventListener('click', function() {
+                const selectedCategory = this.getAttribute('data-category');
+                
+                // Update active state
+                filterPills.forEach(function(p) {
+                    p.classList.remove('active');
+                    p.removeAttribute('aria-current');
+                });
+                this.classList.add('active');
+                this.setAttribute('aria-current', 'true');
+                
+                // Filter category sections
+                categorySections.forEach(function(section) {
+                    if (selectedCategory === 'all') {
+                        section.style.display = '';
+                    } else {
+                        const sectionCategory = section.getAttribute('data-category');
+                        if (sectionCategory === selectedCategory) {
+                            section.style.display = '';
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+    }
+    
+    function initializeCategoryToggles() {
+        const categoryToggleHeaders = document.querySelectorAll('.category-toggle-header');
+        
+        categoryToggleHeaders.forEach(function(toggleHeader) {
+            // Remove existing listeners by cloning
+            const newToggle = toggleHeader.cloneNode(true);
+            toggleHeader.parentNode.replaceChild(newToggle, toggleHeader);
+            
+            newToggle.addEventListener('click', function() {
+                const categorySection = this.closest('.category-section');
+                const servicesList = categorySection.querySelector('.category-services-list');
+                const chevron = this.querySelector('.category-chevron');
+                
+                if (servicesList && chevron) {
+                    servicesList.classList.toggle('collapsed');
+                    chevron.classList.toggle('rotated');
+                }
+            });
+        });
+    }
+    
     // Carousel functionality (only run if carousel exists)
     const carousel = document.querySelector('.provider-images-carousel');
     

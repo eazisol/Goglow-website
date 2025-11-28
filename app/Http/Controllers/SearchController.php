@@ -26,100 +26,21 @@ class SearchController extends Controller
                 return back()->with('error', 'Provider not found');
             }
 
-            // Get all services - cached for 15 minutes to improve performance
-            $services = Cache::remember('all_services', 900, function () {
-                return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider')->json() ?? [];
-            });
-            
-            // Filter services for this provider
-            $filteredServices = collect($services)
-                ->filter(function ($service) use ($providerId) {
-                    return $service['ownerId'] === $providerId;
-                })
-                ->values()
-                ->all();
-
+            // Services will be fetched via JavaScript from frontend
             return view('search.provider-services', [
-                'services' => $filteredServices,
-                'provider' => $provider
+                'services' => [], // Services loaded via JavaScript
+                'provider' => $provider,
+                'providerId' => $providerId // Pass provider ID for JavaScript API call
             ]);
         }
 
-        // Build API URL with search parameters
-        $apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
-        $queryParams = [];
-        
-        if ($search) {
-            $queryParams['name'] = $search;
-        }
-        
-        if ($location) {
-            $queryParams['location'] = $location;
-        }
-        
-        // Build cache key based on search parameters
-        $cacheKey = 'providers_search_' . md5($search . '_' . $location);
-        
-        // Get filtered providers from API - cached for 15 minutes
-        // API already filters the data, so we use it directly without PHP filtering
-        $matchingProviders = Cache::remember($cacheKey, 900, function () use ($apiUrl, $queryParams) {
-            $response = Http::get($apiUrl, $queryParams);
-            return $response->json() ?? [];
-        });
-        
-        // Ensure it's an array
-        if (!is_array($matchingProviders)) {
-            $matchingProviders = [];
-        }
-
-        // Get all services to extract categories - cached for 15 minutes to improve performance
-        // Note: We still need all services to extract categories for the matching providers
-        $allServices = Cache::remember('all_services', 900, function () {
-            return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider')->json() ?? [];
-        });
-        
-        // Handle API failure or null response
-        if (!is_array($allServices)) {
-            $allServices = [];
-        }
-        
-        // Extract unique categories from all services
-        $allCategories = collect($allServices)
-            ->pluck('category.name')
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values()
-            ->all();
-        
-        // Map each provider to their categories (only for matching providers)
-        $providerCategories = [];
-        foreach ($matchingProviders as $provider) {
-            $providerId = $provider['id'] ?? null;
-            if (!$providerId) {
-                continue;
-            }
-            
-            $categories = collect($allServices)
-                ->filter(function ($service) use ($providerId) {
-                    return isset($service['ownerId']) && $service['ownerId'] === $providerId;
-                })
-                ->pluck('category.name')
-                ->filter()
-                ->unique()
-                ->values()
-                ->all();
-            
-            $providerCategories[$providerId] = $categories;
-        }
-
-        // Return the list of matching providers
+        // Providers will be fetched via JavaScript from frontend
         return view('search.provider-results', [
-            'providers' => $matchingProviders,
+            'providers' => [], // Providers loaded via JavaScript
             'search' => $search,
             'location' => $location,
-            'categories' => $allCategories,
-            'providerCategories' => $providerCategories
+            'categories' => [], // Removed: was fetching all services to extract categories
+            'providerCategories' => [] // Removed: was mapping categories from all services
         ]);
     }
     public function showProviderServices($providerId)

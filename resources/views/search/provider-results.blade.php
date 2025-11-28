@@ -140,249 +140,157 @@
     <div class="container">
                             <div class="service-filter-pills" role="tablist" aria-label="Service categories">
                                 <button type="button" class="filter-pill active" data-category="all" aria-current="true">All</button>
-                                @if(isset($categories) && count($categories) > 0)
-                                    @foreach($categories as $category)
-                                        <button type="button" class="filter-pill" data-category="{{ $category }}">{{ $category }}</button>
-                                    @endforeach
-                                @endif
+                                {{-- Categories will be added by JavaScript if needed --}}
                             </div>
         
-
-        <div class="results-grid">
-            @if(count($providers) > 0)
-                @foreach($providers as $provider)
-                    @php
-                        $providerId = $provider['id'] ?? '';
-                        $providerCategoriesList = isset($providerCategories[$providerId]) ? $providerCategories[$providerId] : [];
-                        $categoriesString = implode(',', $providerCategoriesList);
-                    @endphp
-                    <div class="results-item" data-categories="{{ $categoriesString }}">
-                        <div class="provider-card">
-                            <a href="{{ url('/search?provider_id=' . $provider['id']) }}" class="provider-link">
-                                @php
-                                    $avgRating = isset($provider['avg_ratting']) ? floatval($provider['avg_ratting']) : 0;
-                                @endphp
-                                <div class="provider-image">
-                                    <div class="provider-image-inner">
-                                        <img src="{{ isset($provider['profileImg']) && $provider['profileImg'] ? $provider['profileImg'] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}" 
-                                             alt="{{ $provider['name'] }}" 
-                                             class="img-fluid"
-                                             loading="lazy"
-                                             onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
-                                        <div class="image-overlay">
-                                            <div class="overlay-left">
-                                                {{-- <span class="overlay-title">
-                                                    {{ !empty($provider['storeName']) 
-                                                        ? $provider['storeName'] 
-                                                        : (!empty($provider['name']) 
-                                                            ? $provider['name'] 
-                                                            : 'No Name') }}
-                                                </span> --}}
-                                                @if(isset($provider['companyName']) && $provider['companyName'])
-                                                    <span class="overlay-meta">{{ $provider['companyName'] }}</span>
-                                                @endif
-                                            </div>
-                                            {{-- <div class="rating-badge">
-                                                <i class="fas fa-star"></i>
-                                                <span>{{ number_format($avgRating, 1) }}</span>
-                                            </div> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="provider-details p-4">
-                                    <div class="provider-card-heading-section">
-                                    <h3 class="card-title">
-                                        {{-- {{ !empty($provider['storeName']) 
-                                            ? $provider['storeName'] 
-                                            : (!empty($provider['name']) 
-                                                ? $provider['name'] 
-                                                : 'No Name') }} --}}
-                                        {{ !empty($provider['companyName']) 
-                                            ? $provider['companyName'] 
-                                            : (!empty($provider['name']) 
-                                                ? $provider['name'] 
-                                                : 'No Name') }}
-                                    </h3>
-                                    <div class="rating-row">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="15" height="15">
-                                        <span class="rating-value">{{ number_format($avgRating, 1) }}</span>
-                                        <span class="rating-count">({{ $provider['total_review'] ?? 0 }})</span>
-                                    </div>
-
-                                    </div>
-                                    <div class="provider-meta">
-                                        @if(isset($provider['address']))
-                                            <div class="address">
-                                                <span class="search-icon search-icon-sm" aria-hidden="true">
-                                                    <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="20" height="20">
-                                                </span>
-                                                <span>{{ $provider['address'] }}</span>
-                                            </div>
-                                        @endif
-                                    </div>
-
-                                    @php
-                                        $weeklyTiming = isset($provider['timing']) && is_array($provider['timing']) ? $provider['timing'] : [];
-                                        $daysOrder = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-                                        // Map day abbreviations to translated short day names
-                                        $dayNamesMap = [
-                                            'Mon' => __('app.schedule.short_monday'),
-                                            'Tue' => __('app.schedule.short_tuesday'),
-                                            'Wed' => __('app.schedule.short_wednesday'),
-                                            'Thu' => __('app.schedule.short_thursday'),
-                                            'Fri' => __('app.schedule.short_friday'),
-                                            'Sat' => __('app.schedule.short_saturday'),
-                                            'Sun' => __('app.schedule.short_sunday'),
-                                        ];
-                                        $now = \Carbon\Carbon::now();
-                                        $todayKey = $now->format('D');
-                                        $timezone = config('app.timezone') ?: 'UTC';
-
-                                        $formatRange = function($range) use ($timezone) {
-                                            if (!is_array($range) || count($range) < 2 || empty($range)) {
-                                                return null;
-                                            }
-                                            $openTs = (int) ($range[0] ?? 0);
-                                            $closeTs = (int) ($range[1] ?? 0);
-                                            if ($openTs <= 0 || $closeTs <= 0) { return null; }
-                                            $open = \Carbon\Carbon::createFromTimestamp($openTs, $timezone);
-                                            $close = \Carbon\Carbon::createFromTimestamp($closeTs, $timezone);
-                                            return $open->format('g:i A') . ' – ' . $close->format('g:i A');
-                                        };
-
-                                        $todayRangeText = $formatRange($weeklyTiming[$todayKey] ?? []);
-                                        $isOpenToday = $todayRangeText !== null;
-
-                                        // Find next opening day if closed today
-                                        $nextOpenText = null;
-                                        if (!$isOpenToday) {
-                                            for ($i = 1; $i <= 7; $i++) {
-                                                $day = $now->copy()->addDays($i);
-                                                $key = $day->format('D');
-                                                $r = $formatRange($weeklyTiming[$key] ?? []);
-                                                if ($r) { $nextOpenText = 'Opens ' . ($i === 1 ? 'Tomorrow ' : $day->format('D ') ) . $r; break; }
-                                            }
-                                        }
-                                        $cardId = $provider['id'] ?? uniqid('prov_');
-                                        // Build 3 upcoming day chips (today + next two days)
-                                        $chipDays = [];
-                                        for ($i = 0; $i < 3; $i++) {
-                                            $d = $now->copy()->addDays($i);
-                                            $dayKey = $d->format('D');
-                                            $chipDays[] = [
-                                                'label' => $dayNamesMap[$dayKey] ?? $dayKey,
-                                                'day' => $d->format('d'),
-                                                'dayKey' => $dayKey, // Keep original key for timing lookup
-                                            ];
-                                        }
-                                    @endphp
-
-                                    <div class="timing-status" data-tooltip-id="timing-tooltip-{{ $cardId }}">
-                                                <span class="search-icon search-icon-sm" aria-hidden="true">
-                                                    <span class="status-dot {{ $isOpenToday ? 'open' : 'closed' }}"></span>
-                                                </span>
-                                        <span class="status-text">
-                                            @if($isOpenToday)
-                                                {{ __('app.provider.provider_open') }} · {{ $todayRangeText }}
-                                            @else
-                                                {{ __('app.provider.provider_close') }} · {{ $nextOpenText ?: 'Hours unavailable' }}
-                                            @endif
-                                        </span>
-                                    </div>
-
-                                    <div class="timing-tooltip" id="timing-tooltip-{{ $cardId }}" aria-hidden="true">
-                                        <div class="timing-tooltip-inner">
-                                            @foreach($daysOrder as $dow)
-                                                @php $rangeText = $formatRange($weeklyTiming[$dow] ?? []); @endphp
-                                                <div class="timing-row {{ $todayKey === $dow ? 'today' : '' }}">
-                                                    <span class="timing-day">{{ $dayNamesMap[$dow] ?? $dow }}</span>
-                                                    <span class="timing-hours">{{ $rangeText ?: __('app.provider.provider_close') }}</span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-
-                                    <div class="availability-section">
-                                        <div class="availability-title">{{ __('app.provider.next_availability') }}</div>
-                                        @php
-                                            // Check time slot availability for each day
-                                            $chipDaysWithAvailability = [];
-                                            foreach ($chipDays as $cd) {
-                                                // Use dayKey (original Mon, Tue, etc.) for timing lookup, but label (translated) for display
-                                                $dayKey = $cd['dayKey'] ?? $cd['label'];
-                                                $hasTimeSlot = isset($weeklyTiming[$dayKey]) && 
-                                                               is_array($weeklyTiming[$dayKey]) && 
-                                                               count($weeklyTiming[$dayKey]) >= 2 &&
-                                                               !empty($weeklyTiming[$dayKey][0]) &&
-                                                               !empty($weeklyTiming[$dayKey][1]);
-                                                
-                                                $timeSlotText = 'No time availability';
-                                                if ($hasTimeSlot) {
-                                                    $timeSlotText = $formatRange($weeklyTiming[$dayKey]);
-                                                }
-                                                
-                                                $chipDaysWithAvailability[] = [
-                                                    'label' => $cd['label'], // This is already translated
-                                                    'day' => $cd['day'],
-                                                    'hasTimeSlot' => $hasTimeSlot,
-                                                    'timeSlotText' => $timeSlotText
-                                                ];
-                                            }
-                                        @endphp
-                                        <div class="availability-row">
-                                            <span class="time-of-day">
-                                                {{ __('app.provider.morning') }}
-                                            </span>
-                                            <div class="chip-group">
-                                                @foreach($chipDaysWithAvailability as $cd)
-                                                    <span class="date-chip {{ $cd['hasTimeSlot'] ? 'has-slot' : 'no-slot' }}" 
-                                                          data-tooltip="{{ $cd['timeSlotText'] }}">
-                                                        {{ $cd['label'] }} <b>{{ $cd['day'] }}</b>
-                                                        <span class="date-chip-tooltip">{{ $cd['timeSlotText'] }}</span>
-                                                    </span>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        <div class="availability-row">
-                                            <span class="time-of-day">
-                                                {{ __('app.provider.evening') }}
-                                            </span>
-                                            <div class="chip-group">
-                                                @foreach($chipDaysWithAvailability as $cd)
-                                                    <span class="date-chip {{ $cd['hasTimeSlot'] ? 'has-slot' : 'no-slot' }}" 
-                                                          data-tooltip="{{ $cd['timeSlotText'] }}">
-                                                        {{ $cd['label'] }} <b>{{ $cd['day'] }}</b>
-                                                        <span class="date-chip-tooltip">{{ $cd['timeSlotText'] }}</span>
-                                                    </span>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{-- <div class="card-footer-row">
-                                        <div class="reviews-text">{{ $provider['total_review'] ?? 0 }} reviews</div>
-                                        <span class="book-now-btn">BOOK NOW</span>
-                                    </div> --}}
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="col-12 text-center">
-                    <h3>No providers found matching your search criteria.</h3>
-                    <p>Try adjusting your search terms or location.</p>
-                </div>
-            @endif
+        <!-- Loading State -->
+        <div id="providers-loading" class="providers-loading">
+            <div class="providers-spinner"></div>
+            <p>Loading providers...</p>
         </div>
-    </div>
-</div>
+
+        <!-- Error State -->
+        <div id="providers-error" class="providers-error" style="display: none;">
+            <div class="providers-error-icon">
+                <i class="fas fa-exclamation-circle"></i>
+                                            </div>
+            <h3>Oops! Something went wrong</h3>
+            <p id="providers-error-message">Failed to load providers. Please try again later.</p>
+            <button class="providers-retry-btn" onclick="fetchProviders()">Try Again</button>
+                                        </div>
+
+        <!-- Empty State -->
+        <div id="providers-empty" class="providers-empty" style="display: none;">
+            <div class="providers-empty-icon">
+                <i class="fas fa-search"></i>
+                                    </div>
+            <h3>No providers found</h3>
+            <p>No providers found matching your search criteria. Try adjusting your search terms or location.</p>
+                                    </div>
+
+        <!-- Providers Grid Container -->
+        <div id="providers-grid" class="results-grid" style="display: none;">
+            {{-- Providers will be rendered here by JavaScript --}}
+                                    </div>
+                                            </div>
+                                    </div>
 <!-- Search Results Section End -->
 @endsection
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/search.css') }}">
 <style>
+    /* Loading State - Similar to blog loader */
+    .providers-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 20px;
+        min-height: 400px;
+    }
+
+    .providers-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #d5bec6;
+        border-top-color: #75213e;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .providers-loading p {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        color: #75213e;
+    }
+
+    /* Error State */
+    .providers-error {
+        text-align: center;
+        padding: 80px 20px;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .providers-error-icon {
+        font-size: 64px;
+        color: #75213e;
+        margin-bottom: 24px;
+        opacity: 0.6;
+    }
+
+    .providers-error h3 {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c0d18;
+        margin-bottom: 12px;
+    }
+
+    .providers-error p {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        color: #6b7280;
+        margin-bottom: 24px;
+    }
+
+    .providers-retry-btn {
+        background: rgba(229, 0, 80, 1);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .providers-retry-btn:hover {
+        background: #cc0046;
+    }
+
+    /* Empty State */
+    .providers-empty {
+        text-align: center;
+        padding: 80px 20px;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .providers-empty-icon {
+        font-size: 64px;
+        color: #75213e;
+        margin-bottom: 24px;
+        opacity: 0.6;
+    }
+
+    .providers-empty h3 {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c0d18;
+        margin-bottom: 12px;
+    }
+
+    .providers-empty p {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        color: #6b7280;
+    }
+
     .provider-card-heading-section{
         justify-content: space-between;
         display: flex;
@@ -619,6 +527,383 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  // Fetch providers from API
+  const searchParam = new URLSearchParams(window.location.search).get('search');
+  const locationParam = new URLSearchParams(window.location.search).get('location');
+  
+  // Only fetch if we're not viewing a specific provider (no provider_id in URL)
+  const providerIdParam = new URLSearchParams(window.location.search).get('provider_id');
+  if (!providerIdParam) {
+    fetchProviders(searchParam, locationParam);
+  }
+
+  // Function to fetch providers from API
+  async function fetchProviders(search = null, location = null) {
+    const loadingEl = document.getElementById('providers-loading');
+    const errorEl = document.getElementById('providers-error');
+    const emptyEl = document.getElementById('providers-empty');
+    const gridEl = document.getElementById('providers-grid');
+    
+    // Show loading, hide others
+    if (loadingEl) loadingEl.style.display = 'flex';
+    if (errorEl) errorEl.style.display = 'none';
+    if (emptyEl) emptyEl.style.display = 'none';
+    if (gridEl) gridEl.style.display = 'none';
+    
+    try {
+      // Build API URL - fetch all providers (API handles filtering if params provided)
+      let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
+      const params = new URLSearchParams();
+      if (search) params.append('name', search);
+      if (location) params.append('location', location);
+      if (params.toString()) {
+        apiUrl += '?' + params.toString();
+      }
+      
+      const response = await fetch(apiUrl);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const providers = await response.json();
+      
+      // Hide loading
+      if (loadingEl) loadingEl.style.display = 'none';
+      
+      if (!Array.isArray(providers) || providers.length === 0) {
+        if (emptyEl) emptyEl.style.display = 'flex';
+        return;
+      }
+      
+      // Render providers
+      renderProviders(providers);
+      
+    } catch (error) {
+      console.error('Error fetching providers:', error);
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) {
+        errorEl.style.display = 'flex';
+        const errorMsg = document.getElementById('providers-error-message');
+        if (errorMsg) {
+          errorMsg.textContent = 'Failed to load providers. Please check your connection and try again.';
+        }
+      }
+    }
+  }
+  
+  // Make fetchProviders available globally for retry button
+  window.fetchProviders = function() {
+    const searchParam = new URLSearchParams(window.location.search).get('search');
+    const locationParam = new URLSearchParams(window.location.search).get('location');
+    fetchProviders(searchParam, locationParam);
+  };
+
+  // Function to render providers in the grid
+  function renderProviders(providers) {
+    const gridEl = document.getElementById('providers-grid');
+    if (!gridEl) return;
+    
+    gridEl.innerHTML = '';
+    
+    providers.forEach(provider => {
+      const providerCard = createProviderCard(provider);
+      gridEl.appendChild(providerCard);
+    });
+    
+    // Show grid
+    gridEl.style.display = 'grid';
+    
+    // Initialize tooltips for the new cards
+    initializeProviderTooltips();
+    
+    // Initialize category filtering (though categories are empty for now)
+    initializeCategoryFilters();
+  }
+  
+  // Function to create a provider card element
+  function createProviderCard(provider) {
+    const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+    const providerImage = provider.profileImg || defaultImage;
+    const companyName = provider.companyName || provider.name || 'No Name';
+    const avgRating = provider.avg_ratting || 0;
+    const totalReviews = provider.total_review || 0;
+    const address = provider.address || '';
+    const providerId = provider.id || '';
+    const timing = provider.timing || {};
+    
+    // Create timing status
+    const timingStatus = calculateTimingStatus(timing);
+    
+    // Create the card
+    const item = document.createElement('div');
+    item.className = 'results-item';
+    item.setAttribute('data-categories', ''); // Empty for now
+    
+    item.innerHTML = `
+      <div class="provider-card">
+        <a href="/search?provider_id=${providerId}" class="provider-link">
+          <div class="provider-image">
+            <div class="provider-image-inner">
+              <img src="${escapeHtml(providerImage)}" 
+                   alt="${escapeHtml(companyName)}" 
+                   class="img-fluid"
+                   loading="lazy"
+                   onerror="this.src='${defaultImage}'">
+              <div class="image-overlay">
+                <div class="overlay-left">
+                  ${provider.companyName ? `<span class="overlay-meta">${escapeHtml(provider.companyName)}</span>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="provider-details p-4">
+            <div class="provider-card-heading-section">
+              <h3 class="card-title">${escapeHtml(companyName)}</h3>
+              <div class="rating-row">
+                <img src="images/images/star_cards.svg" alt="Location" width="15" height="15">
+                <span class="rating-value">${avgRating.toFixed(1)}</span>
+                <span class="rating-count">(${totalReviews})</span>
+              </div>
+            </div>
+            <div class="provider-meta">
+              ${address ? `
+                <div class="address">
+                  <span class="search-icon search-icon-sm" aria-hidden="true">
+                    <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="20" height="20">
+                  </span>
+                  <span>${escapeHtml(address)}</span>
+                </div>
+              ` : ''}
+            </div>
+            ${timingStatus.html || ''}
+            ${timingStatus.availabilityHtml || ''}
+          </div>
+        </a>
+      </div>
+    `;
+    
+    // Add tooltip if needed
+    if (timingStatus.tooltipHtml) {
+      const tooltipContainer = document.createElement('div');
+      tooltipContainer.innerHTML = timingStatus.tooltipHtml;
+      document.body.appendChild(tooltipContainer.firstElementChild);
+    }
+    
+    return item;
+  }
+  
+  // Function to calculate timing status and availability
+  function calculateTimingStatus(timing) {
+    if (!timing || typeof timing !== 'object') {
+      return { html: '', tooltipHtml: '', availabilityHtml: '', cardId: '' };
+    }
+    
+    const daysOrder = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const dayNamesMap = {
+      'Mon': 'Mon',
+      'Tue': 'Tue', 
+      'Wed': 'Wed',
+      'Thu': 'Thu',
+      'Fri': 'Fri',
+      'Sat': 'Sat',
+      'Sun': 'Sun'
+    };
+    
+    const now = new Date();
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const todayKey = dayNames[now.getDay()];
+    const cardId = 'prov_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    // Format time range helper
+    function formatRange(range) {
+      if (!Array.isArray(range) || range.length < 2 || !range[0] || !range[1]) {
+        return null;
+      }
+      try {
+        const open = new Date(range[0] * 1000);
+        const close = new Date(range[1] * 1000);
+        const openTime = open.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        const closeTime = close.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        return openTime + ' – ' + closeTime;
+      } catch (e) {
+        return null;
+      }
+    }
+    
+    const todayRange = timing[todayKey] || [];
+    const todayRangeText = formatRange(todayRange);
+    const isOpenToday = todayRangeText !== null;
+    
+    // Build status HTML
+    const statusHtml = `
+      <div class="timing-status" data-tooltip-id="timing-tooltip-${cardId}">
+        <span class="search-icon search-icon-sm" aria-hidden="true">
+          <span class="status-dot ${isOpenToday ? 'open' : 'closed'}"></span>
+        </span>
+        <span class="status-text">
+          ${isOpenToday 
+            ? 'Open · ' + todayRangeText 
+            : 'Closed · Hours unavailable'}
+        </span>
+      </div>
+    `;
+    
+    // Build tooltip HTML
+    const tooltipHtml = `
+      <div class="timing-tooltip" id="timing-tooltip-${cardId}" aria-hidden="true">
+        <div class="timing-tooltip-inner">
+          ${daysOrder.map(day => {
+            const rangeText = formatRange(timing[day] || []);
+            const isToday = todayKey === day;
+            return `
+              <div class="timing-row ${isToday ? 'today' : ''}">
+                <span class="timing-day">${dayNamesMap[day] || day}</span>
+                <span class="timing-hours">${rangeText || 'Closed'}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+    
+    // Build availability section (next 3 days with morning/evening slots)
+    const chipDays = [];
+    for (let i = 0; i < 3; i++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() + i);
+      const dayKey = dayNames[d.getDay()];
+      const dayLabel = dayNamesMap[dayKey] || dayKey;
+      const dayNumber = d.getDate().toString().padStart(2, '0');
+      
+      const dayTiming = timing[dayKey] || [];
+      const hasTimeSlot = Array.isArray(dayTiming) && dayTiming.length >= 2 && dayTiming[0] && dayTiming[1];
+      const timeSlotText = hasTimeSlot ? formatRange(dayTiming) : 'No time availability';
+      
+      chipDays.push({
+        label: dayLabel,
+        day: dayNumber,
+        dayKey: dayKey,
+        hasTimeSlot: hasTimeSlot,
+        timeSlotText: timeSlotText
+      });
+    }
+    
+    const availabilityHtml = `
+      <div class="availability-section">
+        <div class="availability-title">Next Availability</div>
+        <div class="availability-row">
+          <span class="time-of-day">Morning</span>
+          <div class="chip-group">
+            ${chipDays.map(cd => `
+              <span class="date-chip ${cd.hasTimeSlot ? 'has-slot' : 'no-slot'}" 
+                    data-tooltip="${escapeHtml(cd.timeSlotText)}">
+                ${cd.label} <b>${cd.day}</b>
+                <span class="date-chip-tooltip">${escapeHtml(cd.timeSlotText)}</span>
+              </span>
+            `).join('')}
+          </div>
+        </div>
+        <div class="availability-row">
+          <span class="time-of-day">Evening</span>
+          <div class="chip-group">
+            ${chipDays.map(cd => `
+              <span class="date-chip ${cd.hasTimeSlot ? 'has-slot' : 'no-slot'}" 
+                    data-tooltip="${escapeHtml(cd.timeSlotText)}">
+                ${cd.label} <b>${cd.day}</b>
+                <span class="date-chip-tooltip">${escapeHtml(cd.timeSlotText)}</span>
+              </span>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+    
+    return { 
+      html: statusHtml, 
+      tooltipHtml: tooltipHtml, 
+      availabilityHtml: availabilityHtml,
+      cardId: cardId 
+    };
+  }
+  
+  // Helper function to escape HTML
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  // Function to initialize tooltips for provider cards
+  function initializeProviderTooltips() {
+    const containers = document.querySelectorAll('.provider-card');
+    containers.forEach(function(card) {
+      const status = card.querySelector('.timing-status');
+      if (!status) return;
+      const tooltipId = status.getAttribute('data-tooltip-id');
+      const tooltip = tooltipId ? document.getElementById(tooltipId) : null;
+      if (!tooltip) return;
+      
+      // Ensure tooltip is in body
+      if (tooltip.parentElement !== document.body) {
+        document.body.appendChild(tooltip);
+      }
+      
+      function positionTooltip() {
+        const rect = status.getBoundingClientRect();
+        const top = rect.top + rect.height + 8;
+        let left = rect.left;
+        const maxLeft = window.innerWidth - tooltip.offsetWidth - 8;
+        if (left > maxLeft) left = Math.max(8, maxLeft);
+        tooltip.style.top = top + 'px';
+        tooltip.style.left = left + 'px';
+      }
+      
+      function show() {
+        tooltip.style.display = 'block';
+        positionTooltip();
+      }
+      
+      function hide() {
+        tooltip.style.display = 'none';
+      }
+      
+      status.addEventListener('mouseenter', show);
+      status.addEventListener('mouseleave', function() {
+        setTimeout(function() {
+          if (!tooltip.matches(':hover')) hide();
+        }, 100);
+      });
+      tooltip.addEventListener('mouseleave', hide);
+      tooltip.addEventListener('mouseenter', function() {
+        tooltip.style.display = 'block';
+      });
+      
+      status.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (tooltip.style.display === 'block') {
+          hide();
+        } else {
+          show();
+        }
+      });
+      
+      window.addEventListener('scroll', function() {
+        if (tooltip.style.display === 'block') positionTooltip();
+      });
+      window.addEventListener('resize', function() {
+        if (tooltip.style.display === 'block') positionTooltip();
+      });
+    });
+  }
+  
+  // Function to initialize category filters (placeholder for now)
+  function initializeCategoryFilters() {
+    // Categories will be empty for now since we removed service fetching
+    // This can be enhanced later if needed
+  }
+
   // Delegate hover/click for timing tooltips
   const containers = document.querySelectorAll('.provider-card');
   containers.forEach(function(card){

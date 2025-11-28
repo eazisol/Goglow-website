@@ -405,14 +405,14 @@
 
 /* Blog Detail Page Styles */
 .blog-detail-page-section {
-    padding: 60px 0 100px;
+    padding: 10px 0 100px;
     min-height: 60vh;
     background-color: #fff4f8;
 }
 
 /* Back Link */
 .blog-detail-back {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .blog-back-link {
@@ -470,7 +470,7 @@
 
 /* Detail Content */
 .blog-detail-content {
-    max-width: 900px;
+    /* max-width: 900px; */
     margin: 0 auto;
     background: #ffffff;
     border-radius: 16px;
