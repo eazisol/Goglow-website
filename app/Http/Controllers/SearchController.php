@@ -46,4 +46,16 @@ class SearchController extends Controller
     public function showProviderServices($providerId)
     {
     }
+
+    public function searchVideos(Request $request)
+    {
+        $search = $request->input('search');
+        $location = $request->input('location');
+        
+        // Return the videos view with same structure as results page
+        return view('search.provider-videos', [
+            'search' => $search,
+            'location' => $location
+        ]);
+    }
 }
