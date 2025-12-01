@@ -11,7 +11,9 @@
 	<meta name="keywords" content="">
 	<meta name="author" content="Awaiken">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+	{{-- <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png"> --}}
+  <link rel="icon" href="{{ asset('favicon.png') }}" type="image/svg+xml">
+
         {{-- new figma design --}}
 
     <!-- Open Graph / Facebook -->
