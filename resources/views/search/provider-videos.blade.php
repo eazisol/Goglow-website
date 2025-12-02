@@ -553,7 +553,7 @@
 
     .video-modal-content {
         position: fixed !important;
-        max-width: 400px;
+        max-width: 320px;
         width: 100%;
         background: transparent;
         cursor: grab;
@@ -751,7 +751,7 @@
         }
 
         .video-modal-content {
-            max-width: 100%;
+            max-width: 90%;
         }
 
         .video-modal-player {
