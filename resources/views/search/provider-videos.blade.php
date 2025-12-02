@@ -706,7 +706,7 @@
         color: white;
         border: none;
         padding: 10px 20px;
-        border-radius: 8px;
+        border-radius: 37px;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
@@ -1470,7 +1470,7 @@ document.addEventListener('DOMContentLoaded', function () {
       
       const scrollPosition = window.innerHeight + window.scrollY;
       const documentHeight = document.documentElement.scrollHeight;
-      const threshold = 200; // Load when 200px from bottom
+      const threshold = 600; // Load when 200px from bottom
       
       if (scrollPosition >= documentHeight - threshold) {
         fetchVideos(lastDocId);
