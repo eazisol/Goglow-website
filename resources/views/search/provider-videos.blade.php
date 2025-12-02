@@ -534,9 +534,14 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.95);
+        /* background: rgba(0, 0, 0, 0.95); */
         z-index: 10000;
         overflow-y: auto;
+        pointer-events: none; /* Allow clicks to pass through to background */
+    }
+
+    .video-modal.active {
+        pointer-events: auto; /* Enable interactions on modal content */
     }
 
     .video-modal.active {
@@ -547,11 +552,23 @@
     }
 
     .video-modal-content {
-        position: relative;
+        position: fixed !important;
         max-width: 400px;
         width: 100%;
         background: transparent;
-        margin: auto;
+        cursor: grab;
+        user-select: none;
+        transition: transform 0.1s ease-out;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: auto; /* Ensure modal content is interactive */
+        will-change: transform, left, top; /* Optimize for position changes */
+    }
+
+    .video-modal-content.dragging {
+        cursor: grabbing;
+        transition: none;
     }
 
     /* Video Player - Portrait Aspect Ratio */
@@ -760,6 +777,15 @@ document.addEventListener('DOMContentLoaded', function () {
   const defaultThumbnail = '{{ asset("images/images/default-video-thumbnail.jpg") }}';
   const defaultUserImage = '{{ asset("images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
 
+  // Drag functionality
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let modalStartX = 0;
+  let modalStartY = 0;
+  let currentX = 0;
+  let currentY = 0;
+
   // Fetch videos from API
   async function fetchVideos(lastDocIdParam = null) {
     if (isLoading) return;
@@ -899,6 +925,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Open video modal
   function openVideoModal(video, videoIndex = -1) {
     const modal = document.getElementById('videoModal');
+    const modalContent = document.querySelector('.video-modal-content');
     const modalVideo = document.getElementById('modalVideo');
     const modalUserImage = document.getElementById('modalUserImage');
     const modalUsername = document.getElementById('modalUsername');
@@ -916,6 +943,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Set video source
     if (modalVideo && video.videoUrl) {
+      modalVideo.setAttribute('data-video-id', video.id || '');
       modalVideo.src = video.videoUrl;
       modalVideo.load();
     }
@@ -943,12 +971,31 @@ document.addEventListener('DOMContentLoaded', function () {
       bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
     }
     
+    // Only reset modal position if opening a NEW video (not navigating)
+    // Check if this is a new video by comparing video IDs
+    const currentVideoId = modalVideo ? modalVideo.getAttribute('data-video-id') : null;
+    const newVideoId = video.id || '';
+    
+    if (modalContent) {
+      if (!modalManuallyPositioned || currentVideoId !== newVideoId) {
+        // Reset to center for new videos
+        modalContent.style.transform = 'translate(-50%, -50%)';
+        modalContent.style.top = '50%';
+        modalContent.style.left = '50%';
+        modalManuallyPositioned = false;
+        savedModalPosition = { left: null, top: null };
+      } else {
+        // Preserve position when navigating between videos if already positioned
+        restoreModalPosition();
+      }
+    }
+    
     // Update navigation buttons
     updateNavigationButtons();
     
     // Show modal
     modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    // Don't prevent background scrolling - allow users to scroll video list
     
     // Play video
     if (modalVideo) {
@@ -993,6 +1040,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Close video modal
   function closeVideoModal() {
     const modal = document.getElementById('videoModal');
+    const modalContent = document.querySelector('.video-modal-content');
     const modalVideo = document.getElementById('modalVideo');
     
     if (modal) {
@@ -1005,7 +1053,119 @@ document.addEventListener('DOMContentLoaded', function () {
       modalVideo.src = '';
     }
     
-    document.body.style.overflow = '';
+    // Reset drag state
+    isDragging = false;
+    if (modalContent) {
+      modalContent.classList.remove('dragging');
+    }
+  }
+
+  // Drag functionality
+  function startDrag(e) {
+    const modal = document.getElementById('videoModal');
+    if (!modal || !modal.classList.contains('active')) return;
+    
+    const modalContent = document.querySelector('.video-modal-content');
+    if (!modalContent) return;
+    
+    // Don't start drag if clicking on buttons or links
+    const target = e.target;
+    if (target.closest('button, a, .video-modal-close, .video-nav-btn, .video-modal-booking-btn')) {
+      return;
+    }
+    
+    // Allow dragging from video area, but check if clicking on video controls
+    if (target.tagName === 'VIDEO' || target.closest('video')) {
+      const video = document.getElementById('modalVideo');
+      if (video) {
+        const rect = video.getBoundingClientRect();
+        const clickY = e.touches ? e.touches[0].clientY : e.clientY;
+        // If clicking in bottom 15% of video (where controls usually are), don't drag
+        if (clickY > rect.top + rect.height * 0.85) {
+          return;
+        }
+      }
+    }
+    
+    isDragging = true;
+    modalManuallyPositioned = true; // Mark that modal has been manually positioned
+    modalContent.classList.add('dragging');
+    
+    // Save initial position
+    saveModalPosition();
+    
+    // Get initial touch/mouse position
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    dragStartX = clientX;
+    dragStartY = clientY;
+    
+    // Get current modal position from computed style
+    const computedStyle = window.getComputedStyle(modalContent);
+    let currentLeft = parseFloat(computedStyle.left);
+    let currentTop = parseFloat(computedStyle.top);
+    
+    // If not set, use center of screen
+    if (isNaN(currentLeft)) {
+      currentLeft = window.innerWidth / 2;
+    }
+    if (isNaN(currentTop)) {
+      currentTop = window.innerHeight / 2;
+    }
+    
+    modalStartX = currentLeft;
+    modalStartY = currentTop;
+    
+    currentX = modalStartX;
+    currentY = modalStartY;
+    
+    // Prevent default to avoid text selection and scrolling
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function drag(e) {
+    if (!isDragging) return;
+    
+    const modalContent = document.querySelector('.video-modal-content');
+    if (!modalContent) return;
+    
+    // Get current touch/mouse position
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    // Calculate new position
+    const deltaX = clientX - dragStartX;
+    const deltaY = clientY - dragStartY;
+    
+    currentX = modalStartX + deltaX;
+    currentY = modalStartY + deltaY;
+    
+    // Update modal position - fully draggable across entire screen
+    modalContent.style.left = currentX + 'px';
+    modalContent.style.top = currentY + 'px';
+    modalContent.style.transform = 'translate(-50%, -50%)';
+    
+    // Save position continuously while dragging
+    savedModalPosition.left = currentX + 'px';
+    savedModalPosition.top = currentY + 'px';
+    
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function endDrag() {
+    if (!isDragging) return;
+    
+    const modalContent = document.querySelector('.video-modal-content');
+    if (modalContent) {
+      modalContent.classList.remove('dragging');
+      // Save final position
+      saveModalPosition();
+    }
+    
+    isDragging = false;
   }
 
   // Handle RÉSERVER button click - close modal and redirect
@@ -1054,6 +1214,143 @@ document.addEventListener('DOMContentLoaded', function () {
   if (bookingBtn) {
     bookingBtn.addEventListener('click', handleReserverClick);
   }
+
+  // Attach drag event listeners - use direct attachment when modal is active
+  function attachDragListeners() {
+    const modalContent = document.querySelector('.video-modal-content');
+    if (!modalContent) return;
+    
+    // Remove existing listeners to avoid duplicates
+    modalContent.removeEventListener('mousedown', startDrag);
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('mouseup', endDrag);
+    modalContent.removeEventListener('touchstart', startDrag);
+    document.removeEventListener('touchmove', drag);
+    document.removeEventListener('touchend', endDrag);
+    
+    // Add new listeners
+    modalContent.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', endDrag);
+    
+    modalContent.addEventListener('touchstart', startDrag, { passive: false });
+    document.addEventListener('touchmove', drag, { passive: false });
+    document.addEventListener('touchend', endDrag);
+  }
+  
+  // Attach listeners when modal opens
+  const originalOpenVideoModal = openVideoModal;
+  openVideoModal = function(video, videoIndex) {
+    originalOpenVideoModal(video, videoIndex);
+    setTimeout(attachDragListeners, 100);
+  };
+  
+  // Also attach on page load if modal exists
+  attachDragListeners();
+
+  // Store if modal has been manually positioned (dragged)
+  let modalManuallyPositioned = false;
+  let savedModalPosition = { left: null, top: null };
+
+  // Save modal position when it's dragged
+  function saveModalPosition() {
+    const modalContent = document.querySelector('.video-modal-content');
+    if (modalContent && modalManuallyPositioned) {
+      const computedStyle = window.getComputedStyle(modalContent);
+      savedModalPosition.left = computedStyle.left;
+      savedModalPosition.top = computedStyle.top;
+    }
+  }
+
+  // Restore modal position after scroll or resize
+  function restoreModalPosition() {
+    const modalContent = document.querySelector('.video-modal-content');
+    const modal = document.getElementById('videoModal');
+    if (modal && modal.classList.contains('active') && modalContent && modalManuallyPositioned) {
+      if (savedModalPosition.left && savedModalPosition.top) {
+        // Use requestAnimationFrame to ensure it happens after any layout recalculation
+        requestAnimationFrame(function() {
+          const modalContent = document.querySelector('.video-modal-content');
+          const modal = document.getElementById('videoModal');
+          if (modal && modal.classList.contains('active') && modalContent && modalManuallyPositioned) {
+            modalContent.style.left = savedModalPosition.left;
+            modalContent.style.top = savedModalPosition.top;
+            modalContent.style.transform = 'translate(-50%, -50%)';
+          }
+        });
+      }
+    }
+  }
+  
+  // Continuously monitor and maintain position if manually positioned
+  function maintainModalPosition() {
+    if (!modalManuallyPositioned) return;
+    
+    const modalContent = document.querySelector('.video-modal-content');
+    const modal = document.getElementById('videoModal');
+    if (modal && modal.classList.contains('active') && modalContent) {
+      const computedStyle = window.getComputedStyle(modalContent);
+      const currentLeft = computedStyle.left;
+      const currentTop = computedStyle.top;
+      
+      // If position has been reset to percentage values, restore pixel values
+      if (savedModalPosition.left && savedModalPosition.top) {
+        if (currentLeft !== savedModalPosition.left || currentTop !== savedModalPosition.top) {
+          if (currentLeft.includes('%') || currentTop.includes('%')) {
+            // Position was reset, restore it
+            modalContent.style.left = savedModalPosition.left;
+            modalContent.style.top = savedModalPosition.top;
+            modalContent.style.transform = 'translate(-50%, -50%)';
+          }
+        }
+      }
+    }
+  }
+  
+  // Monitor position periodically to catch any resets
+  setInterval(maintainModalPosition, 50);
+
+  // Handle window resize - preserve position if manually positioned
+  window.addEventListener('resize', function() {
+    if (!isDragging) {
+      if (modalManuallyPositioned) {
+        // Restore saved position after resize
+        setTimeout(restoreModalPosition, 0);
+      } else {
+        const modalContent = document.querySelector('.video-modal-content');
+        const modal = document.getElementById('videoModal');
+        if (modal && modal.classList.contains('active') && modalContent) {
+          // Only reset to center if it hasn't been dragged
+          modalContent.style.left = '50%';
+          modalContent.style.top = '50%';
+          modalContent.style.transform = 'translate(-50%, -50%)';
+        }
+      }
+    }
+  });
+
+  // Handle scroll - preserve modal position using requestAnimationFrame for smooth updates
+  let scrollRAF = null;
+  window.addEventListener('scroll', function() {
+    if (scrollRAF) {
+      cancelAnimationFrame(scrollRAF);
+    }
+    
+    scrollRAF = requestAnimationFrame(function() {
+      if (modalManuallyPositioned && !isDragging) {
+        const modalContent = document.querySelector('.video-modal-content');
+        const modal = document.getElementById('videoModal');
+        if (modal && modal.classList.contains('active') && modalContent) {
+          // Force maintain the saved position
+          if (savedModalPosition.left && savedModalPosition.top) {
+            modalContent.style.left = savedModalPosition.left;
+            modalContent.style.top = savedModalPosition.top;
+            modalContent.style.transform = 'translate(-50%, -50%)';
+          }
+        }
+      }
+    });
+  }, { passive: true });
 
   // Close modal when clicking outside
   document.addEventListener('click', function(e) {
