@@ -1023,6 +1023,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Track if mouse is over video modal for touchpad scroll
+  let isMouseOverModal = false;
+  let scrollCooldown = false;
+
   // Update navigation buttons state
   function updateNavigationButtons() {
     const navUp = document.querySelector('.video-nav-up');
@@ -1242,11 +1246,95 @@ document.addEventListener('DOMContentLoaded', function () {
   const originalOpenVideoModal = openVideoModal;
   openVideoModal = function(video, videoIndex) {
     originalOpenVideoModal(video, videoIndex);
-    setTimeout(attachDragListeners, 100);
+    setTimeout(function() {
+      attachDragListeners();
+      attachScrollNavigation();
+    }, 100);
   };
   
   // Also attach on page load if modal exists
   attachDragListeners();
+  attachScrollNavigation();
+
+  // Touchpad scroll navigation for video modal
+  function attachScrollNavigation() {
+    const modalContent = document.querySelector('.video-modal-content');
+    if (!modalContent) return;
+    
+    // Track mouse enter/leave on modal
+    modalContent.addEventListener('mouseenter', function() {
+      isMouseOverModal = true;
+    });
+    
+    modalContent.addEventListener('mouseleave', function() {
+      isMouseOverModal = false;
+    });
+  }
+
+  // Handle wheel/touchpad scroll on video modal
+  let wheelTimeout = null;
+  let lastWheelTime = 0;
+  
+  function handleWheelScroll(e) {
+    const modal = document.getElementById('videoModal');
+    if (!modal || !modal.classList.contains('active')) return;
+    
+    // Check if mouse is over modal content
+    const modalContent = document.querySelector('.video-modal-content');
+    if (!modalContent) return;
+    
+    // Get mouse position from the event (wheel events have clientX/Y)
+    const mouseX = e.clientX !== undefined ? e.clientX : (window.mouseX || 0);
+    const mouseY = e.clientY !== undefined ? e.clientY : (window.mouseY || 0);
+    
+    // If clientX/Y not available, use the last known mouse position
+    if (mouseX === 0 && mouseY === 0) {
+      // Fallback: check if we're currently over the modal using isMouseOverModal
+      if (!isMouseOverModal) return;
+    } else {
+      // Check if mouse is within modal bounds
+      const rect = modalContent.getBoundingClientRect();
+      const isOverModal = mouseX >= rect.left && mouseX <= rect.right && 
+                          mouseY >= rect.top && mouseY <= rect.bottom;
+      
+      if (!isOverModal) return;
+    }
+    
+    // Prevent default scroll behavior when over modal
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Throttle to prevent too rapid navigation (minimum 400ms between navigations)
+    const now = Date.now();
+    if (now - lastWheelTime < 400) {
+      return;
+    }
+    lastWheelTime = now;
+    
+    // Determine scroll direction
+    const deltaY = e.deltaY;
+    
+    // Use a threshold to avoid accidental small scrolls
+    if (Math.abs(deltaY) > 10) {
+      if (deltaY > 0) {
+        // Scrolling down - next video
+        navigateVideo('next');
+      } else {
+        // Scrolling up - previous video
+        navigateVideo('prev');
+      }
+    }
+  }
+  
+  // Track mouse position globally for wheel events
+  document.addEventListener('mousemove', function(e) {
+    window.mouseX = e.clientX;
+    window.mouseY = e.clientY;
+  });
+  
+  // Attach wheel event listener
+  document.addEventListener('wheel', handleWheelScroll, { passive: false });
+
 
   // Store if modal has been manually positioned (dragged)
   let modalManuallyPositioned = false;
