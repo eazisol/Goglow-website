@@ -58,4 +58,28 @@ class SearchController extends Controller
             'location' => $location
         ]);
     }
+
+    public function providerVideos(Request $request)
+    {
+        $providerId = $request->input('provider_id');
+        
+        if (!$providerId) {
+            return redirect()->route('search')->with('error', 'Provider ID is required');
+        }
+        
+        // Get provider data
+        $providers = Cache::remember('all_providers', 900, function () {
+            return Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json() ?? [];
+        });
+        
+        $provider = collect($providers)->firstWhere('id', $providerId);
+        if (!$provider) {
+            return redirect()->route('search')->with('error', 'Provider not found');
+        }
+        
+        return view('search.specific-provider-videos', [
+            'provider' => $provider,
+            'providerId' => $providerId
+        ]);
+    }
 }

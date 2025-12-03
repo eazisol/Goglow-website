@@ -233,6 +233,27 @@
                                 {{-- Categories will be added here by JavaScript --}}
                             </div>
 
+    <!-- View Type Tabs Section Start -->
+    <div class="view-type-tabs-container" style="margin-top: 20px;">
+        <div class="view-type-tabs">
+            <a href="{{ route('search') }}{{ request()->getQueryString() ? '?' . request()->getQueryString() : '' }}" class="view-tab active" data-view="list">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M2.5 2.5H5.83333V5H2.5V2.5Z" fill="currentColor"/>
+                </svg>
+                <span>Service List</span>
+            </a>
+            <a href="{{ route('search.videos.provider', ['provider_id' => $providerId ?? request()->get('provider_id')]) }}" class="view-tab" data-view="videos">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2.5" y="4.16667" width="15" height="11.6667" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M8.33333 7.5L13.3333 10L8.33333 12.5V7.5Z" fill="currentColor"/>
+                </svg>
+                <span>Service Videos</span>
+            </a>
+        </div>
+    </div>
+    <!-- View Type Tabs Section End -->
+
     <div class="services-row">
         <div class="services-col-lg-8">
                 {{-- Loading state --}}
@@ -1391,6 +1412,80 @@ $dayNames = [
     font-weight: 400;
     color: rgba(0, 0, 0, 0.5);
     line-height: 1.4;
+}
+
+/* View Type Tabs Styling */
+.view-type-tabs-container {
+    margin: 30px 0;
+}
+
+.view-type-tabs {
+    display: flex;
+    gap: 0;
+    border: none;
+    background: transparent;
+    width: fit-content;
+}
+
+.view-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    background: transparent;
+    border: none;
+}
+
+.view-tab:hover {
+    color: rgba(229, 0, 80, 1);
+}
+
+.view-tab.active {
+    color: rgba(229, 0, 80, 1);
+    background: transparent;
+}
+
+.view-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(229, 0, 80, 1);
+}
+
+.view-tab svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.view-tab span {
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .view-type-tabs {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .view-tab {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    .view-tab svg {
+        width: 18px;
+        height: 18px;
+    }
 }
 
 </style>

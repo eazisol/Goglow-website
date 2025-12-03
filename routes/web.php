@@ -27,6 +27,7 @@ Route::get('/testing', function () {return view('home.indexImage');});
 // Search routes
 Route::get('/search', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
 Route::get('/search/videos', [\App\Http\Controllers\SearchController::class, 'searchVideos'])->name('search.videos');
+Route::get('/search/videos/provider', [\App\Http\Controllers\SearchController::class, 'providerVideos'])->name('search.videos.provider');
 
 // Blog routes
 Route::get('/blogs', function () {return view('blog.index');});

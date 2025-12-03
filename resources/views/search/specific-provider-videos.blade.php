@@ -1,6 +1,6 @@
 @extends('layouts.mainInnerPages')
 
-@section('title', 'Salon Videos')
+@section('title', 'Provider Videos')
 
 @section('content')
 
@@ -83,14 +83,14 @@
     <!-- View Type Tabs Section Start -->
     <div class="view-type-tabs-container" style="margin-top: 20px;">
         <div class="view-type-tabs">
-            <a href="{{ route('search') }}{{ request()->getQueryString() ? '?' . request()->getQueryString() : '' }}" class="view-tab" data-view="list">
+            <a href="{{ route('search', ['provider_id' => $providerId]) }}" class="view-tab" data-view="list">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     <path d="M2.5 2.5H5.83333V5H2.5V2.5Z" fill="currentColor"/>
                 </svg>
                 <span>Salon List</span>
             </a>
-            <a href="{{ route('search.videos') }}{{ request()->getQueryString() ? '?' . request()->getQueryString() : '' }}" class="view-tab active" data-view="videos">
+            <a href="{{ route('search.videos.provider', ['provider_id' => $providerId]) }}" class="view-tab active" data-view="videos">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="2.5" y="4.16667" width="15" height="11.6667" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M8.33333 7.5L13.3333 10L8.33333 12.5V7.5Z" fill="currentColor"/>
@@ -776,6 +776,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let currentVideoIndex = -1;
   const defaultThumbnail = '{{ asset("images/images/default-video-thumbnail.jpg") }}';
   const defaultUserImage = '{{ asset("images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+  const providerId = '{{ $providerId ?? "" }}';
 
   // Drag functionality
   let isDragging = false;
@@ -806,8 +807,21 @@ document.addEventListener('DOMContentLoaded', function () {
     
     try {
       let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllVideos';
+      const params = new URLSearchParams();
+      
+      // Always include serviceProviderId if available
+      if (providerId) {
+        params.append('serviceProviderId', providerId);
+      }
+      
+      // Add lastDocId for pagination if provided
       if (lastDocIdParam) {
-        apiUrl += '?lastDocId=' + encodeURIComponent(lastDocIdParam);
+        params.append('lastDocId', lastDocIdParam);
+      }
+      
+      // Append query string if we have any parameters
+      if (params.toString()) {
+        apiUrl += '?' + params.toString();
       }
       
       const response = await fetch(apiUrl);
@@ -966,8 +980,11 @@ document.addEventListener('DOMContentLoaded', function () {
       modalHashtags.style.display = video.hashtags ? 'block' : 'none';
     }
     
-    // Set booking button link
-    if (bookingBtn && video.serviceProviderId) {
+    // Set booking button link with service ID
+    if (bookingBtn && video.serviceProviderId && video.serviceId) {
+      bookingBtn.href = '/book-appointment?serviceId=' + encodeURIComponent(video.serviceId) + '&service_provider_id=' + encodeURIComponent(video.serviceProviderId);
+    } else if (bookingBtn && video.serviceProviderId) {
+      // Fallback if serviceId is not available
       bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
     }
     
