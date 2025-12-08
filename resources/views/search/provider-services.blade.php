@@ -27,7 +27,7 @@
                 <div class="provider-header services-mb-1">
                     <div class="services-row services-align-center service-proivder-desktop-view">
                         <div class="services-col-md-10 service-page-header-text">
-                            <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2>
+                            {{-- <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2> --}}
                             @if(isset($provider['companyName']))
                                 <h4 class="service-name-heading">{{ $provider['companyName'] }}</h4>
                             @endif
@@ -66,7 +66,7 @@
                             </div>
                     </div>
                     @php
-                        // Collect images: first image is provider profileImg, rest from services
+                        // Collect images: first image is provider profileImg, rest from salon_images then services
                         $providerImages = [];
                         $defaultImage = asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg');
                         
@@ -76,8 +76,25 @@
                             : $defaultImage;
                         $providerImages[] = $firstImage;
                         
-                        // Collect images from services for the remaining 4 slots
-                        if (isset($services) && is_array($services) && count($services) > 0) {
+                        // Track salon_images count for overlay logic
+                        $salonImages = isset($provider['salon_images']) && is_array($provider['salon_images']) 
+                            ? array_filter($provider['salon_images'], function($img) { return !empty($img); }) // Filter out empty images
+                            : [];
+                        $salonImages = array_values($salonImages); // Re-index array after filtering
+                        $salonImagesCount = count($salonImages);
+                        
+                        // Add salon_images to the array (up to 4 images) before service images
+                        // We need exactly 4 small images, so take first 4 salon images
+                        $salonImagesToUse = array_slice($salonImages, 0, 4); // Take first 4 salon images
+                        foreach ($salonImagesToUse as $salonImage) {
+                            if (!empty($salonImage)) {
+                                $providerImages[] = $salonImage;
+                            }
+                        }
+                        
+                        // Only collect images from services if we have fewer than 4 salon images
+                        $salonImagesAdded = count($salonImagesToUse);
+                        if ($salonImagesAdded < 4 && isset($services) && is_array($services) && count($services) > 0) {
                             foreach ($services as $service) {
                                 // Check if service has images array
                                 if (isset($service['images']) && is_array($service['images']) && count($service['images']) > 0) {
@@ -104,6 +121,10 @@
                         
                         // Ensure we have exactly 5 images
                         $providerImages = array_slice($providerImages, 0, 5);
+                        
+                        // Calculate total images for overlay (provider profile + all salon_images)
+                        $totalImagesForOverlay = 1 + $salonImagesCount;
+                        $showOverlay = $totalImagesForOverlay > 5;
                     @endphp
                     
                     <!-- Desktop Grid View -->
@@ -136,12 +157,26 @@
                                      loading="lazy"
                                      onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
                             </div>
-                            <div class="provider-image-small">
+                            <div class="provider-image-small" id="fourth-image-container">
                                 <img src="{{ $providerImages[4] }}" 
                                      alt="{{ $provider['name'] ?? 'Provider' }}" 
                                      class="services-img-fluid"
                                      loading="lazy"
                                      onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                                @if(isset($provider['salon_images']) && is_array($provider['salon_images']) && count($provider['salon_images']) > 0)
+                                    @php
+                                        $galleryImages = array_merge(
+                                            [$firstImage],
+                                            $provider['salon_images']
+                                        );
+                                    @endphp
+                                    <div class="see-all-photos-overlay" id="see-all-overlay" style="display: {{ $showOverlay ? 'flex' : 'none' }};">
+                                        <span>See all {{ $totalImagesForOverlay }} photos</span>
+                                    </div>
+                                    <div class="gallery-data" 
+                                         data-gallery-images='@json($galleryImages)'
+                                         style="display: none;"></div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -180,7 +215,7 @@
                     </div>
                     <div class="services-row services-align-center service-proivder-mobile-view">
                         <div class="services-col-md-10 service-page-header-text">
-                            <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2>
+                            {{-- <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2> --}}
                             @if(isset($provider['companyName']))
                                 <h4 class="service-name-heading">{{ $provider['companyName'] }}</h4>
                             @endif
@@ -424,6 +459,7 @@ $dayNames = [
 @endsection
 
 @section('styles')
+<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
 <style>
 /* Bootstrap-free grid system scoped to provider-services */
 .service-proivder-mobile-view{
@@ -1488,15 +1524,85 @@ $dayNames = [
     }
 }
 
+/* See All Photos Overlay */
+.see-all-photos-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+}
+
+.see-all-photos-overlay:hover {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.see-all-photos-overlay span {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    padding: 0 15px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.provider-image-small {
+    position: relative;
+}
+
+@media (max-width: 767px) {
+    .see-all-photos-overlay span {
+        font-size: 14px;
+        padding: 0 10px;
+    }
+}
+
 </style>
 @endsection
 
 @section('scripts')
+<script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Fetch services for provider via API
     const providerId = '{{ $providerId ?? '' }}';
     const providerData = @json($provider ?? []);
+    
+    // Initialize overlay on page load if salon_images exist
+    const salonImages = (providerData.salon_images && Array.isArray(providerData.salon_images)) 
+        ? providerData.salon_images 
+        : [];
+    const salonImagesCount = salonImages.length;
+    const totalImagesForOverlay = 1 + salonImagesCount;
+    const showOverlay = totalImagesForOverlay > 5;
+    
+    if (showOverlay && salonImagesCount > 0) {
+        const overlay = document.getElementById('see-all-overlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+            const span = overlay.querySelector('span');
+            if (span) {
+                span.textContent = `See all ${totalImagesForOverlay} photos`;
+            }
+        }
+        
+        // Initialize gallery and attach click handler on page load
+        setTimeout(function() {
+            initializeProviderGallery();
+            attachOverlayClickHandler();
+        }, 300);
+    }
     
     if (providerId) {
         fetchProviderServices(providerId);
@@ -1664,6 +1770,163 @@ document.addEventListener('DOMContentLoaded', function() {
         return text.substring(0, length) + '...';
     }
     
+    // Attach click handler to overlay
+    function attachOverlayClickHandler() {
+        const overlay = document.getElementById('see-all-overlay');
+        if (!overlay) {
+            console.log('Overlay not found for click handler');
+            return;
+        }
+        
+        // Find gallery link - try multiple times if not found
+        let galleryLink = document.querySelector('a.gallery-trigger');
+        if (!galleryLink) {
+            console.log('Gallery link not found, retrying...');
+            setTimeout(function() {
+                attachOverlayClickHandler();
+            }, 100);
+            return;
+        }
+        
+        // Remove existing listeners by cloning
+        const newOverlay = overlay.cloneNode(true);
+        // Preserve the display style
+        newOverlay.style.display = overlay.style.display;
+        overlay.parentNode.replaceChild(newOverlay, overlay);
+        
+        // Attach click handler
+        newOverlay.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Overlay clicked, opening gallery...');
+            
+            // Find gallery link again (in case it was recreated)
+            const link = document.querySelector('a.gallery-trigger');
+            if (link) {
+                console.log('Clicking gallery link:', link.href);
+                link.click();
+            } else {
+                console.error('Gallery link not found when clicked');
+                // Try to initialize gallery again
+                initializeProviderGallery();
+                setTimeout(function() {
+                    const retryLink = document.querySelector('a.gallery-trigger');
+                    if (retryLink) {
+                        retryLink.click();
+                    }
+                }, 200);
+            }
+        });
+        
+        // Also make it visually clear it's clickable
+        newOverlay.style.cursor = 'pointer';
+        console.log('Overlay click handler attached');
+    }
+    
+    // Initialize magnificPopup gallery for provider images
+    function initializeProviderGallery() {
+        const galleryData = document.querySelector('.gallery-data');
+        if (!galleryData) return;
+        
+        const galleryImagesJson = galleryData.getAttribute('data-gallery-images');
+        if (!galleryImagesJson) return;
+        
+        let galleryImages = [];
+        try {
+            galleryImages = JSON.parse(galleryImagesJson);
+        } catch (e) {
+            console.error('Error parsing gallery images:', e);
+            return;
+        }
+        
+        if (galleryImages.length === 0) return;
+        
+        // Check if jQuery and magnificPopup are available
+        if (typeof jQuery === 'undefined' || typeof jQuery.fn.magnificPopup === 'undefined') {
+            console.warn('magnificPopup library not loaded, retrying...');
+            setTimeout(initializeProviderGallery, 200);
+            return;
+        }
+        
+        // Create gallery links dynamically
+        const fourthImageContainer = document.getElementById('fourth-image-container');
+        if (!fourthImageContainer) return;
+        
+        // Remove existing gallery link if any
+        const existingLink = fourthImageContainer.querySelector('a.gallery-trigger');
+        if (existingLink) {
+            existingLink.remove();
+        }
+        
+        // Create anchor element for gallery
+        const galleryLink = document.createElement('a');
+        galleryLink.href = galleryImages[0]; // First image
+        galleryLink.className = 'gallery-trigger';
+        galleryLink.style.display = 'none';
+        fourthImageContainer.appendChild(galleryLink);
+        
+        // Filter and format gallery images for magnificPopup (needs objects with src property)
+        const galleryItems = galleryImages
+            .filter(function(img) {
+                return img && typeof img === 'string' && img.trim() !== '' && (img.startsWith('http') || img.startsWith('//'));
+            })
+            .map(function(img) {
+                return {
+                    src: img.trim(),
+                    type: 'image'
+                };
+            });
+        
+        if (galleryItems.length === 0) {
+            console.error('No valid gallery images found. Gallery images:', galleryImages);
+            return;
+        }
+        
+        // Ensure the link href matches the first gallery item
+        galleryLink.href = galleryItems[0].src;
+        
+        console.log('Initializing gallery with', galleryItems.length, 'images');
+        
+        // Initialize magnificPopup with items array
+        jQuery(galleryLink).magnificPopup({
+            items: galleryItems,
+            closeOnContentClick: false,
+            closeBtnInside: false,
+            mainClass: 'mfp-with-zoom mfp-img-mobile',
+            image: {
+                verticalFit: true,
+                titleSrc: function(item) {
+                    return '';
+                }
+            },
+            gallery: {
+                enabled: true,
+                navigateByImgClick: true,
+                preload: [0, 1]
+            },
+            zoom: {
+                enabled: true,
+                duration: 300,
+            },
+            callbacks: {
+                imageLoadComplete: function() {
+                    var self = this;
+                    setTimeout(function() {
+                        self.wrap.addClass('mfp-image-loaded');
+                    }, 16);
+                },
+                error: function(msg, item) {
+                    console.error('MagnificPopup error:', msg, item);
+                }
+            }
+        });
+        
+        // Make overlay clickable - attach click handler after gallery is initialized
+        setTimeout(function() {
+            attachOverlayClickHandler();
+        }, 50);
+    }
+    
     function updateProviderImages(services) {
         // Collect service images for provider gallery
         const providerImages = [];
@@ -1673,21 +1936,44 @@ document.addEventListener('DOMContentLoaded', function() {
         // First image is provider profile
         providerImages.push(providerProfileImg);
         
-        // Collect images from services
-        services.forEach(service => {
-            if (service.images && Array.isArray(service.images) && providerImages.length < 5) {
-                service.images.forEach(img => {
-                    if (img && providerImages.length < 5) {
-                        providerImages.push(img);
-                    }
-                });
+        // Get salon_images from provider data
+        const salonImages = (providerData.salon_images && Array.isArray(providerData.salon_images)) 
+            ? providerData.salon_images.filter(img => img && img.trim() !== '') // Filter out empty images
+            : [];
+        const salonImagesCount = salonImages.length;
+        
+        // Add salon_images to the array (up to 4 images) before service images
+        // We need exactly 4 small images, so take first 4 salon images
+        const salonImagesToUse = salonImages.slice(0, 4); // Take first 4 salon images
+        salonImagesToUse.forEach((salonImage) => {
+            if (salonImage) {
+                providerImages.push(salonImage);
             }
         });
+        
+        // Only collect images from services if we have fewer than 4 salon images
+        const salonImagesAdded = salonImagesToUse.length;
+        if (salonImagesAdded < 4) {
+            const remainingSlots = 4 - salonImagesAdded;
+            services.forEach(service => {
+                if (service.images && Array.isArray(service.images) && providerImages.length < 5) {
+                    service.images.forEach(img => {
+                        if (img && providerImages.length < 5) {
+                            providerImages.push(img);
+                        }
+                    });
+                }
+            });
+        }
         
         // Fill remaining slots with default image
         while (providerImages.length < 5) {
             providerImages.push(defaultImage);
         }
+        
+        // Calculate total images for overlay (provider profile + all salon_images)
+        const totalImagesForOverlay = 1 + salonImagesCount;
+        const showOverlay = totalImagesForOverlay > 5;
         
         // Update desktop grid images
         const mainImage = document.querySelector('.provider-image-main img');
@@ -1699,6 +1985,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.src = providerImages[index + 1];
             }
         });
+        
+        // Update overlay visibility and text
+        const overlay = document.getElementById('see-all-overlay');
+        const fourthImageContainer = document.getElementById('fourth-image-container');
+        
+        if (showOverlay && salonImagesCount > 0) {
+            // Create overlay if it doesn't exist
+            let overlayElement = overlay;
+            if (!overlayElement && fourthImageContainer) {
+                overlayElement = document.createElement('div');
+                overlayElement.id = 'see-all-overlay';
+                overlayElement.className = 'see-all-photos-overlay';
+                const span = document.createElement('span');
+                overlayElement.appendChild(span);
+                fourthImageContainer.appendChild(overlayElement);
+            }
+            
+            if (overlayElement) {
+                overlayElement.style.display = 'flex';
+                const span = overlayElement.querySelector('span');
+                if (span) {
+                    span.textContent = `See all ${totalImagesForOverlay} photos`;
+                }
+            }
+            
+            // Update or create gallery data
+            let galleryData = document.querySelector('.gallery-data');
+            if (!galleryData && fourthImageContainer) {
+                galleryData = document.createElement('div');
+                galleryData.className = 'gallery-data';
+                galleryData.style.display = 'none';
+                fourthImageContainer.appendChild(galleryData);
+            }
+            
+            if (galleryData) {
+                const galleryImages = [providerProfileImg, ...salonImages];
+                galleryData.setAttribute('data-gallery-images', JSON.stringify(galleryImages));
+            }
+            
+            // Initialize gallery and attach click handler after overlay is created/updated
+            setTimeout(function() {
+                initializeProviderGallery();
+                attachOverlayClickHandler();
+            }, 100);
+        } else if (overlay) {
+            overlay.style.display = 'none';
+        }
         
         // Update mobile carousel images
         const carouselSlides = document.querySelectorAll('.carousel-slide img');
@@ -2109,6 +2442,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
+    
+    // Initialize gallery after images are updated
+    if (providerId) {
+        // Wait a bit for updateProviderImages to complete
+        setTimeout(function() {
+            initializeProviderGallery();
+        }, 500);
+    } else {
+        // Initialize immediately if no services to fetch
+        initializeProviderGallery();
     }
 });
 </script>
