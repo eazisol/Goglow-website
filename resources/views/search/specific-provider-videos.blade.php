@@ -553,7 +553,7 @@
 
     .video-modal-content {
         position: fixed !important;
-        max-width: 320px;
+        max-width: 380px;
         width: 100%;
         background: transparent;
         cursor: grab;
