@@ -24,35 +24,27 @@
     <div class="services-container">
         <div class="services-row section-row">
             <div class="services-col-12">
+                {{-- Provider Loading State --}}
+                <div id="providerLoading" class="services-text-center services-py-4" style="display: block;">
+                    <p>Loading provider information...</p>
+                </div>
+                
+                {{-- Provider Error State --}}
+                <div id="providerError" class="services-text-center services-py-4" style="display: none;">
+                    <h5>Failed to load provider information. Please try again later.</h5>
+                </div>
+                
+                {{-- Provider Content Container --}}
+                <div id="providerContent" style="display: none;">
                 <div class="provider-header services-mb-1">
                     <div class="services-row services-align-center service-proivder-desktop-view">
                         <div class="services-col-md-10 service-page-header-text">
                             {{-- <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2> --}}
-                            @if(isset($provider['companyName']))
-                                <h4 class="service-name-heading">{{ $provider['companyName'] }}</h4>
-                            @endif
+                            <h4 class="service-name-heading" id="providerCompanyName"></h4>
                             <div class="provider-info">
-                                <div class="provider-ratting-review">
-                                @if(isset($provider['avg_ratting']) && $provider['avg_ratting'] > 0)
-                                    <p>
-                                        <div class="provider-info-ratting">{{ $provider['avg_ratting'] }}</div>
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        
-                                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} {{ __('app.service.reviews') }})</div>
-                                    </p>
-                                @endif
+                                <div class="provider-ratting-review" id="providerRatingSection">
                                 </div>
-                                <div class="provider-service-address">
-                                    @if(isset($provider['address']))
-                                        <p>
-                                            <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
-                                            <div class="provider-info-address"> {{ $provider['address'] }} </div>
-                                        </p>
-                                    @endif
+                                <div class="provider-service-address" id="providerAddressSection">
                                 </div>
                             </div>
                         </div>
@@ -66,125 +58,56 @@
                             </div>
                     </div>
                     @php
-                        // Collect images: first image is provider profileImg, rest from salon_images then services
-                        $providerImages = [];
                         $defaultImage = asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg');
-                        
-                        // First image: provider profile image
-                        $firstImage = isset($provider['profileImg']) && $provider['profileImg'] 
-                            ? $provider['profileImg'] 
-                            : $defaultImage;
-                        $providerImages[] = $firstImage;
-                        
-                        // Track salon_images count for overlay logic
-                        $salonImages = isset($provider['salon_images']) && is_array($provider['salon_images']) 
-                            ? array_filter($provider['salon_images'], function($img) { return !empty($img); }) // Filter out empty images
-                            : [];
-                        $salonImages = array_values($salonImages); // Re-index array after filtering
-                        $salonImagesCount = count($salonImages);
-                        
-                        // Add salon_images to the array (up to 4 images) before service images
-                        // We need exactly 4 small images, so take first 4 salon images
-                        $salonImagesToUse = array_slice($salonImages, 0, 4); // Take first 4 salon images
-                        foreach ($salonImagesToUse as $salonImage) {
-                            if (!empty($salonImage)) {
-                                $providerImages[] = $salonImage;
-                            }
-                        }
-                        
-                        // Only collect images from services if we have fewer than 4 salon images
-                        $salonImagesAdded = count($salonImagesToUse);
-                        if ($salonImagesAdded < 4 && isset($services) && is_array($services) && count($services) > 0) {
-                            foreach ($services as $service) {
-                                // Check if service has images array
-                                if (isset($service['images']) && is_array($service['images']) && count($service['images']) > 0) {
-                                    foreach ($service['images'] as $serviceImage) {
-                                        if (count($providerImages) >= 5) {
-                                            break 2; // Break both loops when we have 5 images
-                                        }
-                                        if (!empty($serviceImage)) {
-                                            $providerImages[] = $serviceImage;
-                                        }
-                                    }
-                                }
-                                // If we already have 5 images, break
-                                if (count($providerImages) >= 5) {
-                                    break;
-                                }
-                            }
-                        }
-                        
-                        // Fill remaining slots with default image if needed
-                        while (count($providerImages) < 5) {
-                            $providerImages[] = $defaultImage;
-                        }
-                        
-                        // Ensure we have exactly 5 images
-                        $providerImages = array_slice($providerImages, 0, 5);
-                        
-                        // Calculate total images for overlay (provider profile + all salon_images)
-                        $totalImagesForOverlay = 1 + $salonImagesCount;
-                        $showOverlay = $totalImagesForOverlay > 5;
-                        
-                        // Create array with ALL gallery images for mobile carousel
-                        $allGalleryImages = [$firstImage];
-                        foreach ($salonImages as $salonImage) {
-                            if (!empty($salonImage)) {
-                                $allGalleryImages[] = $salonImage;
-                            }
-                        }
                     @endphp
                     
                     <!-- Desktop Grid View -->
                     <div class="provider-images-grid">
                         <div class="provider-image-main">
-                            <img src="{{ $providerImages[0] }}" 
-                                 alt="{{ $provider['name'] ?? 'Provider' }}" 
+                            <img id="providerMainImage" 
+                                 src="{{ $defaultImage }}" 
+                                 alt="Provider" 
                                  class="services-img-fluid"
-                                 onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                                 onerror="this.src='{{ $defaultImage }}'">
                         </div>
                         <div class="provider-images-small">
                             <div class="provider-image-small">
-                                <img src="{{ $providerImages[1] }}" 
-                                     alt="{{ $provider['name'] ?? 'Provider' }}" 
+                                <img id="providerImage1" 
+                                     src="{{ $defaultImage }}" 
+                                     alt="Provider" 
                                      class="services-img-fluid"
                                      loading="lazy"
-                                     onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                                     onerror="this.src='{{ $defaultImage }}'">
                             </div>
                             <div class="provider-image-small">
-                                <img src="{{ $providerImages[2] }}" 
-                                     alt="{{ $provider['name'] ?? 'Provider' }}" 
+                                <img id="providerImage2" 
+                                     src="{{ $defaultImage }}" 
+                                     alt="Provider" 
                                      class="services-img-fluid"
                                      loading="lazy"
-                                     onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                                     onerror="this.src='{{ $defaultImage }}'">
                             </div>
                             <div class="provider-image-small">
-                                <img src="{{ $providerImages[3] }}" 
-                                     alt="{{ $provider['name'] ?? 'Provider' }}" 
+                                <img id="providerImage3" 
+                                     src="{{ $defaultImage }}" 
+                                     alt="Provider" 
                                      class="services-img-fluid"
                                      loading="lazy"
-                                     onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                                     onerror="this.src='{{ $defaultImage }}'">
                             </div>
                             <div class="provider-image-small" id="fourth-image-container">
-                                <img src="{{ $providerImages[4] }}" 
-                                     alt="{{ $provider['name'] ?? 'Provider' }}" 
+                                <img id="providerImage4" 
+                                     src="{{ $defaultImage }}" 
+                                     alt="Provider" 
                                      class="services-img-fluid"
                                      loading="lazy"
-                                     onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
-                                @if(isset($provider['salon_images']) && is_array($provider['salon_images']) && count($provider['salon_images']) > 0)
-                                    @php
-                                        $galleryImages = array_merge(
-                                            [$firstImage],
-                                            $provider['salon_images']
-                                        );
-                                    @endphp
-                                    <div class="see-all-photos-overlay" id="see-all-overlay" style="display: {{ $showOverlay ? 'flex' : 'none' }};">
-                                        <span>See all {{ $totalImagesForOverlay }} photos</span>
-                                    </div>
-                                    <div class="gallery-data" 
-                                         data-gallery-images='@json($galleryImages)'
-                                         style="display: none;"></div>
-                                @endif
+                                     onerror="this.src='{{ $defaultImage }}'">
+                                <div class="see-all-photos-overlay" id="see-all-overlay" style="display: none;">
+                                    <span id="see-all-overlay-text"></span>
+                                </div>
+                                <div class="gallery-data" 
+                                     id="galleryData"
+                                     style="display: none;"></div>
                             </div>
                         </div>
                     </div>
@@ -200,55 +123,24 @@
                             </button>
                         </div>
                         <div class="carousel-container">
-                            <div class="carousel-track">
-                                @foreach($allGalleryImages as $index => $image)
-                                    <div class="carousel-slide {{ $index === 0 ? 'active' : '' }}">
-                                        <img src="{{ $image }}" 
-                                             alt="{{ $provider['name'] ?? 'Provider' }}" 
-                                             class="services-img-fluid"
-                                             loading="lazy"
-                                             onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
-                                    </div>
-                                @endforeach
+                            <div class="carousel-track" id="carouselTrack">
+                                <!-- Carousel slides will be populated by JavaScript -->
                             </div>
                         </div>
                         <div class="carousel-counter">
-                            <span class="current-slide">1</span>/<span class="total-slides">{{ count($allGalleryImages) }}</span>
+                            <span class="current-slide">1</span>/<span class="total-slides" id="totalSlides">1</span>
                         </div>
-                        <div class="carousel-dots">
-                            @foreach($allGalleryImages as $index => $image)
-                                <span class="carousel-dot {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}"></span>
-                            @endforeach
+                        <div class="carousel-dots" id="carouselDots">
+                            <!-- Carousel dots will be populated by JavaScript -->
                         </div>
                     </div>
                     <div class="services-row services-align-center service-proivder-mobile-view">
                         <div class="services-col-md-10 service-page-header-text">
-                            {{-- <h2>{{ $provider['storeName'] ?? $provider['name'] }}</h2> --}}
-                            @if(isset($provider['companyName']))
-                                <h4 class="service-name-heading">{{ $provider['companyName'] }}</h4>
-                            @endif
+                            <h4 class="service-name-heading" id="providerCompanyNameMobile"></h4>
                             <div class="provider-info">
-                                <div class="provider-ratting-review">
-                                @if(isset($provider['avg_ratting']) && $provider['avg_ratting'] > 0)
-                                    <p>
-                                        <div class="provider-info-ratting">{{ $provider['avg_ratting'] }}</div>
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                                        
-                                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} {{ __('app.service.reviews') }})</div>
-                                    </p>
-                                @endif
+                                <div class="provider-ratting-review" id="providerRatingSectionMobile">
                                 </div>
-                                <div class="provider-service-address">
-                                @if(isset($provider['address']))
-                                    <p>
-                                        <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
-                                        <div class="provider-info-address"> {{ $provider['address'] }} </div>
-                                    </p>
-                                @endif
+                                <div class="provider-service-address" id="providerAddressSectionMobile">
                                 </div>
                             </div>
                         </div>
@@ -261,6 +153,7 @@
                                 </button>
                             </div>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -286,7 +179,7 @@
                 </svg>
                 <span>Service List</span>
             </a>
-            <a href="{{ route('search.videos.provider', ['provider_id' => $providerId ?? request()->get('provider_id')]) }}" class="view-tab" data-view="videos">
+            <a href="{{ route('search.videos.provider', ['provider_id' => request()->get('provider_id')]) }}" class="view-tab" id="videosTabLink" data-view="videos">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="2.5" y="4.16667" width="15" height="11.6667" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M8.33333 7.5L13.3333 10L8.33333 12.5V7.5Z" fill="currentColor"/>
@@ -324,30 +217,12 @@
                 
         </div>
 <div class="services-col-lg-4">
-    <div class="provider-info-card">
+    <div class="provider-info-card" id="providerInfoCard">
         <!-- Header Section -->
         <div class="provider-card-header">
-                            @if(isset($provider['companyName']))
-                                <h4 class="provider-card-company-name">{{ $provider['companyName'] }}</h4>
-                            @endif
-            {{-- <h2 class="provider-card-name">{{ $provider['storeName'] ?? $provider['name'] }}</h2> --}}
-            @if(isset($provider['avg_ratting']) && $provider['avg_ratting'] > 0)
-                <div class="provider-ratting-review">
-                @if(isset($provider['avg_ratting']) && $provider['avg_ratting'] > 0)
-                    <p>
-                        <div class="provider-info-ratting">{{ $provider['avg_ratting'] }}</div>
-                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                        <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                        
-                        <div class="provider-info-reviews">({{ $provider['total_review'] ?? 0 }} {{ __('app.service.reviews') }})</div>
-                    </p>
-                @endif
-                </div>
-            @endif
-            {{-- <a href="#" class="to-book-btn">{{ __('app.service.to_book') }}</a> --}}
+            <h4 class="provider-card-company-name" id="providerCardCompanyName"></h4>
+            <div class="provider-ratting-review" id="providerCardRatingSection">
+            </div>
         </div>
         
         <!-- Separator -->
@@ -355,70 +230,21 @@
         
         <!-- Hours of Operation Section -->
         <div class="hours-section">
-            @php
-$dayNames = [
-    'Mon' => __('app.service.monday'),
-    'Tue' => __('app.service.tuesday'),
-    'Wed' => __('app.service.wednesday'),
-    'Thu' => __('app.service.thursday'),
-    'Fri' => __('app.service.friday'),
-    'Sat' => __('app.service.saturday'),
-    'Sun' => __('app.service.sunday'),
-];
-                
-                // Get current day and closing time for "Open until" display
-                $now = \Carbon\Carbon::now('Europe/Paris');
-                $todayKey = $now->format('D');
-                $openUntil = '';
-                if (isset($provider['timing'][$todayKey]) && count($provider['timing'][$todayKey]) === 2) {
-                    $closeTime = \Carbon\Carbon::createFromTimestamp($provider['timing'][$todayKey][1], 'Europe/Paris');
-                    $openTime = \Carbon\Carbon::createFromTimestamp($provider['timing'][$todayKey][0], 'Europe/Paris');
-                    if ($openTime->format('H:i') !== $closeTime->format('H:i') && $openTime->format('H:i') < $closeTime->format('H:i')) {
-                        $openUntil = $closeTime->format('ga');
-                    }
-                }
-            @endphp
-            
             <div class="hours-toggle-header" id="hoursToggle">
                 <div class="hours-toggle-left">
                     <img src="images/images/iconoir_clock.svg" alt="Location" width="24" height="24">
-                    <span class="open-until-text">@if($openUntil){{ __('app.service.open') }} <span class="until-text-time">{{ __('app.service.until') }} {{ $openUntil }}</span>@else Hours of operation @endif</span>
+                    <span class="open-until-text" id="openUntilText">Hours of operation</span>
                 </div>
                 <i class="fas fa-chevron-up hours-chevron" id="hoursChevron"></i>
             </div>
             
             <div class="hours-list" id="hoursList">
-                @if(isset($provider['timing']))
-                    @foreach($dayNames as $shortDay => $fullDay)
-                        <div class="hours-row">
-                            <span class="hours-day">{{ $fullDay }}</span>
-                            @if(isset($provider['timing'][$shortDay]) && count($provider['timing'][$shortDay]) === 2)
-                                @php
-                                    $openTime  = \Carbon\Carbon::createFromTimestamp($provider['timing'][$shortDay][0], 'Europe/Paris')->format('H:i');
-                                    $closeTime = \Carbon\Carbon::createFromTimestamp($provider['timing'][$shortDay][1], 'Europe/Paris')->format('H:i');
-                                @endphp
-                                @if($openTime === $closeTime || $openTime > $closeTime)
-                                    <span class="hours-time">Closed</span>
-                                @else
-                                    <span class="hours-time">{{ $openTime }} - {{ $closeTime }}</span>
-                                @endif
-                            @else
-                                <span class="hours-time">Closed</span>
-                            @endif
-                        </div>
-                    @endforeach
-                @endif
+                <!-- Hours will be populated by JavaScript -->
             </div>
         </div>
         
         <!-- Location Section -->
-        <div class="provider-service-address">
-            @if(isset($provider['address']))
-                <p>
-                    <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
-                    <div class="provider-info-address"> {{ $provider['address'] }} </div>
-                </p>
-            @endif
+        <div class="provider-service-address" id="providerCardAddressSection">
         </div>
     </div>
 </div>
@@ -476,40 +302,424 @@ $dayNames = [
 <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Fetch services for provider via API
-    const providerId = '{{ $providerId ?? '' }}';
-    const providerData = @json($provider ?? []);
+    // Get provider ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const providerId = urlParams.get('provider_id') || '{{ request()->get('provider_id') }}';
+    
+    // Global variable to store provider data
+    let providerData = null;
     
     // Global variable to store gallery items for direct access
     let globalGalleryItems = [];
     
-    // Initialize overlay on page load if salon_images exist
-    const salonImages = (providerData.salon_images && Array.isArray(providerData.salon_images)) 
-        ? providerData.salon_images 
-        : [];
-    const salonImagesCount = salonImages.length;
-    const totalImagesForOverlay = 1 + salonImagesCount;
-    const showOverlay = totalImagesForOverlay > 5;
+    // Default image
+    const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
     
-    if (showOverlay && salonImagesCount > 0) {
-        const overlay = document.getElementById('see-all-overlay');
-        if (overlay) {
-            overlay.style.display = 'flex';
-            const span = overlay.querySelector('span');
-            if (span) {
-                span.textContent = `See all ${totalImagesForOverlay} photos`;
+    // Fetch provider data first, then services
+    if (providerId) {
+        fetchProviderData(providerId).then(() => {
+            // After provider data is loaded, fetch services
+            fetchProviderServices(providerId);
+        }).catch((error) => {
+            console.error('Failed to load provider data:', error);
+            // Still try to fetch services even if provider data fails
+            fetchProviderServices(providerId);
+        });
+    }
+    
+    // Fetch provider data from API
+    async function fetchProviderData(providerId) {
+        const loadingEl = document.getElementById('providerLoading');
+        const errorEl = document.getElementById('providerError');
+        const contentEl = document.getElementById('providerContent');
+        
+        // Show loading
+        if (loadingEl) loadingEl.style.display = 'block';
+        if (errorEl) errorEl.style.display = 'none';
+        if (contentEl) contentEl.style.display = 'none';
+        
+        try {
+            const apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders?providerId=${encodeURIComponent(providerId)}`;
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch provider data');
+            }
+            
+            const providers = await response.json();
+            
+            if (!Array.isArray(providers) || providers.length === 0) {
+                throw new Error('Provider not found');
+            }
+            
+            // Extract provider from array (API returns array with single provider)
+            providerData = providers[0];
+            
+            // Hide loading, show content
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (contentEl) contentEl.style.display = 'block';
+            
+            // Render provider data
+            renderProviderData(providerData);
+            
+            return providerData;
+            
+        } catch (error) {
+            console.error('Error fetching provider data:', error);
+            
+            // Try server-side fallback
+            try {
+                const fallbackUrl = `{{ route('search.provider.fallback') }}?provider_id=${encodeURIComponent(providerId)}`;
+                const fallbackResponse = await fetch(fallbackUrl);
+                
+                if (fallbackResponse.ok) {
+                    const fallbackData = await fallbackResponse.json();
+                    providerData = fallbackData.provider;
+                    
+                    if (loadingEl) loadingEl.style.display = 'none';
+                    if (contentEl) contentEl.style.display = 'block';
+                    
+                    renderProviderData(providerData);
+                    return providerData;
+                }
+            } catch (fallbackError) {
+                console.error('Fallback also failed:', fallbackError);
+            }
+            
+            // Show error
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (errorEl) errorEl.style.display = 'block';
+            if (contentEl) contentEl.style.display = 'none';
+            
+            throw error;
+        }
+    }
+    
+    // Render provider data to the page
+    function renderProviderData(provider) {
+        if (!provider) return;
+        
+        // Render company name (desktop and mobile)
+        const companyName = provider.companyName || provider.name || '';
+        const companyNameEl = document.getElementById('providerCompanyName');
+        const companyNameMobileEl = document.getElementById('providerCompanyNameMobile');
+        const cardCompanyNameEl = document.getElementById('providerCardCompanyName');
+        
+        if (companyNameEl) companyNameEl.textContent = companyName;
+        if (companyNameMobileEl) companyNameMobileEl.textContent = companyName;
+        if (cardCompanyNameEl) cardCompanyNameEl.textContent = companyName;
+        
+        // Render rating and reviews
+        const avgRating = provider.avg_ratting || 0;
+        const totalReviews = provider.total_review || 0;
+        const ratingSectionEl = document.getElementById('providerRatingSection');
+        const ratingSectionMobileEl = document.getElementById('providerRatingSectionMobile');
+        const cardRatingSectionEl = document.getElementById('providerCardRatingSection');
+        
+        const ratingHtml = avgRating > 0 ? `
+            <p>
+                <div class="provider-info-ratting">${avgRating.toFixed(1)}</div>
+                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                <div class="provider-info-reviews">(${totalReviews} {{ __('app.service.reviews') }})</div>
+            </p>
+        ` : '';
+        
+        if (ratingSectionEl) ratingSectionEl.innerHTML = ratingHtml;
+        if (ratingSectionMobileEl) ratingSectionMobileEl.innerHTML = ratingHtml;
+        if (cardRatingSectionEl) cardRatingSectionEl.innerHTML = ratingHtml;
+        
+        // Render address
+        const address = provider.address || '';
+        const addressSectionEl = document.getElementById('providerAddressSection');
+        const addressSectionMobileEl = document.getElementById('providerAddressSectionMobile');
+        const cardAddressSectionEl = document.getElementById('providerCardAddressSection');
+        
+        const addressHtml = address ? `
+            <p>
+                <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
+                <div class="provider-info-address">${escapeHtml(address)}</div>
+            </p>
+        ` : '';
+        
+        if (addressSectionEl) addressSectionEl.innerHTML = addressHtml;
+        if (addressSectionMobileEl) addressSectionMobileEl.innerHTML = addressHtml;
+        if (cardAddressSectionEl) cardAddressSectionEl.innerHTML = addressHtml;
+        
+        // Render images
+        renderProviderImages(provider);
+        
+        // Render hours of operation
+        renderProviderHours(provider);
+        
+        // Update videos tab link
+        const videosTabLink = document.getElementById('videosTabLink');
+        if (videosTabLink && providerId) {
+            videosTabLink.href = `{{ route('search.videos.provider') }}?provider_id=${encodeURIComponent(providerId)}`;
+        }
+    }
+    
+    // Render provider images
+    function renderProviderImages(provider) {
+        const profileImg = provider.profileImg || defaultImage;
+        const salonImages = (provider.salon_images && Array.isArray(provider.salon_images)) 
+            ? provider.salon_images.filter(img => img && img.trim() !== '')
+            : [];
+        
+        // Collect images: profile first, then salon images
+        const providerImages = [profileImg];
+        const salonImagesToUse = salonImages.slice(0, 4);
+        salonImagesToUse.forEach(img => {
+            if (img) providerImages.push(img);
+        });
+        
+        // Fill remaining slots with default image
+        while (providerImages.length < 5) {
+            providerImages.push(defaultImage);
+        }
+        
+        // Ensure exactly 5 images
+        const finalImages = providerImages.slice(0, 5);
+        
+        // Update desktop grid images
+        const mainImageEl = document.getElementById('providerMainImage');
+        const image1El = document.getElementById('providerImage1');
+        const image2El = document.getElementById('providerImage2');
+        const image3El = document.getElementById('providerImage3');
+        const image4El = document.getElementById('providerImage4');
+        
+        if (mainImageEl) mainImageEl.src = finalImages[0];
+        if (image1El) image1El.src = finalImages[1];
+        if (image2El) image2El.src = finalImages[2];
+        if (image3El) image3El.src = finalImages[3];
+        if (image4El) image4El.src = finalImages[4];
+        
+        // Update mobile carousel
+        renderMobileCarousel(profileImg, salonImages);
+        
+        // Setup gallery overlay
+        const salonImagesCount = salonImages.length;
+        const totalImagesForOverlay = 1 + salonImagesCount;
+        const showOverlay = totalImagesForOverlay > 5;
+        
+        const overlayEl = document.getElementById('see-all-overlay');
+        const overlayTextEl = document.getElementById('see-all-overlay-text');
+        const galleryDataEl = document.getElementById('galleryData');
+        
+        if (showOverlay && salonImagesCount > 0) {
+            if (overlayEl) overlayEl.style.display = 'flex';
+            if (overlayTextEl) overlayTextEl.textContent = `See all ${totalImagesForOverlay} photos`;
+            
+            // Setup gallery data
+            const galleryImages = [profileImg, ...salonImages];
+            if (galleryDataEl) {
+                galleryDataEl.setAttribute('data-gallery-images', JSON.stringify(galleryImages));
+            }
+            
+            // Initialize gallery after a delay
+            setTimeout(function() {
+                initializeProviderGallery();
+                attachOverlayClickHandler();
+            }, 300);
+        } else {
+            if (overlayEl) overlayEl.style.display = 'none';
+        }
+    }
+    
+    // Render mobile carousel
+    function renderMobileCarousel(profileImg, salonImages) {
+        const carouselTrack = document.getElementById('carouselTrack');
+        const carouselDots = document.getElementById('carouselDots');
+        const totalSlidesEl = document.getElementById('totalSlides');
+        
+        if (!carouselTrack || !carouselDots) return;
+        
+        const allGalleryImages = [profileImg];
+        salonImages.forEach(img => {
+            if (img) allGalleryImages.push(img);
+        });
+        
+        // Clear existing content
+        carouselTrack.innerHTML = '';
+        carouselDots.innerHTML = '';
+        
+        // Create slides
+        allGalleryImages.forEach((image, index) => {
+            const slide = document.createElement('div');
+            slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+            slide.innerHTML = `
+                <img src="${image}" 
+                     alt="Provider" 
+                     class="services-img-fluid"
+                     loading="lazy"
+                     onerror="this.src='${defaultImage}'">
+            `;
+            carouselTrack.appendChild(slide);
+            
+            // Create dot
+            const dot = document.createElement('span');
+            dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
+            dot.setAttribute('data-slide', index);
+            carouselDots.appendChild(dot);
+        });
+        
+        if (totalSlidesEl) totalSlidesEl.textContent = allGalleryImages.length;
+        
+        // Re-initialize carousel functionality
+        initializeCarousel();
+    }
+    
+    // Render provider hours
+    function renderProviderHours(provider) {
+        const timing = provider.timing || {};
+        const hoursListEl = document.getElementById('hoursList');
+        const openUntilTextEl = document.getElementById('openUntilText');
+        
+        if (!hoursListEl) return;
+        
+        const dayNames = {
+            'Mon': '{{ __('app.service.monday') }}',
+            'Tue': '{{ __('app.service.tuesday') }}',
+            'Wed': '{{ __('app.service.wednesday') }}',
+            'Thu': '{{ __('app.service.thursday') }}',
+            'Fri': '{{ __('app.service.friday') }}',
+            'Sat': '{{ __('app.service.saturday') }}',
+            'Sun': '{{ __('app.service.sunday') }}'
+        };
+        
+        const daysOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        
+        // Calculate "Open until" for today
+        const now = new Date();
+        const dayNamesArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const todayKey = dayNamesArray[now.getDay()];
+        let openUntil = '';
+        
+        if (timing[todayKey] && Array.isArray(timing[todayKey]) && timing[todayKey].length === 2) {
+            const openTime = new Date(timing[todayKey][0] * 1000);
+            const closeTime = new Date(timing[todayKey][1] * 1000);
+            const openTimeStr = openTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            const closeTimeStr = closeTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            
+            if (openTimeStr !== closeTimeStr && openTime < closeTime) {
+                openUntil = closeTimeStr;
             }
         }
         
-        // Initialize gallery and attach click handler on page load
-        setTimeout(function() {
-            initializeProviderGallery();
-            attachOverlayClickHandler();
-        }, 300);
+        // Update "Open until" text
+        if (openUntilTextEl) {
+            if (openUntil) {
+                openUntilTextEl.innerHTML = `{{ __('app.service.open') }} <span class="until-text-time">{{ __('app.service.until') }} ${openUntil}</span>`;
+            } else {
+                openUntilTextEl.textContent = 'Hours of operation';
+            }
+        }
+        
+        // Render hours list
+        hoursListEl.innerHTML = '';
+        daysOrder.forEach(shortDay => {
+            const fullDay = dayNames[shortDay] || shortDay;
+            const hoursRow = document.createElement('div');
+            hoursRow.className = 'hours-row';
+            
+            let hoursTime = 'Closed';
+            if (timing[shortDay] && Array.isArray(timing[shortDay]) && timing[shortDay].length === 2) {
+                const openTime = new Date(timing[shortDay][0] * 1000);
+                const closeTime = new Date(timing[shortDay][1] * 1000);
+                const openTimeStr = openTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                const closeTimeStr = closeTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                
+                if (openTimeStr !== closeTimeStr && openTimeStr < closeTimeStr) {
+                    hoursTime = `${openTimeStr} - ${closeTimeStr}`;
+                }
+            }
+            
+            hoursRow.innerHTML = `
+                <span class="hours-day">${fullDay}</span>
+                <span class="hours-time">${hoursTime}</span>
+            `;
+            hoursListEl.appendChild(hoursRow);
+        });
     }
     
-    if (providerId) {
-        fetchProviderServices(providerId);
+    // Helper function to escape HTML
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // Initialize carousel functionality
+    function initializeCarousel() {
+        const carousel = document.querySelector('.provider-images-carousel');
+        if (!carousel) return;
+        
+        // Use a small delay to ensure DOM is ready
+        setTimeout(() => {
+            const slides = carousel.querySelectorAll('.carousel-slide');
+            const dots = carousel.querySelectorAll('.carousel-dot');
+            const currentSlideSpan = carousel.querySelector('.current-slide');
+            const heartBtn = carousel.querySelector('.heart-btn');
+            
+            if (slides.length === 0) return;
+            
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+            
+            function updateCarousel(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                if (slides[index]) slides[index].classList.add('active');
+                if (dots[index]) dots[index].classList.add('active');
+                
+                if (currentSlideSpan) currentSlideSpan.textContent = index + 1;
+                currentSlide = index;
+            }
+            
+            // Add click handlers to dots
+            dots.forEach((dot, index) => {
+                // Remove existing listeners by cloning
+                const newDot = dot.cloneNode(true);
+                dot.parentNode.replaceChild(newDot, dot);
+                newDot.addEventListener('click', () => updateCarousel(index));
+            });
+            
+            // Swipe functionality
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { once: false });
+            
+            carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                const swipeThreshold = 50;
+                const diff = touchStartX - touchEndX;
+                
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0 && currentSlide < totalSlides - 1) {
+                        updateCarousel(currentSlide + 1);
+                    } else if (diff < 0 && currentSlide > 0) {
+                        updateCarousel(currentSlide - 1);
+                    }
+                }
+            }, { once: false });
+            
+            // Heart button toggle
+            if (heartBtn) {
+                const newHeartBtn = heartBtn.cloneNode(true);
+                heartBtn.parentNode.replaceChild(newHeartBtn, heartBtn);
+                newHeartBtn.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            }
+        }, 100);
     }
     
     async function fetchProviderServices(providerId) {
@@ -881,6 +1091,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function updateProviderImages(services) {
+        // Only update if providerData is available
+        if (!providerData) return;
+        
         // Collect service images for provider gallery
         const providerImages = [];
         const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
@@ -1070,102 +1283,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Carousel functionality (only run if carousel exists)
-    const carousel = document.querySelector('.provider-images-carousel');
-    
-    if (carousel) {
-        const slides = carousel.querySelectorAll('.carousel-slide');
-        const dots = carousel.querySelectorAll('.carousel-dot');
-        const currentSlideSpan = carousel.querySelector('.current-slide');
-        const totalSlidesSpan = carousel.querySelector('.total-slides');
-        const heartBtn = carousel.querySelector('.heart-btn');
-        
-        let currentSlide = 0;
-        const totalSlides = slides.length;
-        
-        if (totalSlidesSpan) {
-            totalSlidesSpan.textContent = totalSlides;
-        }
-        
-        // Function to update carousel
-        function updateCarousel(index) {
-            // Remove active class from all slides and dots
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-            
-            // Add active class to current slide and dot
-            if (slides[index]) {
-                slides[index].classList.add('active');
-            }
-            if (dots[index]) {
-                dots[index].classList.add('active');
-            }
-            
-            // Update counter
-            if (currentSlideSpan) {
-                currentSlideSpan.textContent = index + 1;
-            }
-            
-            currentSlide = index;
-        }
-        
-        // Dot click handlers
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                updateCarousel(index);
-            });
-        });
-        
-        // Swipe functionality for mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        carousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-        
-        carousel.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
-        
-        function handleSwipe() {
-            const swipeThreshold = 50;
-            const diff = touchStartX - touchEndX;
-            
-            if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0 && currentSlide < totalSlides - 1) {
-                    // Swipe left - next slide
-                    updateCarousel(currentSlide + 1);
-                } else if (diff < 0 && currentSlide > 0) {
-                    // Swipe right - previous slide
-                    updateCarousel(currentSlide - 1);
-                }
-            }
-        }
-        
-        // Heart button toggle
-        if (heartBtn) {
-            heartBtn.addEventListener('click', function() {
-                this.classList.toggle('active');
-            });
-        }
-        
-        // Auto-play (optional - can be removed if not needed)
-        // let autoPlayInterval = setInterval(() => {
-        //     const nextSlide = (currentSlide + 1) % totalSlides;
-        //     updateCarousel(nextSlide);
-        // }, 5000);
-        
-        // Pause auto-play on hover/touch
-        // carousel.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
-        // carousel.addEventListener('mouseleave', () => {
-        //     autoPlayInterval = setInterval(() => {
-        //         const nextSlide = (currentSlide + 1) % totalSlides;
-        //         updateCarousel(nextSlide);
-        //     }, 5000);
-        // });
-    }
+    // Carousel is now initialized dynamically in initializeCarousel() function
+    // which is called from renderMobileCarousel() after provider data is loaded
     
     // Desktop heart button toggle (works independently of carousel)
     const desktopHeartBtn = document.querySelector('.provider-image-main .heart-btn');

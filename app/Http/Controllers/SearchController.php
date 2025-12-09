@@ -16,20 +16,10 @@ class SearchController extends Controller
 
         // If provider_id is provided, show services for that provider
         if ($providerId) {
-            // Get all providers to find the specific provider by ID
-            $providers = Cache::remember('all_providers', 900, function () {
-                return Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json() ?? [];
-            });
-            
-            $provider = collect($providers)->firstWhere('id', $providerId);
-            if (!$provider) {
-                return back()->with('error', 'Provider not found');
-            }
-
-            // Services will be fetched via JavaScript from frontend
+            // Provider data will be fetched via JavaScript from frontend
             return view('search.provider-services', [
                 'services' => [], // Services loaded via JavaScript
-                'provider' => $provider,
+                'provider' => null, // Provider loaded via JavaScript
                 'providerId' => $providerId // Pass provider ID for JavaScript API call
             ]);
         }
@@ -45,6 +35,33 @@ class SearchController extends Controller
     }
     public function showProviderServices($providerId)
     {
+    }
+    
+    // Fallback endpoint for provider data (used when JavaScript fetch fails)
+    public function providerFallback(Request $request)
+    {
+        $providerId = $request->input('provider_id');
+        
+        if (!$providerId) {
+            return response()->json(['error' => 'Provider ID is required'], 400);
+        }
+        
+        try {
+            // Get all providers to find the specific provider by ID
+            $providers = Cache::remember('all_providers', 900, function () {
+                return Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json() ?? [];
+            });
+            
+            $provider = collect($providers)->firstWhere('id', $providerId);
+            
+            if (!$provider) {
+                return response()->json(['error' => 'Provider not found'], 404);
+            }
+            
+            return response()->json(['provider' => $provider]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch provider data'], 500);
+        }
     }
 
     public function searchVideos(Request $request)
