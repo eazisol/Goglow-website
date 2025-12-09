@@ -556,18 +556,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function renderServices(services) {
-        // Group services by category
-        const groupedServices = {};
+        // Group services by category, then by subcategory
+        const groupedServices = {};  // { categoryName: { subcategoryName: [services] } }
         const categories = new Set();
         
         services.forEach(service => {
             const categoryName = service.category?.name || 'Uncategorized';
+            const subcategoryName = service.subcategory?.name || null;
             categories.add(categoryName);
             
             if (!groupedServices[categoryName]) {
-                groupedServices[categoryName] = [];
+                groupedServices[categoryName] = {};
             }
-            groupedServices[categoryName].push(service);
+            
+            // Group by subcategory within category
+            const subKey = subcategoryName || '__no_subcategory__';
+            if (!groupedServices[categoryName][subKey]) {
+                groupedServices[categoryName][subKey] = [];
+            }
+            groupedServices[categoryName][subKey].push(service);
         });
         
         // Sort categories
@@ -612,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    function createCategorySection(categoryName, services) {
+    function createCategorySection(categoryName, subcategoryGroups) {
         const section = document.createElement('div');
         section.className = 'category-section';
         section.setAttribute('data-category', categoryName);
@@ -620,49 +627,85 @@ document.addEventListener('DOMContentLoaded', function() {
         const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
         const providerId = '{{ $providerId ?? "" }}';
         
+        // Build subcategory sections HTML
+        let subcategorySectionsHTML = '';
+        
+        // Sort subcategory keys, putting '__no_subcategory__' last
+        const subcategoryKeys = Object.keys(subcategoryGroups).sort((a, b) => {
+            if (a === '__no_subcategory__') return 1;
+            if (b === '__no_subcategory__') return -1;
+            return a.localeCompare(b);
+        });
+        
+        subcategoryKeys.forEach(subKey => {
+            const services = subcategoryGroups[subKey];
+            const isNoSubcategory = subKey === '__no_subcategory__';
+            
+            // Build services HTML for this subcategory
+            const servicesHTML = services.map(service => {
+                const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : defaultImage;
+                const serviceName = service.service_name || 'Unnamed Service';
+                const serviceDetails = service.service_details || '';
+                const duration = service.duration_minutes || 0;
+                const price = service.service_price || 0;
+                const serviceId = service.id || '';
+                const bookUrl = `/book-appointment?serviceId=${serviceId}&service_provider_id=${providerId}`;
+                
+                return `
+                    <div class="service-row services-d-flex services-justify-between services-flex-wrap">
+                        <div class="service-info services-d-flex services-align-center">
+                            <div class="service-image">
+                                <img src="${serviceImage}" 
+                                     alt="${serviceName}" 
+                                     class="services-img-fluid services-rounded-circle"
+                                     loading="lazy"
+                                     onerror="this.src='${defaultImage}'">
+                            </div>
+                            <div class="service-list-details" style="margin-left: 35px;">
+                                <div class="service-name services-fw-semibold">
+                                    <a href="${bookUrl}">${truncateText(serviceName, 50)}</a>
+                                </div>
+                                ${serviceDetails ? `<div class="service-desc services-text-muted">${truncateText(serviceDetails, 50)}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="service-meta services-text-end">
+                            <div class="services-text-muted services-small services-mb-1">
+                                ${duration} min &bull; {{ __('app.service.from') }} €${price}
+                            </div>
+                            <div class="choose-button">
+                                <a href="${bookUrl}" class="choose-btn">{{ __('app.service.choose') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            if (isNoSubcategory) {
+                // Services without subcategory - render directly
+                subcategorySectionsHTML += servicesHTML;
+            } else {
+                // Services with subcategory - render with subcategory header
+                subcategorySectionsHTML += `
+                    <div class="subcategory-section" data-subcategory="${subKey}">
+                        <div class="subcategory-header" style="display: flex; align-items: center; padding: 12px 0; margin-left: 10px; cursor: pointer;">
+                            <h4 style="font-size: 18px; font-weight: 500; color: #333; margin: 0;">${subKey}</h4>
+                            <i class="fas fa-chevron-up subcategory-chevron" style="color: #666; font-size: 12px; transition: transform 0.3s ease; margin-left: 10px;"></i>
+                        </div>
+                        <div class="subcategory-services-list">
+                            ${servicesHTML}
+                        </div>
+                    </div>
+                `;
+            }
+        });
+        
         section.innerHTML = `
             <div class="section-title category-toggle-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; margin-top: 20px; cursor: pointer;" data-category-toggle="${categoryName}">
                 <h3 class="wow" style="font-size:30px; font-weight:500; letter-spacing: -1px; color:rgba(229, 0, 80, 1); margin: 0;">${categoryName}</h3>
                 <i class="fas fa-chevron-up category-chevron" style="color: rgba(229, 0, 80, 1); font-size: 16px; transition: transform 0.3s ease; margin-left: 15px;"></i>
             </div>
             <div class="custom-service-list category-services-list">
-                ${services.map(service => {
-                    const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : defaultImage;
-                    const serviceName = service.service_name || 'Unnamed Service';
-                    const serviceDetails = service.service_details || '';
-                    const duration = service.duration_minutes || 0;
-                    const price = service.service_price || 0;
-                    const serviceId = service.id || '';
-                    const bookUrl = `/book-appointment?serviceId=${serviceId}&service_provider_id=${providerId}`;
-                    
-                    return `
-                        <div class="service-row services-d-flex services-justify-between services-flex-wrap">
-                            <div class="service-info services-d-flex services-align-center">
-                                <div class="service-image">
-                                    <img src="${serviceImage}" 
-                                         alt="${serviceName}" 
-                                         class="services-img-fluid services-rounded-circle"
-                                         loading="lazy"
-                                         onerror="this.src='${defaultImage}'">
-                                </div>
-                                <div class="service-list-details" style="margin-left: 35px;">
-                                    <div class="service-name services-fw-semibold">
-                                        <a href="${bookUrl}">${truncateText(serviceName, 50)}</a>
-                                    </div>
-                                    ${serviceDetails ? `<div class="service-desc services-text-muted">${truncateText(serviceDetails, 50)}</div>` : ''}
-                                </div>
-                            </div>
-                            <div class="service-meta services-text-end">
-                                <div class="services-text-muted services-small services-mb-1">
-                                    ${duration} min &bull; {{ __('app.service.from') }} €${price}
-                                </div>
-                                <div class="choose-button">
-                                    <a href="${bookUrl}" class="choose-btn">{{ __('app.service.choose') }}</a>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('')}
+                ${subcategorySectionsHTML}
             </div>
         `;
         
@@ -997,6 +1040,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 const categorySection = this.closest('.category-section');
                 const servicesList = categorySection.querySelector('.category-services-list');
                 const chevron = this.querySelector('.category-chevron');
+                
+                if (servicesList && chevron) {
+                    servicesList.classList.toggle('collapsed');
+                    chevron.classList.toggle('rotated');
+                }
+            });
+        });
+        
+        // Initialize subcategory toggles
+        const subcategoryHeaders = document.querySelectorAll('.subcategory-header');
+        
+        subcategoryHeaders.forEach(function(subHeader) {
+            // Remove existing listeners by cloning
+            const newSubHeader = subHeader.cloneNode(true);
+            subHeader.parentNode.replaceChild(newSubHeader, subHeader);
+            
+            newSubHeader.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent category toggle from firing
+                const subcategorySection = this.closest('.subcategory-section');
+                const servicesList = subcategorySection.querySelector('.subcategory-services-list');
+                const chevron = this.querySelector('.subcategory-chevron');
                 
                 if (servicesList && chevron) {
                     servicesList.classList.toggle('collapsed');
