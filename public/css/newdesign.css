@@ -2628,6 +2628,9 @@
       }
       .service-meta{
         margin: 0;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row !important;
       }
       .choose-button{
         margin-top: 10px;

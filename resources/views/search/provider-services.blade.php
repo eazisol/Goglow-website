@@ -125,6 +125,14 @@
                         // Calculate total images for overlay (provider profile + all salon_images)
                         $totalImagesForOverlay = 1 + $salonImagesCount;
                         $showOverlay = $totalImagesForOverlay > 5;
+                        
+                        // Create array with ALL gallery images for mobile carousel
+                        $allGalleryImages = [$firstImage];
+                        foreach ($salonImages as $salonImage) {
+                            if (!empty($salonImage)) {
+                                $allGalleryImages[] = $salonImage;
+                            }
+                        }
                     @endphp
                     
                     <!-- Desktop Grid View -->
@@ -193,7 +201,7 @@
                         </div>
                         <div class="carousel-container">
                             <div class="carousel-track">
-                                @foreach($providerImages as $index => $image)
+                                @foreach($allGalleryImages as $index => $image)
                                     <div class="carousel-slide {{ $index === 0 ? 'active' : '' }}">
                                         <img src="{{ $image }}" 
                                              alt="{{ $provider['name'] ?? 'Provider' }}" 
@@ -205,10 +213,10 @@
                             </div>
                         </div>
                         <div class="carousel-counter">
-                            <span class="current-slide">1</span>/<span class="total-slides">5</span>
+                            <span class="current-slide">1</span>/<span class="total-slides">{{ count($allGalleryImages) }}</span>
                         </div>
                         <div class="carousel-dots">
-                            @foreach($providerImages as $index => $image)
+                            @foreach($allGalleryImages as $index => $image)
                                 <span class="carousel-dot {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}"></span>
                             @endforeach
                         </div>
