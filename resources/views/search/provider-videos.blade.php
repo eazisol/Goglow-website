@@ -390,9 +390,14 @@ document.addEventListener('DOMContentLoaded', function () {
       modalHashtags.style.display = video.hashtags ? 'block' : 'none';
     }
     
-    // Set booking button link
+    // Set booking button link - use companyUserName from video data if available
     if (bookingBtn && video.serviceProviderId) {
-      bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+      if (video.companyUserName) {
+        bookingBtn.href = `/${encodeURIComponent(video.companyUserName)}`;
+      } else {
+        // Fallback to old format if username not available
+        bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+      }
     }
     
     // Only reset modal position if opening a NEW video (not navigating)

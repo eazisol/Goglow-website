@@ -493,12 +493,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (bookingBtn && video.serviceProviderId && video.serviceId) {
       bookingBtn.href = '/book-appointment?serviceId=' + encodeURIComponent(video.serviceId) + '&service_provider_id=' + encodeURIComponent(video.serviceProviderId);
     } else if (bookingBtn && video.serviceProviderId) {
-      // Fallback if serviceId is not available - try to get username from providerData or fetch it
-      if (providerData && (providerData.username || providerData.companyUserName)) {
+      // Use companyUserName from video data if available, otherwise fallback to provider_id
+      if (video.companyUserName) {
+        bookingBtn.href = `/${encodeURIComponent(video.companyUserName)}`;
+      } else if (providerData && (providerData.username || providerData.companyUserName)) {
         const username = providerData.username || providerData.companyUserName;
         bookingBtn.href = `/${encodeURIComponent(username)}`;
-      } else if (video.serviceProviderId) {
-        // Try to fetch provider username, but for now use provider_id as fallback
+      } else {
+        // Fallback to old format if username not available
         bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
       }
     }
