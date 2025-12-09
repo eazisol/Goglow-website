@@ -982,7 +982,7 @@
     .day-column.today:not(.active) .day-date {
         color: rgba(255, 45, 139, 0.85);
     } */
-/* 
+    /* 
     .day-slots-column.today {
         background-color: rgba(255, 45, 139, 0.06);
         border-left: 2px solid rgba(255, 45, 139, 0.25);

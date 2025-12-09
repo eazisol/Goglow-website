@@ -1,0 +1,859 @@
+document.addEventListener('DOMContentLoaded', function () {
+  // Fetch categories from API and display them
+  fetchAndDisplayCategories();
+  
+  // Fetch providers from API
+  const searchParam = new URLSearchParams(window.location.search).get('search');
+  const locationParam = new URLSearchParams(window.location.search).get('location');
+  
+  // Only fetch if we're not viewing a specific provider (no provider_id in URL)
+  const providerIdParam = new URLSearchParams(window.location.search).get('provider_id');
+  if (!providerIdParam) {
+    fetchProviders(searchParam, locationParam);
+  }
+
+  // Function to fetch categories from API and display them
+  async function fetchAndDisplayCategories() {
+    const filterPillsContainer = document.getElementById('categoryFilterPills');
+    if (!filterPillsContainer) return;
+    
+    try {
+      const response = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/getSortedCategories');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const categories = await response.json();
+      
+      if (!Array.isArray(categories)) {
+        console.error('Categories API did not return an array');
+        return;
+      }
+      
+      // Filter only active categories and sort by sortOrder
+      const activeCategories = categories
+        .filter(cat => cat.isActive === true)
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+      
+      // Add category buttons to the filter pills container
+      activeCategories.forEach(category => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'filter-pill';
+        button.setAttribute('data-category', category.name);
+        button.setAttribute('aria-current', 'false');
+        
+        // Create icon image if imageUrl exists
+        if (category.imageUrl) {
+          const icon = document.createElement('img');
+          icon.src = category.imageUrl;
+          icon.alt = category.name;
+          icon.className = 'category-icon';
+          button.appendChild(icon);
+        }
+        
+        // Add category name
+        const textNode = document.createTextNode(category.name);
+        button.appendChild(textNode);
+        
+        filterPillsContainer.appendChild(button);
+      });
+      
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  }
+
+  // Function to fetch providers from API
+  async function fetchProviders(search = null, location = null) {
+    const loadingEl = document.getElementById('providers-loading');
+    const errorEl = document.getElementById('providers-error');
+    const emptyEl = document.getElementById('providers-empty');
+    const gridEl = document.getElementById('providers-grid');
+    
+    // Show loading, hide others
+    if (loadingEl) loadingEl.style.display = 'flex';
+    if (errorEl) errorEl.style.display = 'none';
+    if (emptyEl) emptyEl.style.display = 'none';
+    if (gridEl) gridEl.style.display = 'none';
+    
+    try {
+      // Build API URL - fetch all providers (API handles filtering if params provided)
+      let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
+      const params = new URLSearchParams();
+      if (search) params.append('name', search);
+      if (location) params.append('location', location);
+      if (params.toString()) {
+        apiUrl += '?' + params.toString();
+      }
+      
+      const response = await fetch(apiUrl);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const providers = await response.json();
+      
+      // Hide loading
+      if (loadingEl) loadingEl.style.display = 'none';
+      
+      if (!Array.isArray(providers) || providers.length === 0) {
+        if (emptyEl) emptyEl.style.display = 'flex';
+        return;
+      }
+      
+      // Render providers
+      renderProviders(providers);
+      
+    } catch (error) {
+      console.error('Error fetching providers:', error);
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) {
+        errorEl.style.display = 'flex';
+        const errorMsg = document.getElementById('providers-error-message');
+        if (errorMsg) {
+          errorMsg.textContent = 'Failed to load providers. Please check your connection and try again.';
+        }
+      }
+    }
+  }
+  
+  // Make fetchProviders available globally for retry button
+  window.fetchProviders = function() {
+    const searchParam = new URLSearchParams(window.location.search).get('search');
+    const locationParam = new URLSearchParams(window.location.search).get('location');
+    fetchProviders(searchParam, locationParam);
+  };
+
+  // Function to render providers in the grid
+  function renderProviders(providers) {
+    const gridEl = document.getElementById('providers-grid');
+    if (!gridEl) return;
+    
+    gridEl.innerHTML = '';
+    
+    providers.forEach(provider => {
+      const providerCard = createProviderCard(provider);
+      gridEl.appendChild(providerCard);
+    });
+    
+    // Show grid
+    gridEl.style.display = 'grid';
+    
+    // Initialize tooltips for the new cards
+    initializeProviderTooltips();
+    
+    // Initialize category filtering (though categories are empty for now)
+    initializeCategoryFilters();
+  }
+  
+  // Function to create a provider card element
+  function createProviderCard(provider) {
+    // Use global variable for default image, with fallback
+    const defaultImage = window.defaultProviderImage || '/images/adam-winger-FkAZqQJTbXM-unsplash.jpg';
+    const providerImage = provider.profileImg || defaultImage;
+    const companyName = provider.companyName || provider.name || 'No Name';
+    const avgRating = provider.avg_ratting || 0;
+    const totalReviews = provider.total_review || 0;
+    const address = provider.address || '';
+    const providerId = provider.id || '';
+    const timing = provider.timing || {};
+    
+    // Create timing status
+    const timingStatus = calculateTimingStatus(timing);
+    
+    // Create the card
+    const item = document.createElement('div');
+    item.className = 'results-item';
+    item.setAttribute('data-categories', ''); // Empty for now
+    
+    item.innerHTML = `
+      <div class="provider-card">
+        <a href="/search?provider_id=${providerId}" class="provider-link">
+          <div class="provider-image">
+            <div class="provider-image-inner">
+              <img src="${escapeHtml(providerImage)}" 
+                   alt="${escapeHtml(companyName)}" 
+                   class="img-fluid"
+                   loading="lazy"
+                   onerror="this.src='${defaultImage}'">
+              <div class="image-overlay">
+                <div class="overlay-left">
+                  ${provider.companyName ? `<span class="overlay-meta">${escapeHtml(provider.companyName)}</span>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="provider-details p-4">
+            <div class="provider-card-heading-section">
+              <h3 class="card-title">${escapeHtml(companyName)}</h3>
+              <div class="rating-row">
+                <img src="images/images/star_cards.svg" alt="Location" width="15" height="15">
+                <span class="rating-value">${avgRating.toFixed(1)}</span>
+                <span class="rating-count">(${totalReviews})</span>
+              </div>
+            </div>
+            <div class="provider-meta">
+              ${address ? `
+                <div class="address">
+                  <span class="search-icon search-icon-sm" aria-hidden="true">
+                    <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="20" height="20">
+                  </span>
+                  <span>${escapeHtml(address)}</span>
+                </div>
+              ` : ''}
+            </div>
+            ${timingStatus.html || ''}
+            ${timingStatus.availabilityHtml || ''}
+          </div>
+        </a>
+      </div>
+    `;
+    
+    // Add tooltip if needed
+    if (timingStatus.tooltipHtml) {
+      const tooltipContainer = document.createElement('div');
+      tooltipContainer.innerHTML = timingStatus.tooltipHtml;
+      document.body.appendChild(tooltipContainer.firstElementChild);
+    }
+    
+    return item;
+  }
+  
+  // Function to calculate timing status and availability
+  function calculateTimingStatus(timing) {
+    if (!timing || typeof timing !== 'object') {
+      return { html: '', tooltipHtml: '', availabilityHtml: '', cardId: '' };
+    }
+    
+    const daysOrder = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const dayNamesMap = {
+      'Mon': 'Mon',
+      'Tue': 'Tue', 
+      'Wed': 'Wed',
+      'Thu': 'Thu',
+      'Fri': 'Fri',
+      'Sat': 'Sat',
+      'Sun': 'Sun'
+    };
+    
+    const now = new Date();
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const todayKey = dayNames[now.getDay()];
+    const cardId = 'prov_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    // Format time range helper
+    function formatRange(range) {
+      if (!Array.isArray(range) || range.length < 2 || !range[0] || !range[1]) {
+        return null;
+      }
+      try {
+        const open = new Date(range[0] * 1000);
+        const close = new Date(range[1] * 1000);
+        const openTime = open.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        const closeTime = close.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        return openTime + ' – ' + closeTime;
+      } catch (e) {
+        return null;
+      }
+    }
+    
+    const todayRange = timing[todayKey] || [];
+    const todayRangeText = formatRange(todayRange);
+    const isOpenToday = todayRangeText !== null;
+    
+    // Build status HTML
+    const statusHtml = `
+      <div class="timing-status" data-tooltip-id="timing-tooltip-${cardId}">
+        <span class="search-icon search-icon-sm" aria-hidden="true">
+          <span class="status-dot ${isOpenToday ? 'open' : 'closed'}"></span>
+        </span>
+        <span class="status-text">
+          ${isOpenToday 
+            ? 'Open · ' + todayRangeText 
+            : 'Closed · Hours unavailable'}
+        </span>
+      </div>
+    `;
+    
+    // Build tooltip HTML
+    const tooltipHtml = `
+      <div class="timing-tooltip" id="timing-tooltip-${cardId}" aria-hidden="true">
+        <div class="timing-tooltip-inner">
+          ${daysOrder.map(day => {
+            const rangeText = formatRange(timing[day] || []);
+            const isToday = todayKey === day;
+            return `
+              <div class="timing-row ${isToday ? 'today' : ''}">
+                <span class="timing-day">${dayNamesMap[day] || day}</span>
+                <span class="timing-hours">${rangeText || 'Closed'}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+    
+    // Build availability section (next 3 days with morning/evening slots)
+    const chipDays = [];
+    for (let i = 0; i < 3; i++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() + i);
+      const dayKey = dayNames[d.getDay()];
+      const dayLabel = dayNamesMap[dayKey] || dayKey;
+      const dayNumber = d.getDate().toString().padStart(2, '0');
+      
+      const dayTiming = timing[dayKey] || [];
+      const hasTimeSlot = Array.isArray(dayTiming) && dayTiming.length >= 2 && dayTiming[0] && dayTiming[1];
+      const timeSlotText = hasTimeSlot ? formatRange(dayTiming) : 'No time availability';
+      
+      chipDays.push({
+        label: dayLabel,
+        day: dayNumber,
+        dayKey: dayKey,
+        hasTimeSlot: hasTimeSlot,
+        timeSlotText: timeSlotText
+      });
+    }
+    
+    const availabilityHtml = `
+      <div class="availability-section">
+        <div class="availability-title">Next Availability</div>
+        <div class="availability-row">
+          <span class="time-of-day">Morning</span>
+          <div class="chip-group">
+            ${chipDays.map(cd => `
+              <span class="date-chip ${cd.hasTimeSlot ? 'has-slot' : 'no-slot'}" 
+                    data-tooltip="${escapeHtml(cd.timeSlotText)}">
+                ${cd.label} <b>${cd.day}</b>
+                <span class="date-chip-tooltip">${escapeHtml(cd.timeSlotText)}</span>
+              </span>
+            `).join('')}
+          </div>
+        </div>
+        <div class="availability-row">
+          <span class="time-of-day">Evening</span>
+          <div class="chip-group">
+            ${chipDays.map(cd => `
+              <span class="date-chip ${cd.hasTimeSlot ? 'has-slot' : 'no-slot'}" 
+                    data-tooltip="${escapeHtml(cd.timeSlotText)}">
+                ${cd.label} <b>${cd.day}</b>
+                <span class="date-chip-tooltip">${escapeHtml(cd.timeSlotText)}</span>
+              </span>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+    
+    return { 
+      html: statusHtml, 
+      tooltipHtml: tooltipHtml, 
+      availabilityHtml: availabilityHtml,
+      cardId: cardId 
+    };
+  }
+  
+  // Helper function to escape HTML
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  // Function to initialize tooltips for provider cards
+  function initializeProviderTooltips() {
+    const containers = document.querySelectorAll('.provider-card');
+    containers.forEach(function(card) {
+      const status = card.querySelector('.timing-status');
+      if (!status) return;
+      const tooltipId = status.getAttribute('data-tooltip-id');
+      const tooltip = tooltipId ? document.getElementById(tooltipId) : null;
+      if (!tooltip) return;
+      
+      // Ensure tooltip is in body
+      if (tooltip.parentElement !== document.body) {
+        document.body.appendChild(tooltip);
+      }
+      
+      function positionTooltip() {
+        const rect = status.getBoundingClientRect();
+        const top = rect.top + rect.height + 8;
+        let left = rect.left;
+        const maxLeft = window.innerWidth - tooltip.offsetWidth - 8;
+        if (left > maxLeft) left = Math.max(8, maxLeft);
+        tooltip.style.top = top + 'px';
+        tooltip.style.left = left + 'px';
+      }
+      
+      function show() {
+        tooltip.style.display = 'block';
+        positionTooltip();
+      }
+      
+      function hide() {
+        tooltip.style.display = 'none';
+      }
+      
+      status.addEventListener('mouseenter', show);
+      status.addEventListener('mouseleave', function() {
+        setTimeout(function() {
+          if (!tooltip.matches(':hover')) hide();
+        }, 100);
+      });
+      tooltip.addEventListener('mouseleave', hide);
+      tooltip.addEventListener('mouseenter', function() {
+        tooltip.style.display = 'block';
+      });
+      
+      status.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (tooltip.style.display === 'block') {
+          hide();
+        } else {
+          show();
+        }
+      });
+      
+      window.addEventListener('scroll', function() {
+        if (tooltip.style.display === 'block') positionTooltip();
+      });
+      window.addEventListener('resize', function() {
+        if (tooltip.style.display === 'block') positionTooltip();
+      });
+    });
+  }
+  
+  // Function to initialize category filters (placeholder for now)
+  function initializeCategoryFilters() {
+    // Categories will be empty for now since we removed service fetching
+    // This can be enhanced later if needed
+  }
+
+  // Delegate hover/click for timing tooltips
+  const containers = document.querySelectorAll('.provider-card');
+  containers.forEach(function(card){
+    const status = card.querySelector('.timing-status');
+    if(!status) return;
+    const tooltipId = status.getAttribute('data-tooltip-id');
+    const tooltip = tooltipId ? document.getElementById(tooltipId) : null;
+    if(!tooltip) return;
+
+    // Ensure tooltip is appended to body to avoid overflow clipping
+    if (tooltip.parentElement !== document.body) {
+      document.body.appendChild(tooltip);
+    }
+
+    // Position tooltip near status
+    function positionTooltip(){
+      const rect = status.getBoundingClientRect();
+      const top = rect.top + rect.height + 8; // pixels from viewport top
+      let left = rect.left; // pixels from viewport left
+      // Keep inside viewport horizontally
+      const maxLeft = window.innerWidth - tooltip.offsetWidth - 8;
+      if (left > maxLeft) left = Math.max(8, maxLeft);
+      tooltip.style.top = top + 'px';
+      tooltip.style.left = left + 'px';
+    }
+
+    function show(){ tooltip.style.display = 'block'; positionTooltip(); }
+    function hide(){ tooltip.style.display = 'none'; }
+
+    // Hover behavior
+    status.addEventListener('mouseenter', show);
+    status.addEventListener('mouseleave', function(){ setTimeout(function(){
+      // Only hide if not hovered over tooltip
+      if(!tooltip.matches(':hover')) hide();
+    }, 100); });
+    tooltip.addEventListener('mouseleave', hide);
+    // Also keep visible when moving from status to tooltip
+    tooltip.addEventListener('mouseenter', function(){ tooltip.style.display = 'block'; });
+    tooltip.addEventListener('mouseenter', function(){ /* keep visible */ });
+
+    // Click toggle for mobile
+    status.addEventListener('click', function(e){
+      e.preventDefault();
+      if(tooltip.style.display === 'block'){ hide(); } else { show(); }
+    });
+
+    window.addEventListener('scroll', function(){ if(tooltip.style.display==='block') positionTooltip(); });
+    window.addEventListener('resize', function(){ if(tooltip.style.display==='block') positionTooltip(); });
+  });
+
+  // Category filtering functionality
+  const filterPills = document.querySelectorAll('.filter-pill');
+  const providerItems = document.querySelectorAll('.results-item');
+
+  filterPills.forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      const selectedCategory = this.getAttribute('data-category');
+      
+      // Update active state
+      filterPills.forEach(function(p) {
+        p.classList.remove('active');
+        p.removeAttribute('aria-current');
+      });
+      this.classList.add('active');
+      this.setAttribute('aria-current', 'true');
+      
+      // Filter providers
+      providerItems.forEach(function(item) {
+        if (selectedCategory === 'all') {
+          item.style.display = '';
+        } else {
+          const categories = item.getAttribute('data-categories');
+          if (categories && categories.trim() !== '') {
+            const categoryList = categories.split(',').map(function(cat) { return cat.trim(); });
+            if (categoryList.includes(selectedCategory)) {
+              item.style.display = '';
+            } else {
+              item.style.display = 'none';
+            }
+          } else {
+            item.style.display = 'none';
+          }
+        }
+      });
+    });
+  });
+
+  // Search autocomplete functionality
+  const searchInput = document.getElementById('searchInput');
+  const suggestionsDropdown = document.getElementById('searchSuggestionsDropdown');
+  let debounceTimer = null;
+  let currentSuggestions = { providers: [], services: [] };
+  let selectedIndex = -1;
+  let allSuggestions = []; // Flat array of all suggestion items for keyboard navigation
+
+  if (searchInput && suggestionsDropdown) {
+    // Debounce function to limit API calls
+    function debounce(func, wait) {
+      return function(...args) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    // Store original input value for hover functionality
+    let originalInputValue = '';
+
+    // Fetch suggestions from API
+    async function fetchSuggestions(query) {
+      if (!query || query.trim().length === 0) {
+        hideSuggestions();
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `https://us-central1-beauty-984c8.cloudfunctions.net/searchServiceSuggestions?query=${encodeURIComponent(query)}`
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          // Extract both providers and services from the response
+          const providers = data.providers || [];
+          const services = data.services || [];
+          
+          if ((Array.isArray(providers) && providers.length > 0) || (Array.isArray(services) && services.length > 0)) {
+            displaySuggestions(providers, services);
+          } else {
+            hideSuggestions();
+          }
+        } else {
+          hideSuggestions();
+        }
+      } catch (error) {
+        // Silently handle errors - don't show dropdown on error
+        hideSuggestions();
+      }
+    }
+
+    // Display suggestions in dropdown with section headings
+    function displaySuggestions(providers, services) {
+      currentSuggestions = { providers: providers || [], services: services || [] };
+      suggestionsDropdown.innerHTML = '';
+      allSuggestions = [];
+      selectedIndex = -1;
+      
+      let hasContent = false;
+
+      // Display Providers section
+      if (providers && providers.length > 0) {
+        hasContent = true;
+        
+        // Create section heading
+        const providerHeading = document.createElement('div');
+        providerHeading.className = 'search-suggestion-heading';
+        providerHeading.textContent = 'Salon';
+        suggestionsDropdown.appendChild(providerHeading);
+        
+        // Create provider items
+        providers.forEach((provider) => {
+          const item = createSuggestionItem(provider.name, 'provider', provider.id);
+          suggestionsDropdown.appendChild(item);
+          allSuggestions.push({ element: item, name: provider.name, type: 'provider', id: provider.id });
+        });
+      }
+
+      // Display Services section
+      if (services && services.length > 0) {
+        hasContent = true;
+        
+        // Create section heading (only if providers section exists)
+        if (providers && providers.length > 0) {
+          const divider = document.createElement('div');
+          divider.className = 'search-suggestion-divider';
+          suggestionsDropdown.appendChild(divider);
+        }
+        
+        const serviceHeading = document.createElement('div');
+        serviceHeading.className = 'search-suggestion-heading';
+        serviceHeading.textContent = 'Services';
+        suggestionsDropdown.appendChild(serviceHeading);
+        
+        // Create service items
+        services.forEach((service) => {
+          const item = createSuggestionItem(service.name, 'service', service.id, service.provider_id);
+          suggestionsDropdown.appendChild(item);
+          allSuggestions.push({ element: item, name: service.name, type: 'service', id: service.id, providerId: service.provider_id });
+        });
+      }
+
+      if (hasContent) {
+        suggestionsDropdown.classList.add('show');
+      } else {
+        hideSuggestions();
+      }
+    }
+
+    // Create a suggestion item with hover functionality
+    function createSuggestionItem(name, type, id, providerId = null) {
+      const item = document.createElement('div');
+      item.className = 'search-suggestion-item';
+      item.setAttribute('data-type', type);
+      item.setAttribute('data-id', id);
+      if (providerId) {
+        item.setAttribute('data-provider-id', providerId);
+      }
+      item.textContent = name;
+      
+      // Store original input value on first hover (only once)
+      let isFirstHover = true;
+      
+      // Fill input on hover (like Google search)
+      item.addEventListener('mouseenter', () => {
+        if (isFirstHover) {
+          originalInputValue = searchInput.value;
+          isFirstHover = false;
+        }
+        searchInput.value = name;
+        // Update selected index when hovering
+        const index = allSuggestions.findIndex(s => s.element === item);
+        if (index !== -1) {
+          setSelectedIndex(index);
+        }
+      });
+      
+      // Click handler - keep the value filled
+      item.addEventListener('click', () => {
+        searchInput.value = name;
+        originalInputValue = name; // Update original so blur doesn't restore
+        hideSuggestions();
+        // Optionally navigate or submit form
+        searchInput.focus();
+      });
+      
+      return item;
+    }
+
+    // Set selected index and update highlighting
+    function setSelectedIndex(index) {
+      // Remove previous selection
+      if (selectedIndex >= 0 && allSuggestions[selectedIndex]) {
+        allSuggestions[selectedIndex].element.classList.remove('selected');
+      }
+      
+      // Set new selection
+      selectedIndex = index;
+      if (selectedIndex >= 0 && selectedIndex < allSuggestions.length) {
+        allSuggestions[selectedIndex].element.classList.add('selected');
+        searchInput.value = allSuggestions[selectedIndex].name;
+        
+        // Scroll into view if needed
+        allSuggestions[selectedIndex].element.scrollIntoView({
+          block: 'nearest',
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    // Handle keyboard navigation
+    function handleKeyboardNavigation(e) {
+      if (!suggestionsDropdown.classList.contains('show') || allSuggestions.length === 0) {
+        return;
+      }
+
+      switch(e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          if (selectedIndex < allSuggestions.length - 1) {
+            setSelectedIndex(selectedIndex + 1);
+          } else {
+            setSelectedIndex(0); // Loop to first
+          }
+          break;
+          
+        case 'ArrowUp':
+          e.preventDefault();
+          if (selectedIndex > 0) {
+            setSelectedIndex(selectedIndex - 1);
+          } else {
+            setSelectedIndex(allSuggestions.length - 1); // Loop to last
+          }
+          break;
+          
+        case 'Enter':
+          e.preventDefault();
+          if (selectedIndex >= 0 && selectedIndex < allSuggestions.length) {
+            const selected = allSuggestions[selectedIndex];
+            searchInput.value = selected.name;
+            originalInputValue = selected.name;
+            hideSuggestions();
+            // Optionally submit form or navigate
+            searchInput.focus();
+          }
+          break;
+          
+        case 'Escape':
+          e.preventDefault();
+          hideSuggestions();
+          searchInput.focus();
+          break;
+      }
+    }
+
+    // Hide suggestions dropdown
+    function hideSuggestions() {
+      suggestionsDropdown.classList.remove('show');
+      suggestionsDropdown.innerHTML = '';
+      currentSuggestions = { providers: [], services: [] };
+      allSuggestions = [];
+      selectedIndex = -1;
+      // Restore original input value if it was changed by hover
+      if (originalInputValue && searchInput.value !== originalInputValue) {
+        searchInput.value = originalInputValue;
+        originalInputValue = '';
+      }
+    }
+
+    // Debounced search function
+    const debouncedSearch = debounce((query) => {
+      fetchSuggestions(query);
+    }, 300);
+
+    // Get the search-title element
+    const searchTitle = searchInput.closest('.search-content')?.querySelector('.search-title');
+    
+    // Function to toggle search-title visibility
+    function toggleSearchTitle() {
+      if (searchTitle) {
+        if (searchInput.value.trim().length > 0 || document.activeElement === searchInput) {
+          searchTitle.style.display = 'none';
+        } else {
+          searchTitle.style.display = '';
+        }
+      }
+    }
+
+    // Listen for input events
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.trim();
+      debouncedSearch(query);
+      toggleSearchTitle();
+      // Reset selection on new input
+      selectedIndex = -1;
+    });
+
+    // Keyboard navigation
+    searchInput.addEventListener('keydown', handleKeyboardNavigation);
+
+    // Show/hide title on focus
+    searchInput.addEventListener('focus', () => {
+      if (searchTitle) {
+        searchTitle.style.display = 'none';
+      }
+      if (searchInput.value.trim().length > 0 && 
+          ((currentSuggestions.providers && currentSuggestions.providers.length > 0) || 
+           (currentSuggestions.services && currentSuggestions.services.length > 0))) {
+        displaySuggestions(currentSuggestions.providers || [], currentSuggestions.services || []);
+      }
+    });
+
+    // Hide suggestions when input loses focus (with small delay to allow click on suggestion)
+    searchInput.addEventListener('blur', () => {
+      setTimeout(() => {
+        hideSuggestions();
+        toggleSearchTitle();
+      }, 200);
+    });
+    
+    // Initial check for existing value
+    toggleSearchTitle();
+  }
+
+  // Location input field - same functionality
+  const locationInput = document.getElementById('locationInput');
+  if (locationInput) {
+    const locationTitle = locationInput.closest('.search-content')?.querySelector('.search-title');
+    
+    // Function to toggle location title visibility
+    function toggleLocationTitle() {
+      if (locationTitle) {
+        if (locationInput.value.trim().length > 0 || document.activeElement === locationInput) {
+          locationTitle.style.display = 'none';
+        } else {
+          locationTitle.style.display = '';
+        }
+      }
+    }
+
+    // Listen for input events
+    locationInput.addEventListener('input', () => {
+      toggleLocationTitle();
+    });
+
+    // Show/hide title on focus
+    locationInput.addEventListener('focus', () => {
+      if (locationTitle) {
+        locationTitle.style.display = 'none';
+      }
+    });
+
+    // Show/hide title on blur
+    locationInput.addEventListener('blur', () => {
+      toggleLocationTitle();
+    });
+    
+    // Initial check for existing value
+    toggleLocationTitle();
+
+    // Hide suggestions on form submit
+    const searchForm = searchInput.closest('form');
+    if (searchForm) {
+      searchForm.addEventListener('submit', () => {
+        hideSuggestions();
+      });
+    }
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+        hideSuggestions();
+      }
+    });
+  }
+});

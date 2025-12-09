@@ -33,17 +33,6 @@ Route::get('/search/videos/provider', [\App\Http\Controllers\SearchController::c
 Route::get('/blogs', function () {return view('blog.index');});
 Route::get('/blogs/{id}', function ($id) {return view('blog.show', ['id' => $id]);});
 
-// case study
-Route::get('/saloons', function () {return view('caseStudy.index');});
-Route::get('/saloons-single', function () {return view('caseStudy.single');});
-
-
-// testimonials
-Route::get('/testimonials', function () {return view('testimonials.index');});
-
-// gallery
-Route::get('/video-gallery', function () {return view('gallery.video');});
-
 // 404
 Route::get('/404', function () {return view('errors.404');});
 
