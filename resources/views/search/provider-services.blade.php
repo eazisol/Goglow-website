@@ -1579,6 +1579,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const providerId = '{{ $providerId ?? '' }}';
     const providerData = @json($provider ?? []);
     
+    // Global variable to store gallery items for direct access
+    let globalGalleryItems = [];
+    
     // Initialize overlay on page load if salon_images exist
     const salonImages = (providerData.salon_images && Array.isArray(providerData.salon_images)) 
         ? providerData.salon_images 
@@ -1778,10 +1781,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Find gallery link - try multiple times if not found
-        let galleryLink = document.querySelector('a.gallery-trigger');
-        if (!galleryLink) {
-            console.log('Gallery link not found, retrying...');
+        // Check if gallery items are ready
+        if (globalGalleryItems.length === 0) {
+            console.log('Gallery items not ready, retrying...');
             setTimeout(function() {
                 attachOverlayClickHandler();
             }, 100);
@@ -1794,33 +1796,37 @@ document.addEventListener('DOMContentLoaded', function() {
         newOverlay.style.display = overlay.style.display;
         overlay.parentNode.replaceChild(newOverlay, overlay);
         
-        // Attach click handler
+        // Attach click handler - use magnificPopup.open() directly
         newOverlay.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Overlay clicked, opening gallery...');
+            console.log('Overlay clicked, opening gallery with', globalGalleryItems.length, 'images');
             
-            // Find gallery link again (in case it was recreated)
-            const link = document.querySelector('a.gallery-trigger');
-            if (link) {
-                console.log('Clicking gallery link:', link.href);
-                link.click();
+            // Open gallery directly using magnificPopup API
+            if (typeof jQuery !== 'undefined' && jQuery.magnificPopup) {
+                jQuery.magnificPopup.open({
+                    items: globalGalleryItems,
+                    type: 'image',
+                    gallery: {
+                        enabled: true,
+                        navigateByImgClick: true,
+                        preload: [0, 1]
+                    },
+                    image: {
+                        verticalFit: true
+                    },
+                    mainClass: 'mfp-with-zoom mfp-img-mobile',
+                    closeOnContentClick: false,
+                    closeBtnInside: false
+                });
             } else {
-                console.error('Gallery link not found when clicked');
-                // Try to initialize gallery again
-                initializeProviderGallery();
-                setTimeout(function() {
-                    const retryLink = document.querySelector('a.gallery-trigger');
-                    if (retryLink) {
-                        retryLink.click();
-                    }
-                }, 200);
+                console.error('MagnificPopup not available');
             }
         });
         
         // Also make it visually clear it's clickable
         newOverlay.style.cursor = 'pointer';
-        console.log('Overlay click handler attached');
+        console.log('Overlay click handler attached successfully');
     }
     
     // Initialize magnificPopup gallery for provider images
@@ -1886,6 +1892,9 @@ document.addEventListener('DOMContentLoaded', function() {
         galleryLink.href = galleryItems[0].src;
         
         console.log('Initializing gallery with', galleryItems.length, 'images');
+        
+        // Store gallery items globally for direct access
+        globalGalleryItems = galleryItems;
         
         // Initialize magnificPopup with items array
         jQuery(galleryLink).magnificPopup({
