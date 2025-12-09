@@ -83,14 +83,14 @@
     <!-- View Type Tabs Section Start -->
     <div class="view-type-tabs-container" style="margin-top: 20px;">
         <div class="view-type-tabs">
-            <a href="{{ route('search', ['provider_id' => $providerId]) }}" class="view-tab" data-view="list">
+            <a href="#" class="view-tab" id="listTabLink" data-view="list">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     <path d="M2.5 2.5H5.83333V5H2.5V2.5Z" fill="currentColor"/>
                 </svg>
                 <span>Salon List</span>
             </a>
-            <a href="{{ route('search.videos.provider', ['provider_id' => $providerId]) }}" class="view-tab active" data-view="videos">
+            <a href="{{ url()->current() }}" class="view-tab active" id="videosTabLink" data-view="videos">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="2.5" y="4.16667" width="15" height="11.6667" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M8.33333 7.5L13.3333 10L8.33333 12.5V7.5Z" fill="currentColor"/>
@@ -200,7 +200,92 @@ document.addEventListener('DOMContentLoaded', function () {
   let currentVideoIndex = -1;
   const defaultThumbnail = '{{ asset("images/images/default-video-thumbnail.jpg") }}';
   const defaultUserImage = '{{ asset("images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
-  const providerId = '{{ $providerId ?? "" }}';
+  // Get username from URL path or provider_id from server (for backward compatibility)
+  const companyUserNameFromServer = '{{ $companyUserName ?? "" }}';
+  const pathParts = window.location.pathname.split('/').filter(part => part);
+  const companyUserName = companyUserNameFromServer || (pathParts.length > 0 && pathParts[pathParts.length - 1] !== 'videos' ? pathParts[pathParts.length - 1] : pathParts[pathParts.length - 2]) || '';
+  const providerIdFromServer = '{{ $providerId ?? "" }}';
+  
+  // Will be set after fetching provider data
+  let providerId = providerIdFromServer;
+  let providerData = null;
+
+  // Fetch provider data if username is available
+  if (companyUserName && !providerId) {
+    fetchProviderDataByUsername(companyUserName).then(() => {
+      // After provider data is loaded, fetch videos
+      if (providerId) {
+        fetchVideos();
+      }
+    }).catch((error) => {
+      console.error('Failed to load provider data:', error);
+      // Still try to fetch videos if providerId is available from server
+      if (providerId) {
+        fetchVideos();
+      }
+    });
+  } else if (providerId) {
+    // If providerId is already available, fetch videos directly
+    fetchVideos();
+  }
+
+  // Fetch provider data by username
+  async function fetchProviderDataByUsername(username) {
+    try {
+      // Fetch all providers and filter by username
+      const apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
+      const response = await fetch(apiUrl);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch provider data');
+      }
+      
+      let providers = await response.json();
+      
+      if (!Array.isArray(providers)) {
+        throw new Error('Invalid response format');
+      }
+      
+      // Filter by username
+      providers = providers.filter(p => 
+        (p.username && p.username.toLowerCase() === username.toLowerCase()) ||
+        (p.companyUserName && p.companyUserName.toLowerCase() === username.toLowerCase())
+      );
+      
+      if (providers.length === 0) {
+        throw new Error('Provider not found');
+      }
+      
+      providerData = providers[0];
+      providerId = providerData.id;
+      
+      // Update links
+      updateLinks();
+      
+      return providerData;
+    } catch (error) {
+      console.error('Error fetching provider data:', error);
+      throw error;
+    }
+  }
+
+  // Update navigation links
+  function updateLinks() {
+    if (!providerData) return;
+    
+    const username = providerData.username || providerData.companyUserName;
+    const listTabLink = document.getElementById('listTabLink');
+    const videosTabLink = document.getElementById('videosTabLink');
+    
+    if (username) {
+      if (listTabLink) listTabLink.href = `/${encodeURIComponent(username)}`;
+      if (videosTabLink) videosTabLink.href = `/${encodeURIComponent(username)}/videos`;
+    } else if (providerId) {
+      // Fallback to old format
+      if (listTabLink) listTabLink.href = `/search?provider_id=${encodeURIComponent(providerId)}`;
+      if (videosTabLink) videosTabLink.href = `{{ route('search.videos.provider') }}?provider_id=${encodeURIComponent(providerId)}`;
+    }
+  }
 
   // Drag functionality
   let isDragging = false;
@@ -408,8 +493,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (bookingBtn && video.serviceProviderId && video.serviceId) {
       bookingBtn.href = '/book-appointment?serviceId=' + encodeURIComponent(video.serviceId) + '&service_provider_id=' + encodeURIComponent(video.serviceProviderId);
     } else if (bookingBtn && video.serviceProviderId) {
-      // Fallback if serviceId is not available
-      bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+      // Fallback if serviceId is not available - try to get username from providerData or fetch it
+      if (providerData && (providerData.username || providerData.companyUserName)) {
+        const username = providerData.username || providerData.companyUserName;
+        bookingBtn.href = `/${encodeURIComponent(username)}`;
+      } else if (video.serviceProviderId) {
+        // Try to fetch provider username, but for now use provider_id as fallback
+        bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+      }
     }
     
     // Only reset modal position if opening a NEW video (not navigating)

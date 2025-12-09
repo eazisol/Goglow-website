@@ -73,3 +73,7 @@ Route::get('/api/locale', [\App\Http\Controllers\LanguageController::class, 'get
 
 // Test language page
 Route::get('/test-language', function () {return view('test.language');});
+
+// Provider by username routes (must be at the end to avoid conflicts with other routes)
+Route::get('/{companyUserName}/videos', [\App\Http\Controllers\SearchController::class, 'showProviderVideosByUsername'])->name('provider.videos.by.username');
+Route::get('/{companyUserName}', [\App\Http\Controllers\SearchController::class, 'showProviderByUsername'])->name('provider.by.username');

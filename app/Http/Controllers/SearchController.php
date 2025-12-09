@@ -14,9 +14,25 @@ class SearchController extends Controller
         $location = $request->input('location');
         $providerId = $request->input('provider_id');
 
-        // If provider_id is provided, show services for that provider
+        // If provider_id is provided, redirect to username-based URL
         if ($providerId) {
-            // Provider data will be fetched via JavaScript from frontend
+            try {
+                // Get provider to find username
+                $providers = Cache::remember('all_providers', 900, function () {
+                    return Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json() ?? [];
+                });
+                
+                $provider = collect($providers)->firstWhere('id', $providerId);
+                
+                if ($provider && isset($provider['username']) && $provider['username']) {
+                    // Redirect to username-based URL
+                    return redirect()->route('provider.by.username', ['companyUserName' => $provider['username']], 301);
+                }
+            } catch (\Exception $e) {
+                // If redirect fails, fall back to old method
+            }
+            
+            // Fallback: Provider data will be fetched via JavaScript from frontend
             return view('search.provider-services', [
                 'services' => [], // Services loaded via JavaScript
                 'provider' => null, // Provider loaded via JavaScript
@@ -33,6 +49,17 @@ class SearchController extends Controller
             'providerCategories' => [] // Removed: was mapping categories from all services
         ]);
     }
+    
+    public function showProviderByUsername($companyUserName)
+    {
+        // Provider data will be fetched via JavaScript from frontend using username
+        return view('search.provider-services', [
+            'services' => [], // Services loaded via JavaScript
+            'provider' => null, // Provider loaded via JavaScript
+            'providerId' => null, // Not using provider_id anymore
+            'companyUserName' => $companyUserName // Pass username for JavaScript API call
+        ]);
+    }
     public function showProviderServices($providerId)
     {
     }
@@ -41,18 +68,31 @@ class SearchController extends Controller
     public function providerFallback(Request $request)
     {
         $providerId = $request->input('provider_id');
+        $username = $request->input('username');
         
-        if (!$providerId) {
-            return response()->json(['error' => 'Provider ID is required'], 400);
+        if (!$providerId && !$username) {
+            return response()->json(['error' => 'Provider ID or username is required'], 400);
         }
         
         try {
-            // Get all providers to find the specific provider by ID
+            // Get all providers
             $providers = Cache::remember('all_providers', 900, function () {
                 return Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json() ?? [];
             });
             
-            $provider = collect($providers)->firstWhere('id', $providerId);
+            $provider = null;
+            
+            // Try to find by username first, then by ID (case-insensitive)
+            if ($username) {
+                $provider = collect($providers)->first(function ($p) use ($username) {
+                    return (isset($p['username']) && strtolower($p['username']) === strtolower($username)) ||
+                           (isset($p['companyUserName']) && strtolower($p['companyUserName']) === strtolower($username));
+                });
+            }
+            
+            if (!$provider && $providerId) {
+                $provider = collect($providers)->firstWhere('id', $providerId);
+            }
             
             if (!$provider) {
                 return response()->json(['error' => 'Provider not found'], 404);
@@ -84,6 +124,21 @@ class SearchController extends Controller
             return redirect()->route('search')->with('error', 'Provider ID is required');
         }
         
+        // Try to redirect to username-based URL
+        try {
+            $providers = Cache::remember('all_providers', 900, function () {
+                return Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json() ?? [];
+            });
+            
+            $provider = collect($providers)->firstWhere('id', $providerId);
+            
+            if ($provider && isset($provider['username']) && $provider['username']) {
+                return redirect()->route('provider.videos.by.username', ['companyUserName' => $provider['username']], 301);
+            }
+        } catch (\Exception $e) {
+            // Continue with old method if redirect fails
+        }
+        
         // Get provider data
         $providers = Cache::remember('all_providers', 900, function () {
             return Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json() ?? [];
@@ -97,6 +152,16 @@ class SearchController extends Controller
         return view('search.specific-provider-videos', [
             'provider' => $provider,
             'providerId' => $providerId
+        ]);
+    }
+    
+    public function showProviderVideosByUsername($companyUserName)
+    {
+        // Provider data will be fetched via JavaScript from frontend using username
+        return view('search.specific-provider-videos', [
+            'provider' => null, // Provider loaded via JavaScript
+            'providerId' => null, // Not using provider_id anymore
+            'companyUserName' => $companyUserName // Pass username for JavaScript API call
         ]);
     }
 }

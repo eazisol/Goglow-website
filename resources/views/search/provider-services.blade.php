@@ -172,14 +172,14 @@
     <!-- View Type Tabs Section Start -->
     <div class="view-type-tabs-container" style="margin-top: 20px;">
         <div class="view-type-tabs">
-            <a href="{{ route('search') }}{{ request()->getQueryString() ? '?' . request()->getQueryString() : '' }}" class="view-tab active" data-view="list">
+            <a href="{{ url()->current() }}" class="view-tab active" id="listTabLink" data-view="list">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     <path d="M2.5 2.5H5.83333V5H2.5V2.5Z" fill="currentColor"/>
                 </svg>
                 <span>Service List</span>
             </a>
-            <a href="{{ route('search.videos.provider', ['provider_id' => request()->get('provider_id')]) }}" class="view-tab" id="videosTabLink" data-view="videos">
+            <a href="#" class="view-tab" id="videosTabLink" data-view="videos">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="2.5" y="4.16667" width="15" height="11.6667" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M8.33333 7.5L13.3333 10L8.33333 12.5V7.5Z" fill="currentColor"/>
@@ -302,9 +302,14 @@
 <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Get provider ID from URL
+    // Get username from URL path or provider_id from query (for backward compatibility)
     const urlParams = new URLSearchParams(window.location.search);
-    const providerId = urlParams.get('provider_id') || '{{ request()->get('provider_id') }}';
+    const providerIdFromQuery = urlParams.get('provider_id') || '{{ request()->get('provider_id') }}';
+    const companyUserNameFromServer = '{{ $companyUserName ?? '' }}';
+    
+    // Extract username from URL path (e.g., /testing-glow -> testing-glow)
+    const pathParts = window.location.pathname.split('/').filter(part => part);
+    const companyUserName = companyUserNameFromServer || pathParts[pathParts.length - 1] || '';
     
     // Global variable to store provider data
     let providerData = null;
@@ -316,19 +321,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
     
     // Fetch provider data first, then services
-    if (providerId) {
-        fetchProviderData(providerId).then(() => {
+    if (companyUserName || providerIdFromQuery) {
+        fetchProviderData(companyUserName, providerIdFromQuery).then(() => {
             // After provider data is loaded, fetch services
-            fetchProviderServices(providerId);
+            if (providerData && providerData.id) {
+                fetchProviderServices(providerData.id);
+            } else if (providerIdFromQuery) {
+                fetchProviderServices(providerIdFromQuery);
+            }
         }).catch((error) => {
             console.error('Failed to load provider data:', error);
             // Still try to fetch services even if provider data fails
-            fetchProviderServices(providerId);
+            if (providerIdFromQuery) {
+                fetchProviderServices(providerIdFromQuery);
+            }
         });
     }
     
     // Fetch provider data from API
-    async function fetchProviderData(providerId) {
+    async function fetchProviderData(companyUserName, providerId) {
         const loadingEl = document.getElementById('providerLoading');
         const errorEl = document.getElementById('providerError');
         const contentEl = document.getElementById('providerContent');
@@ -339,20 +350,42 @@ document.addEventListener('DOMContentLoaded', function() {
         if (contentEl) contentEl.style.display = 'none';
         
         try {
-            const apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders?providerId=${encodeURIComponent(providerId)}`;
+            // Try to fetch by username first, then by providerId
+            let apiUrl;
+            if (companyUserName) {
+                // Fetch all providers and filter by username (API might not support username parameter directly)
+                apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
+            } else if (providerId) {
+                apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders?providerId=${encodeURIComponent(providerId)}`;
+            } else {
+                throw new Error('No username or provider ID provided');
+            }
+            
             const response = await fetch(apiUrl);
             
             if (!response.ok) {
                 throw new Error('Failed to fetch provider data');
             }
             
-            const providers = await response.json();
+            let providers = await response.json();
             
-            if (!Array.isArray(providers) || providers.length === 0) {
+            if (!Array.isArray(providers)) {
+                throw new Error('Invalid response format');
+            }
+            
+            // If searching by username, filter the results
+            if (companyUserName && providers.length > 0) {
+                providers = providers.filter(p => 
+                    (p.username && p.username.toLowerCase() === companyUserName.toLowerCase()) ||
+                    (p.companyUserName && p.companyUserName.toLowerCase() === companyUserName.toLowerCase())
+                );
+            }
+            
+            if (providers.length === 0) {
                 throw new Error('Provider not found');
             }
             
-            // Extract provider from array (API returns array with single provider)
+            // Extract provider from array (API returns array with single provider or filtered results)
             providerData = providers[0];
             
             // Hide loading, show content
@@ -369,7 +402,15 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Try server-side fallback
             try {
-                const fallbackUrl = `{{ route('search.provider.fallback') }}?provider_id=${encodeURIComponent(providerId)}`;
+                let fallbackUrl = '{{ route('search.provider.fallback') }}?';
+                if (companyUserName) {
+                    fallbackUrl += `username=${encodeURIComponent(companyUserName)}`;
+                } else if (providerId) {
+                    fallbackUrl += `provider_id=${encodeURIComponent(providerId)}`;
+                } else {
+                    throw new Error('No fallback parameters available');
+                }
+                
                 const fallbackResponse = await fetch(fallbackUrl);
                 
                 if (fallbackResponse.ok) {
@@ -457,8 +498,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update videos tab link
         const videosTabLink = document.getElementById('videosTabLink');
-        if (videosTabLink && providerId) {
-            videosTabLink.href = `{{ route('search.videos.provider') }}?provider_id=${encodeURIComponent(providerId)}`;
+        if (videosTabLink && providerData) {
+            const username = providerData.username || providerData.companyUserName;
+            if (username) {
+                videosTabLink.href = `/${encodeURIComponent(username)}/videos`;
+            } else if (providerData.id) {
+                // Fallback to old format if username not available
+                videosTabLink.href = `{{ route('search.videos.provider') }}?provider_id=${encodeURIComponent(providerData.id)}`;
+            }
+        }
+        
+        // Update list tab link to current URL
+        const listTabLink = document.getElementById('listTabLink');
+        if (listTabLink) {
+            listTabLink.href = window.location.pathname;
         }
     }
     
@@ -835,7 +888,8 @@ document.addEventListener('DOMContentLoaded', function() {
         section.setAttribute('data-category', categoryName);
         
         const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
-        const providerId = '{{ $providerId ?? "" }}';
+        // Get provider ID from providerData if available, otherwise from server
+        const providerId = (providerData && providerData.id) ? providerData.id : '{{ $providerId ?? "" }}';
         
         // Build subcategory sections HTML
         let subcategorySectionsHTML = '';

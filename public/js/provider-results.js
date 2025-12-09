@@ -159,7 +159,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalReviews = provider.total_review || 0;
     const address = provider.address || '';
     const providerId = provider.id || '';
+    const username = provider.username || provider.companyUserName || '';
     const timing = provider.timing || {};
+    
+    // Create provider URL - use username if available, fallback to provider_id
+    const providerUrl = username ? `/${encodeURIComponent(username)}` : `/search?provider_id=${encodeURIComponent(providerId)}`;
     
     // Create timing status
     const timingStatus = calculateTimingStatus(timing);
@@ -171,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     item.innerHTML = `
       <div class="provider-card">
-        <a href="/search?provider_id=${providerId}" class="provider-link">
+        <a href="${providerUrl}" class="provider-link">
           <div class="provider-image">
             <div class="provider-image-inner">
               <img src="${escapeHtml(providerImage)}" 
