@@ -81,11 +81,11 @@
 
                             <div class="calendar-strip">
                                 <button type="button" id="prevWeek" class="calendar-arrow">
-                                    <img src="images/images/leftarrow_days.svg" alt="" width="16" height="16">
+                                    <img src="{{ asset('images/images/leftarrow_days.svg') }}" alt="" width="16" height="16">
                                 </button>
                                 <div class="days-header"></div>
                                 <button type="button" id="nextWeek" class="calendar-arrow">
-                                    <img src="images/images/rightarrow_days.svg" alt="" width="16" height="16">
+                                    <img src="{{ asset('images/images/rightarrow_days.svg') }}" alt="" width="16" height="16">
                                 </button>
                             </div>
 
@@ -99,11 +99,11 @@
                             <!-- Time Slots with Navigation (hidden initially) -->
                             <div id="timeSlotsStrip" class="time-slots-strip" style="display: none;">
                                 <button type="button" id="prevTimeSlot" class="time-slot-arrow">
-                                    <img src="images/images/leftarrow_days.svg" alt="" width="16" height="16">
+                                    <img src="{{ asset('images/images/leftarrow_days.svg') }}" alt="" width="16" height="16">
                                 </button>
                                 <div id="timeSlotGrid" class="time-slots-container"></div>
                                 <button type="button" id="nextTimeSlot" class="time-slot-arrow">
-                                    <img src="images/images/rightarrow_days.svg" alt="" width="16" height="16">
+                                    <img src="{{ asset('images/images/rightarrow_days.svg') }}" alt="" width="16" height="16">
                                 </button>
                             </div>
                                     </div>
@@ -215,6 +215,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // Check if Stripe is loaded
     console.log('Stripe object availability:', typeof Stripe !== 'undefined' ? 'Available' : 'Not available');
     
+    // Extract companyUserName and servicesSlug from URL path if available
+    const pathParts = window.location.pathname.split('/').filter(part => part);
+    let companyUserNameFromPath = null;
+    let servicesSlugFromPath = null;
+    
+    // Check if URL matches pattern /{companyUserName}/{servicesSlug}
+    if (pathParts.length >= 2) {
+        // Last two parts should be companyUserName and servicesSlug
+        servicesSlugFromPath = pathParts[pathParts.length - 1];
+        companyUserNameFromPath = pathParts[pathParts.length - 2];
+    }
+    
     // Renamed to avoid namespace collision with Bootstrap JS
     const bookingBootstrap = {
         service: @json($selectedService ?? null),
@@ -222,6 +234,8 @@ document.addEventListener('DOMContentLoaded', function () {
         agents: @json($agents ?? []),
         serviceId: @json($serviceId ?? null),
         serviceProviderId: @json($serviceProviderId ?? null),
+        companyUserName: @json($companyUserName ?? null) || companyUserNameFromPath,
+        servicesSlug: @json($servicesSlug ?? null) || servicesSlugFromPath,
         userId: @json($userId ?? null),
         userData: @json($userData ?? null),
     };
@@ -971,7 +985,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Get params from URL (fallback) and from server (preferred)
         const urlParams = new URLSearchParams(window.location.search);
-        const serviceId = bookingBootstrap.serviceId || urlParams.get('serviceId');
+        // Get serviceId from service data if available, otherwise from query params (for backward compatibility)
+        const serviceId = bookingBootstrap.service?.id || bookingBootstrap.serviceId || urlParams.get('serviceId');
         const serviceProviderId = bookingBootstrap.serviceProviderId || urlParams.get('service_provider_id');
 
         // Build booking date object from selected date and time

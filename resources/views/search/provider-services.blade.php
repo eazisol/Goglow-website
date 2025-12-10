@@ -899,6 +899,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
         // Get provider ID from providerData if available, otherwise from server
         const providerId = (providerData && providerData.id) ? providerData.id : '{{ $providerId ?? "" }}';
+        // Get companyUserName from providerData or use the global companyUserName variable from URL path
+        const currentCompanyUserName = (providerData && (providerData.username || providerData.companyUserName)) 
+            ? (providerData.username || providerData.companyUserName) 
+            : (typeof companyUserName !== 'undefined' ? companyUserName : '');
         
         // Build subcategory sections HTML
         let subcategorySectionsHTML = '';
@@ -922,7 +926,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const duration = service.duration_minutes || 0;
                 const price = service.service_price || 0;
                 const serviceId = service.id || '';
-                const bookUrl = `/book-appointment?serviceId=${serviceId}&service_provider_id=${providerId}`;
+                const servicesSlug = service.services_slug || '';
+                
+                // Use slug-based URL if available, otherwise fallback to old format
+                let bookUrl;
+                if (currentCompanyUserName && servicesSlug) {
+                    bookUrl = `/${encodeURIComponent(currentCompanyUserName)}/${encodeURIComponent(servicesSlug)}`;
+                } else {
+                    // Fallback to old format if slug or username not available
+                    bookUrl = `/book-appointment?serviceId=${serviceId}&service_provider_id=${providerId}`;
+                }
                 
                 return `
                     <div class="service-row services-d-flex services-justify-between services-flex-wrap">

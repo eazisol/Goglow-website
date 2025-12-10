@@ -203,31 +203,67 @@ document.addEventListener('DOMContentLoaded', function () {
   // Get username from URL path or provider_id from server (for backward compatibility)
   const companyUserNameFromServer = '{{ $companyUserName ?? "" }}';
   const pathParts = window.location.pathname.split('/').filter(part => part);
-  const companyUserName = companyUserNameFromServer || (pathParts.length > 0 && pathParts[pathParts.length - 1] !== 'videos' ? pathParts[pathParts.length - 1] : pathParts[pathParts.length - 2]) || '';
+  // Extract username from URL: /heaven-palace/videos -> heaven-palace (second to last if last is 'videos', otherwise last)
+  let companyUserName = companyUserNameFromServer;
+  if (!companyUserName && pathParts.length > 0) {
+    if (pathParts[pathParts.length - 1] === 'videos' && pathParts.length > 1) {
+      // URL is /username/videos format
+      companyUserName = pathParts[pathParts.length - 2];
+    } else {
+      // URL is /username format
+      companyUserName = pathParts[pathParts.length - 1];
+    }
+  }
   const providerIdFromServer = '{{ $providerId ?? "" }}';
   
+  console.log('Video page initialization:', {
+    pathname: window.location.pathname,
+    pathParts: pathParts,
+    companyUserNameFromServer: companyUserNameFromServer,
+    companyUserName: companyUserName,
+    providerIdFromServer: providerIdFromServer
+  });
+  
   // Will be set after fetching provider data
-  let providerId = providerIdFromServer;
+  let providerId = providerIdFromServer && providerIdFromServer.trim() !== '' ? providerIdFromServer : null;
   let providerData = null;
+  let videosFetched = false; // Flag to prevent duplicate API calls
 
   // Fetch provider data if username is available
-  if (companyUserName && !providerId) {
+  if (companyUserName && !providerId && !videosFetched) {
+    console.log('Fetching provider data first, then videos');
     fetchProviderDataByUsername(companyUserName).then(() => {
       // After provider data is loaded, fetch videos using companyUserName
-      fetchVideos();
+      if (!videosFetched) {
+        console.log('Provider data loaded, fetching videos');
+        videosFetched = true;
+        fetchVideos();
+      }
     }).catch((error) => {
       console.error('Failed to load provider data:', error);
       // Still try to fetch videos using companyUserName from URL
-      if (companyUserName) {
+      if (companyUserName && !videosFetched) {
+        console.log('Fetching videos with username after provider fetch failed');
+        videosFetched = true;
         fetchVideos();
       }
     });
   } else if (companyUserName) {
     // If companyUserName is available, fetch videos directly using it
-    fetchVideos();
+    if (!videosFetched) {
+      console.log('Fetching videos directly with username:', companyUserName);
+      videosFetched = true;
+      fetchVideos();
+    }
   } else if (providerId) {
     // Fallback: If providerId is available but no username, fetch videos using providerId
-    fetchVideos();
+    if (!videosFetched) {
+      console.log('Fetching videos with providerId:', providerId);
+      videosFetched = true;
+      fetchVideos();
+    }
+  } else {
+    console.warn('No companyUserName or providerId available - cannot fetch videos');
   }
 
   // Fetch provider data by username
@@ -299,7 +335,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Fetch videos from API
   async function fetchVideos(lastDocIdParam = null) {
-    if (isLoading) return;
+    // Prevent duplicate calls on initial load (but allow pagination)
+    if (isLoading) {
+      console.log('fetchVideos: Already loading, skipping duplicate call');
+      return;
+    }
+    
+    // On initial load (no lastDocIdParam), mark as fetched to prevent duplicate initial calls
+    if (lastDocIdParam === null) {
+      videosFetched = true;
+    }
     
     isLoading = true;
     const loadingEl = document.getElementById('videos-loading');
@@ -322,11 +367,17 @@ document.addEventListener('DOMContentLoaded', function () {
       // Use companyUserName if available (preferred), otherwise fallback to serviceProviderId
       const username = companyUserName || (providerData && (providerData.username || providerData.companyUserName));
       
+      console.log('Fetching videos with:', { companyUserName, username, providerId, providerData });
+      
       if (username) {
         params.append('companyUserName', username);
+        console.log('Using companyUserName parameter:', username);
       } else if (providerId) {
         // Fallback to serviceProviderId if username not available
         params.append('serviceProviderId', providerId);
+        console.log('Using serviceProviderId parameter:', providerId);
+      } else {
+        console.warn('No username or providerId available for fetching videos');
       }
       
       // Add lastDocId for pagination if provided
@@ -339,6 +390,8 @@ document.addEventListener('DOMContentLoaded', function () {
         apiUrl += '?' + params.toString();
       }
       
+      console.log('Fetching videos from API:', apiUrl);
+      
       const response = await fetch(apiUrl);
       
       if (!response.ok) {
@@ -347,11 +400,20 @@ document.addEventListener('DOMContentLoaded', function () {
       
       const data = await response.json();
       
+      console.log('Videos API response:', {
+        hasVideos: !!data.videos,
+        videosCount: data.videos ? data.videos.length : 0,
+        videos: data.videos,
+        pagination: data.pagination
+      });
+      
       if (loadingEl) loadingEl.style.display = 'none';
       
       if (!data.videos || !Array.isArray(data.videos) || data.videos.length === 0) {
+        console.log('No videos found in response');
         if (videos.length === 0) {
           if (emptyEl) emptyEl.style.display = 'flex';
+          console.log('Showing empty state');
         }
         hasMore = false;
         isLoading = false;
@@ -367,10 +429,15 @@ document.addEventListener('DOMContentLoaded', function () {
       // Append new videos
       videos = [...videos, ...data.videos];
       
+      console.log('Total videos after append:', videos.length);
+      
       // Render videos
       renderVideos(data.videos);
       
-      if (gridEl) gridEl.style.display = 'grid';
+      if (gridEl) {
+        gridEl.style.display = 'grid';
+        console.log('Videos grid displayed');
+      }
       if (emptyEl) emptyEl.style.display = 'none';
       
     } catch (error) {
@@ -391,12 +458,19 @@ document.addEventListener('DOMContentLoaded', function () {
   // Render video cards
   function renderVideos(videosArray) {
     const gridEl = document.getElementById('videos-grid');
-    if (!gridEl) return;
+    if (!gridEl) {
+      console.error('Videos grid element not found!');
+      return;
+    }
+    
+    console.log('Rendering', videosArray.length, 'videos');
     
     videosArray.forEach(video => {
       const videoCard = createVideoCard(video);
       gridEl.appendChild(videoCard);
     });
+    
+    console.log('Videos rendered successfully');
   }
 
   // Create video card element
@@ -436,7 +510,9 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Add click handler to open modal
     card.addEventListener('click', function() {
+      console.log('Video card clicked:', video.id);
       const videoIndex = videos.findIndex(v => v.id === video.id);
+      console.log('Opening video modal, index:', videoIndex);
       openVideoModal(video, videoIndex);
     });
     
@@ -453,6 +529,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Open video modal
   function openVideoModal(video, videoIndex = -1) {
+    console.log('openVideoModal called with:', { videoId: video.id, videoIndex });
     const modal = document.getElementById('videoModal');
     const modalContent = document.querySelector('.video-modal-content');
     const modalVideo = document.getElementById('modalVideo');
@@ -461,7 +538,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalHashtags = document.getElementById('modalHashtags');
     const bookingBtn = document.getElementById('modalBookingBtn');
     
-    if (!modal) return;
+    if (!modal) {
+      console.error('Video modal element not found!');
+      return;
+    }
+    
+    console.log('Modal found, opening...');
     
     // Store current video index
     if (videoIndex >= 0) {
@@ -495,18 +577,40 @@ document.addEventListener('DOMContentLoaded', function () {
       modalHashtags.style.display = video.hashtags ? 'block' : 'none';
     }
     
-    // Set booking button link with service ID
-    if (bookingBtn && video.serviceProviderId && video.serviceId) {
+    // Set booking button link using services_slug and companyUserName
+    if (bookingBtn && video.services_slug) {
+      // Use companyUserName from video data if available, otherwise from providerData or URL
+      const username = video.companyUserName || 
+                      (providerData && (providerData.username || providerData.companyUserName)) ||
+                      companyUserName;
+      
+      if (username && video.services_slug) {
+        bookingBtn.href = `/${encodeURIComponent(username)}/${encodeURIComponent(video.services_slug)}`;
+      } else if (video.serviceId && video.serviceProviderId) {
+        // Fallback to old format if slug or username not available
+        bookingBtn.href = '/book-appointment?serviceId=' + encodeURIComponent(video.serviceId) + '&service_provider_id=' + encodeURIComponent(video.serviceProviderId);
+      } else if (video.serviceProviderId) {
+        // Fallback to provider page if service info not available
+        const fallbackUsername = video.companyUserName || 
+                                (providerData && (providerData.username || providerData.companyUserName)) ||
+                                companyUserName;
+        if (fallbackUsername) {
+          bookingBtn.href = `/${encodeURIComponent(fallbackUsername)}`;
+        } else {
+          bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+        }
+      }
+    } else if (bookingBtn && video.serviceId && video.serviceProviderId) {
+      // Fallback to old format if services_slug not available
       bookingBtn.href = '/book-appointment?serviceId=' + encodeURIComponent(video.serviceId) + '&service_provider_id=' + encodeURIComponent(video.serviceProviderId);
     } else if (bookingBtn && video.serviceProviderId) {
-      // Use companyUserName from video data if available, otherwise fallback to provider_id
-      if (video.companyUserName) {
-        bookingBtn.href = `/${encodeURIComponent(video.companyUserName)}`;
-      } else if (providerData && (providerData.username || providerData.companyUserName)) {
-        const username = providerData.username || providerData.companyUserName;
-        bookingBtn.href = `/${encodeURIComponent(username)}`;
+      // Fallback to provider page
+      const fallbackUsername = video.companyUserName || 
+                              (providerData && (providerData.username || providerData.companyUserName)) ||
+                              companyUserName;
+      if (fallbackUsername) {
+        bookingBtn.href = `/${encodeURIComponent(fallbackUsername)}`;
       } else {
-        // Fallback to old format if username not available
         bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
       }
     }
@@ -534,14 +638,19 @@ document.addEventListener('DOMContentLoaded', function () {
     updateNavigationButtons();
     
     // Show modal
+    console.log('Showing video modal');
     modal.classList.add('active');
+    console.log('Modal active class added, modal visible:', modal.classList.contains('active'));
     // Don't prevent background scrolling - allow users to scroll video list
     
     // Play video
     if (modalVideo) {
+      console.log('Playing video:', modalVideo.src);
       modalVideo.play().catch(err => {
         console.error('Error playing video:', err);
       });
+    } else {
+      console.error('Modal video element not found!');
     }
   }
 
@@ -1023,6 +1132,8 @@ document.addEventListener('DOMContentLoaded', function () {
     videos = [];
     lastDocId = null;
     hasMore = true;
+    videosFetched = false; // Reset flag for retry
+    isLoading = false; // Reset loading state
     const gridEl = document.getElementById('videos-grid');
     if (gridEl) gridEl.innerHTML = '';
     fetchVideos();

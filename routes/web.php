@@ -75,5 +75,7 @@ Route::get('/api/locale', [\App\Http\Controllers\LanguageController::class, 'get
 Route::get('/test-language', function () {return view('test.language');});
 
 // Provider by username routes (must be at the end to avoid conflicts with other routes)
+// IMPORTANT: Videos route must come BEFORE the slug route to prevent "videos" from being matched as a slug
 Route::get('/{companyUserName}/videos', [\App\Http\Controllers\SearchController::class, 'showProviderVideosByUsername'])->name('provider.videos.by.username');
+Route::get('/{companyUserName}/{servicesSlug}', [\App\Http\Controllers\BookAppointmentController::class, 'showBySlug'])->middleware('firebase.auth.modal')->name('book-appointment.slug')->where('servicesSlug', '[a-zA-Z0-9\-]+');
 Route::get('/{companyUserName}', [\App\Http\Controllers\SearchController::class, 'showProviderByUsername'])->name('provider.by.username');
