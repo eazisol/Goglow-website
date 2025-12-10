@@ -987,7 +987,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const urlParams = new URLSearchParams(window.location.search);
         // Get serviceId from service data if available, otherwise from query params (for backward compatibility)
         const serviceId = bookingBootstrap.service?.id || bookingBootstrap.serviceId || urlParams.get('serviceId');
-        const serviceProviderId = bookingBootstrap.serviceProviderId || urlParams.get('service_provider_id');
+        // Get serviceProviderId from service.ownerId (primary), then fallback to controller-passed value, then URL params
+        const serviceProviderId = bookingBootstrap.service?.ownerId || bookingBootstrap.serviceProviderId || urlParams.get('service_provider_id');
 
         // Build booking date object from selected date and time
         const [year, month, day] = selectedDateInput.value.split('-').map(Number);

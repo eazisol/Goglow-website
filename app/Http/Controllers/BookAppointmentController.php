@@ -162,8 +162,9 @@ class BookAppointmentController extends Controller
                     $agents = $json['agents'] ?? [];
                     
                     // Extract service provider ID from service data if available
-                    if ($selectedService && isset($selectedService['service_provider_id'])) {
-                        $serviceProviderId = $selectedService['service_provider_id'];
+                    // Use ownerId field from service data (as per API response structure)
+                    if ($selectedService && isset($selectedService['ownerId'])) {
+                        $serviceProviderId = $selectedService['ownerId'];
                     }
                 } else {
                     $selectedService = null;
