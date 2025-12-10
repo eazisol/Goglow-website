@@ -61,8 +61,12 @@ document.addEventListener('DOMContentLoaded', function() {
     bookingPayload.agent_name = formData.agentName;
     
     // Update the booking payload with payment information
-    bookingPayload.payment_id = '{{ $transactionId }}';
-    bookingPayload.payment_type = '{{ $paymentType }}';
+    const transactionId = '{{ $transactionId }}';
+    const paymentType = '{{ $paymentType }}';
+    const isFreeBooking = transactionId && transactionId.startsWith('free-booking');
+    
+    bookingPayload.payment_id = transactionId;
+    bookingPayload.payment_type = paymentType;
     bookingPayload.payment_status = 'completed';
     if (bookingPayload.payment_type === 'full') {
         bookingPayload.payed = true;
@@ -71,12 +75,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     console.log('After conditions booking payload:', bookingPayload);
+    console.log('Is free booking:', isFreeBooking);
     
     // Populate booking details in the UI
     populateBookingDetails(formData, bookingPayload);
     
     // Submit the booking to the API
-    submitBooking(bookingPayload);
+    // For free bookings that were already submitted, skip to avoid double submission
+    if (isFreeBooking && bookingPayload.alreadySubmitted) {
+        console.log('Free booking already submitted, skipping duplicate submission');
+        // Still update the UI status to show booking was successful
+        document.getElementById('apiResponseStatus').innerHTML = 
+            '<strong class="text-success">' + successTranslations.booking_confirmed_server + '</strong>';
+    } else {
+        submitBooking(bookingPayload);
+    }
     
     // Function to format date
     function formatDate(dateString) {
@@ -138,6 +151,26 @@ document.addEventListener('DOMContentLoaded', function() {
         return '€' + parseFloat(amount).toFixed(2);
     }
     
+    // Function to calculate deposit percentage from service data
+    function calculateDepositPercentage(serviceData) {
+        if (!serviceData) return 0;
+        
+        const spDeposit = serviceData.spDeposit || 0;
+        const commission = serviceData.commission || {};
+        const minimumBookingPercentage = commission.minimum_booking_percentage || 0;
+        const commissionValue = commission.commission || 0;
+        
+        if (spDeposit > 0) {
+            return spDeposit;
+        } else if (minimumBookingPercentage > 0) {
+            return minimumBookingPercentage;
+        } else if (commissionValue > 0) {
+            return commissionValue;
+        } else {
+            return 0;
+        }
+    }
+    
     // Function to populate booking details
     function populateBookingDetails(formData, bookingPayload) {
         try {
@@ -166,11 +199,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const servicePrice = bookingPayload.services?.[0]?.servicePrice || 0;
             const paymentType = '{{ $paymentType }}';
             
+            // Get service data from bookingPayload or try to get from stored data
+            const serviceData = bookingPayload.serviceData || bookingPayload.service || null;
+            const depositPercentage = calculateDepositPercentage(serviceData);
+            
             let amountPaid = servicePrice;
             let remainingAmount = 0;
             
             if (paymentType === 'deposit') {
-                amountPaid = servicePrice * 0.15;
+                if (depositPercentage > 0) {
+                    amountPaid = servicePrice * (depositPercentage / 100);
+                } else {
+                    amountPaid = 0; // Free booking
+                }
                 remainingAmount = servicePrice - amountPaid;
                 
                 // Show remaining amount section
@@ -251,11 +292,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const bookingTime = formatTime(bookingPayload.booking_time || formData.selectedTime);
             const agentName = bookingPayload.agent_name || formData.agentName || 'Not available';
             
+            // Get service data from bookingPayload or try to get from stored data
+            const serviceData = bookingPayload.serviceData || bookingPayload.service || null;
+            const depositPercentage = calculateDepositPercentage(serviceData);
+            
             let amountPaid = servicePrice;
             let remainingAmount = 0;
             
             if (paymentType === 'deposit') {
-                amountPaid = servicePrice * 0.15;
+                if (depositPercentage > 0) {
+                    amountPaid = servicePrice * (depositPercentage / 100);
+                } else {
+                    amountPaid = 0; // Free booking
+                }
                 remainingAmount = servicePrice - amountPaid;
             }
             

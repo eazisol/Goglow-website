@@ -73,10 +73,18 @@ class BookAppointmentController extends Controller
                 });
 
                 if ($json) {
-                    // API returns keys: service, category, agents
+                    // API returns keys: service, category, agents, spDeposit, commission
                     $selectedService = $json['service'] ?? null;
                     $selectedCategory = $json['category'] ?? null;
                     $agents = $json['agents'] ?? [];
+                    
+                    // Merge spDeposit and commission into selectedService if they exist
+                    if ($selectedService && isset($json['spDeposit'])) {
+                        $selectedService['spDeposit'] = $json['spDeposit'];
+                    }
+                    if ($selectedService && isset($json['commission'])) {
+                        $selectedService['commission'] = $json['commission'];
+                    }
                 } else {
                     $selectedService = null;
                     $selectedCategory = null;
@@ -156,10 +164,18 @@ class BookAppointmentController extends Controller
                 });
 
                 if ($json) {
-                    // API returns keys: service, category, agents
+                    // API returns keys: service, category, agents, spDeposit, commission
                     $selectedService = $json['service'] ?? null;
                     $selectedCategory = $json['category'] ?? null;
                     $agents = $json['agents'] ?? [];
+                    
+                    // Merge spDeposit and commission into selectedService if they exist
+                    if ($selectedService && isset($json['spDeposit'])) {
+                        $selectedService['spDeposit'] = $json['spDeposit'];
+                    }
+                    if ($selectedService && isset($json['commission'])) {
+                        $selectedService['commission'] = $json['commission'];
+                    }
                     
                     // Extract service provider ID from service data if available
                     // Use ownerId field from service data (as per API response structure)

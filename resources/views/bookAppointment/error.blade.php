@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.mainInnerPages')
 {{-- Title --}}
 @section('title', 'Payment Error')
 

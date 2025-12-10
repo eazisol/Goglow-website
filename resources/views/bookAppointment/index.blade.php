@@ -138,11 +138,49 @@
                                     <div class="form-group col-md-12 mb-4">
                                         <label class="form-label">{{ __('app.agent_page.payment_options') }}</label>
                                         <div class="payment-options">
+                                            @php
+                                                // Calculate deposit percentage based on priority: spDeposit > minimum_booking_percentage > commission
+                                                $depositPercentage = null;
+                                                $depositLabel = '';
+                                                
+                                                if (!empty($selectedService)) {
+                                                    $spDeposit = $selectedService['spDeposit'] ?? 0;
+                                                    $commission = $selectedService['commission'] ?? [];
+                                                    $minimumBookingPercentage = $commission['minimum_booking_percentage'] ?? 0;
+                                                    $commissionValue = $commission['commission'] ?? 0;
+                                                    
+                                                    if ($spDeposit > 0) {
+                                                        $depositPercentage = $spDeposit;
+                                                        $depositLabel = $spDeposit . '% deposit now';
+                                                    } elseif ($minimumBookingPercentage > 0) {
+                                                        $depositPercentage = $minimumBookingPercentage;
+                                                        $depositLabel = $minimumBookingPercentage . '% deposit now';
+                                                    } elseif ($commissionValue > 0) {
+                                                        $depositPercentage = $commissionValue;
+                                                        $depositLabel = $commissionValue . '% deposit now';
+                                                    } else {
+                                                        $depositPercentage = 0;
+                                                        $depositLabel = 'Free booking';
+                                                    }
+                                                    
+                                                    $servicePrice = $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0);
+                                                    $depositAmount = ($depositPercentage > 0) ? ($servicePrice * ($depositPercentage / 100)) : 0;
+                                                } else {
+                                                    $depositPercentage = 0;
+                                                    $depositLabel = 'Free booking';
+                                                    $depositAmount = 0;
+                                                }
+                                            @endphp
                                             <div class="form-check mb-3">
                                                 <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
-                                                <label class="form-check-label" for="payDeposit">
-                                                    {{ __('app.agent_page.pay_15%_deposit_now') }} (€{{ number_format(($selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0)) * 0.15, 2) }})
+                                                <label class="form-check-label" for="payDeposit" id="payDepositLabel">
+                                                    @if($depositPercentage > 0)
+                                                        {{ $depositLabel }} (€{{ number_format($depositAmount, 2) }})
+                                                    @else
+                                                        {{ $depositLabel }}
+                                                    @endif
                                                 </label>
+                                                <input type="hidden" id="depositPercentage" value="{{ $depositPercentage }}">
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
@@ -1094,7 +1132,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     email: email,
                     phone: phone,
                 }
-            ]
+            ],
+            // Include service data for deposit calculation on success page
+            serviceData: bookingBootstrap.service || null
         };
         
         // Collect form data to pass through the payment process
@@ -1120,15 +1160,92 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('bookingFormData', JSON.stringify(formDataToStore));
             localStorage.setItem('bookingPayload', JSON.stringify(bookingPayload));
             
+            // Get deposit percentage from hidden input or calculate from service data
+            const depositPercentageInput = document.getElementById('depositPercentage');
+            let depositPercentage = depositPercentageInput ? parseFloat(depositPercentageInput.value) : null;
+            
+            // If not found in input, calculate from service data
+            if (depositPercentage === null || isNaN(depositPercentage)) {
+                const service = bookingBootstrap.service || {};
+                const spDeposit = service.spDeposit || 0;
+                const commission = service.commission || {};
+                const minimumBookingPercentage = commission.minimum_booking_percentage || 0;
+                const commissionValue = commission.commission || 0;
+                
+                if (spDeposit > 0) {
+                    depositPercentage = spDeposit;
+                } else if (minimumBookingPercentage > 0) {
+                    depositPercentage = minimumBookingPercentage;
+                } else if (commissionValue > 0) {
+                    depositPercentage = commissionValue;
+                } else {
+                    depositPercentage = 0;
+                }
+            }
+            
             console.log('Preparing to send checkout request with data:', {
                 serviceId,
                 serviceProviderId,
                 serviceName,
                 servicePrice,
                 paymentType,
+                depositPercentage,
                 formData: formDataToStore
             });
             
+            // Check if this is a free booking (deposit is 0 and payment type is deposit)
+            const isFreeBooking = (depositPercentage === 0 && paymentType === 'deposit');
+            
+            if (isFreeBooking) {
+                // For free bookings, skip Stripe and directly submit the booking
+                console.log('Free booking detected, skipping Stripe payment');
+                
+                // Add payment information to booking payload
+                const freeBookingTransactionId = 'free-booking-' + Date.now();
+                bookingPayload.payment_id = freeBookingTransactionId;
+                bookingPayload.payment_type = 'deposit';
+                bookingPayload.payment_status = 'completed';
+                bookingPayload.payed = false; // Free booking, so not fully paid
+                bookingPayload.alreadySubmitted = true; // Flag to prevent double submission
+                
+                // Store booking data in localStorage for success page (same as paid bookings)
+                localStorage.setItem('bookingFormData', JSON.stringify(formDataToStore));
+                localStorage.setItem('bookingPayload', JSON.stringify(bookingPayload));
+                
+                try {
+                    // Submit booking directly to API
+                    const bookingResponse = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/bookService', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(bookingPayload)
+                    });
+                    
+                    const bookingResponseData = await bookingResponse.json();
+                    console.log('Booking API response:', bookingResponseData);
+                    
+                    if (bookingResponse.ok) {
+                        // Redirect to success page
+                        const successUrl = '{{ route("payment.success") }}?session_id=' + freeBookingTransactionId + 
+                            '&serviceId=' + encodeURIComponent(serviceId) +
+                            '&serviceProviderId=' + encodeURIComponent(serviceProviderId) +
+                            '&paymentType=deposit';
+                        window.location.href = successUrl;
+                    } else {
+                        setButtonLoading(false);
+                        alert('Error submitting booking: ' + (bookingResponseData.message || 'Unknown error'));
+                        console.error('Error submitting booking:', bookingResponseData);
+                    }
+                } catch (bookingError) {
+                    setButtonLoading(false);
+                    console.error('Error submitting free booking:', bookingError);
+                    alert('An error occurred while submitting your booking: ' + bookingError.message);
+                }
+                return; // Exit early for free bookings
+            }
+            
+            // For paid bookings, proceed with Stripe checkout
             const checkoutUrl = '{{ route("checkout.session") }}';
             console.log('Checkout URL:', checkoutUrl);
             
@@ -1144,6 +1261,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     serviceName, 
                     servicePrice,
                     paymentType,
+                    depositPercentage,
+                    serviceData: bookingBootstrap.service || null,
                     formData: formDataToStore,
                     bookingData: bookingPayload
                 })

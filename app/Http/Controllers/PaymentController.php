@@ -26,9 +26,79 @@ class PaymentController extends Controller
         $paymentType = $request->input('paymentType'); // 'deposit' or 'full'
         $formData = $request->input('formData');
         $bookingData = $request->input('bookingData');
+        
+        // Get deposit percentage from request or calculate from service data
+        $depositPercentage = $request->input('depositPercentage');
+        $serviceData = $request->input('serviceData');
+        
+        // If depositPercentage is not provided, calculate it from service data
+        if ($depositPercentage === null && $serviceData) {
+            $spDeposit = $serviceData['spDeposit'] ?? 0;
+            $commission = $serviceData['commission'] ?? [];
+            $minimumBookingPercentage = $commission['minimum_booking_percentage'] ?? 0;
+            $commissionValue = $commission['commission'] ?? 0;
+            
+            if ($spDeposit > 0) {
+                $depositPercentage = $spDeposit;
+            } elseif ($minimumBookingPercentage > 0) {
+                $depositPercentage = $minimumBookingPercentage;
+            } elseif ($commissionValue > 0) {
+                $depositPercentage = $commissionValue;
+            } else {
+                $depositPercentage = 0;
+            }
+        }
+        
+        // If still not available, try to fetch service data from API
+        if ($depositPercentage === null && $serviceId) {
+            try {
+                $response = Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServiceById', [
+                    'service_id' => $serviceId,
+                ]);
+                
+                if ($response->ok()) {
+                    $json = $response->json();
+                    $service = $json['service'] ?? null;
+                    
+                    if ($service) {
+                        $spDeposit = $service['spDeposit'] ?? 0;
+                        $commission = $service['commission'] ?? [];
+                        $minimumBookingPercentage = $commission['minimum_booking_percentage'] ?? 0;
+                        $commissionValue = $commission['commission'] ?? 0;
+                        
+                        if ($spDeposit > 0) {
+                            $depositPercentage = $spDeposit;
+                        } elseif ($minimumBookingPercentage > 0) {
+                            $depositPercentage = $minimumBookingPercentage;
+                        } elseif ($commissionValue > 0) {
+                            $depositPercentage = $commissionValue;
+                        } else {
+                            $depositPercentage = 0;
+                        }
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Failed to fetch service data for deposit calculation', ['error' => $e->getMessage()]);
+                // Fallback to 0 if we can't fetch
+                $depositPercentage = 0;
+            }
+        }
+        
+        // Default to 0 if still not set
+        $depositPercentage = $depositPercentage ?? 0;
 
         // Calculate the payment amount based on payment type
-        $amount = ($paymentType === 'deposit') ? ($servicePrice * 0.15) : $servicePrice;
+        if ($paymentType === 'deposit') {
+            if ($depositPercentage > 0) {
+                $amount = $servicePrice * ($depositPercentage / 100);
+            } else {
+                // Free booking - set amount to 0 (but Stripe requires minimum 50 cents)
+                $amount = 0;
+            }
+        } else {
+            $amount = $servicePrice;
+        }
+        
         $amountInCents = (int) ($amount * 100); // Stripe requires amounts in cents
 
         // Create a checkout session
@@ -59,7 +129,9 @@ class PaymentController extends Controller
                 'line_items' => [
                     [
                         'name' => $serviceName ?: 'Beauty Service',
-                        'description' => ($paymentType === 'deposit') ? '15% Deposit' : 'Full Payment',
+                        'description' => ($paymentType === 'deposit') 
+                            ? ($depositPercentage > 0 ? $depositPercentage . '% Deposit' : 'Free Booking')
+                            : 'Full Payment',
                         'amount' => max(50, $amountInCents), // Minimum 50 cents
                         'currency' => 'eur',
                         'quantity' => 1,
@@ -105,22 +177,31 @@ class PaymentController extends Controller
                 throw new \Exception('Session ID is missing from the request.');
             }
             
-            // Retrieve the session to get payment information
-            Log::info('Retrieving Stripe session', ['sessionId' => $sessionId]);
-            $session = Session::retrieve($sessionId);
+            // Check if this is a free booking (session_id starts with "free-booking")
+            $isFreeBooking = strpos($sessionId, 'free-booking') === 0;
             
-            if (!is_object($session)) {
-                throw new \Exception('Failed to retrieve a valid session object');
-            }
-            
-            Log::info('Session retrieved', ['sessionId' => $session->id]);
-            
-            // Use safe property access for Stripe v7.0 compatibility
-            $paymentIntentId = $sessionId; // Default to session ID
-            
-            // Try to get payment_intent if it exists
-            if (isset($session->payment_intent)) {
-                $paymentIntentId = $session->payment_intent;
+            if ($isFreeBooking) {
+                // For free bookings, skip Stripe session retrieval
+                Log::info('Free booking detected, skipping Stripe session retrieval', ['sessionId' => $sessionId]);
+                $paymentIntentId = $sessionId; // Use the free-booking transaction ID
+            } else {
+                // Retrieve the session to get payment information
+                Log::info('Retrieving Stripe session', ['sessionId' => $sessionId]);
+                $session = Session::retrieve($sessionId);
+                
+                if (!is_object($session)) {
+                    throw new \Exception('Failed to retrieve a valid session object');
+                }
+                
+                Log::info('Session retrieved', ['sessionId' => $session->id]);
+                
+                // Use safe property access for Stripe v7.0 compatibility
+                $paymentIntentId = $sessionId; // Default to session ID
+                
+                // Try to get payment_intent if it exists
+                if (isset($session->payment_intent)) {
+                    $paymentIntentId = $session->payment_intent;
+                }
             }
             
             Log::info('Payment ID', ['paymentIntentId' => $paymentIntentId]);
@@ -131,7 +212,8 @@ class PaymentController extends Controller
                 'transactionId' => $paymentIntentId,
                 'paymentType' => $paymentType,
                 'serviceId' => $serviceId,
-                'serviceProviderId' => $serviceProviderId
+                'serviceProviderId' => $serviceProviderId,
+                'isFreeBooking' => $isFreeBooking
             ]);
             
             // Return the success view with payment information
