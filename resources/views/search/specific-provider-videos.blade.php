@@ -213,19 +213,20 @@ document.addEventListener('DOMContentLoaded', function () {
   // Fetch provider data if username is available
   if (companyUserName && !providerId) {
     fetchProviderDataByUsername(companyUserName).then(() => {
-      // After provider data is loaded, fetch videos
-      if (providerId) {
-        fetchVideos();
-      }
+      // After provider data is loaded, fetch videos using companyUserName
+      fetchVideos();
     }).catch((error) => {
       console.error('Failed to load provider data:', error);
-      // Still try to fetch videos if providerId is available from server
-      if (providerId) {
+      // Still try to fetch videos using companyUserName from URL
+      if (companyUserName) {
         fetchVideos();
       }
     });
+  } else if (companyUserName) {
+    // If companyUserName is available, fetch videos directly using it
+    fetchVideos();
   } else if (providerId) {
-    // If providerId is already available, fetch videos directly
+    // Fallback: If providerId is available but no username, fetch videos using providerId
     fetchVideos();
   }
 
@@ -318,8 +319,13 @@ document.addEventListener('DOMContentLoaded', function () {
       let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllVideos';
       const params = new URLSearchParams();
       
-      // Always include serviceProviderId if available
-      if (providerId) {
+      // Use companyUserName if available (preferred), otherwise fallback to serviceProviderId
+      const username = companyUserName || (providerData && (providerData.username || providerData.companyUserName));
+      
+      if (username) {
+        params.append('companyUserName', username);
+      } else if (providerId) {
+        // Fallback to serviceProviderId if username not available
         params.append('serviceProviderId', providerId);
       }
       
@@ -1022,8 +1028,8 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchVideos();
   };
 
-  // Initial fetch
-  fetchVideos();
+  // Note: Initial fetch is handled by the conditional logic above (lines 213-231)
+  // No need to call fetchVideos() here to avoid duplicate API calls
   
   // Search autocomplete functionality (same as provider-results)
   const searchInput = document.getElementById('searchInput');

@@ -179,7 +179,7 @@
                 </svg>
                 <span>Service List</span>
             </a>
-            <a href="#" class="view-tab" id="videosTabLink" data-view="videos">
+            <a href="{{ $companyUserName ? '/' . $companyUserName . '/videos' : '#' }}" class="view-tab" id="videosTabLink" data-view="videos">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="2.5" y="4.16667" width="15" height="11.6667" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M8.33333 7.5L13.3333 10L8.33333 12.5V7.5Z" fill="currentColor"/>
@@ -319,6 +319,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Default image
     const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+    
+    // Set videos tab link immediately if username is available
+    const videosTabLink = document.getElementById('videosTabLink');
+    if (videosTabLink && companyUserName) {
+        videosTabLink.href = `/${encodeURIComponent(companyUserName)}/videos`;
+    }
     
     // Fetch provider data first, then services
     if (companyUserName || providerIdFromQuery) {
@@ -496,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Render hours of operation
         renderProviderHours(provider);
         
-        // Update videos tab link
+        // Update videos tab link - use providerData username if available, otherwise keep the one set initially
         const videosTabLink = document.getElementById('videosTabLink');
         if (videosTabLink && providerData) {
             const username = providerData.username || providerData.companyUserName;
@@ -506,6 +512,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Fallback to old format if username not available
                 videosTabLink.href = `{{ route('search.videos.provider') }}?provider_id=${encodeURIComponent(providerData.id)}`;
             }
+        } else if (videosTabLink && companyUserName && !videosTabLink.href || videosTabLink.href === '#') {
+            // Ensure link is set even if providerData hasn't loaded yet
+            videosTabLink.href = `/${encodeURIComponent(companyUserName)}/videos`;
         }
         
         // Update list tab link to current URL
