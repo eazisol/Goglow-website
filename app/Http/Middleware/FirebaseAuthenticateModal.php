@@ -27,8 +27,10 @@ class FirebaseAuthenticateModal
             session()->flash('show_auth_modal', true);
             session()->flash('auth_redirect', $redirect);
             
-            // For the book-appointment route, we want to allow access but show the modal via JavaScript
-            if (strpos($request->path(), 'book-appointment') !== false) {
+            // For the book-appointment routes (both old format and slug-based), we want to allow access but show the modal via JavaScript
+            $routeName = $request->route() ? $request->route()->getName() : null;
+            if (strpos($request->path(), 'book-appointment') !== false || 
+                $routeName === 'book-appointment.slug') {
                 return $next($request);
             }
             
