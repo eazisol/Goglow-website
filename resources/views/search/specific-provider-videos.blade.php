@@ -229,6 +229,27 @@ document.addEventListener('DOMContentLoaded', function () {
   let providerData = null;
   let videosFetched = false; // Flag to prevent duplicate API calls
 
+  // Set list tab link immediately based on URL, before provider data is fetched
+  const listTabLink = document.getElementById('listTabLink');
+  if (listTabLink && companyUserName) {
+    listTabLink.href = `/${encodeURIComponent(companyUserName)}`;
+    console.log('Set listTabLink href immediately:', listTabLink.href);
+  } else if (listTabLink && !companyUserName) {
+    // If no username yet, set a click handler to prevent navigation until href is set
+    listTabLink.addEventListener('click', function(e) {
+      if (this.href === '#' || this.href === window.location.href + '#') {
+        e.preventDefault();
+        console.warn('List tab link not ready yet, waiting for provider data...');
+        // Try to set href from companyUserName if available
+        if (companyUserName) {
+          this.href = `/${encodeURIComponent(companyUserName)}`;
+          // Trigger click again after setting href
+          setTimeout(() => this.click(), 100);
+        }
+      }
+    });
+  }
+
   // Fetch provider data if username is available
   if (companyUserName && !providerId && !videosFetched) {
     console.log('Fetching provider data first, then videos');
@@ -308,19 +329,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Update navigation links
   function updateLinks() {
-    if (!providerData) return;
-    
-    const username = providerData.username || providerData.companyUserName;
     const listTabLink = document.getElementById('listTabLink');
     const videosTabLink = document.getElementById('videosTabLink');
     
+    // Use providerData if available, otherwise fall back to companyUserName from URL
+    const username = (providerData && (providerData.username || providerData.companyUserName)) || companyUserName;
+    
     if (username) {
-      if (listTabLink) listTabLink.href = `/${encodeURIComponent(username)}`;
-      if (videosTabLink) videosTabLink.href = `/${encodeURIComponent(username)}/videos`;
+      if (listTabLink) {
+        listTabLink.href = `/${encodeURIComponent(username)}`;
+        console.log('Updated listTabLink href:', listTabLink.href);
+      }
+      if (videosTabLink) {
+        videosTabLink.href = `/${encodeURIComponent(username)}/videos`;
+      }
     } else if (providerId) {
       // Fallback to old format
-      if (listTabLink) listTabLink.href = `/search?provider_id=${encodeURIComponent(providerId)}`;
-      if (videosTabLink) videosTabLink.href = `{{ route('search.videos.provider') }}?provider_id=${encodeURIComponent(providerId)}`;
+      if (listTabLink) {
+        listTabLink.href = `/search?provider_id=${encodeURIComponent(providerId)}`;
+      }
+      if (videosTabLink) {
+        videosTabLink.href = `{{ route('search.videos.provider') }}?provider_id=${encodeURIComponent(providerId)}`;
+      }
     }
   }
 
