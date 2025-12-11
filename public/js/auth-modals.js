@@ -237,8 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = {
                 name: document.getElementById('signup-name').value,
                 email: document.getElementById('signup-email').value,
-                phone: document.getElementById('signup-phone').value,
-                location: document.getElementById('signup-location').value,
                 password: password,
                 password_confirmation: confirmPassword,
                 terms: document.getElementById('signup-terms').checked ? 1 : 0

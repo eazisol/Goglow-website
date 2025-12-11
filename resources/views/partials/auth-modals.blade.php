@@ -82,16 +82,6 @@
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <input type="text" name="phone" class="form-control-login" id="signup-phone" placeholder="{{ __('app.auth.phone_with_country_code') }}" required>
-                                <div class="help-block with-errors"></div>
-                            </div>
-
-                            <div class="form-group col-md-6 mb-4">
-                                <input type="text" name="location" class="form-control-login" id="signup-location" placeholder="{{ __('app.auth.location_city_country') }}" required>
-                                <div class="help-block with-errors"></div>
-                            </div>
-
-                            <div class="form-group col-md-6 mb-4">
                                 <div class="input-group">
                                     <input type="password" name="password" id="signup-password" class="form-control-login" placeholder="{{ __('app.auth.password_min_chars') }}" required minlength="6">
                                     <span class="input-group-text password-toggle" onclick="togglePassword('signup-password')">

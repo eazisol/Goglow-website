@@ -94,16 +94,6 @@
                                 </div>
 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="text" name="phone" class="form-control" id="phone" placeholder="{{ __('app.auth.phone_with_country_code') }}" value="{{ old('phone') }}" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-
-                                <div class="form-group col-md-12 mb-4">
-                                    <input type="text" name="location" class="form-control" id="location" placeholder="{{ __('app.auth.location_city_country') }}" value="{{ old('location') }}" required>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-
-                                <div class="form-group col-md-12 mb-4">
                                     <div class="input-group">
                                         <input type="password" name="password" id="password" class="form-control" placeholder="{{ __('app.auth.password_min_chars') }}" required minlength="6">
                                         <span class="input-group-text password-toggle" onclick="const p=document.getElementById('password'); p.type=p.type==='password'?'text':'password'">

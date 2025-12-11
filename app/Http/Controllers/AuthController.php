@@ -104,8 +104,6 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:32'],
-            'location' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'terms' => ['accepted'],
         ]);
@@ -121,24 +119,11 @@ class AuthController extends Controller
 
             $createdUser = $auth->createUser($userProperties);
 
-            // Optionally store phone and location in Firebase custom claims or your own DB.
-            // If you want to store phone in Firebase user profile when possible:
-            try {
-                if (!empty($validated['phone'])) {
-                    $auth->updateUser($createdUser->uid, ['phoneNumber' => $validated['phone']]);
-                }
-            } catch (\Throwable $e) {
-                // Non-fatal if phone update fails (e.g., invalid E.164)
-                \Log::warning('Phone update skipped', ['uid' => $createdUser->uid, 'error' => $e->getMessage()]);
-            }
-
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Account created successfully. You can now sign in.',
                     'uid' => $createdUser->uid,
-                    'phone' => $validated['phone'] ?? null,
-                    'location' => $validated['location'] ?? null,
                 ]);
             }
 
