@@ -66,6 +66,7 @@ Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])-
 // AJAX auth routes
 Route::post('/ajax/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('ajax.login');
 Route::post('/ajax/signup', [\App\Http\Controllers\AuthController::class, 'register'])->name('ajax.signup');
+Route::post('/ajax/oauth-login', [\App\Http\Controllers\AuthController::class, 'oauthLogin'])->name('ajax.oauth.login');
 
 // Language switching routes
 Route::get('/language/{locale}', [\App\Http\Controllers\LanguageController::class, 'switchLanguage'])->name('language.switch');

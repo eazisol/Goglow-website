@@ -141,6 +141,49 @@ class AuthController extends Controller
             return back()->withErrors(['email' => $e->getMessage()])->withInput();
         }
     }
+
+    public function oauthLogin(Request $request, FirebaseAuth $auth)
+    {
+        $validated = $request->validate([
+            'idToken' => ['required', 'string'],
+            'isSignup' => ['boolean'],
+        ]);
+
+        try {
+            // Verify the ID token
+            $verifiedToken = $auth->verifyIdToken($validated['idToken']);
+            $uid = $verifiedToken->claims()->get('sub');
+            
+            // Get user info from Firebase
+            $user = $auth->getUser($uid);
+            
+            // Store in session
+            session([
+                'firebase_uid' => $uid,
+                'firebase_email' => $user->email ?? '',
+                'firebase_id_token' => $validated['idToken'],
+            ]);
+
+            // Check for stored book appointment URL first, then request redirect, then default to search
+            $redirect = session('last_book_appointment_url') ?: $request->input('redirect') ?: route('search');
+            
+            // Clear the stored URL after using it
+            session()->forget('last_book_appointment_url');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Logged in successfully',
+                'redirect' => $redirect
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('OAuth login failed', ['error' => $e->getMessage()]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Authentication failed: ' . $e->getMessage()
+            ], 422);
+        }
+    }
 }
 
 

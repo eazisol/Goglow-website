@@ -38,6 +38,20 @@
                                     </span>
                                 </button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
+                                
+                                <div class="text-center my-3">
+                                    <span style="color: #999;">{{ __('app.auth.or') }}</span>
+                                </div>
+                                
+                                <div class="social-login-buttons">
+                                    <button type="button" class="btn-social btn-google" id="google-signin-btn">
+                                        <i class="fab fa-google"></i> {{ __('app.auth.sign_in_with_google') }}
+                                    </button>
+                                    <button type="button" class="btn-social btn-apple" id="apple-signin-btn">
+                                        <i class="fab fa-apple"></i> {{ __('app.auth.sign_in_with_apple') }}
+                                    </button>
+                                </div>
+                                
                                 <p class="mt-3 mb-0" style="text-align: center;">{{ __('app.auth.dont_have_account') }} <a href="#" id="show-signup-modal">{{ __('app.auth.create_one') }}</a></p>
                             </div>
                         </div>
@@ -114,6 +128,20 @@
                                     </span>
                                 </button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
+                                
+                                <div class="text-center my-3">
+                                    <span style="color: #999;">{{ __('app.auth.or') }}</span>
+                                </div>
+                                
+                                <div class="social-login-buttons">
+                                    <button type="button" class="btn-social btn-google" id="google-signup-btn">
+                                        <i class="fab fa-google"></i> {{ __('app.auth.sign_up_with_google') }}
+                                    </button>
+                                    <button type="button" class="btn-social btn-apple" id="apple-signup-btn">
+                                        <i class="fab fa-apple"></i> {{ __('app.auth.sign_up_with_apple') }}
+                                    </button>
+                                </div>
+                                
                                 <p class="mt-3 mb-0" style="text-align: center;">{{ __('app.auth.already_have_account') }} <a href="#" id="show-login-modal">{{ __('app.auth.login') }}</a></p>
                             </div>
                         </div>
@@ -124,3 +152,11 @@
         </div>
     </div>
 </div>
+<script>
+  // Temporary debug - check config values
+  console.log('=== FIREBASE CONFIG DEBUG ===');
+  console.log('API Key:', '{{ config("services.firebase.web_api_key") ? "SET" : "MISSING" }}');
+  console.log('Auth Domain:', '{{ config("services.firebase.auth_domain") }}');
+  console.log('Project ID:', '{{ config("services.firebase.project_id") }}');
+  console.log('============================');
+</script>

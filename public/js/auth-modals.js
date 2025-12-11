@@ -301,6 +301,124 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Handle Google Sign-In
+    async function handleGoogleSignIn(isSignup = false) {
+        try {
+            if (!window.firebaseAuth || typeof firebase === 'undefined') {
+                console.error('Firebase Auth not initialized');
+                alert('Authentication service not available. Please refresh the page.');
+                return;
+            }
+
+            const provider = new firebase.auth.GoogleAuthProvider();
+            const result = await window.firebaseAuth.signInWithPopup(provider);
+            const idToken = await result.user.getIdToken();
+            
+            // Send ID token to backend for verification
+            await handleOAuthCallback(idToken, isSignup);
+        } catch (error) {
+            console.error('Google sign-in error:', error);
+            const errorElement = document.getElementById(isSignup ? 'signup-error' : 'login-error');
+            if (errorElement) {
+                errorElement.textContent = error.message || 'Google sign-in failed';
+                errorElement.classList.remove('d-none');
+            }
+        }
+    }
+
+    // Handle Apple Sign-In
+    async function handleAppleSignIn(isSignup = false) {
+        try {
+            if (!window.firebaseAuth || typeof firebase === 'undefined') {
+                console.error('Firebase Auth not initialized');
+                alert('Authentication service not available. Please refresh the page.');
+                return;
+            }
+
+            const provider = new firebase.auth.OAuthProvider('apple.com');
+            const result = await window.firebaseAuth.signInWithPopup(provider);
+            const idToken = await result.user.getIdToken();
+            
+            // Send ID token to backend for verification
+            await handleOAuthCallback(idToken, isSignup);
+        } catch (error) {
+            console.error('Apple sign-in error:', error);
+            const errorElement = document.getElementById(isSignup ? 'signup-error' : 'login-error');
+            if (errorElement) {
+                errorElement.textContent = error.message || 'Apple sign-in failed';
+                errorElement.classList.remove('d-none');
+            }
+        }
+    }
+
+    // Handle OAuth callback - send ID token to backend
+    async function handleOAuthCallback(idToken, isSignup = false) {
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            const storedUrl = localStorage.getItem('book_appointment_url');
+            
+            const response = await fetch('/ajax/oauth-login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : '',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idToken: idToken,
+                    isSignup: isSignup
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Update authentication status
+                window.isAuthenticated = true;
+                
+                // Close modal
+                if (loginModal) loginModal.hide();
+                if (signupModal) signupModal.hide();
+                
+                // Redirect
+                const redirectUrl = storedUrl || data.redirect || '/';
+                localStorage.removeItem('book_appointment_url');
+                window.location.href = redirectUrl;
+            } else {
+                throw new Error(data.message || 'Authentication failed');
+            }
+        } catch (error) {
+            console.error('OAuth callback error:', error);
+            const errorElement = document.getElementById(isSignup ? 'signup-error' : 'login-error');
+            if (errorElement) {
+                errorElement.textContent = error.message || 'Authentication failed';
+                errorElement.classList.remove('d-none');
+            }
+        }
+    }
+
+    // Google Sign-In buttons
+    const googleSigninBtn = document.getElementById('google-signin-btn');
+    const googleSignupBtn = document.getElementById('google-signup-btn');
+    
+    if (googleSigninBtn) {
+        googleSigninBtn.addEventListener('click', () => handleGoogleSignIn(false));
+    }
+    if (googleSignupBtn) {
+        googleSignupBtn.addEventListener('click', () => handleGoogleSignIn(true));
+    }
+
+    // Apple Sign-In buttons
+    const appleSigninBtn = document.getElementById('apple-signin-btn');
+    const appleSignupBtn = document.getElementById('apple-signup-btn');
+    
+    if (appleSigninBtn) {
+        appleSigninBtn.addEventListener('click', () => handleAppleSignIn(false));
+    }
+    if (appleSignupBtn) {
+        appleSignupBtn.addEventListener('click', () => handleAppleSignIn(true));
+    }
+
     // Handle book appointment button clicks that require authentication
     document.querySelectorAll('.requires-auth').forEach(button => {
         button.addEventListener('click', function(e) {

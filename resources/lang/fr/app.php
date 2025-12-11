@@ -50,6 +50,11 @@ return [
         'privacy_policy' => 'Politique de confidentialité',
         'please_accept_terms' => 'Veuillez accepter les termes et conditions pour continuer.',
         'passwords_not_match' => 'Les mots de passe ne correspondent pas.',
+        'or' => 'ou',
+        'sign_in_with_google' => 'Se connecter avec Google',
+        'sign_in_with_apple' => 'Se connecter avec Apple',
+        'sign_up_with_google' => 'S\'inscrire avec Google',
+        'sign_up_with_apple' => 'S\'inscrire avec Apple',
     ],
 
     // Booking
