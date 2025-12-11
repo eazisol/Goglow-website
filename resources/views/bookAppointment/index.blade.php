@@ -963,6 +963,175 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Helper function to restore time slot and payment options
+    function restoreTimeSlotAndPayment(state, skipSlotClick = false) {
+        // Wait for period selection to render slots, then restore time slot
+        setTimeout(() => {
+            if (state.selectedDate && state.selectedTime && selectedDateInput && selectedTimeInput) {
+                // Find and click the time slot
+                const timeSlot = document.querySelector(
+                    `.time-slot[data-date="${state.selectedDate}"][data-time="${state.selectedTime}"]`
+                );
+                if (timeSlot && !timeSlot.classList.contains('unavailable')) {
+                    timeSlot.click();
+                    console.log('Restored time slot selection:', state.selectedDate, state.selectedTime);
+                } else {
+                    // If exact slot not found or unavailable, try to set values directly
+                    // This handles cases where slot might have become unavailable
+                    selectedDateInput.value = state.selectedDate;
+                    selectedTimeInput.value = state.selectedTime;
+                    if (state.selectedDay) {
+                        selectedDayInput.value = state.selectedDay;
+                    }
+                    // Show payment options if time was selected
+                    if (paymentOptionsSection) {
+                        paymentOptionsSection.style.display = '';
+                    }
+                    // Update selected slot info display if available
+                    if (selectedSlotInfo && selectedDateTimeDisplay) {
+                        const [yy, mm, dd] = state.selectedDate.split('-').map(Number);
+                        const selectedDateObj = new Date(yy, mm - 1, dd);
+                        const formattedDate = formatDate(selectedDateObj);
+                        const formattedTime = formatTimeDisplay(state.selectedTime);
+                        selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
+                        selectedSlotInfo.style.display = '';
+                    }
+                    if (!timeSlot) {
+                        console.warn('Time slot not found, restored values directly. Slot may no longer be available.');
+                    } else {
+                        console.warn('Time slot is unavailable, restored values directly.');
+                    }
+                }
+            }
+
+            // Restore payment type selection
+            if (state.paymentType) {
+                const paymentRadio = document.querySelector(`input[name="paymentType"][value="${state.paymentType}"]`);
+                if (paymentRadio) {
+                    paymentRadio.checked = true;
+                    console.log('Restored payment type:', state.paymentType);
+                }
+            }
+
+            // Restore terms checkbox
+            if (state.termsChecked && termsCheckbox) {
+                termsCheckbox.checked = true;
+                console.log('Restored terms checkbox');
+            }
+
+            // Clear the saved state after successful restoration
+            localStorage.removeItem('pendingBookingState');
+            console.log('Booking state restored successfully');
+        }, skipSlotClick ? 100 : 500); // Shorter timeout if skipping slot click
+    }
+
+    // Function to restore pending booking state after login
+    function restorePendingBookingState() {
+        try {
+            const savedState = localStorage.getItem('pendingBookingState');
+            if (!savedState) {
+                return; // No saved state to restore
+            }
+
+            const state = JSON.parse(savedState);
+            console.log('Restoring pending booking state:', state);
+
+            // Check if user is now logged in (state should only be restored after login)
+            if (!bookingBootstrap.userId) {
+                console.log('User not logged in yet, skipping state restoration');
+                return;
+            }
+
+            // Check if agent still exists in the list
+            let agentFound = false;
+            if (state.agentId && agentList) {
+                const agentAvatars = agentList.querySelectorAll('.agent-avatar');
+                for (const avatar of agentAvatars) {
+                    try {
+                        const agent = JSON.parse(avatar.dataset.agent);
+                        if (agent.id === state.agentId) {
+                            agentFound = true;
+                            // Trigger click on agent avatar to initialize everything
+                            avatar.click();
+                            console.log('Restored agent selection:', agent.name);
+                            break;
+                        }
+                    } catch (e) {
+                        console.warn('Error parsing agent data:', e);
+                    }
+                }
+            }
+
+            if (!agentFound && state.agentId) {
+                console.warn('Agent not found in list, cannot restore booking state');
+                localStorage.removeItem('pendingBookingState');
+                return;
+            }
+
+            // Wait for agent selection to initialize, then restore other selections
+            setTimeout(() => {
+                // Restore day selection first - find the day column by date
+                if (state.selectedDate && selectedDateInput) {
+                    const dayColumn = document.querySelector(`.day-column[data-date="${state.selectedDate}"]`);
+                    if (dayColumn) {
+                        // Click the day column to trigger day selection
+                        dayColumn.click();
+                        console.log('Restored day selection:', state.selectedDate);
+                        
+                        // Wait for day selection to complete, then restore period
+                        setTimeout(() => {
+                            // Restore period selection
+                            if (state.selectedPeriod && periodSelector) {
+                                selectedPeriod = state.selectedPeriod;
+                                const periodBtn = periodSelector.querySelector(`[data-period="${state.selectedPeriod}"]`);
+                                if (periodBtn) {
+                                    // Check if day is selected before clicking period button
+                                    const activeDay = document.querySelector('.day-column.active');
+                                    if (activeDay && selectedDayInput.value) {
+                                        periodBtn.click();
+                                        console.log('Restored period selection:', state.selectedPeriod);
+                                        
+                                        // Wait for period selection to render slots, then restore time slot
+                                        restoreTimeSlotAndPayment(state);
+                                    } else {
+                                        console.warn('Day not properly selected, cannot restore period');
+                                        restoreTimeSlotAndPayment(state, true); // Try to restore time slot anyway
+                                    }
+                                } else {
+                                    console.warn('Period button not found');
+                                    restoreTimeSlotAndPayment(state, true);
+                                }
+                            } else {
+                                // No period to restore, try to restore time slot directly
+                                restoreTimeSlotAndPayment(state, true);
+                            }
+                        }, 300); // Wait for day selection to complete
+                    } else {
+                        console.warn('Day column not found for date:', state.selectedDate);
+                        // Try to set values directly
+                        if (state.selectedDay) {
+                            selectedDayInput.value = state.selectedDay;
+                        }
+                        if (state.selectedDate) {
+                            selectedDateInput.value = state.selectedDate;
+                        }
+                        restoreTimeSlotAndPayment(state, true);
+                    }
+                } else {
+                    console.warn('No selected date in saved state');
+                    restoreTimeSlotAndPayment(state, true);
+                }
+            }, 800); // Wait for agent selection to initialize
+        } catch (error) {
+            console.error('Error restoring pending booking state:', error);
+            // Clear invalid state
+            localStorage.removeItem('pendingBookingState');
+        }
+    }
+
+    // Restore pending booking state if user just logged in
+    restorePendingBookingState();
+
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
@@ -1065,6 +1234,20 @@ document.addEventListener('DOMContentLoaded', function () {
             setButtonLoading(false);
             // Store the current URL for redirection after login
             localStorage.setItem('book_appointment_url', window.location.href);
+            
+            // Save booking form state before showing login modal
+            const pendingBookingState = {
+                agentId: chosenAgent?.id || null,
+                agent: chosenAgent || null,
+                selectedDate: selectedDateInput?.value || '',
+                selectedTime: selectedTimeInput?.value || '',
+                selectedDay: selectedDayInput?.value || '',
+                selectedPeriod: selectedPeriod || null,
+                paymentType: document.querySelector('input[name="paymentType"]:checked')?.value || null,
+                termsChecked: termsCheckbox?.checked || false
+            };
+            localStorage.setItem('pendingBookingState', JSON.stringify(pendingBookingState));
+            console.log('Saved pending booking state:', pendingBookingState);
             
             // Show the login modal instead of alert
             const showLoginModal = () => {
@@ -1226,6 +1409,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log('Booking API response:', bookingResponseData);
                     
                     if (bookingResponse.ok) {
+                        // Clear pending booking state after successful booking
+                        localStorage.removeItem('pendingBookingState');
+                        
                         // Redirect to success page
                         const successUrl = '{{ route("payment.success") }}?session_id=' + freeBookingTransactionId + 
                             '&serviceId=' + encodeURIComponent(serviceId) +
@@ -1284,6 +1470,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // Clear pending booking state before redirecting to Stripe
+            localStorage.removeItem('pendingBookingState');
+            
             // Initialize Stripe object with publishable key
             const stripe = Stripe('pk_test_YvIcG9lWoxs6ITHB264wNchO');
             console.log('Redirecting to Stripe checkout with session ID:', session.id);
