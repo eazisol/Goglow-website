@@ -214,24 +214,90 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Toggle between login and signup modals
     const showSignupBtn = document.getElementById('show-signup-modal');
-    if (showSignupBtn && loginModal && signupModal) {
+    if (showSignupBtn) {
         showSignupBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            loginModal.hide();
+            
+            // Get modal instances - create if they don't exist
+            let loginModalInstance = loginModal;
+            let signupModalInstance = signupModal;
+            
+            const loginModalEl = document.getElementById('loginModal');
+            const signupModalEl = document.getElementById('signupModal');
+            
+            if (!loginModalInstance && loginModalEl) {
+                if (typeof bootstrap !== 'undefined') {
+                    loginModalInstance = new bootstrap.Modal(loginModalEl);
+                }
+            }
+            
+            if (!signupModalInstance && signupModalEl) {
+                if (typeof bootstrap !== 'undefined') {
+                    signupModalInstance = new bootstrap.Modal(signupModalEl);
+                }
+            }
+            
+            // Hide login modal
+            if (loginModalInstance) {
+                loginModalInstance.hide();
+            } else if (loginModalEl && typeof bootstrap !== 'undefined') {
+                const tempModal = new bootstrap.Modal(loginModalEl);
+                tempModal.hide();
+            }
+            
+            // Show signup modal after delay
             setTimeout(() => {
-                signupModal.show();
-            }, 500);
+                if (signupModalInstance) {
+                    signupModalInstance.show();
+                } else if (signupModalEl && typeof bootstrap !== 'undefined') {
+                    const tempModal = new bootstrap.Modal(signupModalEl);
+                    tempModal.show();
+                }
+            }, 300);
         });
     }
     
     const showLoginBtn = document.getElementById('show-login-modal');
-    if (showLoginBtn && loginModal && signupModal) {
+    if (showLoginBtn) {
         showLoginBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            signupModal.hide();
+            
+            // Get modal instances - create if they don't exist
+            let loginModalInstance = loginModal;
+            let signupModalInstance = signupModal;
+            
+            const loginModalEl = document.getElementById('loginModal');
+            const signupModalEl = document.getElementById('signupModal');
+            
+            if (!loginModalInstance && loginModalEl) {
+                if (typeof bootstrap !== 'undefined') {
+                    loginModalInstance = new bootstrap.Modal(loginModalEl);
+                }
+            }
+            
+            if (!signupModalInstance && signupModalEl) {
+                if (typeof bootstrap !== 'undefined') {
+                    signupModalInstance = new bootstrap.Modal(signupModalEl);
+                }
+            }
+            
+            // Hide signup modal
+            if (signupModalInstance) {
+                signupModalInstance.hide();
+            } else if (signupModalEl && typeof bootstrap !== 'undefined') {
+                const tempModal = new bootstrap.Modal(signupModalEl);
+                tempModal.hide();
+            }
+            
+            // Show login modal after delay
             setTimeout(() => {
-                loginModal.show();
-            }, 500);
+                if (loginModalInstance) {
+                    loginModalInstance.show();
+                } else if (loginModalEl && typeof bootstrap !== 'undefined') {
+                    const tempModal = new bootstrap.Modal(loginModalEl);
+                    tempModal.show();
+                }
+            }, 300);
         });
     }
     

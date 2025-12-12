@@ -55,6 +55,8 @@ return [
         'sign_in_with_apple' => 'Se connecter avec Apple',
         'sign_up_with_google' => 'S\'inscrire avec Google',
         'sign_up_with_apple' => 'S\'inscrire avec Apple',
+        'login_successful' => 'Connexion réussie!',
+        'redirecting' => 'Redirection...',
     ],
 
     // Booking

@@ -39,16 +39,16 @@
                                 </button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
                                 
-                                <div class="text-center my-3">
+                                <div class="text-center">
                                     <span style="color: #999;">{{ __('app.auth.or') }}</span>
                                 </div>
                                 
                                 <div class="social-login-buttons">
-                                    <button type="button" class="btn-social btn-google" id="google-signin-btn">
-                                        <i class="fab fa-google"></i> {{ __('app.auth.sign_in_with_google') }}
+                                    <button type="button" class="btn-social btn-google" id="google-signin-btn" title="{{ __('app.auth.sign_in_with_google') }}">
+                                        <i class="fab fa-google"></i>
                                     </button>
-                                    <button type="button" class="btn-social btn-apple" id="apple-signin-btn">
-                                        <i class="fab fa-apple"></i> {{ __('app.auth.sign_in_with_apple') }}
+                                    <button type="button" class="btn-social btn-apple" id="apple-signin-btn" title="{{ __('app.auth.sign_in_with_apple') }}">
+                                        <i class="fab fa-apple"></i>
                                     </button>
                                 </div>
                                 
@@ -134,11 +134,11 @@
                                 </div>
                                 
                                 <div class="social-login-buttons">
-                                    <button type="button" class="btn-social btn-google" id="google-signup-btn">
-                                        <i class="fab fa-google"></i> {{ __('app.auth.sign_up_with_google') }}
+                                    <button type="button" class="btn-social btn-google" id="google-signup-btn" title="{{ __('app.auth.sign_up_with_google') }}">
+                                        <i class="fab fa-google"></i>
                                     </button>
-                                    <button type="button" class="btn-social btn-apple" id="apple-signup-btn">
-                                        <i class="fab fa-apple"></i> {{ __('app.auth.sign_up_with_apple') }}
+                                    <button type="button" class="btn-social btn-apple" id="apple-signup-btn" title="{{ __('app.auth.sign_up_with_apple') }}">
+                                        <i class="fab fa-apple"></i>
                                     </button>
                                 </div>
                                 
@@ -152,6 +152,20 @@
         </div>
     </div>
 </div>
+
+<!-- OAuth Success Loader Overlay -->
+<div id="oauth-success-loader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 9999; align-items: center; justify-content: center; flex-direction: column;">
+    <div style="background: white; padding: 40px; border-radius: 12px; text-align: center; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <div style="margin-bottom: 20px;">
+            <div class="spinner-border text-primary" role="status" style="width: 50px; height: 50px;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <h4 style="color: #333; margin-bottom: 10px; font-weight: 600;">{{ __('app.auth.login_successful') ?: 'Login Successful!' }}</h4>
+        <p style="color: #666; margin: 0;">{{ __('app.auth.redirecting') ?: 'Redirecting...' }}</p>
+    </div>
+</div>
+
 <script>
   // OAuth button handlers - embedded directly in template to ensure they work
   (function() {
@@ -196,10 +210,27 @@
             })
             .then(function(data) {
               if (data.success) {
+                // Show success loader
+                const loader = document.getElementById('oauth-success-loader');
+                if (loader) {
+                  loader.style.display = 'flex';
+                }
+                
+                // Close modals
+                const loginModalEl = document.getElementById('loginModal');
+                if (loginModalEl && typeof bootstrap !== 'undefined') {
+                  const bsModal = bootstrap.Modal.getInstance(loginModalEl);
+                  if (bsModal) bsModal.hide();
+                }
+                
                 window.isAuthenticated = true;
                 const storedUrl = localStorage.getItem('book_appointment_url');
                 localStorage.removeItem('book_appointment_url');
-                window.location.href = storedUrl || data.redirect || '/';
+                
+                // Redirect after a short delay to show the success message
+                setTimeout(function() {
+                  window.location.href = storedUrl || data.redirect || '/';
+                }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
               }
@@ -255,10 +286,27 @@
             })
             .then(function(data) {
               if (data.success) {
+                // Show success loader
+                const loader = document.getElementById('oauth-success-loader');
+                if (loader) {
+                  loader.style.display = 'flex';
+                }
+                
+                // Close modals
+                const loginModalEl = document.getElementById('loginModal');
+                if (loginModalEl && typeof bootstrap !== 'undefined') {
+                  const bsModal = bootstrap.Modal.getInstance(loginModalEl);
+                  if (bsModal) bsModal.hide();
+                }
+                
                 window.isAuthenticated = true;
                 const storedUrl = localStorage.getItem('book_appointment_url');
                 localStorage.removeItem('book_appointment_url');
-                window.location.href = storedUrl || data.redirect || '/';
+                
+                // Redirect after a short delay to show the success message
+                setTimeout(function() {
+                  window.location.href = storedUrl || data.redirect || '/';
+                }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
               }
@@ -314,10 +362,27 @@
             })
             .then(function(data) {
               if (data.success) {
+                // Show success loader
+                const loader = document.getElementById('oauth-success-loader');
+                if (loader) {
+                  loader.style.display = 'flex';
+                }
+                
+                // Close modals
+                const loginModalEl = document.getElementById('loginModal');
+                if (loginModalEl && typeof bootstrap !== 'undefined') {
+                  const bsModal = bootstrap.Modal.getInstance(loginModalEl);
+                  if (bsModal) bsModal.hide();
+                }
+                
                 window.isAuthenticated = true;
                 const storedUrl = localStorage.getItem('book_appointment_url');
                 localStorage.removeItem('book_appointment_url');
-                window.location.href = storedUrl || data.redirect || '/';
+                
+                // Redirect after a short delay to show the success message
+                setTimeout(function() {
+                  window.location.href = storedUrl || data.redirect || '/';
+                }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
               }
@@ -373,10 +438,27 @@
             })
             .then(function(data) {
               if (data.success) {
+                // Show success loader
+                const loader = document.getElementById('oauth-success-loader');
+                if (loader) {
+                  loader.style.display = 'flex';
+                }
+                
+                // Close modals
+                const loginModalEl = document.getElementById('loginModal');
+                if (loginModalEl && typeof bootstrap !== 'undefined') {
+                  const bsModal = bootstrap.Modal.getInstance(loginModalEl);
+                  if (bsModal) bsModal.hide();
+                }
+                
                 window.isAuthenticated = true;
                 const storedUrl = localStorage.getItem('book_appointment_url');
                 localStorage.removeItem('book_appointment_url');
-                window.location.href = storedUrl || data.redirect || '/';
+                
+                // Redirect after a short delay to show the success message
+                setTimeout(function() {
+                  window.location.href = storedUrl || data.redirect || '/';
+                }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
               }

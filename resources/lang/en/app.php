@@ -55,6 +55,8 @@ return [
         'sign_in_with_apple' => 'Sign in with Apple',
         'sign_up_with_google' => 'Sign up with Google',
         'sign_up_with_apple' => 'Sign up with Apple',
+        'login_successful' => 'Login Successful!',
+        'redirecting' => 'Redirecting...',
     ],
 
     // Booking
