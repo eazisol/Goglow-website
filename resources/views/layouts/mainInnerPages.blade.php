@@ -115,18 +115,37 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
 
   {{-- Firebase JS SDK for OAuth --}}
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-        apiKey: '{{ config("services.firebase.web_api_key") }}',
-        authDomain: '{{ config("services.firebase.auth_domain") }}',
-        projectId: '{{ config("services.firebase.project_id") }}',
-    };
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" onerror="console.error('Failed to load firebase-app-compat.js')"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" onerror="console.error('Failed to load firebase-auth-compat.js')"></script>
+<script>
+  // Initialize Firebase
+  if (typeof firebase === 'undefined') {
+    console.error('Firebase SDK not loaded!');
+  } else {
+    const apiKey = '{{ config("services.firebase.web_api_key") }}';
+    const authDomain = '{{ config("services.firebase.auth_domain") }}';
+    const projectId = '{{ config("services.firebase.project_id") }}';
     
-    firebase.initializeApp(firebaseConfig);
-    window.firebaseAuth = firebase.auth();
-  </script>
+    if (!apiKey || !authDomain || !projectId) {
+      console.error('Firebase config values are missing!');
+    } else {
+      const firebaseConfig = {
+        apiKey: apiKey,
+        authDomain: authDomain,
+        projectId: projectId,
+      };
+      
+      try {
+        if (firebase.apps.length === 0) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        window.firebaseAuth = firebase.auth();
+      } catch (error) {
+        console.error('Firebase initialization error:', error);
+      }
+    }
+  }
+</script>
   
   {{-- Stripe.js - Deferred (loaded when needed) --}}
   <script src="https://js.stripe.com/v3/" defer></script>

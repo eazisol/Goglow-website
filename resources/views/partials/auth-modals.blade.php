@@ -153,10 +153,258 @@
     </div>
 </div>
 <script>
-  // Temporary debug - check config values
-  console.log('=== FIREBASE CONFIG DEBUG ===');
-  console.log('API Key:', '{{ config("services.firebase.web_api_key") ? "SET" : "MISSING" }}');
-  console.log('Auth Domain:', '{{ config("services.firebase.auth_domain") }}');
-  console.log('Project ID:', '{{ config("services.firebase.project_id") }}');
-  console.log('============================');
+  // OAuth button handlers - embedded directly in template to ensure they work
+  (function() {
+    function setupOAuthHandlers() {
+      
+      // Google Sign-In button (Login)
+      const googleSigninBtn = document.getElementById('google-signin-btn');
+      if (googleSigninBtn) {
+        // Remove any existing listeners by cloning
+        const newBtn = googleSigninBtn.cloneNode(true);
+        googleSigninBtn.parentNode.replaceChild(newBtn, googleSigninBtn);
+        
+        newBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (!window.firebaseAuth || typeof firebase === 'undefined') {
+            console.error('Firebase not available');
+            alert('Firebase not initialized. Please refresh.');
+            return;
+          }
+          
+          const provider = new firebase.auth.GoogleAuthProvider();
+          window.firebaseAuth.signInWithPopup(provider)
+            .then(function(result) {
+              return result.user.getIdToken();
+            })
+            .then(function(idToken) {
+              const csrfToken = document.querySelector('meta[name="csrf-token"]');
+              return fetch('/ajax/oauth-login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : '',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken, isSignup: false })
+              });
+            })
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(data) {
+              if (data.success) {
+                window.isAuthenticated = true;
+                const storedUrl = localStorage.getItem('book_appointment_url');
+                localStorage.removeItem('book_appointment_url');
+                window.location.href = storedUrl || data.redirect || '/';
+              } else {
+                throw new Error(data.message || 'Authentication failed');
+              }
+            })
+            .catch(function(error) {
+              console.error('Google sign-in error:', error);
+              const errorEl = document.getElementById('login-error');
+              if (errorEl) {
+                errorEl.textContent = error.message || 'Google sign-in failed';
+                errorEl.classList.remove('d-none');
+              } else {
+                alert('Google sign-in failed: ' + (error.message || 'Unknown error'));
+              }
+            });
+        });
+      }
+      
+      // Apple Sign-In button (Login)
+      const appleSigninBtn = document.getElementById('apple-signin-btn');
+      if (appleSigninBtn) {
+        const newBtn = appleSigninBtn.cloneNode(true);
+        appleSigninBtn.parentNode.replaceChild(newBtn, appleSigninBtn);
+        
+        newBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (!window.firebaseAuth || typeof firebase === 'undefined') {
+            console.error('Firebase not available');
+            alert('Firebase not initialized. Please refresh.');
+            return;
+          }
+          
+          const provider = new firebase.auth.OAuthProvider('apple.com');
+          window.firebaseAuth.signInWithPopup(provider)
+            .then(function(result) {
+              return result.user.getIdToken();
+            })
+            .then(function(idToken) {
+              const csrfToken = document.querySelector('meta[name="csrf-token"]');
+              return fetch('/ajax/oauth-login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : '',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken, isSignup: false })
+              });
+            })
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(data) {
+              if (data.success) {
+                window.isAuthenticated = true;
+                const storedUrl = localStorage.getItem('book_appointment_url');
+                localStorage.removeItem('book_appointment_url');
+                window.location.href = storedUrl || data.redirect || '/';
+              } else {
+                throw new Error(data.message || 'Authentication failed');
+              }
+            })
+            .catch(function(error) {
+              console.error('Apple sign-in error:', error);
+              const errorEl = document.getElementById('login-error');
+              if (errorEl) {
+                errorEl.textContent = error.message || 'Apple sign-in failed';
+                errorEl.classList.remove('d-none');
+              } else {
+                alert('Apple sign-in failed: ' + (error.message || 'Unknown error'));
+              }
+            });
+        });
+      }
+      
+      // Google Sign-Up button
+      const googleSignupBtn = document.getElementById('google-signup-btn');
+      if (googleSignupBtn) {
+        const newBtn = googleSignupBtn.cloneNode(true);
+        googleSignupBtn.parentNode.replaceChild(newBtn, googleSignupBtn);
+        
+        newBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (!window.firebaseAuth || typeof firebase === 'undefined') {
+            console.error('Firebase not available');
+            alert('Firebase not initialized. Please refresh.');
+            return;
+          }
+          
+          const provider = new firebase.auth.GoogleAuthProvider();
+          window.firebaseAuth.signInWithPopup(provider)
+            .then(function(result) {
+              return result.user.getIdToken();
+            })
+            .then(function(idToken) {
+              const csrfToken = document.querySelector('meta[name="csrf-token"]');
+              return fetch('/ajax/oauth-login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : '',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken, isSignup: true })
+              });
+            })
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(data) {
+              if (data.success) {
+                window.isAuthenticated = true;
+                const storedUrl = localStorage.getItem('book_appointment_url');
+                localStorage.removeItem('book_appointment_url');
+                window.location.href = storedUrl || data.redirect || '/';
+              } else {
+                throw new Error(data.message || 'Authentication failed');
+              }
+            })
+            .catch(function(error) {
+              console.error('Google sign-up error:', error);
+              const errorEl = document.getElementById('signup-error');
+              if (errorEl) {
+                errorEl.textContent = error.message || 'Google sign-up failed';
+                errorEl.classList.remove('d-none');
+              } else {
+                alert('Google sign-up failed: ' + (error.message || 'Unknown error'));
+              }
+            });
+        });
+      }
+      
+      // Apple Sign-Up button
+      const appleSignupBtn = document.getElementById('apple-signup-btn');
+      if (appleSignupBtn) {
+        const newBtn = appleSignupBtn.cloneNode(true);
+        appleSignupBtn.parentNode.replaceChild(newBtn, appleSignupBtn);
+        
+        newBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (!window.firebaseAuth || typeof firebase === 'undefined') {
+            console.error('Firebase not available');
+            alert('Firebase not initialized. Please refresh.');
+            return;
+          }
+          
+          const provider = new firebase.auth.OAuthProvider('apple.com');
+          window.firebaseAuth.signInWithPopup(provider)
+            .then(function(result) {
+              return result.user.getIdToken();
+            })
+            .then(function(idToken) {
+              const csrfToken = document.querySelector('meta[name="csrf-token"]');
+              return fetch('/ajax/oauth-login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : '',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken, isSignup: true })
+              });
+            })
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(data) {
+              if (data.success) {
+                window.isAuthenticated = true;
+                const storedUrl = localStorage.getItem('book_appointment_url');
+                localStorage.removeItem('book_appointment_url');
+                window.location.href = storedUrl || data.redirect || '/';
+              } else {
+                throw new Error(data.message || 'Authentication failed');
+              }
+            })
+            .catch(function(error) {
+              console.error('Apple sign-up error:', error);
+              const errorEl = document.getElementById('signup-error');
+              if (errorEl) {
+                errorEl.textContent = error.message || 'Apple sign-up failed';
+                errorEl.classList.remove('d-none');
+              } else {
+                alert('Apple sign-up failed: ' + (error.message || 'Unknown error'));
+              }
+            });
+        });
+      }
+    }
+    
+    // Try immediately if DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupOAuthHandlers);
+    } else {
+      setupOAuthHandlers();
+    }
+    
+    // Also try after delays as backup
+    setTimeout(setupOAuthHandlers, 100);
+    setTimeout(setupOAuthHandlers, 500);
+    setTimeout(setupOAuthHandlers, 1000);
+  })();
 </script>

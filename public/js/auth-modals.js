@@ -3,10 +3,120 @@
  * Manages authentication modals for login and signup
  */
 
+// CRITICAL: Setup OAuth event delegation FIRST, before anything else
+// This ensures it works even if other code fails
+(function setupOAuthEarly() {
+    console.log('🚀 EARLY OAuth setup - running immediately');
+    
+    function attachOAuthDelegation() {
+        const loginModalEl = document.getElementById('loginModal');
+        const signupModalEl = document.getElementById('signupModal');
+        
+        if (loginModalEl) {
+            const loginModalBody = loginModalEl.querySelector('.modal-body');
+            if (loginModalBody && !loginModalBody.hasAttribute('data-oauth-attached')) {
+                loginModalBody.setAttribute('data-oauth-attached', 'true');
+                loginModalBody.addEventListener('click', function(e) {
+                    const target = e.target.closest('#google-signin-btn, #apple-signin-btn');
+                    if (target) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🔵 OAuth button clicked:', target.id);
+                        
+                        if (!window.firebaseAuth || typeof firebase === 'undefined') {
+                            console.error('❌ Firebase Auth not available');
+                            alert('Firebase not initialized. Please refresh.');
+                            return;
+                        }
+                        
+                        if (target.id === 'google-signin-btn') {
+                            if (typeof handleGoogleSignIn === 'function') {
+                                handleGoogleSignIn(false);
+                            } else {
+                                console.error('handleGoogleSignIn function not found');
+                            }
+                        } else if (target.id === 'apple-signin-btn') {
+                            if (typeof handleAppleSignIn === 'function') {
+                                handleAppleSignIn(false);
+                            } else {
+                                console.error('handleAppleSignIn function not found');
+                            }
+                        }
+                    }
+                });
+                console.log('✅ Early login modal delegation attached');
+            }
+        }
+        
+        if (signupModalEl) {
+            const signupModalBody = signupModalEl.querySelector('.modal-body');
+            if (signupModalBody && !signupModalBody.hasAttribute('data-oauth-attached')) {
+                signupModalBody.setAttribute('data-oauth-attached', 'true');
+                signupModalBody.addEventListener('click', function(e) {
+                    const target = e.target.closest('#google-signup-btn, #apple-signup-btn');
+                    if (target) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🔵 OAuth button clicked:', target.id);
+                        
+                        if (!window.firebaseAuth || typeof firebase === 'undefined') {
+                            console.error('❌ Firebase Auth not available');
+                            alert('Firebase not initialized. Please refresh.');
+                            return;
+                        }
+                        
+                        if (target.id === 'google-signup-btn') {
+                            if (typeof window.handleGoogleSignIn === 'function') {
+                                window.handleGoogleSignIn(true);
+                            } else {
+                                console.error('handleGoogleSignIn function not found, waiting...');
+                                setTimeout(function() {
+                                    if (typeof window.handleGoogleSignIn === 'function') {
+                                        window.handleGoogleSignIn(true);
+                                    } else {
+                                        alert('Google sign-up not ready. Please try again in a moment.');
+                                    }
+                                }, 500);
+                            }
+                        } else if (target.id === 'apple-signup-btn') {
+                            if (typeof window.handleAppleSignIn === 'function') {
+                                window.handleAppleSignIn(true);
+                            } else {
+                                console.error('handleAppleSignIn function not found, waiting...');
+                                setTimeout(function() {
+                                    if (typeof window.handleAppleSignIn === 'function') {
+                                        window.handleAppleSignIn(true);
+                                    } else {
+                                        alert('Apple sign-up not ready. Please try again in a moment.');
+                                    }
+                                }, 500);
+                            }
+                        }
+                    }
+                });
+                console.log('✅ Early signup modal delegation attached');
+            }
+        }
+    }
+    
+    // Try immediately
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attachOAuthDelegation);
+    } else {
+        attachOAuthDelegation();
+    }
+    
+    // Also try after a delay
+    setTimeout(attachOAuthDelegation, 100);
+    setTimeout(attachOAuthDelegation, 500);
+    setTimeout(attachOAuthDelegation, 1000);
+})();
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Auth modals script loaded');
-    console.log('Authentication status:', window.isAuthenticated);
-    console.log('Show auth modal:', window.showAuthModal);
+    try {
+        console.log('Auth modals script loaded');
+        console.log('Authentication status:', window.isAuthenticated);
+        console.log('Show auth modal:', window.showAuthModal);
     // Modal toggle functions
     const loginModalElement = document.getElementById('loginModal');
     const signupModalElement = document.getElementById('signupModal');
@@ -16,6 +126,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let signupModal = null;
     
     try {
+        console.log('🔍 Checking for jQuery/Bootstrap...');
+        console.log('jQuery available:', typeof $ !== 'undefined');
+        console.log('Bootstrap available:', typeof bootstrap !== 'undefined');
+        
         // Check if jQuery is available
         if (typeof $ !== 'undefined') {
             console.log('Using jQuery for modal handling');
@@ -30,28 +144,73 @@ document.addEventListener('DOMContentLoaded', function() {
                 show: function() { $('#signupModal').modal('show'); },
                 hide: function() { $('#signupModal').modal('hide'); }
             };
+            console.log('✅ jQuery modals initialized');
         } else if (typeof bootstrap !== 'undefined') {
             console.log('Using Bootstrap JS for modal handling');
+            console.log('Bootstrap version/type:', typeof bootstrap.Modal);
             
             if (loginModalElement) {
                 console.log('Login modal element found:', loginModalElement);
-                loginModal = new bootstrap.Modal(loginModalElement);
+                try {
+                    console.log('🔨 Attempting to create Login Bootstrap Modal instance...');
+                    loginModal = new bootstrap.Modal(loginModalElement);
+                    console.log('✅ Login modal Bootstrap instance created:', loginModal);
+                    console.log('✅✅✅ SUCCESS - Login modal created, execution continuing');
+                } catch (modalError) {
+                    console.error('❌ ERROR creating login modal:', modalError);
+                    console.error('Modal error details:', modalError.message, modalError.stack);
+                    // Don't throw - set to null and continue
+                    loginModal = null;
+                }
             } else {
                 console.warn('Login modal element not found');
             }
             
             if (signupModalElement) {
                 console.log('Signup modal element found:', signupModalElement);
-                signupModal = new bootstrap.Modal(signupModalElement);
+                console.log('🔨 About to create signup modal...');
+                
+                // Use setTimeout to ensure this executes
+                setTimeout(function() {
+                    try {
+                        console.log('🔨 Attempting to create Bootstrap Modal instance...');
+                        signupModal = new bootstrap.Modal(signupModalElement);
+                        console.log('✅ Signup modal Bootstrap instance created:', signupModal);
+                        console.log('✅✅✅ SUCCESS - Signup modal created');
+                    } catch (modalError) {
+                        console.error('❌ ERROR creating signup modal:', modalError);
+                        console.error('Modal error details:', modalError.message, modalError.stack);
+                        signupModal = null;
+                    }
+                }, 0);
+                
+                console.log('✅✅✅ Signup modal creation initiated (async)');
             } else {
                 console.warn('Signup modal element not found');
             }
+            console.log('✅✅✅ About to log "Bootstrap modals initialization complete"');
+            console.log('✅ Bootstrap modals initialization complete');
+            console.log('✅✅✅ Past Bootstrap modals initialization complete');
         } else {
             console.error('Neither jQuery nor Bootstrap JS is available');
         }
     } catch (error) {
-        console.error('Error initializing modals:', error);
+        console.error('❌ CRITICAL ERROR initializing modals:', error);
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+        // Don't throw - continue execution
     }
+    
+    // Force log with multiple methods to ensure it shows
+    console.log('✅✅✅ Modal initialization complete, continuing with form handlers...');
+    console.error('🔴 FORCE LOG - Modal init complete (using console.error to ensure visibility)');
+    console.log('Login modal object:', loginModal);
+    console.log('Signup modal object:', signupModal);
+    console.log('📍 About to set up toggle buttons...');
+    console.log('Login modal object:', loginModal);
+    console.log('Signup modal object:', signupModal);
+    console.log('📍 About to set up toggle buttons...');
     
     // Toggle between login and signup modals
     const showSignupBtn = document.getElementById('show-signup-modal');
@@ -301,52 +460,83 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Handle Google Sign-In
-    async function handleGoogleSignIn(isSignup = false) {
+    console.log('📋 Form handlers setup complete, setting up OAuth handlers...');
+    console.log('📍 About to define OAuth handler functions...');
+    
+    // Handle Google Sign-In - Make it globally available
+    window.handleGoogleSignIn = async function(isSignup = false) {
         try {
+            console.log('🚀 Starting Google sign-in process...');
+            
             if (!window.firebaseAuth || typeof firebase === 'undefined') {
-                console.error('Firebase Auth not initialized');
+                console.error('❌ Firebase Auth not initialized');
                 alert('Authentication service not available. Please refresh the page.');
                 return;
             }
 
+            console.log('📦 Creating Google provider...');
             const provider = new firebase.auth.GoogleAuthProvider();
+            
+            console.log('🔓 Opening sign-in popup...');
             const result = await window.firebaseAuth.signInWithPopup(provider);
+            console.log('✅ Sign-in successful, user:', result.user.email);
+            
+            console.log('🎫 Getting ID token...');
             const idToken = await result.user.getIdToken();
+            console.log('✅ ID token received');
             
             // Send ID token to backend for verification
             await handleOAuthCallback(idToken, isSignup);
         } catch (error) {
-            console.error('Google sign-in error:', error);
+            console.error('❌ Google sign-in error:', error);
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            
             const errorElement = document.getElementById(isSignup ? 'signup-error' : 'login-error');
             if (errorElement) {
                 errorElement.textContent = error.message || 'Google sign-in failed';
                 errorElement.classList.remove('d-none');
+            } else {
+                alert('Google sign-in failed: ' + (error.message || 'Unknown error'));
             }
         }
     }
 
-    // Handle Apple Sign-In
-    async function handleAppleSignIn(isSignup = false) {
+    // Handle Apple Sign-In - Make it globally available
+    window.handleAppleSignIn = async function(isSignup = false) {
         try {
+            console.log('🚀 Starting Apple sign-in process...');
+            
             if (!window.firebaseAuth || typeof firebase === 'undefined') {
-                console.error('Firebase Auth not initialized');
+                console.error('❌ Firebase Auth not initialized');
                 alert('Authentication service not available. Please refresh the page.');
                 return;
             }
 
+            console.log('📦 Creating Apple provider...');
             const provider = new firebase.auth.OAuthProvider('apple.com');
+            
+            console.log('🔓 Opening sign-in popup...');
             const result = await window.firebaseAuth.signInWithPopup(provider);
+            console.log('✅ Sign-in successful, user:', result.user.email || 'Apple user');
+            
+            console.log('🎫 Getting ID token...');
             const idToken = await result.user.getIdToken();
+            console.log('✅ ID token received');
             
             // Send ID token to backend for verification
             await handleOAuthCallback(idToken, isSignup);
         } catch (error) {
-            console.error('Apple sign-in error:', error);
+            console.error('❌ Apple sign-in error:', error);
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            
             const errorElement = document.getElementById(isSignup ? 'signup-error' : 'login-error');
             if (errorElement) {
                 errorElement.textContent = error.message || 'Apple sign-in failed';
                 errorElement.classList.remove('d-none');
+            } else {
+                alert('Apple sign-in failed: ' + (error.message || 'Unknown error'));
             }
         }
     }
@@ -397,26 +587,169 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Google Sign-In buttons
-    const googleSigninBtn = document.getElementById('google-signin-btn');
-    const googleSignupBtn = document.getElementById('google-signup-btn');
-    
-    if (googleSigninBtn) {
-        googleSigninBtn.addEventListener('click', () => handleGoogleSignIn(false));
+    // Use EVENT DELEGATION - more robust, works even if buttons load later
+    // Attach handlers to modals instead of individual buttons
+    function setupOAuthEventDelegation() {
+        console.log('=== SETTING UP OAUTH EVENT DELEGATION ===');
+        
+        const loginModalEl = document.getElementById('loginModal');
+        const signupModalEl = document.getElementById('signupModal');
+        
+        console.log('Login modal element:', loginModalEl ? 'Found' : 'NOT FOUND');
+        console.log('Signup modal element:', signupModalEl ? 'Found' : 'NOT FOUND');
+        
+        // Use event delegation on the modal body - this works even if buttons don't exist yet
+        if (loginModalEl) {
+            const loginModalBody = loginModalEl.querySelector('.modal-body');
+            if (loginModalBody) {
+                loginModalBody.addEventListener('click', function(e) {
+                    const target = e.target.closest('#google-signin-btn, #apple-signin-btn');
+                    if (target) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🔵 OAuth button clicked in login modal:', target.id);
+                        
+                        if (!window.firebaseAuth || typeof firebase === 'undefined') {
+                            console.error('❌ Firebase Auth not available');
+                            alert('Firebase not initialized. Please refresh the page.');
+                            return;
+                        }
+                        
+                        if (target.id === 'google-signin-btn') {
+                            console.log('🚀 Starting Google sign-in...');
+                            handleGoogleSignIn(false);
+                        } else if (target.id === 'apple-signin-btn') {
+                            console.log('🚀 Starting Apple sign-in...');
+                            handleAppleSignIn(false);
+                        }
+                    }
+                });
+                console.log('✅ Login modal event delegation attached');
+            } else {
+                console.warn('⚠️ Login modal body not found');
+            }
+        }
+        
+        if (signupModalEl) {
+            const signupModalBody = signupModalEl.querySelector('.modal-body');
+            if (signupModalBody) {
+                signupModalBody.addEventListener('click', function(e) {
+                    const target = e.target.closest('#google-signup-btn, #apple-signup-btn');
+                    if (target) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🔵 OAuth button clicked in signup modal:', target.id);
+                        
+                        if (!window.firebaseAuth || typeof firebase === 'undefined') {
+                            console.error('❌ Firebase Auth not available');
+                            alert('Firebase not initialized. Please refresh the page.');
+                            return;
+                        }
+                        
+                        if (target.id === 'google-signup-btn') {
+                            console.log('🚀 Starting Google sign-up...');
+                            handleGoogleSignIn(true);
+                        } else if (target.id === 'apple-signup-btn') {
+                            console.log('🚀 Starting Apple sign-up...');
+                            handleAppleSignIn(true);
+                        }
+                    }
+                });
+                console.log('✅ Signup modal event delegation attached');
+            } else {
+                console.warn('⚠️ Signup modal body not found');
+            }
+        }
+        
+        console.log('=== EVENT DELEGATION SETUP COMPLETE ===');
     }
-    if (googleSignupBtn) {
-        googleSignupBtn.addEventListener('click', () => handleGoogleSignIn(true));
+    
+    // Legacy function for backward compatibility (but use delegation instead)
+    function attachOAuthButtonHandlers() {
+        console.log('⚠️ Using legacy button attachment (event delegation is preferred)');
+        setupOAuthEventDelegation();
     }
 
-    // Apple Sign-In buttons
-    const appleSigninBtn = document.getElementById('apple-signin-btn');
-    const appleSignupBtn = document.getElementById('apple-signup-btn');
+    // Initial attachment - wait a bit to ensure DOM is fully ready
+    // Try multiple times in case modals load slowly
+    let attempts = 0;
+    const maxAttempts = 5;
     
-    if (appleSigninBtn) {
-        appleSigninBtn.addEventListener('click', () => handleAppleSignIn(false));
+    function tryAttachHandlers() {
+        attempts++;
+        console.log(`🔄 Attempting to attach OAuth handlers (attempt ${attempts}/${maxAttempts})...`);
+        
+        try {
+            attachOAuthButtonHandlers();
+            
+            // Check if at least one button was found
+            const hasButtons = document.getElementById('google-signin-btn') || 
+                             document.getElementById('google-signup-btn') || 
+                             document.getElementById('apple-signin-btn') || 
+                             document.getElementById('apple-signup-btn');
+            
+            if (!hasButtons && attempts < maxAttempts) {
+                console.log(`⏳ No buttons found yet, retrying in 300ms...`);
+                setTimeout(tryAttachHandlers, 300);
+            } else if (hasButtons) {
+                console.log('✅ OAuth handlers attached successfully');
+            } else {
+                console.warn('⚠️ OAuth buttons not found after all attempts');
+            }
+        } catch (error) {
+            console.error('❌ Error attaching OAuth handlers:', error);
+            console.error('Error stack:', error.stack);
+            if (attempts < maxAttempts) {
+                setTimeout(tryAttachHandlers, 300);
+            }
+        }
     }
-    if (appleSignupBtn) {
-        appleSignupBtn.addEventListener('click', () => handleAppleSignIn(true));
+    
+    // Setup OAuth handlers using event delegation - THIS IS THE MAIN METHOD
+    // Event delegation works even if buttons don't exist yet or are added dynamically
+    console.log('🔧🔧🔧 Setting up OAuth handlers using EVENT DELEGATION');
+    console.log('This method works even if buttons load later or are dynamically added');
+    
+    try {
+        // Setup immediately - event delegation doesn't need buttons to exist
+        setupOAuthEventDelegation();
+        console.log('✅ Event delegation setup completed');
+    } catch (error) {
+        console.error('❌ Event delegation setup failed:', error);
+        console.error('Error stack:', error.stack);
+    }
+    
+    // Also try after a short delay as backup (in case modals aren't in DOM yet)
+    setTimeout(function() {
+        console.log('🔄 Backup event delegation setup (200ms delay)...');
+        try {
+            setupOAuthEventDelegation();
+        } catch (error) {
+            console.error('❌ Backup setup failed:', error);
+        }
+    }, 200);
+    
+    // Also setup when modals are shown (backup - event delegation should already work)
+    if (loginModalElement) {
+        loginModalElement.addEventListener('shown.bs.modal', function() {
+            console.log('🔵 Login modal shown - ensuring event delegation is active');
+            try {
+                setupOAuthEventDelegation();
+            } catch (error) {
+                console.error('Error setting up event delegation:', error);
+            }
+        });
+    }
+    
+    if (signupModalElement) {
+        signupModalElement.addEventListener('shown.bs.modal', function() {
+            console.log('🔵 Signup modal shown - ensuring event delegation is active');
+            try {
+                setupOAuthEventDelegation();
+            } catch (error) {
+                console.error('Error setting up event delegation:', error);
+            }
+        });
     }
 
     // Handle book appointment button clicks that require authentication
@@ -491,4 +824,11 @@ document.addEventListener('DOMContentLoaded', function() {
     //         }
     //     }, 500);
     // }
+    
+    console.log('✅ DOMContentLoaded handler completed - all setup done!');
+    } catch (error) {
+        console.error('❌ CRITICAL ERROR in auth-modals.js DOMContentLoaded handler:', error);
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+    }
 });
