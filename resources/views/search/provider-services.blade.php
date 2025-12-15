@@ -326,6 +326,42 @@ document.addEventListener('DOMContentLoaded', function() {
         videosTabLink.href = `/${encodeURIComponent(companyUserName)}/videos`;
     }
     
+    // Clean up old sessionStorage cache entries
+    function cleanupOldCacheEntries() {
+        try {
+            const cacheExpiry = 5 * 60 * 1000; // 5 minutes
+            const now = Date.now();
+            const keysToRemove = [];
+            
+            // Check all sessionStorage keys
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key && key.startsWith('provider_data_')) {
+                    try {
+                        const cached = JSON.parse(sessionStorage.getItem(key));
+                        if (cached && cached.timestamp) {
+                            const age = now - cached.timestamp;
+                            if (age >= cacheExpiry) {
+                                keysToRemove.push(key);
+                            }
+                        }
+                    } catch (e) {
+                        // Invalid cache entry, remove it
+                        keysToRemove.push(key);
+                    }
+                }
+            }
+            
+            // Remove old entries
+            keysToRemove.forEach(key => sessionStorage.removeItem(key));
+        } catch (error) {
+            console.warn('Error cleaning up cache:', error);
+        }
+    }
+    
+    // Clean up old cache entries on page load
+    cleanupOldCacheEntries();
+    
     // Fetch provider data first, then services
     if (companyUserName || providerIdFromQuery) {
         fetchProviderData(companyUserName, providerIdFromQuery).then(() => {
@@ -355,8 +391,56 @@ document.addEventListener('DOMContentLoaded', function() {
         if (errorEl) errorEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'none';
         
+        // Check sessionStorage first for cached provider data (from search page)
+        let cachedData = null;
+        const cacheExpiry = 5 * 60 * 1000; // 5 minutes
+        
         try {
-            // Try to fetch by username first, then by providerId
+            const cacheKey = companyUserName ? `provider_data_${companyUserName}` : (providerId ? `provider_data_${providerId}` : null);
+            if (cacheKey) {
+                const cached = sessionStorage.getItem(cacheKey);
+                if (cached) {
+                    cachedData = JSON.parse(cached);
+                    const age = Date.now() - cachedData.timestamp;
+                    
+                    // Validate cache: check age, username/providerId match
+                    if (age < cacheExpiry) {
+                        const matchesUsername = companyUserName && (
+                            (cachedData.username && cachedData.username.toLowerCase() === companyUserName.toLowerCase()) ||
+                            (cachedData.provider && cachedData.provider.username && cachedData.provider.username.toLowerCase() === companyUserName.toLowerCase()) ||
+                            (cachedData.provider && cachedData.provider.companyUserName && cachedData.provider.companyUserName.toLowerCase() === companyUserName.toLowerCase())
+                        );
+                        const matchesProviderId = providerId && (
+                            cachedData.providerId === providerId ||
+                            (cachedData.provider && cachedData.provider.id === providerId)
+                        );
+                        
+                        if (matchesUsername || matchesProviderId) {
+                            // Use cached data - instant load!
+                            providerData = cachedData.provider;
+                            
+                            // Hide loading, show content
+                            if (loadingEl) loadingEl.style.display = 'none';
+                            if (contentEl) contentEl.style.display = 'block';
+                            
+                            // Render provider data
+                            renderProviderData(providerData);
+                            
+                            // Clean up old cache entries
+                            cleanupOldCacheEntries();
+                            
+                            return providerData;
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('Error reading from sessionStorage:', error);
+            // Continue to API fetch if cache read fails
+        }
+        
+        try {
+            // Fetch from API if no valid cache
             let apiUrl;
             if (companyUserName) {
                 // Fetch single provider by companyUserName parameter
@@ -386,12 +470,29 @@ document.addEventListener('DOMContentLoaded', function() {
             // Extract provider from array (API returns array with single provider)
             providerData = providers[0];
             
+            // Store in sessionStorage for future use
+            try {
+                const cacheKey = companyUserName ? `provider_data_${companyUserName}` : `provider_data_${providerId}`;
+                const cacheData = {
+                    provider: providerData,
+                    timestamp: Date.now(),
+                    username: providerData.username || providerData.companyUserName || companyUserName,
+                    providerId: providerData.id || providerId
+                };
+                sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
+            } catch (error) {
+                console.warn('Failed to store provider data in sessionStorage:', error);
+            }
+            
             // Hide loading, show content
             if (loadingEl) loadingEl.style.display = 'none';
             if (contentEl) contentEl.style.display = 'block';
             
             // Render provider data
             renderProviderData(providerData);
+            
+            // Clean up old cache entries
+            cleanupOldCacheEntries();
             
             return providerData;
             

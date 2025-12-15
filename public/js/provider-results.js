@@ -223,6 +223,26 @@ document.addEventListener('DOMContentLoaded', function () {
       document.body.appendChild(tooltipContainer.firstElementChild);
     }
     
+    // Add click handler to store provider data in sessionStorage before navigation
+    const providerLink = item.querySelector('.provider-link');
+    if (providerLink) {
+      providerLink.addEventListener('click', function(e) {
+        // Store provider data in sessionStorage for fast loading on provider page
+        const cacheKey = username ? `provider_data_${username}` : `provider_data_${providerId}`;
+        const cacheData = {
+          provider: provider,
+          timestamp: Date.now(),
+          username: username,
+          providerId: providerId
+        };
+        try {
+          sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
+        } catch (error) {
+          console.warn('Failed to store provider data in sessionStorage:', error);
+        }
+      });
+    }
+    
     return item;
   }
   
