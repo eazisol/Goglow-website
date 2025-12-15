@@ -50,7 +50,7 @@
                         </div>
                             <div class="desktop-image-controls">
                                 <button class="desktop-control-btn share-btn" aria-label="Share">
-                                    <img src="images/images/share-icon.svg" alt="Location" width="25" height="25">
+                                    <img src="{{ asset('images/images/share-icon.svg') }}" alt="Location" width="25" height="25">
                                 </button>
                                 <button class="desktop-control-btn heart-btn" aria-label="Favorite">
                                     <img src="images/images/si_heart-line.svg" alt="Location" width="25" height="25">
@@ -172,24 +172,27 @@
     <!-- View Type Tabs Section Start -->
     <div class="view-type-tabs-container" style="margin-top: 20px;">
         <div class="view-type-tabs">
-            <a href="{{ url()->current() }}" class="view-tab active" id="listTabLink" data-view="list">
+            <button type="button" class="view-tab active" id="listTabBtn" data-view="list">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     <path d="M2.5 2.5H5.83333V5H2.5V2.5Z" fill="currentColor"/>
                 </svg>
                 <span>Service List</span>
-            </a>
-            <a href="{{ $companyUserName ? '/' . $companyUserName . '/videos' : '#' }}" class="view-tab" id="videosTabLink" data-view="videos">
+            </button>
+            <button type="button" class="view-tab" id="videosTabBtn" data-view="videos">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="2.5" y="4.16667" width="15" height="11.6667" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M8.33333 7.5L13.3333 10L8.33333 12.5V7.5Z" fill="currentColor"/>
                 </svg>
                 <span>Service Videos</span>
-            </a>
+            </button>
         </div>
     </div>
     <!-- View Type Tabs Section End -->
 
+    <!-- Tab Content Panels -->
+    <!-- Service List Tab Panel -->
+    <div id="serviceListTabPanel" class="tab-content-panel active">
     <div class="services-row">
         <div class="services-col-lg-8">
                 {{-- Loading state --}}
@@ -250,6 +253,14 @@
 </div>
 
     </div>
+    </div>
+    <!-- End Service List Tab Panel -->
+
+    <!-- Service Videos Tab Panel -->
+    <div id="serviceVideosTabPanel" class="tab-content-panel" style="display: none;">
+        @include('partials.provider-videos-content')
+    </div>
+    <!-- End Service Videos Tab Panel -->
 
         
         <div class="services-row services-mt-4">
@@ -295,11 +306,157 @@
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
 <link rel="stylesheet" href="{{ asset('css/provider-services.css') }}">
+<link rel="stylesheet" href="{{ asset('css/specific-provider-videos.css') }}">
+<style>
+/* Tab Content Panel Styles */
+.tab-content-panel {
+    display: none;
+}
+.tab-content-panel.active {
+    display: block;
+}
+</style>
 @endsection
 
 @section('scripts')
 <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+
+<!-- Tab Switching Script - Runs independently -->
+<script>
+(function() {
+    'use strict';
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Tab switching script loaded');
+        
+        // Tab elements
+        const listTabBtn = document.getElementById('listTabBtn');
+        const videosTabBtn = document.getElementById('videosTabBtn');
+        const serviceListPanel = document.getElementById('serviceListTabPanel');
+        const serviceVideosPanel = document.getElementById('serviceVideosTabPanel');
+        
+        // Get username from URL
+        const pathParts = window.location.pathname.split('/').filter(part => part);
+        let companyUserName = '';
+        if (pathParts.length > 0) {
+            // If last part is 'videos', get the one before it
+            if (pathParts[pathParts.length - 1] === 'videos' && pathParts.length > 1) {
+                companyUserName = pathParts[pathParts.length - 2];
+            } else {
+                companyUserName = pathParts[pathParts.length - 1];
+            }
+        }
+        
+        console.log('Tab elements found:', {
+            listTabBtn: !!listTabBtn,
+            videosTabBtn: !!videosTabBtn,
+            serviceListPanel: !!serviceListPanel,
+            serviceVideosPanel: !!serviceVideosPanel,
+            companyUserName: companyUserName
+        });
+        
+        // Track if videos have been loaded
+        window.videosTabLoaded = false;
+        
+        // Function to switch tabs
+        window.switchProviderTab = function(tabName) {
+            console.log('Switching to tab:', tabName);
+            
+            if (tabName === 'list') {
+                if (listTabBtn) listTabBtn.classList.add('active');
+                if (videosTabBtn) videosTabBtn.classList.remove('active');
+                if (serviceListPanel) {
+                    serviceListPanel.classList.add('active');
+                    serviceListPanel.style.display = 'block';
+                }
+                if (serviceVideosPanel) {
+                    serviceVideosPanel.classList.remove('active');
+                    serviceVideosPanel.style.display = 'none';
+                }
+                // Update URL to just /username (no hash)
+                if (companyUserName) {
+                    history.replaceState(null, null, '/' + encodeURIComponent(companyUserName));
+                }
+            } else if (tabName === 'videos') {
+                if (videosTabBtn) videosTabBtn.classList.add('active');
+                if (listTabBtn) listTabBtn.classList.remove('active');
+                if (serviceVideosPanel) {
+                    serviceVideosPanel.classList.add('active');
+                    serviceVideosPanel.style.display = 'block';
+                }
+                if (serviceListPanel) {
+                    serviceListPanel.classList.remove('active');
+                    serviceListPanel.style.display = 'none';
+                }
+                // Update URL to /username/videos
+                if (companyUserName) {
+                    history.replaceState(null, null, '/' + encodeURIComponent(companyUserName) + '/videos');
+                }
+                
+                // Trigger video loading if not loaded
+                if (!window.videosTabLoaded) {
+                    window.videosTabLoaded = true;
+                    console.log('Triggering video loading...');
+                    
+                    // Function to call initializeVideosTab with retry
+                    function tryInitializeVideos(retryCount) {
+                        console.log('Attempting to initialize videos, attempt:', retryCount);
+                        if (typeof window.initializeVideosTab === 'function') {
+                            console.log('initializeVideosTab found, calling it...');
+                            window.initializeVideosTab();
+                        } else if (retryCount < 20) {
+                            // Retry after 100ms, up to 20 times (2 seconds total)
+                            console.log('initializeVideosTab not found yet, retrying in 100ms...');
+                            setTimeout(function() {
+                                tryInitializeVideos(retryCount + 1);
+                            }, 100);
+                        } else {
+                            console.error('initializeVideosTab never became available');
+                        }
+                    }
+                    
+                    tryInitializeVideos(0);
+                }
+            }
+        };
+        
+        // Attach click handlers
+        if (listTabBtn) {
+            listTabBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('List tab button clicked');
+                window.switchProviderTab('list');
+            });
+        }
+        
+        if (videosTabBtn) {
+            videosTabBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Videos tab button clicked');
+                window.switchProviderTab('videos');
+            });
+        }
+        
+        // Check if current URL is /username/videos to show videos tab initially
+        const isVideosUrl = pathParts.length > 0 && pathParts[pathParts.length - 1] === 'videos';
+        if (isVideosUrl) {
+            window.switchProviderTab('videos');
+        }
+        
+        // Handle browser back/forward
+        window.addEventListener('popstate', function() {
+            const currentPath = window.location.pathname;
+            if (currentPath.endsWith('/videos')) {
+                window.switchProviderTab('videos');
+            } else {
+                window.switchProviderTab('list');
+            }
+        });
+    });
+})();
+</script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Translation strings
@@ -324,12 +481,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Default image
     const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
-    
-    // Set videos tab link immediately if username is available
-    const videosTabLink = document.getElementById('videosTabLink');
-    if (videosTabLink && companyUserName) {
-        videosTabLink.href = `/${encodeURIComponent(companyUserName)}/videos`;
-    }
     
     // Clean up old sessionStorage cache entries
     function cleanupOldCacheEntries() {
@@ -599,27 +750,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Render hours of operation
         renderProviderHours(provider);
-        
-        // Update videos tab link - use providerData username if available, otherwise keep the one set initially
-        const videosTabLink = document.getElementById('videosTabLink');
-        if (videosTabLink && providerData) {
-            const username = providerData.username || providerData.companyUserName;
-            if (username) {
-                videosTabLink.href = `/${encodeURIComponent(username)}/videos`;
-            } else if (providerData.id) {
-                // Fallback to old format if username not available
-                videosTabLink.href = `{{ route('search.videos.provider') }}?provider_id=${encodeURIComponent(providerData.id)}`;
-            }
-        } else if (videosTabLink && companyUserName && !videosTabLink.href || videosTabLink.href === '#') {
-            // Ensure link is set even if providerData hasn't loaded yet
-            videosTabLink.href = `/${encodeURIComponent(companyUserName)}/videos`;
-        }
-        
-        // Update list tab link to current URL
-        const listTabLink = document.getElementById('listTabLink');
-        if (listTabLink) {
-            listTabLink.href = window.location.pathname;
-        }
     }
     
     // Render provider images
@@ -1830,7 +1960,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Initialize gallery after images are updated
-    if (providerId) {
+    if (providerData && providerData.id) {
         // Wait a bit for updateProviderImages to complete
         setTimeout(function() {
             initializeProviderGallery();
@@ -1839,6 +1969,641 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initialize immediately if no services to fetch
         initializeProviderGallery();
     }
+
+    // ========================================
+    // VIDEO FUNCTIONALITY
+    // ========================================
+    
+    // Video variables (scoped to be accessible by tab switching)
+    let videos = [];
+    let lastDocId = null;
+    let hasMore = true;
+    let isVideoLoading = false;
+    let currentVideoIndex = -1;
+    const defaultThumbnail = '{{ asset("images/images/default-video-thumbnail.jpg") }}';
+    const defaultUserImage = '{{ asset("images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+    
+    // Track if mouse is over video modal for touchpad scroll
+    let isMouseOverModal = false;
+    let scrollCooldown = false;
+    
+    // Drag functionality
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let modalStartX = 0;
+    let modalStartY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    
+    // Modal position tracking
+    let modalManuallyPositioned = false;
+    let savedModalPosition = { left: null, top: null };
+    
+    // Initialize videos when tab is activated
+    function initializeVideos() {
+        console.log('Initializing videos tab...');
+        
+        // Show loading state
+        const loadingEl = document.getElementById('videos-loading');
+        if (loadingEl) loadingEl.style.display = 'flex';
+        
+        // Fetch videos
+        fetchVideos();
+        
+        // Setup event listeners for video modal
+        setupVideoEventListeners();
+    }
+    
+    // Make initializeVideos globally accessible for the tab switching script
+    window.initializeVideosTab = initializeVideos;
+    
+    // If videos tab was already opened (tab script ran first), initialize now
+    if (window.videosTabLoaded && !window.videosInitialized) {
+        window.videosInitialized = true;
+        console.log('Videos tab was already opened, initializing now...');
+        initializeVideos();
+    }
+    
+    // Fetch videos from API
+    async function fetchVideos(lastDocIdParam = null) {
+        if (isVideoLoading) {
+            console.log('fetchVideos: Already loading, skipping duplicate call');
+            return;
+        }
+        
+        isVideoLoading = true;
+        const loadingEl = document.getElementById('videos-loading');
+        const errorEl = document.getElementById('videos-error');
+        const emptyEl = document.getElementById('videos-empty');
+        const gridEl = document.getElementById('videos-grid');
+        
+        // Show loading only on first load
+        if (lastDocIdParam === null) {
+            if (loadingEl) loadingEl.style.display = 'flex';
+            if (errorEl) errorEl.style.display = 'none';
+            if (emptyEl) emptyEl.style.display = 'none';
+            if (gridEl) gridEl.style.display = 'none';
+        }
+        
+        try {
+            let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllVideos';
+            const params = new URLSearchParams();
+            
+            // Use companyUserName if available (preferred), otherwise fallback to serviceProviderId
+            const username = companyUserName || (providerData && (providerData.username || providerData.companyUserName));
+            
+            console.log('Fetching videos with:', { companyUserName, username, providerData });
+            
+            if (username) {
+                params.append('companyUserName', username);
+                console.log('Using companyUserName parameter:', username);
+            } else if (providerData && providerData.id) {
+                // Fallback to serviceProviderId if username not available
+                params.append('serviceProviderId', providerData.id);
+                console.log('Using serviceProviderId parameter:', providerData.id);
+            } else {
+                console.warn('No username or providerId available for fetching videos');
+            }
+            
+            // Add lastDocId for pagination if provided
+            if (lastDocIdParam) {
+                params.append('lastDocId', lastDocIdParam);
+            }
+            
+            // Append query string if we have any parameters
+            if (params.toString()) {
+                apiUrl += '?' + params.toString();
+            }
+            
+            console.log('Fetching videos from API:', apiUrl);
+            
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            console.log('Videos API response:', {
+                hasVideos: !!data.videos,
+                videosCount: data.videos ? data.videos.length : 0,
+                pagination: data.pagination
+            });
+            
+            if (loadingEl) loadingEl.style.display = 'none';
+            
+            if (!data.videos || !Array.isArray(data.videos) || data.videos.length === 0) {
+                console.log('No videos found in response');
+                if (videos.length === 0) {
+                    if (emptyEl) emptyEl.style.display = 'flex';
+                    console.log('Showing empty state');
+                }
+                hasMore = false;
+                isVideoLoading = false;
+                return;
+            }
+            
+            // Update pagination info
+            if (data.pagination) {
+                hasMore = data.pagination.hasMore === true;
+                lastDocId = data.pagination.lastDocId || null;
+            }
+            
+            // Append new videos
+            videos = [...videos, ...data.videos];
+            
+            console.log('Total videos after append:', videos.length);
+            
+            // Render videos
+            renderVideos(data.videos);
+            
+            if (gridEl) {
+                gridEl.style.display = 'grid';
+                console.log('Videos grid displayed');
+            }
+            if (emptyEl) emptyEl.style.display = 'none';
+            
+        } catch (error) {
+            console.error('Error fetching videos:', error);
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (errorEl) {
+                errorEl.style.display = 'flex';
+                const errorMsg = document.getElementById('videos-error-message');
+                if (errorMsg) {
+                    errorMsg.textContent = 'Failed to load videos. Please check your connection and try again.';
+                }
+            }
+        } finally {
+            isVideoLoading = false;
+        }
+    }
+    
+    // Render video cards
+    function renderVideos(videosArray) {
+        const gridEl = document.getElementById('videos-grid');
+        if (!gridEl) {
+            console.error('Videos grid element not found!');
+            return;
+        }
+        
+        console.log('Rendering', videosArray.length, 'videos');
+        
+        videosArray.forEach(video => {
+            const videoCard = createVideoCard(video);
+            gridEl.appendChild(videoCard);
+        });
+        
+        console.log('Videos rendered successfully');
+    }
+    
+    // Create video card element
+    function createVideoCard(video) {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.setAttribute('data-video-id', video.id || '');
+        
+        const thumbnail = video.thumbnail || defaultThumbnail;
+        const userImage = video.userImage || defaultUserImage;
+        const username = video.username || 'Unknown';
+        const hashtags = video.hashtags || '';
+        
+        card.innerHTML = `
+            <div class="video-thumbnail-container">
+                <img src="${escapeHtmlForVideo(thumbnail)}" 
+                     alt="Video thumbnail" 
+                     class="video-thumbnail"
+                     onerror="this.src='${defaultThumbnail}'">
+                <div class="video-play-overlay">
+                    <div class="video-play-icon"></div>
+                </div>
+                <div class="video-user-info">
+                    <img src="${escapeHtmlForVideo(userImage)}" 
+                         alt="${escapeHtmlForVideo(username)}" 
+                         class="video-user-image"
+                         onerror="this.src='${defaultUserImage}'">
+                    <div class="video-user-text">
+                        <div class="video-username-overlay">${escapeHtmlForVideo(username)}</div>
+                        ${hashtags ? `<div class="video-hashtags-overlay">${escapeHtmlForVideo(hashtags)}</div>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add click handler to open modal
+        card.addEventListener('click', function() {
+            console.log('Video card clicked:', video.id);
+            const videoIndex = videos.findIndex(v => v.id === video.id);
+            console.log('Opening video modal, index:', videoIndex);
+            openVideoModal(video, videoIndex);
+        });
+        
+        return card;
+    }
+    
+    // Escape HTML to prevent XSS (for videos)
+    function escapeHtmlForVideo(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // Open video modal
+    function openVideoModal(video, videoIndex = -1) {
+        console.log('openVideoModal called with:', { videoId: video.id, videoIndex });
+        const modal = document.getElementById('videoModal');
+        const modalContent = document.querySelector('.video-modal-content');
+        const modalVideo = document.getElementById('modalVideo');
+        const modalUserImage = document.getElementById('modalUserImage');
+        const modalUsername = document.getElementById('modalUsername');
+        const modalHashtags = document.getElementById('modalHashtags');
+        const bookingBtn = document.getElementById('modalBookingBtn');
+        
+        if (!modal) {
+            console.error('Video modal element not found!');
+            return;
+        }
+        
+        console.log('Modal found, opening...');
+        
+        // Store current video index
+        if (videoIndex >= 0) {
+            currentVideoIndex = videoIndex;
+        } else {
+            currentVideoIndex = videos.findIndex(v => v.id === video.id);
+        }
+        
+        // Set video source
+        if (modalVideo && video.videoUrl) {
+            modalVideo.setAttribute('data-video-id', video.id || '');
+            modalVideo.src = video.videoUrl;
+            modalVideo.load();
+        }
+        
+        // Set user info
+        if (modalUserImage) {
+            modalUserImage.src = video.userImage || defaultUserImage;
+            modalUserImage.alt = video.username || 'User';
+            modalUserImage.onerror = function() {
+                this.src = defaultUserImage;
+            };
+        }
+        
+        if (modalUsername) {
+            modalUsername.textContent = video.username || 'Unknown';
+        }
+        
+        if (modalHashtags) {
+            modalHashtags.textContent = video.hashtags || '';
+            modalHashtags.style.display = video.hashtags ? 'block' : 'none';
+        }
+        
+        // Set booking button link
+        if (bookingBtn && video.services_slug) {
+            const username = video.companyUserName || 
+                            (providerData && (providerData.username || providerData.companyUserName)) ||
+                            companyUserName;
+            
+            if (username && video.services_slug) {
+                bookingBtn.href = `/${encodeURIComponent(username)}/${encodeURIComponent(video.services_slug)}`;
+            } else if (video.serviceId && video.serviceProviderId) {
+                bookingBtn.href = '/book-appointment?serviceId=' + encodeURIComponent(video.serviceId) + '&service_provider_id=' + encodeURIComponent(video.serviceProviderId);
+            } else if (video.serviceProviderId) {
+                const fallbackUsername = video.companyUserName || 
+                                        (providerData && (providerData.username || providerData.companyUserName)) ||
+                                        companyUserName;
+                if (fallbackUsername) {
+                    bookingBtn.href = `/${encodeURIComponent(fallbackUsername)}`;
+                } else {
+                    bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+                }
+            }
+        } else if (bookingBtn && video.serviceProviderId) {
+            const fallbackUsername = video.companyUserName || 
+                                    (providerData && (providerData.username || providerData.companyUserName)) ||
+                                    companyUserName;
+            if (fallbackUsername) {
+                bookingBtn.href = `/${encodeURIComponent(fallbackUsername)}`;
+            } else {
+                bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+            }
+        }
+        
+        // Reset modal position for new videos
+        if (modalContent) {
+            modalContent.style.transform = 'translate(-50%, -50%)';
+            modalContent.style.top = '50%';
+            modalContent.style.left = '50%';
+            modalManuallyPositioned = false;
+            savedModalPosition = { left: null, top: null };
+        }
+        
+        // Update navigation buttons
+        updateNavigationButtons();
+        
+        // Show modal
+        console.log('Showing video modal');
+        modal.classList.add('active');
+        
+        // Play video
+        if (modalVideo) {
+            console.log('Playing video:', modalVideo.src);
+            modalVideo.play().catch(err => {
+                console.error('Error playing video:', err);
+            });
+        }
+    }
+    
+    // Navigate to previous/next video
+    function navigateVideo(direction) {
+        if (currentVideoIndex < 0 || videos.length === 0) return;
+        
+        let newIndex = currentVideoIndex;
+        if (direction === 'prev') {
+            newIndex = currentVideoIndex - 1;
+            if (newIndex < 0) return;
+        } else if (direction === 'next') {
+            newIndex = currentVideoIndex + 1;
+            if (newIndex >= videos.length) return;
+        }
+        
+        if (newIndex >= 0 && newIndex < videos.length) {
+            openVideoModal(videos[newIndex], newIndex);
+        }
+    }
+    
+    // Update navigation buttons state
+    function updateNavigationButtons() {
+        const navUp = document.querySelector('.video-nav-up');
+        const navDown = document.querySelector('.video-nav-down');
+        
+        if (navUp) {
+            navUp.disabled = currentVideoIndex <= 0;
+        }
+        
+        if (navDown) {
+            navDown.disabled = currentVideoIndex >= videos.length - 1;
+        }
+    }
+    
+    // Close video modal
+    function closeVideoModal() {
+        const modal = document.getElementById('videoModal');
+        const modalContent = document.querySelector('.video-modal-content');
+        const modalVideo = document.getElementById('modalVideo');
+        
+        if (modal) {
+            modal.classList.remove('active');
+        }
+        
+        if (modalVideo) {
+            modalVideo.pause();
+            modalVideo.currentTime = 0;
+            modalVideo.src = '';
+        }
+        
+        isDragging = false;
+        if (modalContent) {
+            modalContent.classList.remove('dragging');
+        }
+    }
+    
+    // Setup video event listeners
+    function setupVideoEventListeners() {
+        // Close button
+        const closeBtn = document.getElementById('videoModalCloseBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeVideoModal);
+        }
+        
+        // Navigation buttons
+        const navUpBtn = document.getElementById('videoNavUpBtn');
+        if (navUpBtn) {
+            navUpBtn.addEventListener('click', function() {
+                navigateVideo('prev');
+            });
+        }
+        
+        const navDownBtn = document.getElementById('videoNavDownBtn');
+        if (navDownBtn) {
+            navDownBtn.addEventListener('click', function() {
+                navigateVideo('next');
+            });
+        }
+        
+        // Booking button
+        const bookingBtn = document.getElementById('modalBookingBtn');
+        if (bookingBtn) {
+            bookingBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.href;
+                closeVideoModal();
+                setTimeout(function() {
+                    if (url && url !== '#') {
+                        window.location.href = url;
+                    }
+                }, 100);
+            });
+        }
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('videoModal');
+            if (modal && e.target === modal) {
+                closeVideoModal();
+            }
+        });
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('videoModal');
+                if (modal && modal.classList.contains('active')) {
+                    closeVideoModal();
+                }
+            }
+        });
+        
+        // Setup drag functionality
+        setupDragFunctionality();
+        
+        // Setup wheel scroll navigation
+        setupWheelNavigation();
+        
+        // Setup infinite scroll for videos
+        setupInfiniteScroll();
+    }
+    
+    // Setup drag functionality for modal
+    function setupDragFunctionality() {
+        const modalContent = document.querySelector('.video-modal-content');
+        if (!modalContent) return;
+        
+        function startDrag(e) {
+            const modal = document.getElementById('videoModal');
+            if (!modal || !modal.classList.contains('active')) return;
+            
+            const target = e.target;
+            if (target.closest('button, a, .video-modal-close, .video-nav-btn, .video-modal-booking-btn')) {
+                return;
+            }
+            
+            if (target.tagName === 'VIDEO' || target.closest('video')) {
+                const video = document.getElementById('modalVideo');
+                if (video) {
+                    const rect = video.getBoundingClientRect();
+                    const clickY = e.touches ? e.touches[0].clientY : e.clientY;
+                    if (clickY > rect.top + rect.height * 0.85) {
+                        return;
+                    }
+                }
+            }
+            
+            isDragging = true;
+            modalManuallyPositioned = true;
+            modalContent.classList.add('dragging');
+            
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            dragStartX = clientX;
+            dragStartY = clientY;
+            
+            const computedStyle = window.getComputedStyle(modalContent);
+            let currentLeft = parseFloat(computedStyle.left);
+            let currentTop = parseFloat(computedStyle.top);
+            
+            if (isNaN(currentLeft)) currentLeft = window.innerWidth / 2;
+            if (isNaN(currentTop)) currentTop = window.innerHeight / 2;
+            
+            modalStartX = currentLeft;
+            modalStartY = currentTop;
+            currentX = modalStartX;
+            currentY = modalStartY;
+            
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        function drag(e) {
+            if (!isDragging) return;
+            
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const deltaX = clientX - dragStartX;
+            const deltaY = clientY - dragStartY;
+            
+            currentX = modalStartX + deltaX;
+            currentY = modalStartY + deltaY;
+            
+            modalContent.style.left = currentX + 'px';
+            modalContent.style.top = currentY + 'px';
+            modalContent.style.transform = 'translate(-50%, -50%)';
+            
+            savedModalPosition.left = currentX + 'px';
+            savedModalPosition.top = currentY + 'px';
+            
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        function endDrag() {
+            if (!isDragging) return;
+            modalContent.classList.remove('dragging');
+            isDragging = false;
+        }
+        
+        modalContent.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', endDrag);
+        modalContent.addEventListener('touchstart', startDrag, { passive: false });
+        document.addEventListener('touchmove', drag, { passive: false });
+        document.addEventListener('touchend', endDrag);
+    }
+    
+    // Setup wheel scroll navigation
+    function setupWheelNavigation() {
+        let lastWheelTime = 0;
+        
+        function handleWheelScroll(e) {
+            const modal = document.getElementById('videoModal');
+            if (!modal || !modal.classList.contains('active')) return;
+            
+            const modalContent = document.querySelector('.video-modal-content');
+            if (!modalContent) return;
+            
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            const rect = modalContent.getBoundingClientRect();
+            const isOverModal = mouseX >= rect.left && mouseX <= rect.right && 
+                                mouseY >= rect.top && mouseY <= rect.bottom;
+            
+            if (!isOverModal) return;
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const now = Date.now();
+            if (now - lastWheelTime < 400) return;
+            lastWheelTime = now;
+            
+            const deltaY = e.deltaY;
+            if (Math.abs(deltaY) > 10) {
+                if (deltaY > 0) {
+                    navigateVideo('next');
+                } else {
+                    navigateVideo('prev');
+                }
+            }
+        }
+        
+        document.addEventListener('wheel', handleWheelScroll, { passive: false });
+    }
+    
+    // Setup infinite scroll for videos
+    function setupInfiniteScroll() {
+        let scrollTimeout = null;
+        
+        window.addEventListener('scroll', function() {
+            // Only trigger infinite scroll if videos tab is active
+            const videosPanel = document.getElementById('serviceVideosTabPanel');
+            if (!videosPanel || videosPanel.style.display === 'none') return;
+            
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+            
+            scrollTimeout = setTimeout(function() {
+                if (isVideoLoading || !hasMore) return;
+                
+                const scrollPosition = window.innerHeight + window.scrollY;
+                const documentHeight = document.documentElement.scrollHeight;
+                const threshold = 600;
+                
+                if (scrollPosition >= documentHeight - threshold) {
+                    fetchVideos(lastDocId);
+                }
+            }, 100);
+        });
+    }
+    
+    // Make functions globally accessible for retry button
+    window.retryFetchVideos = function() {
+        videos = [];
+        lastDocId = null;
+        hasMore = true;
+        isVideoLoading = false;
+        const gridEl = document.getElementById('videos-grid');
+        if (gridEl) gridEl.innerHTML = '';
+        fetchVideos();
+    };
+    
+    // Make closeVideoModal globally accessible
+    window.closeVideoModal = closeVideoModal;
 });
 </script>
 @endsection

@@ -168,8 +168,9 @@ class SearchController extends Controller
     
     public function showProviderVideosByUsername($companyUserName)
     {
-        // Provider data will be fetched via JavaScript from frontend using username
-        return view('search.specific-provider-videos', [
+        // Use the same provider-services view - it will detect /videos URL and show videos tab
+        return view('search.provider-services', [
+            'services' => [], // Services loaded via JavaScript
             'provider' => null, // Provider loaded via JavaScript
             'providerId' => null, // Not using provider_id anymore
             'companyUserName' => $companyUserName // Pass username for JavaScript API call

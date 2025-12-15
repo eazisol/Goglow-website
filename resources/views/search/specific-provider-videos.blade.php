@@ -1,3 +1,8 @@
+{{--
+    DEPRECATED: This page is deprecated in favor of the tab-based view in provider-services.blade.php
+    The /username/videos URL is now handled directly by provider-services.blade.php with the tab system
+    This file is kept for backward compatibility but the route should now point to provider-services
+--}}
 @extends('layouts.mainInnerPages')
 
 @section('title', 'Provider Videos')
