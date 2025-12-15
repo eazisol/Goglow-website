@@ -290,8 +290,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // Fetch provider data by username
   async function fetchProviderDataByUsername(username) {
     try {
-      // Fetch all providers and filter by username
-      const apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
+      // Fetch single provider by companyUserName parameter
+      const apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders?companyUserName=${encodeURIComponent(username)}`;
       const response = await fetch(apiUrl);
       
       if (!response.ok) {
@@ -303,12 +303,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!Array.isArray(providers)) {
         throw new Error('Invalid response format');
       }
-      
-      // Filter by username
-      providers = providers.filter(p => 
-        (p.username && p.username.toLowerCase() === username.toLowerCase()) ||
-        (p.companyUserName && p.companyUserName.toLowerCase() === username.toLowerCase())
-      );
       
       if (providers.length === 0) {
         throw new Error('Provider not found');

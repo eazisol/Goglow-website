@@ -359,8 +359,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Try to fetch by username first, then by providerId
             let apiUrl;
             if (companyUserName) {
-                // Fetch all providers and filter by username (API might not support username parameter directly)
-                apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
+                // Fetch single provider by companyUserName parameter
+                apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders?companyUserName=${encodeURIComponent(companyUserName)}`;
             } else if (providerId) {
                 apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders?providerId=${encodeURIComponent(providerId)}`;
             } else {
@@ -379,19 +379,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('Invalid response format');
             }
             
-            // If searching by username, filter the results
-            if (companyUserName && providers.length > 0) {
-                providers = providers.filter(p => 
-                    (p.username && p.username.toLowerCase() === companyUserName.toLowerCase()) ||
-                    (p.companyUserName && p.companyUserName.toLowerCase() === companyUserName.toLowerCase())
-                );
-            }
-            
             if (providers.length === 0) {
                 throw new Error('Provider not found');
             }
             
-            // Extract provider from array (API returns array with single provider or filtered results)
+            // Extract provider from array (API returns array with single provider)
             providerData = providers[0];
             
             // Hide loading, show content

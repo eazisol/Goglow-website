@@ -75,23 +75,34 @@ class SearchController extends Controller
         }
         
         try {
-            // Get all providers
-            $providers = Cache::remember('all_providers', 900, function () {
-                return Http::get('https://searchproviders-cn34hp55ga-uc.a.run.app')->json() ?? [];
-            });
-            
             $provider = null;
             
-            // Try to find by username first, then by ID (case-insensitive)
+            // Try to fetch single provider by username first
             if ($username) {
-                $provider = collect($providers)->first(function ($p) use ($username) {
-                    return (isset($p['username']) && strtolower($p['username']) === strtolower($username)) ||
-                           (isset($p['companyUserName']) && strtolower($p['companyUserName']) === strtolower($username));
+                $cacheKey = "provider_by_username_{$username}";
+                $providers = Cache::remember($cacheKey, 900, function () use ($username) {
+                    return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders', [
+                        'companyUserName' => $username
+                    ])->json() ?? [];
                 });
+                
+                if (is_array($providers) && count($providers) > 0) {
+                    $provider = $providers[0];
+                }
             }
             
+            // Fallback to providerId if username didn't work
             if (!$provider && $providerId) {
-                $provider = collect($providers)->firstWhere('id', $providerId);
+                $cacheKey = "provider_by_id_{$providerId}";
+                $providers = Cache::remember($cacheKey, 900, function () use ($providerId) {
+                    return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders', [
+                        'providerId' => $providerId
+                    ])->json() ?? [];
+                });
+                
+                if (is_array($providers) && count($providers) > 0) {
+                    $provider = $providers[0];
+                }
             }
             
             if (!$provider) {
