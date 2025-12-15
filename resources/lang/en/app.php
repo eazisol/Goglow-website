@@ -400,6 +400,8 @@ return [
         'friday' => 'Friday',
         'saturday' => 'Saturday',
         'sunday' => 'Sunday',
+        'see_more' => 'See More',
+        'see_less' => 'See Less',
     ],
     // Agent Page
     'agent_page' => [

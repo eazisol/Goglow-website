@@ -521,7 +521,7 @@
     gap: 15px;
     overflow: hidden;
     transition: max-height 0.3s ease, opacity 0.3s ease;
-    max-height: 5000px;
+    /* max-height: 5000px; */
     opacity: 1;
 }
 
@@ -684,6 +684,32 @@
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
     white-space: nowrap;
+}
+
+.see-more-services-btn {
+    background-color: transparent;
+    color: #E50050;
+    border: 2px solid #E50050;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 15px 0;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+.see-more-services-btn:hover {
+    background-color: #E50050;
+    color: white;
+}
+
+.hidden-service-item {
+    display: none;
 }
 
 .custom-service-list .choose-btn:hover {

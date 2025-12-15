@@ -302,6 +302,11 @@
 <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Translation strings
+    const translations = {
+        seeMore: '{{ __('app.service.see_more') }}',
+        seeLess: '{{ __('app.service.see_less') }}'
+    };
     // Get username from URL path or provider_id from query (for backward compatibility)
     const urlParams = new URLSearchParams(window.location.search);
     const providerIdFromQuery = urlParams.get('provider_id') || '{{ request()->get('provider_id') }}';
@@ -960,6 +965,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Re-initialize category filtering and toggle functionality
         initializeCategoryFilters();
         initializeCategoryToggles();
+        initializeSeeMoreButtons();
     }
     
     function renderCategoryFilters(categories) {
@@ -1011,8 +1017,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const services = subcategoryGroups[subKey];
             const isNoSubcategory = subKey === '__no_subcategory__';
             
-            // Build services HTML for this subcategory
-            const servicesHTML = services.map(service => {
+            // Check if we need to limit services (more than 5)
+            const hasMoreServices = services.length > 5;
+            const visibleServices = hasMoreServices ? services.slice(0, 5) : services;
+            const hiddenServices = hasMoreServices ? services.slice(5) : [];
+            
+            // Build services HTML for visible services only
+            const servicesHTML = visibleServices.map(service => {
                 const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : defaultImage;
                 const serviceName = service.service_name || 'Unnamed Service';
                 const serviceDetails = service.service_details || '';
@@ -1059,9 +1070,68 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }).join('');
             
+            // Build hidden services HTML (only if there are hidden services)
+            const hiddenServicesHTML = hiddenServices.map(service => {
+                const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : defaultImage;
+                const serviceName = service.service_name || 'Unnamed Service';
+                const serviceDetails = service.service_details || '';
+                const duration = service.duration_minutes || 0;
+                const price = service.service_price || 0;
+                const serviceId = service.id || '';
+                const servicesSlug = service.services_slug || '';
+                
+                // Use slug-based URL if available, otherwise fallback to old format
+                let bookUrl;
+                if (currentCompanyUserName && servicesSlug) {
+                    bookUrl = `/${encodeURIComponent(currentCompanyUserName)}/${encodeURIComponent(servicesSlug)}`;
+                } else {
+                    // Fallback to old format if slug or username not available
+                    bookUrl = `/book-appointment?serviceId=${serviceId}&service_provider_id=${providerId}`;
+                }
+                
+                return `
+                    <div class="service-row services-d-flex services-justify-between services-flex-wrap hidden-service-item" style="display: none;">
+                        <div class="service-info services-d-flex services-align-center">
+                            <div class="service-image">
+                                <img src="${serviceImage}" 
+                                     alt="${serviceName}" 
+                                     class="services-img-fluid services-rounded-circle"
+                                     loading="lazy"
+                                     onerror="this.src='${defaultImage}'">
+                            </div>
+                            <div class="service-list-details" style="margin-left: 35px;">
+                                <div class="service-name services-fw-semibold">
+                                    <a href="${bookUrl}">${truncateText(serviceName, 50)}</a>
+                                </div>
+                                ${serviceDetails ? `<div class="service-desc services-text-muted">${truncateText(serviceDetails, 50)}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="service-meta services-text-end">
+                            <div class="services-text-muted services-small services-mb-1">
+                                ${duration} min &bull; {{ __('app.service.from') }} €${price}
+                            </div>
+                            <div class="choose-button">
+                                <a href="${bookUrl}" class="choose-btn">{{ __('app.service.choose') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Create unique ID for this subcategory's see more button
+            // Use category name + subcategory key to ensure uniqueness
+            const subcategoryId = (categoryName + '_' + subKey).replace(/[^a-zA-Z0-9]/g, '_');
+            const seeMoreBtnHTML = hasMoreServices ? `
+                <button type="button" class="see-more-services-btn" data-subcategory-id="${subcategoryId}" data-expanded="false" data-see-more-text="${translations.seeMore}" data-see-less-text="${translations.seeLess}">
+                    ${translations.seeMore} (${hiddenServices.length})
+                </button>
+            ` : '';
+            
             if (isNoSubcategory) {
-                // Services without subcategory - render directly
-                subcategorySectionsHTML += servicesHTML;
+                // Services without subcategory - render directly with a wrapper for the see more button
+                subcategorySectionsHTML += servicesHTML + 
+                    (hiddenServicesHTML ? `<div class="hidden-services-container" data-subcategory-id="${subcategoryId}">${hiddenServicesHTML}</div>` : '') + 
+                    seeMoreBtnHTML;
             } else {
                 // Services with subcategory - render with subcategory header
                 subcategorySectionsHTML += `
@@ -1072,6 +1142,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="subcategory-services-list">
                             ${servicesHTML}
+                            ${hiddenServicesHTML ? `<div class="hidden-services-container" data-subcategory-id="${subcategoryId}">${hiddenServicesHTML}</div>` : ''}
+                            ${seeMoreBtnHTML}
                         </div>
                     </div>
                 `;
@@ -1447,6 +1519,57 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (servicesList && chevron) {
                     servicesList.classList.toggle('collapsed');
                     chevron.classList.toggle('rotated');
+                }
+            });
+        });
+    }
+    
+    function initializeSeeMoreButtons() {
+        const seeMoreButtons = document.querySelectorAll('.see-more-services-btn');
+        
+        seeMoreButtons.forEach(function(button) {
+            // Remove existing listeners by cloning
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            // Get translation texts from data attributes
+            const seeMoreText = newButton.getAttribute('data-see-more-text') || 'See More';
+            const seeLessText = newButton.getAttribute('data-see-less-text') || 'See Less';
+            
+            newButton.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent category/subcategory toggle from firing
+                
+                const subcategoryId = this.getAttribute('data-subcategory-id');
+                const isExpanded = this.getAttribute('data-expanded') === 'true';
+                
+                // Find the hidden services container with matching subcategory ID
+                const hiddenContainer = document.querySelector(`.hidden-services-container[data-subcategory-id="${subcategoryId}"]`);
+                
+                if (!hiddenContainer) {
+                    console.warn('Hidden services container not found for subcategory:', subcategoryId);
+                    return;
+                }
+                
+                // Find all hidden service items within this specific container
+                const hiddenItems = hiddenContainer.querySelectorAll('.hidden-service-item');
+                
+                if (isExpanded) {
+                    // Collapse: hide all hidden items
+                    hiddenItems.forEach(function(item) {
+                        item.style.display = 'none';
+                    });
+                    // Update button text with translation
+                    const hiddenCount = hiddenItems.length;
+                    newButton.textContent = `${seeMoreText} (${hiddenCount})`;
+                    newButton.setAttribute('data-expanded', 'false');
+                } else {
+                    // Expand: show all hidden items (use flex to match parent container)
+                    hiddenItems.forEach(function(item) {
+                        item.style.display = 'flex';
+                    });
+                    // Update button text with translation
+                    newButton.textContent = seeLessText;
+                    newButton.setAttribute('data-expanded', 'true');
                 }
             });
         });
