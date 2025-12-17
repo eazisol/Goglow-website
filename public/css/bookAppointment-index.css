@@ -1027,6 +1027,30 @@
         font-size: 14px;
     }
     
+    /* See More Button */
+    .mobile-see-more-btn {
+        width: 100%;
+        margin-top: 16px;
+        padding: 12px;
+        background: transparent;
+        border: none;
+        color: rgba(229, 0, 80, 1);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: underline;
+        cursor: pointer;
+        text-align: center;
+        transition: color 0.2s ease;
+    }
+    
+    .mobile-see-more-btn:hover {
+        color: rgba(229, 0, 80, 0.8);
+    }
+    
+    .mobile-see-more-btn:active {
+        color: rgba(229, 0, 80, 0.6);
+    }
+    
     /* Hide mobile container on desktop */
     @media (min-width: 769px) {
         .mobile-time-slots-container {

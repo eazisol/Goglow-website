@@ -415,6 +415,7 @@ return [
         'the_morning' => 'The Morning',
         'in_the_afternoon' => 'In The Afternoon',
         'in_the_evening' => 'In The Evening',
+        'see_more' => 'See More',
     ],
 
     // I Am Professional Page

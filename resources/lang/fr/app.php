@@ -416,6 +416,7 @@ return [
         'the_morning' => 'La Matinée',
         'in_the_afternoon' => 'L’après-midi',
         'in_the_evening' => 'La Soirée',
+        'see_more' => 'Voir plus',
     ],
 
     // I Am Professional Page

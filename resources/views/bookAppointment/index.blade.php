@@ -778,6 +778,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Create time slots container for this period (vertical list)
             const slotsContainer = document.createElement('div');
             slotsContainer.className = 'mobile-period-slots';
+            slotsContainer.dataset.period = period.key;
+            slotsContainer.dataset.allSlots = JSON.stringify(filteredSlots);
             
             if (filteredSlots.length === 0) {
                 const noSlotsMsg = document.createElement('div');
@@ -785,8 +787,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 noSlotsMsg.textContent = 'No slot';
                 slotsContainer.appendChild(noSlotsMsg);
             } else {
-                // Create time slot buttons vertically
-                filteredSlots.forEach(slot => {
+                // Show only first 3 slots initially
+                const initialSlots = filteredSlots.slice(0, 3);
+                const remainingSlots = filteredSlots.slice(3);
+                
+                // Create time slot buttons vertically (only first 3 visible)
+                initialSlots.forEach(slot => {
                     const timeSlot = document.createElement('div');
                     timeSlot.className = 'mobile-time-slot';
                     timeSlot.dataset.day = selectedDay;
@@ -836,6 +842,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     
                     slotsContainer.appendChild(timeSlot);
                 });
+                
+                // Store remaining slots data for "See More" functionality
+                slotsContainer.dataset.hasMore = remainingSlots.length > 0 ? 'true' : 'false';
+                slotsContainer.dataset.remainingSlots = JSON.stringify(remainingSlots);
             }
             
             column.appendChild(slotsContainer);
@@ -843,6 +853,91 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         
         mobileTimeSlotsContainer.appendChild(columnsContainer);
+        
+        // Add "See More" button if any column has more slots
+        const hasMoreSlots = Array.from(columnsContainer.querySelectorAll('.mobile-period-slots')).some(
+            container => container.dataset.hasMore === 'true'
+        );
+        
+        if (hasMoreSlots) {
+            const seeMoreBtn = document.createElement('button');
+            seeMoreBtn.className = 'mobile-see-more-btn';
+            seeMoreBtn.textContent = '{{ __('app.agent_page.see_more') }}';
+            seeMoreBtn.type = 'button';
+            
+            seeMoreBtn.addEventListener('click', function() {
+                // Expand all columns to show all slots
+                const allSlotsContainers = columnsContainer.querySelectorAll('.mobile-period-slots');
+                allSlotsContainers.forEach(container => {
+                    if (container.dataset.hasMore === 'true') {
+                        const remainingSlots = JSON.parse(container.dataset.remainingSlots);
+                        const selectedDay = container.querySelector('.mobile-time-slot')?.dataset.day || selectedDayInput.value;
+                        const selectedDate = container.querySelector('.mobile-time-slot')?.dataset.date || selectedDateInput.value;
+                        const periodKey = container.dataset.period;
+                        
+                        // Add remaining slots
+                        remainingSlots.forEach(slot => {
+                            const timeSlot = document.createElement('div');
+                            timeSlot.className = 'mobile-time-slot';
+                            timeSlot.dataset.day = selectedDay;
+                            timeSlot.dataset.time = slot.time;
+                            timeSlot.dataset.date = selectedDate;
+                            timeSlot.dataset.period = periodKey;
+                            timeSlot.textContent = formatTimeDisplay24(slot.time);
+                            
+                            // Add click handler for slot selection
+                            timeSlot.addEventListener('click', function() {
+                                // Deselect any previously selected slot
+                                document.querySelectorAll('.mobile-time-slot, .time-slot').forEach(s => s.classList.remove('selected'));
+                                
+                                // Select this slot
+                                this.classList.add('selected');
+                                
+                                // Update hidden inputs
+                                selectedDateInput.value = this.dataset.date;
+                                selectedTimeInput.value = this.dataset.time;
+                                selectedDayInput.value = this.dataset.day;
+                                
+                                // Set selected period
+                                selectedPeriod = this.dataset.period;
+                                
+                                // Highlight the corresponding period button
+                                periodSelector.querySelectorAll('.period-btn').forEach(btn => {
+                                    if (btn.dataset.period === periodKey) {
+                                        btn.classList.add('active');
+                                    } else {
+                                        btn.classList.remove('active');
+                                    }
+                                });
+                                
+                                // Show selected date/time info
+                                const [yy, mm, dd] = this.dataset.date.split('-').map(Number);
+                                const selectedDateObj = new Date(yy, mm - 1, dd);
+                                const formattedDate = formatDate(selectedDateObj);
+                                const formattedTime = formatTimeDisplay(this.dataset.time);
+                                selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
+                                selectedSlotInfo.style.display = '';
+                                
+                                // Show payment options section after time slot selection
+                                if (paymentOptionsSection) {
+                                    paymentOptionsSection.style.display = '';
+                                }
+                            });
+                            
+                            container.appendChild(timeSlot);
+                        });
+                        
+                        // Mark as expanded
+                        container.dataset.hasMore = 'false';
+                    }
+                });
+                
+                // Hide the "See More" button after expanding
+                this.style.display = 'none';
+            });
+            
+            mobileTimeSlotsContainer.appendChild(seeMoreBtn);
+        }
     }
     
     // Helper function to update time slot arrow states
