@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
+  // // Cache configuration - 15 minutes (900 seconds) to match backend cache
+  // const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
+  // Cache configuration - 24 hours
+  const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  
   // Fetch categories from API and display them
   fetchAndDisplayCategories();
   
@@ -12,12 +17,66 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchProviders(searchParam, locationParam);
   }
 
+  // Helper function to display categories
+  function displayCategories(categories) {
+    const filterPillsContainer = document.getElementById('categoryFilterPills');
+    if (!filterPillsContainer) return;
+    
+    // Filter only active categories and sort by sortOrder
+    const activeCategories = categories
+      .filter(cat => cat.isActive === true)
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    
+    // Add category buttons to the filter pills container
+    activeCategories.forEach(category => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'filter-pill';
+      button.setAttribute('data-category', category.name);
+      button.setAttribute('aria-current', 'false');
+      
+      // Create icon image if imageUrl exists
+      if (category.imageUrl) {
+        const icon = document.createElement('img');
+        icon.src = category.imageUrl;
+        icon.alt = category.name;
+        icon.className = 'category-icon';
+        button.appendChild(icon);
+      }
+      
+      // Add category name
+      const textNode = document.createTextNode(category.name);
+      button.appendChild(textNode);
+      
+      filterPillsContainer.appendChild(button);
+    });
+  }
+
   // Function to fetch categories from API and display them
   async function fetchAndDisplayCategories() {
     const filterPillsContainer = document.getElementById('categoryFilterPills');
     if (!filterPillsContainer) return;
     
     try {
+      // Check cache for categories first
+      const categoriesCacheKey = 'categories_cache';
+      try {
+        const cached = localStorage.getItem(categoriesCacheKey);
+        if (cached) {
+          const cacheData = JSON.parse(cached);
+          const now = Date.now();
+          // Cache categories for 15 minutes
+          if (now - cacheData.timestamp < CACHE_DURATION) {
+            displayCategories(cacheData.categories);
+            return;
+          } else {
+            localStorage.removeItem(categoriesCacheKey);
+          }
+        }
+      } catch (cacheError) {
+        console.warn('Error reading categories cache:', cacheError);
+      }
+      
       const response = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/getSortedCategories');
       
       if (!response.ok) {
@@ -31,37 +90,78 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       
-      // Filter only active categories and sort by sortOrder
-      const activeCategories = categories
-        .filter(cat => cat.isActive === true)
-        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+      // Cache the categories
+      try {
+        const cacheData = {
+          categories: categories,
+          timestamp: Date.now()
+        };
+        localStorage.setItem(categoriesCacheKey, JSON.stringify(cacheData));
+      } catch (cacheError) {
+        console.warn('Error caching categories:', cacheError);
+      }
       
-      // Add category buttons to the filter pills container
-      activeCategories.forEach(category => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'filter-pill';
-        button.setAttribute('data-category', category.name);
-        button.setAttribute('aria-current', 'false');
-        
-        // Create icon image if imageUrl exists
-        if (category.imageUrl) {
-          const icon = document.createElement('img');
-          icon.src = category.imageUrl;
-          icon.alt = category.name;
-          icon.className = 'category-icon';
-          button.appendChild(icon);
-        }
-        
-        // Add category name
-        const textNode = document.createTextNode(category.name);
-        button.appendChild(textNode);
-        
-        filterPillsContainer.appendChild(button);
-      });
+      // Display categories
+      displayCategories(categories);
       
     } catch (error) {
       console.error('Error fetching categories:', error);
+    }
+  }
+  
+  // Helper function to get cache key for providers
+  function getProvidersCacheKey(search, location) {
+    return `salons_cache_${search || 'all'}_${location || 'all'}`;
+  }
+  
+  // Helper function to get cached providers
+  function getCachedProviders(search, location) {
+    try {
+      const cacheKey = getProvidersCacheKey(search, location);
+      const cached = localStorage.getItem(cacheKey);
+      if (!cached) return null;
+      
+      const cacheData = JSON.parse(cached);
+      const now = Date.now();
+      
+      // Check if cache is still valid
+      if (now - cacheData.timestamp < CACHE_DURATION) {
+        return cacheData.providers;
+      } else {
+        // Cache expired, remove it
+        localStorage.removeItem(cacheKey);
+        return null;
+      }
+    } catch (error) {
+      console.warn('Error reading cache:', error);
+      return null;
+    }
+  }
+  
+  // Helper function to cache providers
+  function cacheProviders(search, location, providers) {
+    try {
+      const cacheKey = getProvidersCacheKey(search, location);
+      const cacheData = {
+        providers: providers,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+    } catch (error) {
+      console.warn('Error caching providers:', error);
+      // If storage quota exceeded, try to clear old cache entries
+      try {
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+          if (key.startsWith('salons_cache_')) {
+            localStorage.removeItem(key);
+          }
+        });
+        // Retry caching
+        localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+      } catch (retryError) {
+        console.warn('Failed to cache providers after cleanup:', retryError);
+      }
     }
   }
 
@@ -77,6 +177,22 @@ document.addEventListener('DOMContentLoaded', function () {
     if (errorEl) errorEl.style.display = 'none';
     if (emptyEl) emptyEl.style.display = 'none';
     if (gridEl) gridEl.style.display = 'none';
+    
+    // Check cache first
+    const cachedProviders = getCachedProviders(search, location);
+    if (cachedProviders) {
+      // Use cached data
+      if (loadingEl) loadingEl.style.display = 'none';
+      
+      if (!Array.isArray(cachedProviders) || cachedProviders.length === 0) {
+        if (emptyEl) emptyEl.style.display = 'flex';
+        return;
+      }
+      
+      // Render cached providers
+      renderProviders(cachedProviders);
+      return;
+    }
     
     try {
       // Build API URL - fetch all providers (API handles filtering if params provided)
@@ -95,6 +211,11 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       
       const providers = await response.json();
+      
+      // Cache the providers
+      if (Array.isArray(providers)) {
+        cacheProviders(search, location, providers);
+      }
       
       // Hide loading
       if (loadingEl) loadingEl.style.display = 'none';
