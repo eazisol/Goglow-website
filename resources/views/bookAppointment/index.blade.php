@@ -1142,6 +1142,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 chosenAgentSlots = createSampleSlots();
                 console.log('Sample slots:', chosenAgentSlots);
             }
+            
+            // Automatically select today's date
+            setTimeout(() => {
+                const todayColumn = document.querySelector('.day-column.today');
+                if (todayColumn) {
+                    todayColumn.click();
+                } else {
+                    // If today is not visible, find the first available day column
+                    const firstDayColumn = document.querySelector('.day-column');
+                    if (firstDayColumn) {
+                        firstDayColumn.click();
+                    }
+                }
+            }, 100);
         });
     }
 
