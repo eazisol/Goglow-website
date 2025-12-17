@@ -53,7 +53,7 @@
                                     <img src="{{ asset('images/images/share-icon.svg') }}" alt="Location" width="25" height="25">
                                 </button>
                                 <button class="desktop-control-btn heart-btn" aria-label="Favorite">
-                                    <img src="images/images/si_heart-line.svg" alt="Location" width="25" height="25">
+                                    <img src="{{ asset('images/images/si_heart-line.svg') }}" alt="Location" width="25" height="25">
                                 </button>
                             </div>
                     </div>
@@ -116,10 +116,10 @@
                     <div class="provider-images-carousel">
                         <div class="carousel-controls-top">
                             <button class="carousel-btn-mobile share-btn" aria-label="Share">
-                                <img src="images/images/share-icon.svg" alt="Location" width="25" height="25">
+                                <img src="{{ asset('images/images/share-icon.svg') }}" alt="Location" width="25" height="25">
                             </button>
                             <button class="carousel-btn-mobile heart-btn" aria-label="Favorite">
-                                <img src="images/images/si_heart-line.svg" alt="Location" width="25" height="25">
+                                <img src="{{ asset('images/images/si_heart-line.svg') }}" alt="Location" width="25" height="25">
                             </button>
                         </div>
                         <div class="carousel-container">
@@ -146,10 +146,10 @@
                         </div>
                             <div class="desktop-image-controls">
                                 <button class="desktop-control-btn share-btn" aria-label="Share">
-                                    <img src="images/images/share-icon.svg" alt="Location" width="25" height="25">
+                                    <img src="{{ asset('images/images/share-icon.svg') }}" alt="Location" width="25" height="25">
                                 </button>
                                 <button class="desktop-control-btn heart-btn" aria-label="Favorite">
-                                    <img src="images/images/si_heart-line.svg" alt="Location" width="25" height="25">
+                                    <img src="{{ asset('images/images/si_heart-line.svg') }}" alt="Location" width="25" height="25">
                                 </button>
                             </div>
                     </div>
@@ -235,7 +235,7 @@
         <div class="hours-section">
             <div class="hours-toggle-header" id="hoursToggle">
                 <div class="hours-toggle-left">
-                    <img src="images/images/iconoir_clock.svg" alt="Location" width="24" height="24">
+                    <img src="{{ asset('images/images/iconoir_clock.svg') }}" alt="Location" width="24" height="24">
                     <span class="open-until-text" id="openUntilText">Hours of operation</span>
                 </div>
                 <i class="fas fa-chevron-up hours-chevron" id="hoursChevron"></i>
@@ -715,11 +715,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const ratingHtml = avgRating > 0 ? `
             <p>
                 <div class="provider-info-ratting">${avgRating.toFixed(1)}</div>
-                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
-                <img src="images/images/star_cards.svg" alt="Location" width="14" height="14">
+                <img src="{{ asset('images/images/star_cards.svg') }}" alt="Location" width="14" height="14">
+                <img src="{{ asset('images/images/star_cards.svg') }}" alt="Location" width="14" height="14">
+                <img src="{{ asset('images/images/star_cards.svg') }}" alt="Location" width="14" height="14">
+                <img src="{{ asset('images/images/star_cards.svg') }}" alt="Location" width="14" height="14">
+                <img src="{{ asset('images/images/star_cards.svg') }}" alt="Location" width="14" height="14">
                 <div class="provider-info-reviews">(${totalReviews} {{ __('app.service.reviews') }})</div>
             </p>
         ` : '';
@@ -736,7 +736,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const addressHtml = address ? `
             <p>
-                <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="18" height="18">
+                <img src="{{ asset('images/images/mage_map-marker-fill.svg') }}" alt="Location" width="18" height="18">
                 <div class="provider-info-address">${escapeHtml(address)}</div>
             </p>
         ` : '';
