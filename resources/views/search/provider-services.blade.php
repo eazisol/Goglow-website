@@ -25,7 +25,8 @@
         <div class="services-row section-row">
             <div class="services-col-12">
                 {{-- Provider Loading State --}}
-                <div id="providerLoading" class="services-text-center services-py-4" style="display: block;">
+                <div id="providerLoading" class="provider-loading" style="display: flex;">
+                    <div class="provider-spinner"></div>
                     <p>Loading provider information...</p>
                 </div>
                 
@@ -196,7 +197,8 @@
     <div class="services-row">
         <div class="services-col-lg-8">
                 {{-- Loading state --}}
-                <div id="servicesLoading" class="services-text-center services-py-4" style="display: none;">
+                <div id="servicesLoading" class="services-loading" style="display: none;">
+                    <div class="services-spinner"></div>
                     <p>Loading services...</p>
                 </div>
                 
@@ -543,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const contentEl = document.getElementById('providerContent');
         
         // Show loading
-        if (loadingEl) loadingEl.style.display = 'block';
+        if (loadingEl) loadingEl.style.display = 'flex';
         if (errorEl) errorEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'none';
         
@@ -1019,7 +1021,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerEl = document.getElementById('servicesContainer');
         
         // Show loading
-        loadingEl.style.display = 'block';
+        loadingEl.style.display = 'flex';
         errorEl.style.display = 'none';
         emptyEl.style.display = 'none';
         containerEl.innerHTML = '';

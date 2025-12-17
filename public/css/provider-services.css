@@ -1247,3 +1247,38 @@
         padding: 0 10px;
     }
 }
+
+/* Loading State - Same as provider-results spinner */
+.services-loading,
+.provider-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    min-height: 400px;
+}
+
+.services-spinner,
+.provider-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #d5bec6;
+    border-top-color: #75213e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.services-loading p,
+.provider-loading p {
+    font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    color: #75213e;
+}
