@@ -35,5 +35,9 @@ return [
         'project_id' => env('FIREBASE_PROJECT_ID'),
         'auth_domain' => env('FIREBASE_AUTH_DOMAIN'),
     ],
+    
+    'stripe' => [
+    'secret' => env('STRIPE_SECRET'),
+    ],
 
 ];

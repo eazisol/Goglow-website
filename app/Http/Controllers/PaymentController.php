@@ -13,7 +13,7 @@ class PaymentController extends Controller
     public function createCheckoutSession(Request $request)
     {
         // Set Stripe API key directly (fallback in case env isn't working)
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         // Log the request for debugging
         Log::info('Stripe checkout request', $request->all());
@@ -158,7 +158,7 @@ class PaymentController extends Controller
     public function handlePaymentSuccess(Request $request)
     {
         // Set Stripe API key directly for consistency
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        Stripe::setApiKey(config('services.stripe.secret'));
         
         // Log request data
         Log::info('Payment success callback received', $request->all());

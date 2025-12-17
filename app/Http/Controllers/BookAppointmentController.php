@@ -152,7 +152,7 @@ class BookAppointmentController extends Controller
         if ($servicesSlug) {
             try {
                 // Cache service by slug for 10 minutes to improve performance
-                $json = Cache::remember("service_by_slug_{$servicesSlug}", 600, function () use ($servicesSlug) {
+                $json = Cache::remember("service_by_slug_{$servicesSlug}", 10, function () use ($servicesSlug) {
                     $response = Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServiceById', [
                         'services_slug' => $servicesSlug,
                     ]);
