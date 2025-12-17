@@ -472,8 +472,9 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Update the week display
     function updateWeekDisplay() {
+        const daysToShow = isMobileView() ? 3 : 7;
         const endDate = new Date(currentWeekStart);
-        endDate.setDate(endDate.getDate() + 6);
+        endDate.setDate(endDate.getDate() + (daysToShow - 1));
         
         // Use translated month names
         const startMonth = monthNames[currentWeekStart.getMonth()];
@@ -724,13 +725,24 @@ document.addEventListener('DOMContentLoaded', function () {
         return date < today;
     }
     
+    // Helper function to detect mobile viewport (width <= 768px)
+    function isMobileView() {
+        return window.innerWidth <= 768;
+    }
+    
+    // Get the number of days to navigate based on viewport
+    function getDaysToNavigate() {
+        return isMobileView() ? 3 : 7;
+    }
+    
     // Function to update the prev week button state
     function updatePrevWeekButtonState() {
-        // Calculate the date that would be the start of the previous week
+        // Calculate the date that would be the start of the previous period
+        const daysToNavigate = getDaysToNavigate();
         const prevWeekDate = new Date(currentWeekStart);
-        prevWeekDate.setDate(prevWeekDate.getDate() - 7);
+        prevWeekDate.setDate(prevWeekDate.getDate() - daysToNavigate);
         
-        // Disable the button if the previous week would be in the past
+        // Disable the button if the previous period would be in the past
         if (isDateInPast(prevWeekDate)) {
             prevWeekBtn.classList.add('disabled');
             prevWeekBtn.setAttribute('disabled', 'disabled');
@@ -740,13 +752,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    // Navigate to previous week
+    // Navigate to previous week/period
     prevWeekBtn.addEventListener('click', function() {
-        // Calculate the new week start
+        // Calculate the new period start based on viewport
+        const daysToNavigate = getDaysToNavigate();
         const newWeekStart = new Date(currentWeekStart);
-        newWeekStart.setDate(newWeekStart.getDate() - 7);
+        newWeekStart.setDate(newWeekStart.getDate() - daysToNavigate);
         
-        // Only navigate if the new week start is not in the past
+        // Only navigate if the new period start is not in the past
         if (!isDateInPast(newWeekStart)) {
             currentWeekStart = newWeekStart;
             updateWeekDisplay();
@@ -763,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedSlotInfo.style.display = 'none';
             selectedTimeInput.value = '';
             
-            // Hide payment options section when week navigation changes
+            // Hide payment options section when period navigation changes
             if (paymentOptionsSection) {
                 paymentOptionsSection.style.display = 'none';
             }
@@ -778,9 +791,11 @@ document.addEventListener('DOMContentLoaded', function () {
         updatePrevWeekButtonState();
     });
     
-    // Navigate to next week
+    // Navigate to next week/period
     nextWeekBtn.addEventListener('click', function() {
-        currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+        // Calculate the new period start based on viewport
+        const daysToNavigate = getDaysToNavigate();
+        currentWeekStart.setDate(currentWeekStart.getDate() + daysToNavigate);
         updateWeekDisplay();
         renderDaysHeader();
         
@@ -1645,6 +1660,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         });
     }
+    
+    // Handle window resize to update calendar when switching between mobile/desktop views
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        // Debounce resize events to avoid excessive updates
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            // Only update if calendar is already initialized (agent selected)
+            if (chosenAgent && agentSchedule && agentSchedule.style.display !== 'none') {
+                updateWeekDisplay();
+                renderDaysHeader();
+                updatePrevWeekButtonState();
+            }
+        }, 250);
+    });
 });
 </script>
 
