@@ -1174,9 +1174,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
                  // Get user data from bookingBootstrap
          const userData = bookingBootstrap.userData || {};
-         const name = userData.name || '';
-         const email = userData.email || '';
-         const phone = userData.phone || '';
+         // Ensure we have valid values, not empty strings
+         const name = (userData.name && userData.name.trim()) ? userData.name.trim() : null;
+         const email = (userData.email && userData.email.trim()) ? userData.email.trim() : null;
+         const phone = (userData.phone && userData.phone.trim()) ? userData.phone.trim() : null;
+         
+         // Validate that we have at least email or user ID
+         if (!email && !bookingBootstrap.userId) {
+             setButtonLoading(false);
+             alert('User information is missing. Please try logging in again.');
+             return;
+         }
          
          // Log user data being used for the booking
          console.log('User data for booking:', {
@@ -1184,7 +1192,8 @@ document.addEventListener('DOMContentLoaded', function () {
              name: name,
              email: email,
              phone: phone,
-             userData: userData
+             userData: userData,
+             bookingBootstrap: bookingBootstrap
          });
 
          // Get payment option
@@ -1226,8 +1235,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const bookingTime = formatForApi(localDate);
+        
+        // Extract bookTime (e.g., "6:24" from "July 17, 2025 at 6:24:00 PM UTC+5")
+        const bookTimeMatch = bookingTime.match(/at (\d+):(\d+):/);
+        const bookTime = bookTimeMatch ? `${bookTimeMatch[1]}:${bookTimeMatch[2]}` : null;
+        
         const serviceName = bookingBootstrap.service?.service_name || 'Selected Service';
-        const servicePrice = (bookingBootstrap.service?.discounted_price ?? bookingBootstrap.service?.service_price ?? 0);
+        const servicePrice = parseFloat(bookingBootstrap.service?.discounted_price ?? bookingBootstrap.service?.service_price ?? 0) || 0;
         const durationMinutes = (bookingBootstrap.service?.duration_minutes ?? 0);
         const userId = bookingBootstrap.userId;
         if (!userId) {
@@ -1290,11 +1304,91 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Extract deposit percentage from label if available
+        const depositLabelElement = document.getElementById('payDepositLabel');
+        let depositPercentage = null;
+        if (depositLabelElement) {
+            const labelText = depositLabelElement.textContent || depositLabelElement.innerText;
+            const percentageMatch = labelText.match(/(\d+)%/);
+            if (percentageMatch) {
+                depositPercentage = parseFloat(percentageMatch[1]);
+            }
+        }
+        
+        // Get deposit percentage from hidden input or calculate from service data
+        if (depositPercentage === null) {
+            const depositPercentageInput = document.getElementById('depositPercentage');
+            depositPercentage = depositPercentageInput ? parseFloat(depositPercentageInput.value) : null;
+            
+            // If not found in input, calculate from service data
+            if (depositPercentage === null || isNaN(depositPercentage)) {
+                const service = bookingBootstrap.service || {};
+                const spDeposit = service.spDeposit || 0;
+                const commission = service.commission || {};
+                const minimumBookingPercentage = commission.minimum_booking_percentage || 0;
+                const commissionValue = commission.commission || 0;
+                
+                if (spDeposit > 0) {
+                    depositPercentage = spDeposit;
+                } else if (minimumBookingPercentage > 0) {
+                    depositPercentage = minimumBookingPercentage;
+                } else if (commissionValue > 0) {
+                    depositPercentage = commissionValue;
+                } else {
+                    depositPercentage = 0;
+                }
+            }
+        }
+        
+        // Get service provider info (try to get from service data, otherwise set to null)
+        const serviceProviderInfo = {
+            email: bookingBootstrap.service?.ownerEmail || null,
+            id: serviceProviderId || null,
+            name: bookingBootstrap.service?.ownerName || null,
+            photo: bookingBootstrap.service?.ownerPhoto || null
+        };
+        
+        // Get address from service provider data (try multiple possible fields)
+        const address = bookingBootstrap.service?.address || 
+                       bookingBootstrap.service?.serviceProviderAddress || 
+                       bookingBootstrap.service?.location || 
+                       bookingBootstrap.service?.serviceLocation || 
+                       null;
+        
+        // Calculate amount based on payment type
+        let amount = null;
+        if (paymentType === 'deposit') {
+            if (depositPercentage > 0) {
+                amount = Math.round((servicePrice * (depositPercentage / 100)) * 100) / 100;
+            } else {
+                amount = 0; // Free booking
+            }
+        } else if (paymentType === 'full') {
+            amount = Math.round(servicePrice * 100) / 100;
+        }
+        
+        // Extract country code from phone number if available (e.g., +33 from +33123456789)
+        let countryCode = null;
+        if (phone) {
+            const phoneMatch = phone.match(/^\+(\d{1,3})/);
+            if (phoneMatch) {
+                countryCode = '+' + phoneMatch[1];
+            }
+        }
+        
+        // Get user photo from Firebase user data if available
+        const userPhoto = bookingBootstrap.userData?.photoURL || bookingBootstrap.userData?.photo || null;
+        
         // Construct booking payload
         const bookingPayload = {
             booking_time: bookingTime,
+            bookTime: bookTime,
             service_provider_id: serviceProviderId,
+            serviceProviderInfo: serviceProviderInfo,
             user_id: userId,
+            depositPercentage: depositPercentage,
+            address: address,
+            amount: amount,
             services: [
                 {
                     serviceId: serviceId,
@@ -1312,8 +1406,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 {
                     id: userId,
                     name: name,
-                    email: email,
+                    email: email || null,
                     phone: phone,
+                    countryCode: countryCode,
+                    photo: userPhoto
                 }
             ],
             // Include service data for deposit calculation on success page
@@ -1342,29 +1438,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Store full booking data in localStorage so we can retrieve it after payment
             localStorage.setItem('bookingFormData', JSON.stringify(formDataToStore));
             localStorage.setItem('bookingPayload', JSON.stringify(bookingPayload));
-            
-            // Get deposit percentage from hidden input or calculate from service data
-            const depositPercentageInput = document.getElementById('depositPercentage');
-            let depositPercentage = depositPercentageInput ? parseFloat(depositPercentageInput.value) : null;
-            
-            // If not found in input, calculate from service data
-            if (depositPercentage === null || isNaN(depositPercentage)) {
-                const service = bookingBootstrap.service || {};
-                const spDeposit = service.spDeposit || 0;
-                const commission = service.commission || {};
-                const minimumBookingPercentage = commission.minimum_booking_percentage || 0;
-                const commissionValue = commission.commission || 0;
-                
-                if (spDeposit > 0) {
-                    depositPercentage = spDeposit;
-                } else if (minimumBookingPercentage > 0) {
-                    depositPercentage = minimumBookingPercentage;
-                } else if (commissionValue > 0) {
-                    depositPercentage = commissionValue;
-                } else {
-                    depositPercentage = 0;
-                }
-            }
             
             console.log('Preparing to send checkout request with data:', {
                 serviceId,

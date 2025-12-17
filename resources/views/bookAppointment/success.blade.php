@@ -74,6 +74,127 @@ document.addEventListener('DOMContentLoaded', function() {
         bookingPayload.payed = false;
     }
     
+    // Ensure all required fields are present
+    // Extract bookTime from booking_time if not already present
+    if (!bookingPayload.bookTime && bookingPayload.booking_time) {
+        const bookTimeMatch = bookingPayload.booking_time.match(/at (\d+):(\d+):/);
+        bookingPayload.bookTime = bookTimeMatch ? `${bookTimeMatch[1]}:${bookTimeMatch[2]}` : null;
+    }
+    
+    // Ensure depositPercentage is set
+    if (bookingPayload.depositPercentage === undefined || bookingPayload.depositPercentage === null) {
+        const serviceData = bookingPayload.serviceData || bookingPayload.service || null;
+        const depositPercentage = calculateDepositPercentage(serviceData);
+        bookingPayload.depositPercentage = depositPercentage;
+    }
+    
+    // Ensure serviceProviderInfo is present
+    if (!bookingPayload.serviceProviderInfo) {
+        bookingPayload.serviceProviderInfo = {
+            email: bookingPayload.serviceData?.ownerEmail || null,
+            id: bookingPayload.service_provider_id || null,
+            name: bookingPayload.serviceData?.ownerName || null,
+            photo: bookingPayload.serviceData?.ownerPhoto || null
+        };
+    }
+    
+    // Ensure address is set
+    if (!bookingPayload.address) {
+        bookingPayload.address = bookingPayload.serviceData?.address || 
+                                 bookingPayload.serviceData?.serviceProviderAddress || 
+                                 bookingPayload.serviceData?.location || 
+                                 bookingPayload.serviceData?.serviceLocation || 
+                                 null;
+    }
+    
+    // Ensure amount is calculated if not already set
+    if (bookingPayload.amount === null || bookingPayload.amount === undefined) {
+        const servicePrice = parseFloat(bookingPayload.services?.[0]?.servicePrice || 0) || 0;
+        const depositPercentage = parseFloat(bookingPayload.depositPercentage || 0) || 0;
+        
+        if (paymentType === 'deposit') {
+            if (depositPercentage > 0) {
+                bookingPayload.amount = Math.round((servicePrice * (depositPercentage / 100)) * 100) / 100;
+            } else {
+                bookingPayload.amount = 0; // Free booking
+            }
+        } else if (paymentType === 'full') {
+            bookingPayload.amount = Math.round(servicePrice * 100) / 100;
+        } else {
+            bookingPayload.amount = null;
+        }
+    } else if (bookingPayload.amount !== null && bookingPayload.amount !== undefined) {
+        // Round existing amount to 2 decimal places to fix floating point precision issues
+        bookingPayload.amount = Math.round(bookingPayload.amount * 100) / 100;
+    }
+    
+    // Ensure address and amount are set to null if not present
+    if (bookingPayload.address === undefined) {
+        bookingPayload.address = null;
+    }
+    if (bookingPayload.amount === undefined) {
+        bookingPayload.amount = null;
+    }
+    
+    // Ensure userInfo has countryCode and photo, and validate values
+    if (bookingPayload.userInfo && bookingPayload.userInfo.length > 0) {
+        const userInfo = bookingPayload.userInfo[0];
+        
+        // Clean up empty strings and ensure proper values
+        if (userInfo.name === '' || (userInfo.name && !userInfo.name.trim())) {
+            userInfo.name = null;
+        } else if (userInfo.name) {
+            userInfo.name = userInfo.name.trim();
+        }
+        
+        if (userInfo.email === '' || (userInfo.email && !userInfo.email.trim())) {
+            userInfo.email = null;
+        } else if (userInfo.email) {
+            userInfo.email = userInfo.email.trim();
+        }
+        
+        if (userInfo.phone === '' || (userInfo.phone && !userInfo.phone.trim())) {
+            userInfo.phone = null;
+        } else if (userInfo.phone) {
+            userInfo.phone = userInfo.phone.trim();
+        }
+        
+        // Extract country code from phone if available
+        if (userInfo.countryCode === undefined) {
+            let countryCode = null;
+            if (userInfo.phone) {
+                const phoneMatch = userInfo.phone.match(/^\+(\d{1,3})/);
+                if (phoneMatch) {
+                    countryCode = '+' + phoneMatch[1];
+                }
+            }
+            userInfo.countryCode = countryCode;
+        }
+        
+        if (userInfo.photo === undefined) {
+            userInfo.photo = null;
+        }
+        
+        // Ensure user ID is present
+        if (!userInfo.id && bookingPayload.user_id) {
+            userInfo.id = bookingPayload.user_id;
+        }
+        
+        // Log userInfo for debugging
+        console.log('Final userInfo before API call:', userInfo);
+    } else {
+        // If userInfo is missing, try to reconstruct it
+        console.warn('userInfo is missing, attempting to reconstruct from payload');
+        bookingPayload.userInfo = [{
+            id: bookingPayload.user_id || null,
+            name: null,
+            email: null,
+            phone: null,
+            countryCode: null,
+            photo: null
+        }];
+    }
+    
     console.log('After conditions booking payload:', bookingPayload);
     console.log('Is free booking:', isFreeBooking);
     

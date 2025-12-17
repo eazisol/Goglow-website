@@ -46,6 +46,8 @@ class BookAppointmentController extends Controller
                     'name' => $user->displayName ?? '',
                     'email' => $user->email ?? session('firebase_email', ''),
                     'phone' => $user->phoneNumber ?? '',
+                    'photoURL' => $user->photoUrl ?? null,
+                    'photo' => $user->photoUrl ?? null,
                 ];
             } catch (\Throwable $e) {
                 // If we can't get user data, use what we have in session
@@ -54,6 +56,8 @@ class BookAppointmentController extends Controller
                     'name' => '',
                     'email' => session('firebase_email', ''),
                     'phone' => '',
+                    'photoURL' => null,
+                    'photo' => null,
                 ];
             }
         }
@@ -137,6 +141,8 @@ class BookAppointmentController extends Controller
                     'name' => $user->displayName ?? '',
                     'email' => $user->email ?? session('firebase_email', ''),
                     'phone' => $user->phoneNumber ?? '',
+                    'photoURL' => $user->photoUrl ?? null,
+                    'photo' => $user->photoUrl ?? null,
                 ];
             } catch (\Throwable $e) {
                 // If we can't get user data, use what we have in session
@@ -145,6 +151,8 @@ class BookAppointmentController extends Controller
                     'name' => '',
                     'email' => session('firebase_email', ''),
                     'phone' => '',
+                    'photoURL' => null,
+                    'photo' => null,
                 ];
             }
         }
