@@ -1473,29 +1473,25 @@ document.addEventListener('DOMContentLoaded', function () {
         // Show loading state after validation passes
         setButtonLoading(true);
 
-                 // Get user data from bookingBootstrap
-         const userData = bookingBootstrap.userData || {};
-         // Ensure we have valid values, not empty strings
-         const name = (userData.name && userData.name.trim()) ? userData.name.trim() : null;
-         const email = (userData.email && userData.email.trim()) ? userData.email.trim() : null;
-         const phone = (userData.phone && userData.phone.trim()) ? userData.phone.trim() : null;
-         
-         // Validate that we have at least email or user ID
-         if (!email && !bookingBootstrap.userId) {
-             setButtonLoading(false);
-             alert('User information is missing. Please try logging in again.');
-             return;
-         }
-         
-         // Log user data being used for the booking
-         console.log('User data for booking:', {
-             id: bookingBootstrap.userId,
-             name: name,
-             email: email,
-             phone: phone,
-             userData: userData,
-             bookingBootstrap: bookingBootstrap
-         });
+        // Get user data from bookingBootstrap
+        const userData = bookingBootstrap.userData || {};
+        // Ensure we have valid values, not empty strings
+        const name = (userData.name && userData.name.trim()) ? userData.name.trim() : null;
+        const email = (userData.email && userData.email.trim()) ? userData.email.trim() : null;
+        const phone = (userData.phone && userData.phone.trim()) ? userData.phone.trim() : null;
+        
+        // Get userId from bookingBootstrap or userData as fallback
+        const userId = bookingBootstrap.userId || userData.id || null;
+        
+        // Log user data being used for the booking
+        console.log('User data for booking:', {
+            id: userId,
+            name: name,
+            email: email,
+            phone: phone,
+            userData: userData,
+            bookingBootstrap: bookingBootstrap
+        });
 
          // Get payment option
          const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
@@ -1544,7 +1540,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const serviceName = bookingBootstrap.service?.service_name || 'Selected Service';
         const servicePrice = parseFloat(bookingBootstrap.service?.discounted_price ?? bookingBootstrap.service?.service_price ?? 0) || 0;
         const durationMinutes = (bookingBootstrap.service?.duration_minutes ?? 0);
-        const userId = bookingBootstrap.userId;
+        // userId is already declared above, check if it exists for booking
         if (!userId) {
             setButtonLoading(false);
             // Store the current URL for redirection after login
