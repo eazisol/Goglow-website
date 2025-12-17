@@ -106,6 +106,9 @@
                                     <img src="{{ asset('images/images/rightarrow_days.svg') }}" alt="" width="16" height="16">
                                 </button>
                             </div>
+                            
+                            <!-- Mobile Time Slots Container (vertical layout, hidden initially) -->
+                            <div id="mobileTimeSlotsContainer" class="mobile-time-slots-container" style="display: none;"></div>
                                     </div>
                                 </div>
                                 @endif
@@ -325,6 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const prevTimeSlotBtn = document.getElementById('prevTimeSlot');
     const nextTimeSlotBtn = document.getElementById('nextTimeSlot');
     const paymentOptionsSection = document.getElementById('paymentOptionsSection');
+    const mobileTimeSlotsContainer = document.getElementById('mobileTimeSlotsContainer');
     
     let chosenAgent = null;
     let chosenAgentSlots = null;
@@ -541,12 +545,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 selectedPeriod = null;
                 periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
                 
-                // Show period selector and hide time slots
+                // Show period selector
                 periodSelector.style.display = '';
-                timeSlotGrid.innerHTML = '';
-                if (timeSlotsStrip) {
-                    timeSlotsStrip.style.display = 'none';
+                
+                // Check if mobile view
+                if (isMobileView()) {
+                    // On mobile: Show period selector + render all time slots vertically
+                    if (chosenAgentSlots) {
+                        renderTimeSlotsMobile(chosenAgentSlots, dayKey, formatDateValue(date));
+                        if (mobileTimeSlotsContainer) {
+                            mobileTimeSlotsContainer.style.display = '';
+                        }
+                    }
+                    // Hide desktop time slots strip
+                    if (timeSlotsStrip) {
+                        timeSlotsStrip.style.display = 'none';
+                    }
+                } else {
+                    // On desktop: Show period selector only, wait for period selection
+                    timeSlotGrid.innerHTML = '';
+                    if (timeSlotsStrip) {
+                        timeSlotsStrip.style.display = 'none';
+                    }
+                    // Hide mobile container
+                    if (mobileTimeSlotsContainer) {
+                        mobileTimeSlotsContainer.style.display = 'none';
+                    }
                 }
+                
                 selectedSlotInfo.style.display = 'none';
                 selectedTimeInput.value = '';
                 
@@ -569,6 +595,11 @@ document.addEventListener('DOMContentLoaded', function () {
         // Hide time slots strip initially
         if (timeSlotsStrip) {
             timeSlotsStrip.style.display = 'none';
+        }
+        
+        // Hide mobile container (desktop view)
+        if (mobileTimeSlotsContainer) {
+            mobileTimeSlotsContainer.style.display = 'none';
         }
         
         if (!slots || !selectedDay || !selectedPeriod || !selectedDate) {
@@ -698,6 +729,122 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 100);
     }
     
+    // Render time slots for mobile (3 vertical columns - one for each period)
+    function renderTimeSlotsMobile(slots, selectedDay, selectedDate) {
+        console.log('Rendering mobile time slots:', { slots, selectedDay, selectedDate });
+        
+        if (!mobileTimeSlotsContainer) return;
+        
+        mobileTimeSlotsContainer.innerHTML = '';
+        
+        if (!slots || !selectedDay || !selectedDate) {
+            mobileTimeSlotsContainer.innerHTML = '<div class="mobile-no-slots">There is no slot available</div>';
+            return;
+        }
+        
+        // Get slots for the selected day
+        const daySlots = slots[selectedDay] || [];
+        
+        if (!Array.isArray(daySlots) || daySlots.length === 0) {
+            mobileTimeSlotsContainer.innerHTML = '<div class="mobile-no-slots">There is no slot available</div>';
+            return;
+        }
+        
+        // Define time period ranges (hours) - in order: Morning, Afternoon, Evening
+        const periodRanges = [
+            { key: 'morning', start: 6, end: 12, label: '{{ __('app.agent_page.the_morning') }}' },
+            { key: 'afternoon', start: 12, end: 17, label: '{{ __('app.agent_page.in_the_afternoon') }}' },
+            { key: 'evening', start: 17, end: 21, label: '{{ __('app.agent_page.in_the_evening') }}' }
+        ];
+        
+        // Create a container for the 3 columns
+        const columnsContainer = document.createElement('div');
+        columnsContainer.className = 'mobile-slots-columns-container';
+        
+        // Create a column for each period (Morning, Afternoon, Evening)
+        periodRanges.forEach(period => {
+            // Filter slots by period and availability
+            const filteredSlots = daySlots.filter(slot => {
+                if (!slot.available) return false;
+                const [hours] = slot.time.split(':').map(Number);
+                return hours >= period.start && hours < period.end;
+            });
+            
+            // Create column container
+            const column = document.createElement('div');
+            column.className = 'mobile-period-column';
+            column.id = `mobile-period-${period.key}`;
+            
+            // Create time slots container for this period (vertical list)
+            const slotsContainer = document.createElement('div');
+            slotsContainer.className = 'mobile-period-slots';
+            
+            if (filteredSlots.length === 0) {
+                const noSlotsMsg = document.createElement('div');
+                noSlotsMsg.className = 'mobile-period-no-slots';
+                noSlotsMsg.textContent = 'No slot';
+                slotsContainer.appendChild(noSlotsMsg);
+            } else {
+                // Create time slot buttons vertically
+                filteredSlots.forEach(slot => {
+                    const timeSlot = document.createElement('div');
+                    timeSlot.className = 'mobile-time-slot';
+                    timeSlot.dataset.day = selectedDay;
+                    timeSlot.dataset.time = slot.time;
+                    timeSlot.dataset.date = selectedDate;
+                    timeSlot.dataset.period = period.key;
+                    timeSlot.textContent = formatTimeDisplay24(slot.time);
+                    
+                    // Add click handler for slot selection
+                    timeSlot.addEventListener('click', function() {
+                        // Deselect any previously selected slot
+                        document.querySelectorAll('.mobile-time-slot, .time-slot').forEach(s => s.classList.remove('selected'));
+                        
+                        // Select this slot
+                        this.classList.add('selected');
+                        
+                        // Update hidden inputs
+                        selectedDateInput.value = this.dataset.date;
+                        selectedTimeInput.value = this.dataset.time;
+                        selectedDayInput.value = this.dataset.day;
+                        
+                        // Set selected period
+                        selectedPeriod = this.dataset.period;
+                        
+                        // Highlight the corresponding period button
+                        periodSelector.querySelectorAll('.period-btn').forEach(btn => {
+                            if (btn.dataset.period === period.key) {
+                                btn.classList.add('active');
+                            } else {
+                                btn.classList.remove('active');
+                            }
+                        });
+                        
+                        // Show selected date/time info
+                        const [yy, mm, dd] = this.dataset.date.split('-').map(Number);
+                        const selectedDateObj = new Date(yy, mm - 1, dd);
+                        const formattedDate = formatDate(selectedDateObj);
+                        const formattedTime = formatTimeDisplay(this.dataset.time);
+                        selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
+                        selectedSlotInfo.style.display = '';
+                        
+                        // Show payment options section after time slot selection
+                        if (paymentOptionsSection) {
+                            paymentOptionsSection.style.display = '';
+                        }
+                    });
+                    
+                    slotsContainer.appendChild(timeSlot);
+                });
+            }
+            
+            column.appendChild(slotsContainer);
+            columnsContainer.appendChild(column);
+        });
+        
+        mobileTimeSlotsContainer.appendChild(columnsContainer);
+    }
+    
     // Helper function to update time slot arrow states
     function updateTimeSlotArrows() {
         if (!timeSlotGrid || !prevTimeSlotBtn || !nextTimeSlotBtn) return;
@@ -773,6 +920,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = 'none';
             }
+            if (mobileTimeSlotsContainer) {
+                mobileTimeSlotsContainer.style.display = 'none';
+                mobileTimeSlotsContainer.innerHTML = '';
+            }
             selectedSlotInfo.style.display = 'none';
             selectedTimeInput.value = '';
             
@@ -804,6 +955,13 @@ document.addEventListener('DOMContentLoaded', function () {
         periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
         periodSelector.style.display = 'none';
         timeSlotGrid.innerHTML = '';
+        if (timeSlotsStrip) {
+            timeSlotsStrip.style.display = 'none';
+        }
+        if (mobileTimeSlotsContainer) {
+            mobileTimeSlotsContainer.style.display = 'none';
+            mobileTimeSlotsContainer.innerHTML = '';
+        }
         selectedSlotInfo.style.display = 'none';
         selectedTimeInput.value = '';
         
@@ -854,6 +1012,10 @@ document.addEventListener('DOMContentLoaded', function () {
             timeSlotGrid.innerHTML = '';
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = 'none';
+            }
+            if (mobileTimeSlotsContainer) {
+                mobileTimeSlotsContainer.style.display = 'none';
+                mobileTimeSlotsContainer.innerHTML = '';
             }
             
             // Hide payment options section when agent changes
@@ -915,17 +1077,32 @@ document.addEventListener('DOMContentLoaded', function () {
             periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
             periodBtn.classList.add('active');
             
-            // Render time slots for selected day and period
-            if (chosenAgentSlots) {
-                const selectedDate = selectedDateInput.value;
-                renderTimeSlots(chosenAgentSlots, dayKey, period, selectedDate);
+            // Check if mobile view
+            if (isMobileView()) {
+                // On mobile: Scroll to the period's time slots section
+                const periodSection = document.getElementById(`mobile-period-${period}`);
+                if (periodSection) {
+                    periodSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    // Add a temporary highlight effect
+                    periodSection.style.transition = 'background-color 0.3s ease';
+                    periodSection.style.backgroundColor = 'rgba(229, 0, 80, 0.1)';
+                    setTimeout(() => {
+                        periodSection.style.backgroundColor = '';
+                    }, 1000);
+                }
             } else {
-                timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
-                // Show strip to display message, but hide arrows
-                if (timeSlotsStrip) {
-                    timeSlotsStrip.style.display = '';
-                    if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
-                    if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
+                // On desktop: Render horizontal time slots for selected period
+                if (chosenAgentSlots) {
+                    const selectedDate = selectedDateInput.value;
+                    renderTimeSlots(chosenAgentSlots, dayKey, period, selectedDate);
+                } else {
+                    timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+                    // Show strip to display message, but hide arrows
+                    if (timeSlotsStrip) {
+                        timeSlotsStrip.style.display = '';
+                        if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
+                        if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
+                    }
                 }
             }
         });
@@ -1663,12 +1840,48 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Handle window resize to update calendar when switching between mobile/desktop views
     let resizeTimeout;
+    let lastMobileState = isMobileView();
     window.addEventListener('resize', function() {
         // Debounce resize events to avoid excessive updates
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(function() {
             // Only update if calendar is already initialized (agent selected)
             if (chosenAgent && agentSchedule && agentSchedule.style.display !== 'none') {
+                const currentMobileState = isMobileView();
+                
+                // If viewport type changed (mobile <-> desktop), re-render time slots
+                if (currentMobileState !== lastMobileState) {
+                    const activeDay = document.querySelector('.day-column.active');
+                    if (activeDay && chosenAgentSlots) {
+                        const dayKey = selectedDayInput.value;
+                        const selectedDate = selectedDateInput.value;
+                        
+                        if (currentMobileState) {
+                            // Switched to mobile: render mobile vertical layout
+                            if (dayKey && selectedDate) {
+                                renderTimeSlotsMobile(chosenAgentSlots, dayKey, selectedDate);
+                                if (mobileTimeSlotsContainer) {
+                                    mobileTimeSlotsContainer.style.display = '';
+                                }
+                                if (timeSlotsStrip) {
+                                    timeSlotsStrip.style.display = 'none';
+                                }
+                            }
+                        } else {
+                            // Switched to desktop: render desktop horizontal layout if period selected
+                            if (selectedPeriod && dayKey && selectedDate) {
+                                renderTimeSlots(chosenAgentSlots, dayKey, selectedPeriod, selectedDate);
+                            } else {
+                                // No period selected, just hide mobile container
+                                if (mobileTimeSlotsContainer) {
+                                    mobileTimeSlotsContainer.style.display = 'none';
+                                }
+                            }
+                        }
+                    }
+                    lastMobileState = currentMobileState;
+                }
+                
                 updateWeekDisplay();
                 renderDaysHeader();
                 updatePrevWeekButtonState();
