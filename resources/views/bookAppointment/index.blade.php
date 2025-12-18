@@ -1763,17 +1763,8 @@ document.addEventListener('DOMContentLoaded', function () {
         
         console.log('Resolved address:', address);
         
-        // Calculate amount based on payment type
-        let amount = null;
-        if (paymentType === 'deposit') {
-            if (depositPercentage > 0) {
-                amount = Math.round((servicePrice * (depositPercentage / 100)) * 100) / 100;
-            } else {
-                amount = 0; // Free booking
-            }
-        } else if (paymentType === 'full') {
-            amount = Math.round(servicePrice * 100) / 100;
-        }
+        // Always save the full service amount regardless of payment type
+        const amount = Math.round(servicePrice * 100) / 100;
         
         // Extract country code from phone number if available (e.g., +33 from +33123456789)
         let countryCode = null;

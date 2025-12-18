@@ -147,26 +147,9 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Resolved address:', bookingPayload.address);
     }
     
-    // Ensure amount is calculated if not already set
-    if (bookingPayload.amount === null || bookingPayload.amount === undefined) {
-        const servicePrice = parseFloat(bookingPayload.services?.[0]?.servicePrice || 0) || 0;
-        const depositPercentage = parseFloat(bookingPayload.depositPercentage || 0) || 0;
-        
-        if (paymentType === 'deposit') {
-            if (depositPercentage > 0) {
-                bookingPayload.amount = Math.round((servicePrice * (depositPercentage / 100)) * 100) / 100;
-            } else {
-                bookingPayload.amount = 0; // Free booking
-            }
-        } else if (paymentType === 'full') {
-            bookingPayload.amount = Math.round(servicePrice * 100) / 100;
-        } else {
-            bookingPayload.amount = null;
-        }
-    } else if (bookingPayload.amount !== null && bookingPayload.amount !== undefined) {
-        // Round existing amount to 2 decimal places to fix floating point precision issues
-        bookingPayload.amount = Math.round(bookingPayload.amount * 100) / 100;
-    }
+    // Always save the full service amount regardless of payment type
+    const servicePrice = parseFloat(bookingPayload.services?.[0]?.servicePrice || 0) || 0;
+    bookingPayload.amount = Math.round(servicePrice * 100) / 100;
     
     // Ensure address and amount are set to null if not present
     if (bookingPayload.address === undefined) {
