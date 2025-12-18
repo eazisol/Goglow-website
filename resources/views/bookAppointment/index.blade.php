@@ -284,6 +284,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Log logged-in user data at page load
     console.log('Logged-in user ID:', bookingBootstrap.userId);
     console.log('Logged-in user data:', bookingBootstrap.userData);
+    
+    // Debug: Log service data to verify ownerMail and ownerProfile are present
+    if (bookingBootstrap.service) {
+        console.log('=== SERVICE DATA DEBUG (Page Load) ===');
+        console.log('Full service object:', bookingBootstrap.service);
+        console.log('ownerMail:', bookingBootstrap.service.ownerMail);
+        console.log('ownerProfile:', bookingBootstrap.service.ownerProfile);
+        console.log('ownerName:', bookingBootstrap.service.ownerName);
+        console.log('ownerId:', bookingBootstrap.service.ownerId);
+        console.log('All service keys:', Object.keys(bookingBootstrap.service));
+        console.log('=====================================');
+    }
+    
     const dayButtons = document.querySelectorAll('.day-btn');
     const selectedDayInput = document.getElementById('selected_day');
     const selectedDateInput = document.getElementById('selected_date');
@@ -1655,19 +1668,100 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         // Get service provider info (try to get from service data, otherwise set to null)
+        // Debug: Log service data to see what fields are available
+        console.log('=== SERVICE PROVIDER INFO DEBUG ===');
+        console.log('Full service object:', bookingBootstrap.service);
+        console.log('ownerMail:', bookingBootstrap.service?.ownerMail);
+        console.log('ownerProfile:', bookingBootstrap.service?.ownerProfile);
+        console.log('ownerName:', bookingBootstrap.service?.ownerName);
+        console.log('ownerId:', bookingBootstrap.service?.ownerId);
+        console.log('All service keys:', bookingBootstrap.service ? Object.keys(bookingBootstrap.service) : 'No service data');
+        
+        // Try multiple ways to access the data (in case of case sensitivity or different structure)
+        let ownerMail = bookingBootstrap.service?.ownerMail || 
+                       bookingBootstrap.service?.owner_mail || 
+                       bookingBootstrap.service?.ownerEmail ||
+                       null;
+        let ownerProfile = bookingBootstrap.service?.ownerProfile || 
+                          bookingBootstrap.service?.owner_profile || 
+                          bookingBootstrap.service?.ownerPhoto ||
+                          null;
+        
+        // If data is missing, try to fetch from API as fallback
+        if ((!ownerMail || !ownerProfile) && (bookingBootstrap.servicesSlug || bookingBootstrap.serviceId)) {
+            console.warn('ownerMail or ownerProfile missing, attempting API fallback...');
+            try {
+                // Fetch service data directly from API
+                const apiUrl = bookingBootstrap.servicesSlug 
+                    ? `https://us-central1-beauty-984c8.cloudfunctions.net/getServiceById?services_slug=${encodeURIComponent(bookingBootstrap.servicesSlug)}`
+                    : `https://us-central1-beauty-984c8.cloudfunctions.net/getServiceById?service_id=${encodeURIComponent(bookingBootstrap.serviceId)}`;
+                
+                const apiResponse = await fetch(apiUrl);
+                if (apiResponse.ok) {
+                    const apiData = await apiResponse.json();
+                    const apiService = apiData?.service || {};
+                    
+                    console.log('API fallback response:', apiService);
+                    
+                    // Update ownerMail and ownerProfile from API response
+                    if (!ownerMail && apiService.ownerMail) {
+                        ownerMail = apiService.ownerMail;
+                        console.log('Retrieved ownerMail from API:', ownerMail);
+                    }
+                    if (!ownerProfile && apiService.ownerProfile) {
+                        ownerProfile = apiService.ownerProfile;
+                        console.log('Retrieved ownerProfile from API:', ownerProfile);
+                    }
+                    
+                    // Update bookingBootstrap.service with fresh data
+                    if (bookingBootstrap.service) {
+                        bookingBootstrap.service.ownerMail = ownerMail || bookingBootstrap.service.ownerMail;
+                        bookingBootstrap.service.ownerProfile = ownerProfile || bookingBootstrap.service.ownerProfile;
+                        // Also update address-related fields if missing
+                        if (!bookingBootstrap.service.companyAddress && apiService.companyAddress) {
+                            bookingBootstrap.service.companyAddress = apiService.companyAddress;
+                        }
+                        if (!bookingBootstrap.service.address && apiService.address) {
+                            bookingBootstrap.service.address = apiService.address;
+                        }
+                    }
+                }
+            } catch (apiError) {
+                console.error('Error fetching service data from API fallback:', apiError);
+            }
+        }
+        
+        console.log('Resolved ownerMail:', ownerMail);
+        console.log('Resolved ownerProfile:', ownerProfile);
+        console.log('===================================');
+        
         const serviceProviderInfo = {
-            email: bookingBootstrap.service?.ownerEmail || null,
+            email: ownerMail,
             id: serviceProviderId || null,
             name: bookingBootstrap.service?.ownerName || null,
-            photo: bookingBootstrap.service?.ownerPhoto || null
+            photo: ownerProfile
         };
         
+        console.log('Constructed serviceProviderInfo:', serviceProviderInfo);
+        
         // Get address from service provider data (try multiple possible fields)
+        // Debug: Log address fields to see what's available
+        console.log('=== ADDRESS DEBUG ===');
+        console.log('address:', bookingBootstrap.service?.address);
+        console.log('companyAddress:', bookingBootstrap.service?.companyAddress);
+        console.log('serviceProviderAddress:', bookingBootstrap.service?.serviceProviderAddress);
+        console.log('location:', bookingBootstrap.service?.location);
+        console.log('serviceLocation:', bookingBootstrap.service?.serviceLocation);
+        console.log('========================');
+        
         const address = bookingBootstrap.service?.address || 
+                       bookingBootstrap.service?.companyAddress ||
                        bookingBootstrap.service?.serviceProviderAddress || 
                        bookingBootstrap.service?.location || 
                        bookingBootstrap.service?.serviceLocation || 
                        null;
+        
+        console.log('Resolved address:', address);
         
         // Calculate amount based on payment type
         let amount = null;

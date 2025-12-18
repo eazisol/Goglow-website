@@ -90,21 +90,61 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Ensure serviceProviderInfo is present
     if (!bookingPayload.serviceProviderInfo) {
+        // Debug: Log serviceData to see what fields are available
+        console.log('=== SERVICE PROVIDER INFO DEBUG (Success Page) ===');
+        console.log('serviceData:', bookingPayload.serviceData);
+        console.log('ownerMail:', bookingPayload.serviceData?.ownerMail);
+        console.log('ownerProfile:', bookingPayload.serviceData?.ownerProfile);
+        console.log('All serviceData keys:', bookingPayload.serviceData ? Object.keys(bookingPayload.serviceData) : 'No serviceData');
+        console.log('==================================================');
+        
         bookingPayload.serviceProviderInfo = {
-            email: bookingPayload.serviceData?.ownerEmail || null,
+            email: bookingPayload.serviceData?.ownerMail || 
+                  bookingPayload.serviceData?.owner_mail || 
+                  bookingPayload.serviceData?.ownerEmail || 
+                  null,
             id: bookingPayload.service_provider_id || null,
             name: bookingPayload.serviceData?.ownerName || null,
-            photo: bookingPayload.serviceData?.ownerPhoto || null
+            photo: bookingPayload.serviceData?.ownerProfile || 
+                  bookingPayload.serviceData?.owner_profile || 
+                  bookingPayload.serviceData?.ownerPhoto || 
+                  null
         };
+        
+        console.log('Constructed serviceProviderInfo:', bookingPayload.serviceProviderInfo);
+    } else {
+        // If serviceProviderInfo exists but email/photo are null, try to update from serviceData
+        if ((!bookingPayload.serviceProviderInfo.email || !bookingPayload.serviceProviderInfo.photo) && bookingPayload.serviceData) {
+            console.log('Updating serviceProviderInfo from serviceData...');
+            if (!bookingPayload.serviceProviderInfo.email && bookingPayload.serviceData.ownerMail) {
+                bookingPayload.serviceProviderInfo.email = bookingPayload.serviceData.ownerMail;
+            }
+            if (!bookingPayload.serviceProviderInfo.photo && bookingPayload.serviceData.ownerProfile) {
+                bookingPayload.serviceProviderInfo.photo = bookingPayload.serviceData.ownerProfile;
+            }
+            console.log('Updated serviceProviderInfo:', bookingPayload.serviceProviderInfo);
+        }
     }
     
     // Ensure address is set
     if (!bookingPayload.address) {
+        // Debug: Log address fields to see what's available
+        console.log('=== ADDRESS DEBUG (Success Page) ===');
+        console.log('address:', bookingPayload.serviceData?.address);
+        console.log('companyAddress:', bookingPayload.serviceData?.companyAddress);
+        console.log('serviceProviderAddress:', bookingPayload.serviceData?.serviceProviderAddress);
+        console.log('location:', bookingPayload.serviceData?.location);
+        console.log('serviceLocation:', bookingPayload.serviceData?.serviceLocation);
+        console.log('=====================================');
+        
         bookingPayload.address = bookingPayload.serviceData?.address || 
+                                 bookingPayload.serviceData?.companyAddress ||
                                  bookingPayload.serviceData?.serviceProviderAddress || 
                                  bookingPayload.serviceData?.location || 
                                  bookingPayload.serviceData?.serviceLocation || 
                                  null;
+        
+        console.log('Resolved address:', bookingPayload.address);
     }
     
     // Ensure amount is calculated if not already set
