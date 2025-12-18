@@ -57,6 +57,11 @@ return [
         'sign_up_with_apple' => 'Sign up with Apple',
         'login_successful' => 'Login Successful!',
         'redirecting' => 'Redirecting...',
+        'login_to_glaura' => 'Login to Glaura',
+        'login_options_desc' => 'Manage you account , book salon services , chat comment , follow and more.',
+        'continue_with_google' => 'Continue with Google',
+        'continue_with_apple' => 'Continue with Apple',
+        'use_email_password' => 'Email & password',
     ],
 
     // Booking

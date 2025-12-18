@@ -206,7 +206,7 @@
                                             <div class="terms-checkbox-container" style="display: flex; align-items: flex-start; gap: 12px;">
                                                 <input type="checkbox" name="terms_conditions" id="termsConditions" class="terms-checkbox-input" required style="width: 20px; height: 20px; margin: 0; cursor: pointer; flex-shrink: 0; margin-top: 2px;">
                                                 <label class="terms-checkbox-label" for="termsConditions" style="font-size: 14px; line-height: 1.5; color: #2c0d18; cursor: pointer; margin: 0; flex: 1;">
-                                                    {{ __('app.auth.i_agree_to') }} <a href="#" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.terms') }}</a> {{ __('app.auth.and') }} <a href="#" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.privacy_policy') }}</a>
+                                                    {{ __('app.auth.i_agree_to') }} <a href="{{ url('/terms_condition') }}" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.terms') }}</a> {{ __('app.auth.and') }} <a href="{{ url('/privacy_policy') }}" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.privacy_policy') }}</a>
                                                 </label>
                                             </div>
                                             <div class="invalid-feedback" id="termsError" style="display: none; color: #dc3545; font-size: 13px; margin-top: 8px; margin-left: 32px;">
@@ -1560,38 +1560,55 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('pendingBookingState', JSON.stringify(pendingBookingState));
             console.log('Saved pending booking state:', pendingBookingState);
             
-            // Show the login modal instead of alert
-            const showLoginModal = () => {
-                const loginModalElement = document.getElementById('loginModal');
-                if (!loginModalElement) {
-                    console.error('Login modal element not found');
-                    return;
-                }
-                
-                // Try Bootstrap 5 first
-                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                    try {
-                        const modal = new bootstrap.Modal(loginModalElement);
-                        modal.show();
+            // Show the login options modal instead of direct login modal
+            const showLoginOptionsModal = () => {
+                // First try to show the Login Options Modal
+                const loginOptionsModalElement = document.getElementById('loginOptionsModal');
+                if (loginOptionsModalElement) {
+                    // Try Bootstrap 5 first
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        try {
+                            const modal = new bootstrap.Modal(loginOptionsModalElement);
+                            modal.show();
+                            return;
+                        } catch (e) {
+                            console.error('Error creating Bootstrap modal:', e);
+                        }
+                    }
+                    
+                    // Fallback to jQuery if available
+                    if (typeof $ !== 'undefined' && $.fn.modal) {
+                        $('#loginOptionsModal').modal('show');
                         return;
-                    } catch (e) {
-                        console.error('Error creating Bootstrap modal:', e);
                     }
                 }
                 
-                // Fallback to jQuery if available
-                if (typeof $ !== 'undefined' && $.fn.modal) {
-                    $('#loginModal').modal('show');
-                    return;
+                // Fallback to original login modal if options modal not found
+                const loginModalElement = document.getElementById('loginModal');
+                if (loginModalElement) {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        try {
+                            const modal = new bootstrap.Modal(loginModalElement);
+                            modal.show();
+                            return;
+                        } catch (e) {
+                            console.error('Error creating Bootstrap modal:', e);
+                        }
+                    }
+                    
+                    if (typeof $ !== 'undefined' && $.fn.modal) {
+                        $('#loginModal').modal('show');
+                        return;
+                    }
                 }
                 
                 // Fallback: try again after a short delay
                 console.warn('Bootstrap not loaded yet, retrying...');
-                setTimeout(showLoginModal, 100);
+                setTimeout(showLoginOptionsModal, 100);
             };
             
             // Wait a bit for Bootstrap to be ready
-            setTimeout(showLoginModal, 50);
+            setTimeout(showLoginOptionsModal, 50);
             return;
         }
 
