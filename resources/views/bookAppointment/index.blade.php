@@ -1573,32 +1573,11 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('pendingBookingState', JSON.stringify(pendingBookingState));
             console.log('Saved pending booking state:', pendingBookingState);
             
-            // Show the login options modal instead of direct login modal
-            const showLoginOptionsModal = () => {
-                // First try to show the Login Options Modal
-                const loginOptionsModalElement = document.getElementById('loginOptionsModal');
-                if (loginOptionsModalElement) {
-                    // Try Bootstrap 5 first
-                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                        try {
-                            const modal = new bootstrap.Modal(loginOptionsModalElement);
-                            modal.show();
-                            return;
-                        } catch (e) {
-                            console.error('Error creating Bootstrap modal:', e);
-                        }
-                    }
-                    
-                    // Fallback to jQuery if available
-                    if (typeof $ !== 'undefined' && $.fn.modal) {
-                        $('#loginOptionsModal').modal('show');
-                        return;
-                    }
-                }
-                
-                // Fallback to original login modal if options modal not found
+            // Show the login modal
+            const showLoginModal = () => {
                 const loginModalElement = document.getElementById('loginModal');
                 if (loginModalElement) {
+                    // Try Bootstrap 5 first
                     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                         try {
                             const modal = new bootstrap.Modal(loginModalElement);
@@ -1609,6 +1588,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                     
+                    // Fallback to jQuery if available
                     if (typeof $ !== 'undefined' && $.fn.modal) {
                         $('#loginModal').modal('show');
                         return;
@@ -1617,11 +1597,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 // Fallback: try again after a short delay
                 console.warn('Bootstrap not loaded yet, retrying...');
-                setTimeout(showLoginOptionsModal, 100);
+                setTimeout(showLoginModal, 100);
             };
             
             // Wait a bit for Bootstrap to be ready
-            setTimeout(showLoginOptionsModal, 50);
+            setTimeout(showLoginModal, 50);
             return;
         }
 
