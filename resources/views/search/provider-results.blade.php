@@ -157,5 +157,5 @@
     // Global variable for default image path (used in provider-results.js)
     window.defaultProviderImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
 </script>
-<script src="{{ asset('js/provider-results.js') }}"></script>
+<script src="{{ asset('js/provider-results.js') }}?v={{ file_exists(public_path('js/provider-results.js')) ? filemtime(public_path('js/provider-results.js')) : '1' }}"></script>
 @endsection

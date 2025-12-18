@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (cached) {
           const cacheData = JSON.parse(cached);
           const now = Date.now();
-          // Cache categories for 15 minutes
+          // Cache categories for 24 hours
           if (now - cacheData.timestamp < CACHE_DURATION) {
             displayCategories(cacheData.categories);
             return;
