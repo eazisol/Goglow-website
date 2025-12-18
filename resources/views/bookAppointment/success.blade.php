@@ -9,6 +9,9 @@
 
 @section('scripts')
 <script>
+// Get current locale
+const currentLocale = '{{ app()->getLocale() }}';
+
 // Pass translations to JavaScript
 const successTranslations = {
     not_available: @json(__('app.success.not_available')),
@@ -382,6 +385,210 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Helper function to parse date from booking_time string
+    function parseBookingDate(bookingTimeString) {
+        if (!bookingTimeString) return null;
+        
+        try {
+            // Format: "December 18, 2025 at 9:00:00 AM UTC+5"
+            // Extract date part (before " at ")
+            const datePart = bookingTimeString.split(' at ')[0];
+            if (!datePart) return null;
+            
+            // Parse the date string (e.g., "December 18, 2025")
+            const date = new Date(datePart);
+            if (isNaN(date.getTime())) return null;
+            
+            // Format as YYYY-MM-DD
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            return `${year}-${month}-${day}`;
+        } catch (error) {
+            console.error('Error parsing booking date:', error);
+            return null;
+        }
+    }
+    
+    // Helper function to parse time from booking_time string
+    function parseBookingTime(bookingTimeString, bookTimeField) {
+        // First try to use bookTime field if available (e.g., "9:24")
+        if (bookTimeField) {
+            return bookTimeField;
+        }
+        
+        if (!bookingTimeString) return null;
+        
+        try {
+            // Format: "December 18, 2025 at 9:00:00 AM UTC+5"
+            // Extract time part (after " at ")
+            const timePart = bookingTimeString.split(' at ')[1];
+            if (!timePart) return null;
+            
+            // Extract hour, minute, and AM/PM (e.g., "9:00:00 AM" -> hour=9, minute=00, ampm=AM)
+            const timeMatch = timePart.match(/(\d+):(\d+):\d+\s+(AM|PM)/i);
+            if (timeMatch) {
+                let hour = parseInt(timeMatch[1]);
+                const minute = timeMatch[2];
+                const ampm = timeMatch[3].toUpperCase();
+                
+                // Convert 12-hour to 24-hour format
+                if (ampm === 'PM' && hour !== 12) {
+                    hour += 12;
+                } else if (ampm === 'AM' && hour === 12) {
+                    hour = 0;
+                }
+                
+                return `${hour}:${minute}`;
+            }
+            
+            // Fallback: try to extract without AM/PM (assume 24-hour format)
+            const fallbackMatch = timePart.match(/(\d+):(\d+):/);
+            if (fallbackMatch) {
+                const hour = parseInt(fallbackMatch[1]);
+                const minute = fallbackMatch[2];
+                return `${hour}:${minute}`;
+            }
+            
+            return null;
+        } catch (error) {
+            console.error('Error parsing booking time:', error);
+            return null;
+        }
+    }
+    
+    // Function to send booking emails
+    async function sendBookingEmails(payload) {
+        try {
+            console.log('Preparing to send booking emails...');
+            
+            // Extract required data from payload
+            const userInfo = payload.userInfo?.[0] || {};
+            const serviceInfo = payload.services?.[0] || {};
+            const serviceProviderInfo = payload.serviceProviderInfo || {};
+            const serviceData = payload.serviceData || {};
+            
+            const clientName = userInfo.name || 'Customer';
+            const clientEmail = userInfo.email;
+            const serviceName = serviceInfo.serviceName || '';
+            const salonName = serviceData.companyName || '';
+            const ownerName = serviceProviderInfo.name || serviceData.ownerName || '';
+            const ownerEmail = serviceProviderInfo.email || serviceData.ownerMail || null;
+            const address = payload.address || serviceData.companyAddress || '';
+            const bookingAmount = serviceInfo.servicePrice || payload.amount || 0;
+            
+            // Parse date and time from booking_time
+            const bookingDate = parseBookingDate(payload.booking_time);
+            const bookingTime = parseBookingTime(payload.booking_time, payload.bookTime);
+            
+            console.log('Email data:', {
+                clientName,
+                clientEmail,
+                serviceName,
+                salonName,
+                ownerName,
+                ownerEmail,
+                address,
+                bookingDate,
+                bookingTime,
+                bookingAmount
+            });
+            
+            // Validate required data
+            if (!clientEmail) {
+                console.warn('Cannot send customer email: client email is missing');
+            }
+            if (!ownerEmail) {
+                console.warn('Cannot send provider email: owner email is missing');
+            }
+            if (!bookingDate || !bookingTime) {
+                console.warn('Cannot send emails: booking date or time is missing');
+            }
+            
+            // Send customer email (bookingCreated)
+            if (clientEmail && bookingDate && bookingTime) {
+                try {
+                    const customerEmailPayload = {
+                        to: clientEmail,
+                        type: 'bookingCreated',
+                        lang: currentLocale,
+                        data: {
+                            clientName: clientName,
+                            serviceName: serviceName,
+                            salonName: salonName,
+                            date: bookingDate,
+                            time: bookingTime,
+                            address: address
+                        }
+                    };
+                    
+                    console.log('Sending customer email:', customerEmailPayload);
+                    
+                    const customerEmailResponse = await fetch('https://backend.glaura.ai/api/send-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(customerEmailPayload)
+                    });
+                    
+                    const customerEmailResult = await customerEmailResponse.json();
+                    if (customerEmailResponse.ok) {
+                        console.log('Customer email sent successfully:', customerEmailResult);
+                    } else {
+                        console.error('Error sending customer email:', customerEmailResult);
+                    }
+                } catch (customerEmailError) {
+                    console.error('Error sending customer email:', customerEmailError);
+                }
+            }
+            
+            // Send provider email (providerNewBookingReceived)
+            if (ownerEmail && bookingDate && bookingTime) {
+                try {
+                    // Format booking amount with € symbol
+                    const formattedAmount = `€${parseFloat(bookingAmount).toFixed(2)}`;
+                    
+                    const providerEmailPayload = {
+                        to: ownerEmail,
+                        type: 'providerNewBookingReceived',
+                        lang: currentLocale,
+                        data: {
+                            proName: ownerName,
+                            clientName: clientName,
+                            serviceName: serviceName,
+                            date: bookingDate,
+                            time: bookingTime,
+                            bookingAmount: formattedAmount
+                        }
+                    };
+                    
+                    console.log('Sending provider email:', providerEmailPayload);
+                    
+                    const providerEmailResponse = await fetch('https://backend.glaura.ai/api/send-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(providerEmailPayload)
+                    });
+                    
+                    const providerEmailResult = await providerEmailResponse.json();
+                    if (providerEmailResponse.ok) {
+                        console.log('Provider email sent successfully:', providerEmailResult);
+                    } else {
+                        console.error('Error sending provider email:', providerEmailResult);
+                    }
+                } catch (providerEmailError) {
+                    console.error('Error sending provider email:', providerEmailError);
+                }
+            }
+        } catch (error) {
+            console.error('Error in sendBookingEmails:', error);
+        }
+    }
+    
     // Function to submit the booking
     async function submitBooking(payload) {
         try {
@@ -404,6 +611,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok) {
                 document.getElementById('apiResponseStatus').innerHTML = 
                     '<strong class="text-success">' + successTranslations.booking_confirmed_server + '</strong>';
+                
+                // Send booking emails after successful booking
+                await sendBookingEmails(payload);
                 
                 // Don't clear stored data until we've displayed all the information
                 // localStorage.removeItem('bookingFormData');
