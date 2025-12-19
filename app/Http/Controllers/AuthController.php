@@ -105,15 +105,25 @@ class AuthController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'country_code' => ['required', 'string', 'regex:/^[A-Z]{2}$/'],
+            'country_code' => ['required', 'string', 'regex:/^\+\d{1,4}$/'], // Accept prefix format like "+92"
             'phone' => ['required', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'terms' => ['accepted'],
         ]);
         
+        // Convert prefix to country code for validation
+        $prefixToCountryCode = $this->getPrefixToCountryCodeMap();
+        $countryPrefix = $validated['country_code'];
+        $countryCode = $prefixToCountryCode[$countryPrefix] ?? null;
+        
+        if (!$countryCode) {
+            return back()->withErrors([
+                'country_code' => 'Invalid country code selected.'
+            ])->withInput();
+        }
+        
         // Validate phone number length based on country code
         $phoneLengthLimits = $this->getPhoneLengthLimits();
-        $countryCode = $validated['country_code'];
         $phoneDigits = preg_replace('/\D/', '', $validated['phone']);
         
         if (isset($phoneLengthLimits[$countryCode])) {
@@ -202,6 +212,67 @@ class AuthController extends Controller
                 'message' => 'Authentication failed: ' . $e->getMessage()
             ], 422);
         }
+    }
+    
+    /**
+     * Get prefix to country code mapping
+     * @return array
+     */
+    private function getPrefixToCountryCodeMap()
+    {
+        return [
+            '+1' => 'US', // United States/Canada (US takes precedence for validation)
+            '+44' => 'GB', // United Kingdom
+            '+61' => 'AU', // Australia
+            '+49' => 'DE', // Germany
+            '+33' => 'FR', // France
+            '+39' => 'IT', // Italy
+            '+34' => 'ES', // Spain
+            '+31' => 'NL', // Netherlands
+            '+32' => 'BE', // Belgium
+            '+41' => 'CH', // Switzerland
+            '+43' => 'AT', // Austria
+            '+46' => 'SE', // Sweden
+            '+47' => 'NO', // Norway
+            '+45' => 'DK', // Denmark
+            '+358' => 'FI', // Finland
+            '+48' => 'PL', // Poland
+            '+351' => 'PT', // Portugal
+            '+30' => 'GR', // Greece
+            '+353' => 'IE', // Ireland
+            '+64' => 'NZ', // New Zealand
+            '+81' => 'JP', // Japan
+            '+82' => 'KR', // South Korea
+            '+86' => 'CN', // China
+            '+91' => 'IN', // India
+            '+55' => 'BR', // Brazil
+            '+52' => 'MX', // Mexico
+            '+54' => 'AR', // Argentina
+            '+27' => 'ZA', // South Africa
+            '+971' => 'AE', // UAE
+            '+966' => 'SA', // Saudi Arabia
+            '+20' => 'EG', // Egypt
+            '+234' => 'NG', // Nigeria
+            '+254' => 'KE', // Kenya
+            '+233' => 'GH', // Ghana
+            '+212' => 'MA', // Morocco
+            '+216' => 'TN', // Tunisia
+            '+213' => 'DZ', // Algeria
+            '+90' => 'TR', // Turkey
+            '+972' => 'IL', // Israel
+            '+7' => 'RU', // Russia
+            '+380' => 'UA', // Ukraine
+            '+92' => 'PK', // Pakistan
+            '+880' => 'BD', // Bangladesh
+            '+63' => 'PH', // Philippines
+            '+66' => 'TH', // Thailand
+            '+84' => 'VN', // Vietnam
+            '+62' => 'ID', // Indonesia
+            '+60' => 'MY', // Malaysia
+            '+65' => 'SG', // Singapore
+            '+852' => 'HK', // Hong Kong
+            '+886' => 'TW', // Taiwan
+        ];
     }
     
     /**

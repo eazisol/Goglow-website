@@ -739,6 +739,63 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const countryCode = countryCodeSelect.value;
+            
+            // Get the prefix (phone code) for the selected country code
+            let countryPrefix = null;
+            
+            // Try to get prefix from global function first
+            const getCountryByCodeFunc = window.getCountryByCode || (typeof getCountryByCode !== 'undefined' ? getCountryByCode : null);
+            if (getCountryByCodeFunc) {
+                const country = getCountryByCodeFunc(countryCode);
+                if (country && country.prefix) {
+                    countryPrefix = country.prefix;
+                }
+            }
+            
+            // Fallback: Extract prefix from the selected option's text (format: "🇵🇰 +92")
+            if (!countryPrefix && countryCodeSelect.selectedOptions.length > 0) {
+                const selectedOptionText = countryCodeSelect.selectedOptions[0].textContent.trim();
+                // Match pattern like "+92" or "🇵🇰 +92"
+                const prefixMatch = selectedOptionText.match(/(\+\d{1,4})/);
+                if (prefixMatch) {
+                    countryPrefix = prefixMatch[1];
+                }
+            }
+            
+            // Final fallback: Use inline country data if available
+            if (!countryPrefix) {
+                const inlineCountryData = [
+                    {code: 'US', prefix: '+1'}, {code: 'GB', prefix: '+44'}, {code: 'CA', prefix: '+1'},
+                    {code: 'AU', prefix: '+61'}, {code: 'DE', prefix: '+49'}, {code: 'FR', prefix: '+33'},
+                    {code: 'IT', prefix: '+39'}, {code: 'ES', prefix: '+34'}, {code: 'NL', prefix: '+31'},
+                    {code: 'BE', prefix: '+32'}, {code: 'CH', prefix: '+41'}, {code: 'AT', prefix: '+43'},
+                    {code: 'SE', prefix: '+46'}, {code: 'NO', prefix: '+47'}, {code: 'DK', prefix: '+45'},
+                    {code: 'FI', prefix: '+358'}, {code: 'PL', prefix: '+48'}, {code: 'PT', prefix: '+351'},
+                    {code: 'GR', prefix: '+30'}, {code: 'IE', prefix: '+353'}, {code: 'NZ', prefix: '+64'},
+                    {code: 'JP', prefix: '+81'}, {code: 'KR', prefix: '+82'}, {code: 'CN', prefix: '+86'},
+                    {code: 'IN', prefix: '+91'}, {code: 'BR', prefix: '+55'}, {code: 'MX', prefix: '+52'},
+                    {code: 'AR', prefix: '+54'}, {code: 'ZA', prefix: '+27'}, {code: 'AE', prefix: '+971'},
+                    {code: 'SA', prefix: '+966'}, {code: 'EG', prefix: '+20'}, {code: 'NG', prefix: '+234'},
+                    {code: 'KE', prefix: '+254'}, {code: 'GH', prefix: '+233'}, {code: 'MA', prefix: '+212'},
+                    {code: 'TN', prefix: '+216'}, {code: 'DZ', prefix: '+213'}, {code: 'TR', prefix: '+90'},
+                    {code: 'IL', prefix: '+972'}, {code: 'RU', prefix: '+7'}, {code: 'UA', prefix: '+380'},
+                    {code: 'PK', prefix: '+92'}, {code: 'BD', prefix: '+880'}, {code: 'PH', prefix: '+63'},
+                    {code: 'TH', prefix: '+66'}, {code: 'VN', prefix: '+84'}, {code: 'ID', prefix: '+62'},
+                    {code: 'MY', prefix: '+60'}, {code: 'SG', prefix: '+65'}, {code: 'HK', prefix: '+852'},
+                    {code: 'TW', prefix: '+886'}
+                ];
+                const country = inlineCountryData.find(c => c.code === countryCode);
+                if (country) {
+                    countryPrefix = country.prefix;
+                }
+            }
+            
+            if (!countryPrefix) {
+                errorElement.textContent = 'Please select a valid country code';
+                errorElement.classList.remove('d-none');
+                return;
+            }
+            
             const getPhoneValidationRulesFunc = window.getPhoneValidationRules || (typeof getPhoneValidationRules !== 'undefined' ? getPhoneValidationRules : null);
             const phoneRules = getPhoneValidationRulesFunc ? getPhoneValidationRulesFunc(countryCode) : null;
             
@@ -755,12 +812,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = true;
             }
             
-            // Form data
+            // Form data - send prefix as country_code
             const formData = {
                 first_name: document.getElementById('signup-first-name').value,
                 last_name: document.getElementById('signup-last-name').value,
                 email: document.getElementById('signup-email').value,
-                country_code: countryCode,
+                country_code: countryPrefix, // Send prefix like "+92" instead of country code "PK"
                 phone: phoneInput.value,
                 password: password,
                 password_confirmation: confirmPassword,

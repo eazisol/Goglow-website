@@ -238,6 +238,89 @@
                                     setTimeout(populateCountryDropdown, 100);
                                     setTimeout(populateCountryDropdown, 500);
                                 })();
+                                
+                                // Convert country code to prefix before form submission
+                                const signupForm = document.querySelector('form[action*="signup.store"]');
+                                if (signupForm) {
+                                    signupForm.addEventListener('submit', function(e) {
+                                        const countryCodeSelect = document.getElementById('country-code');
+                                        if (countryCodeSelect && countryCodeSelect.value) {
+                                            // Find the country by code to get the prefix
+                                            const countryCode = countryCodeSelect.value;
+                                            const countryList = [
+                                                {code: 'US', name: 'United States', prefix: '+1'},
+                                                {code: 'GB', name: 'United Kingdom', prefix: '+44'},
+                                                {code: 'CA', name: 'Canada', prefix: '+1'},
+                                                {code: 'AU', name: 'Australia', prefix: '+61'},
+                                                {code: 'DE', name: 'Germany', prefix: '+49'},
+                                                {code: 'FR', name: 'France', prefix: '+33'},
+                                                {code: 'IT', name: 'Italy', prefix: '+39'},
+                                                {code: 'ES', name: 'Spain', prefix: '+34'},
+                                                {code: 'NL', name: 'Netherlands', prefix: '+31'},
+                                                {code: 'BE', name: 'Belgium', prefix: '+32'},
+                                                {code: 'CH', name: 'Switzerland', prefix: '+41'},
+                                                {code: 'AT', name: 'Austria', prefix: '+43'},
+                                                {code: 'SE', name: 'Sweden', prefix: '+46'},
+                                                {code: 'NO', name: 'Norway', prefix: '+47'},
+                                                {code: 'DK', name: 'Denmark', prefix: '+45'},
+                                                {code: 'FI', name: 'Finland', prefix: '+358'},
+                                                {code: 'PL', name: 'Poland', prefix: '+48'},
+                                                {code: 'PT', name: 'Portugal', prefix: '+351'},
+                                                {code: 'GR', name: 'Greece', prefix: '+30'},
+                                                {code: 'IE', name: 'Ireland', prefix: '+353'},
+                                                {code: 'NZ', name: 'New Zealand', prefix: '+64'},
+                                                {code: 'JP', name: 'Japan', prefix: '+81'},
+                                                {code: 'KR', name: 'South Korea', prefix: '+82'},
+                                                {code: 'CN', name: 'China', prefix: '+86'},
+                                                {code: 'IN', name: 'India', prefix: '+91'},
+                                                {code: 'BR', name: 'Brazil', prefix: '+55'},
+                                                {code: 'MX', name: 'Mexico', prefix: '+52'},
+                                                {code: 'AR', name: 'Argentina', prefix: '+54'},
+                                                {code: 'ZA', name: 'South Africa', prefix: '+27'},
+                                                {code: 'AE', name: 'UAE', prefix: '+971'},
+                                                {code: 'SA', name: 'Saudi Arabia', prefix: '+966'},
+                                                {code: 'EG', name: 'Egypt', prefix: '+20'},
+                                                {code: 'NG', name: 'Nigeria', prefix: '+234'},
+                                                {code: 'KE', name: 'Kenya', prefix: '+254'},
+                                                {code: 'GH', name: 'Ghana', prefix: '+233'},
+                                                {code: 'MA', name: 'Morocco', prefix: '+212'},
+                                                {code: 'TN', name: 'Tunisia', prefix: '+216'},
+                                                {code: 'DZ', name: 'Algeria', prefix: '+213'},
+                                                {code: 'TR', name: 'Turkey', prefix: '+90'},
+                                                {code: 'IL', name: 'Israel', prefix: '+972'},
+                                                {code: 'RU', name: 'Russia', prefix: '+7'},
+                                                {code: 'UA', name: 'Ukraine', prefix: '+380'},
+                                                {code: 'PK', name: 'Pakistan', prefix: '+92'},
+                                                {code: 'BD', name: 'Bangladesh', prefix: '+880'},
+                                                {code: 'PH', name: 'Philippines', prefix: '+63'},
+                                                {code: 'TH', name: 'Thailand', prefix: '+66'},
+                                                {code: 'VN', name: 'Vietnam', prefix: '+84'},
+                                                {code: 'ID', name: 'Indonesia', prefix: '+62'},
+                                                {code: 'MY', name: 'Malaysia', prefix: '+60'},
+                                                {code: 'SG', name: 'Singapore', prefix: '+65'},
+                                                {code: 'HK', name: 'Hong Kong', prefix: '+852'},
+                                                {code: 'TW', name: 'Taiwan', prefix: '+886'}
+                                            ];
+                                            
+                                            const country = countryList.find(c => c.code === countryCode);
+                                            if (country && country.prefix) {
+                                                // Create a hidden input with the prefix value
+                                                let hiddenInput = document.getElementById('country-code-prefix');
+                                                if (!hiddenInput) {
+                                                    hiddenInput = document.createElement('input');
+                                                    hiddenInput.type = 'hidden';
+                                                    hiddenInput.name = 'country_code';
+                                                    hiddenInput.id = 'country-code-prefix';
+                                                    signupForm.appendChild(hiddenInput);
+                                                }
+                                                hiddenInput.value = country.prefix;
+                                                
+                                                // Remove the original select from submission
+                                                countryCodeSelect.disabled = true;
+                                            }
+                                        }
+                                    });
+                                }
                                 </script>
 
                                 <div class="form-group col-md-12 mb-4">
