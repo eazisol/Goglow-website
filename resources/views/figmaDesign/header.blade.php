@@ -30,7 +30,7 @@
                       <img src="{{ asset('images/images/flowbite_user-solid.svg') }}" alt="Profile" style="width:33px; margin-left: 5px; cursor: pointer;">
                   </button>
                   <div class="profile-dropdown-menu" id="profile-dropdown-menu">
-                      <a href="#" class="dropdown-item logout-item" onclick="event.preventDefault(); document.getElementById('logout-form-figma').submit();">
+                      <a href="#" class="dropdown-item logout-item" id="logout-link">
                           <span>{{ __('app.nav.logout') }}</span>
                       </a>
                   </div>
@@ -41,6 +41,41 @@
           @endif
     </div>
   </nav>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutLink = document.getElementById('logout-link');
+        const logoutForm = document.getElementById('logout-form-figma');
+        
+        if (logoutLink && logoutForm) {
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Function to submit form
+                const submitLogout = () => {
+                   logoutForm.submit();
+                };
+                
+                // Try to sign out from Firebase first
+                if (window.firebase && window.firebase.auth) {
+                    firebase.auth().signOut()
+                        .then(() => {
+                            console.log('Firebase signed out successfully');
+                            submitLogout();
+                        })
+                        .catch((error) => {
+                            console.error('Firebase sign out error:', error);
+                            // Still submit form even if firebase logout fails
+                            submitLogout();
+                        });
+                } else {
+                    // Firebase not available, just submit
+                    submitLogout();
+                }
+            });
+        }
+    });
+  </script>
 
 
   <!-- Sidebar for Mobile -->

@@ -284,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Log logged-in user data at page load
     console.log('Logged-in user ID:', bookingBootstrap.userId);
     console.log('Logged-in user data:', bookingBootstrap.userData);
+    console.log('fire-base-status', firebase.auth().currentUser);
     
     // Debug: Log service data to verify ownerMail and ownerProfile are present
     if (bookingBootstrap.service) {
