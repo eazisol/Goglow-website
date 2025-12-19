@@ -64,6 +64,7 @@ return [
         'continue_with_google' => 'Continue with Google',
         'continue_with_apple' => 'Continue with Apple',
         'use_email_password' => 'Email & password',
+        'select_country' => 'Select Country',
     ],
 
     // Booking

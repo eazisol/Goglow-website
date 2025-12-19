@@ -99,9 +99,146 @@
                                 </div>
 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="tel" name="phone" class="form-control" id="phone" placeholder="{{ __('app.auth.phone') }}" value="{{ old('phone') }}" required>
+                                    <label class="form-label">{{ __('app.auth.phone') }}</label>
+                                    <div class="phone-input-group">
+                                        <select name="country_code" class="form-control country-code-select" id="country-code" required data-old-value="{{ old('country_code') }}" data-initialized="false">
+                                            <option value="">{{ __('app.auth.select_country') }}</option>
+                                        </select>
+                                        
+                                        <input type="tel" name="phone" class="form-control phone-input" id="phone" placeholder="{{ __('app.auth.phone') }}" value="{{ old('phone') }}" required>
+                                    </div>
                                     <div class="help-block with-errors"></div>
                                 </div>
+                                
+                                <script>
+                                // Inline country data and initialization for signup page
+                                (function() {
+                                    // Function to get flag emoji from country code
+                                    function getCountryFlag(code) {
+                                        const flagMap = {
+                                            'US': '🇺🇸', 'GB': '🇬🇧', 'CA': '🇨🇦', 'AU': '🇦🇺', 'DE': '🇩🇪',
+                                            'FR': '🇫🇷', 'IT': '🇮🇹', 'ES': '🇪🇸', 'NL': '🇳🇱', 'BE': '🇧🇪',
+                                            'CH': '🇨🇭', 'AT': '🇦🇹', 'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰',
+                                            'FI': '🇫🇮', 'PL': '🇵🇱', 'PT': '🇵🇹', 'GR': '🇬🇷', 'IE': '🇮🇪',
+                                            'NZ': '🇳🇿', 'JP': '🇯🇵', 'KR': '🇰🇷', 'CN': '🇨🇳', 'IN': '🇮🇳',
+                                            'BR': '🇧🇷', 'MX': '🇲🇽', 'AR': '🇦🇷', 'ZA': '🇿🇦', 'AE': '🇦🇪',
+                                            'SA': '🇸🇦', 'EG': '🇪🇬', 'NG': '🇳🇬', 'KE': '🇰🇪', 'GH': '🇬🇭',
+                                            'MA': '🇲🇦', 'TN': '🇹🇳', 'DZ': '🇩🇿', 'TR': '🇹🇷', 'IL': '🇮🇱',
+                                            'RU': '🇷🇺', 'UA': '🇺🇦', 'PK': '🇵🇰', 'BD': '🇧🇩', 'PH': '🇵🇭',
+                                            'TH': '🇹🇭', 'VN': '🇻🇳', 'ID': '🇮🇩', 'MY': '🇲🇾', 'SG': '🇸🇬',
+                                            'HK': '🇭🇰', 'TW': '🇹🇼'
+                                        };
+                                        return flagMap[code] || '🏳️';
+                                    }
+                                    
+                                    const countryList = [
+                                        {code: 'US', name: 'United States', prefix: '+1'},
+                                        {code: 'GB', name: 'United Kingdom', prefix: '+44'},
+                                        {code: 'CA', name: 'Canada', prefix: '+1'},
+                                        {code: 'AU', name: 'Australia', prefix: '+61'},
+                                        {code: 'DE', name: 'Germany', prefix: '+49'},
+                                        {code: 'FR', name: 'France', prefix: '+33'},
+                                        {code: 'IT', name: 'Italy', prefix: '+39'},
+                                        {code: 'ES', name: 'Spain', prefix: '+34'},
+                                        {code: 'NL', name: 'Netherlands', prefix: '+31'},
+                                        {code: 'BE', name: 'Belgium', prefix: '+32'},
+                                        {code: 'CH', name: 'Switzerland', prefix: '+41'},
+                                        {code: 'AT', name: 'Austria', prefix: '+43'},
+                                        {code: 'SE', name: 'Sweden', prefix: '+46'},
+                                        {code: 'NO', name: 'Norway', prefix: '+47'},
+                                        {code: 'DK', name: 'Denmark', prefix: '+45'},
+                                        {code: 'FI', name: 'Finland', prefix: '+358'},
+                                        {code: 'PL', name: 'Poland', prefix: '+48'},
+                                        {code: 'PT', name: 'Portugal', prefix: '+351'},
+                                        {code: 'GR', name: 'Greece', prefix: '+30'},
+                                        {code: 'IE', name: 'Ireland', prefix: '+353'},
+                                        {code: 'NZ', name: 'New Zealand', prefix: '+64'},
+                                        {code: 'JP', name: 'Japan', prefix: '+81'},
+                                        {code: 'KR', name: 'South Korea', prefix: '+82'},
+                                        {code: 'CN', name: 'China', prefix: '+86'},
+                                        {code: 'IN', name: 'India', prefix: '+91'},
+                                        {code: 'BR', name: 'Brazil', prefix: '+55'},
+                                        {code: 'MX', name: 'Mexico', prefix: '+52'},
+                                        {code: 'AR', name: 'Argentina', prefix: '+54'},
+                                        {code: 'ZA', name: 'South Africa', prefix: '+27'},
+                                        {code: 'AE', name: 'UAE', prefix: '+971'},
+                                        {code: 'SA', name: 'Saudi Arabia', prefix: '+966'},
+                                        {code: 'EG', name: 'Egypt', prefix: '+20'},
+                                        {code: 'NG', name: 'Nigeria', prefix: '+234'},
+                                        {code: 'KE', name: 'Kenya', prefix: '+254'},
+                                        {code: 'GH', name: 'Ghana', prefix: '+233'},
+                                        {code: 'MA', name: 'Morocco', prefix: '+212'},
+                                        {code: 'TN', name: 'Tunisia', prefix: '+216'},
+                                        {code: 'DZ', name: 'Algeria', prefix: '+213'},
+                                        {code: 'TR', name: 'Turkey', prefix: '+90'},
+                                        {code: 'IL', name: 'Israel', prefix: '+972'},
+                                        {code: 'RU', name: 'Russia', prefix: '+7'},
+                                        {code: 'UA', name: 'Ukraine', prefix: '+380'},
+                                        {code: 'PK', name: 'Pakistan', prefix: '+92'},
+                                        {code: 'BD', name: 'Bangladesh', prefix: '+880'},
+                                        {code: 'PH', name: 'Philippines', prefix: '+63'},
+                                        {code: 'TH', name: 'Thailand', prefix: '+66'},
+                                        {code: 'VN', name: 'Vietnam', prefix: '+84'},
+                                        {code: 'ID', name: 'Indonesia', prefix: '+62'},
+                                        {code: 'MY', name: 'Malaysia', prefix: '+60'},
+                                        {code: 'SG', name: 'Singapore', prefix: '+65'},
+                                        {code: 'HK', name: 'Hong Kong', prefix: '+852'},
+                                        {code: 'TW', name: 'Taiwan', prefix: '+886'}
+                                    ];
+                                    
+                                    function populateCountryDropdown() {
+                                        const select = document.getElementById('country-code');
+                                        if (!select) {
+                                            return false;
+                                        }
+                                        
+                                        if (select.getAttribute('data-initialized') === 'true') {
+                                            return true;
+                                        }
+                                        
+                                        const oldValue = select.getAttribute('data-old-value') || '';
+                                        
+                                        // Clear placeholder
+                                        while (select.options.length > 1) {
+                                            select.remove(1);
+                                        }
+                                        
+                                        // Add countries with flags
+                                        countryList.forEach(function(country) {
+                                            const option = document.createElement('option');
+                                            option.value = country.code;
+                                            option.textContent = getCountryFlag(country.code) + ' ' + country.prefix;
+                                            if (oldValue === country.code) {
+                                                option.selected = true;
+                                            }
+                                            select.appendChild(option);
+                                        });
+                                        
+                                        // Set default to US if no old value
+                                        if (!oldValue) {
+                                            const usOption = select.querySelector('option[value="US"]');
+                                            if (usOption) {
+                                                usOption.selected = true;
+                                            }
+                                        }
+                                        
+                                        select.setAttribute('data-initialized', 'true');
+                                        console.log('Signup page country dropdown populated with', countryList.length, 'countries');
+                                        return true;
+                                    }
+                                    
+                                    // Try immediately
+                                    if (document.readyState === 'loading') {
+                                        document.addEventListener('DOMContentLoaded', populateCountryDropdown);
+                                    } else {
+                                        populateCountryDropdown();
+                                    }
+                                    
+                                    // Also try after delays
+                                    setTimeout(populateCountryDropdown, 100);
+                                    setTimeout(populateCountryDropdown, 500);
+                                })();
+                                </script>
 
                                 <div class="form-group col-md-12 mb-4">
                                     <div class="input-group">
@@ -145,10 +282,72 @@
 @endsection
 
 @section('scripts')
+<script src="{{ asset('js/country-codes.js') }}"></script>
 <script>
 // client-side light validation feedback
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
+    
+    // Initialize country code dropdown
+    if (typeof getAllCountries !== 'undefined') {
+        const countries = getAllCountries();
+        const countrySelect = document.getElementById('country-code');
+        
+        if (countrySelect) {
+            const oldCountryCode = countrySelect.dataset.oldValue || '';
+            
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country.code;
+                option.textContent = `${country.prefix} - ${country.name}`;
+                if (oldCountryCode === country.code) {
+                    option.selected = true;
+                }
+                countrySelect.appendChild(option);
+            });
+            
+            // Set default to US if no old value
+            if (!oldCountryCode) {
+                const usOption = countrySelect.querySelector('option[value="US"]');
+                if (usOption) {
+                    usOption.selected = true;
+                    updatePhoneValidationForPage();
+                }
+            }
+            
+            // Update phone validation when country changes
+            countrySelect.addEventListener('change', function() {
+                updatePhoneValidationForPage();
+            });
+            
+            // Initialize validation
+            updatePhoneValidationForPage();
+        }
+    }
+    
+    function updatePhoneValidationForPage() {
+        const countrySelect = document.getElementById('country-code');
+        const phoneInput = document.getElementById('phone');
+        
+        if (!countrySelect || !phoneInput || typeof getPhoneValidationRules === 'undefined') {
+            return;
+        }
+        
+        const selectedCountryCode = countrySelect.value;
+        if (!selectedCountryCode) {
+            phoneInput.removeAttribute('minlength');
+            phoneInput.removeAttribute('maxlength');
+            return;
+        }
+        
+        const rules = getPhoneValidationRules(selectedCountryCode);
+        if (rules) {
+            phoneInput.setAttribute('minlength', rules.min);
+            phoneInput.setAttribute('maxlength', rules.max);
+            phoneInput.placeholder = `Phone (${rules.min}-${rules.max} digits)`;
+        }
+    }
+    
     form?.addEventListener('submit', function (e) {
         const password = document.getElementById('password');
         const confirm = document.getElementById('password_confirmation');
@@ -156,6 +355,31 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             alert('{{ __('app.auth.passwords_not_match') }}');
             confirm.focus();
+            return;
+        }
+        
+        // Validate country code and phone
+        const countryCode = document.getElementById('country-code').value;
+        const phoneInput = document.getElementById('phone');
+        
+        if (!countryCode) {
+            e.preventDefault();
+            alert('Please select a country code');
+            document.getElementById('country-code').focus();
+            return;
+        }
+        
+        if (typeof getPhoneValidationRules !== 'undefined') {
+            const rules = getPhoneValidationRules(countryCode);
+            if (rules) {
+                const phoneValue = phoneInput.value.replace(/\D/g, '');
+                if (phoneValue.length < rules.min || phoneValue.length > rules.max) {
+                    e.preventDefault();
+                    alert(`Phone number must be ${rules.min}-${rules.max} digits`);
+                    phoneInput.focus();
+                    return;
+                }
+            }
         }
     });
 });

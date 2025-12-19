@@ -180,6 +180,9 @@
   
   @include('partials.auth-modals')
   
+  <!-- Country codes script must be loaded before auth-modals.js -->
+  <script src="{{ asset('js/country-codes.js') }}" onload="console.log('country-codes.js loaded successfully')" onerror="console.error('Failed to load country-codes.js')"></script>
+  
   <!-- Auth modals script must be loaded after Bootstrap and modals are in the DOM -->
   <script src="{{ asset('js/auth-modals.js') }}"></script>
   

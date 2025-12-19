@@ -311,6 +311,283 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
+    // Country Code and Phone Validation
+    function initializeCountryCodeDropdowns() {
+        // Check if countryCodes is available (try both window and global scope)
+        const getAllCountriesFunc = window.getAllCountries || (typeof getAllCountries !== 'undefined' ? getAllCountries : null);
+        const getPhoneValidationRulesFunc = window.getPhoneValidationRules || (typeof getPhoneValidationRules !== 'undefined' ? getPhoneValidationRules : null);
+        
+        if (!getAllCountriesFunc || !getPhoneValidationRulesFunc) {
+            console.warn('Country codes data not loaded. Please ensure country-codes.js is loaded before auth-modals.js');
+            console.log('getAllCountries available:', typeof getAllCountriesFunc);
+            console.log('getPhoneValidationRules available:', typeof getPhoneValidationRulesFunc);
+            return false;
+        }
+        
+        const countries = getAllCountriesFunc();
+        let initialized = false;
+        
+        console.log('Initializing country dropdowns. Found', countries.length, 'countries');
+        
+        // Populate signup modal dropdown
+        const signupCountrySelect = document.getElementById('signup-country-code');
+        if (signupCountrySelect) {
+            console.log('Found signup country select. Current options:', signupCountrySelect.options.length);
+            
+            // Only populate if not already populated (has only placeholder)
+            if (signupCountrySelect.options.length <= 1) {
+                // Clear existing options except the first one (placeholder)
+                while (signupCountrySelect.options.length > 1) {
+                    signupCountrySelect.remove(1);
+                }
+                
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country.code;
+                    option.textContent = `${country.prefix} - ${country.name}`;
+                    signupCountrySelect.appendChild(option);
+                });
+                
+                console.log('Added', countries.length, 'countries to signup modal dropdown. Total options:', signupCountrySelect.options.length);
+                
+                // Set default to US if available
+                const usOption = signupCountrySelect.querySelector('option[value="US"]');
+                if (usOption) {
+                    usOption.selected = true;
+                    updatePhoneValidation('signup-country-code', 'signup-phone');
+                }
+                
+                initialized = true;
+            } else {
+                console.log('Signup modal dropdown already populated');
+            }
+            
+            // Add change event listener (only once)
+            if (!signupCountrySelect.hasAttribute('data-listener-added')) {
+                signupCountrySelect.setAttribute('data-listener-added', 'true');
+                signupCountrySelect.addEventListener('change', function() {
+                    updatePhoneValidation('signup-country-code', 'signup-phone');
+                });
+            }
+        } else {
+            console.log('Signup country select not found in DOM');
+        }
+        
+        // Populate signup page dropdown
+        const pageCountrySelect = document.getElementById('country-code');
+        if (pageCountrySelect && pageCountrySelect.options.length <= 1) {
+            const oldCountryCode = pageCountrySelect.dataset.oldValue || '';
+            
+            // Clear existing options except the first one (placeholder)
+            while (pageCountrySelect.options.length > 1) {
+                pageCountrySelect.remove(1);
+            }
+            
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country.code;
+                option.textContent = `${country.prefix} - ${country.name}`;
+                // Preserve old value if exists
+                if (oldCountryCode === country.code) {
+                    option.selected = true;
+                }
+                pageCountrySelect.appendChild(option);
+            });
+            
+            // Set default to US if no old value
+            if (!oldCountryCode) {
+                const usOption = pageCountrySelect.querySelector('option[value="US"]');
+                if (usOption) {
+                    usOption.selected = true;
+                    updatePhoneValidation('country-code', 'phone');
+                }
+            } else {
+                updatePhoneValidation('country-code', 'phone');
+            }
+            
+            // Add change event listener (only once)
+            if (!pageCountrySelect.hasAttribute('data-listener-added')) {
+                pageCountrySelect.setAttribute('data-listener-added', 'true');
+                pageCountrySelect.addEventListener('change', function() {
+                    updatePhoneValidation('country-code', 'phone');
+                });
+            }
+            
+            initialized = true;
+            console.log('Signup page country dropdown initialized');
+        }
+        
+        return initialized;
+    }
+    
+    function updatePhoneValidation(countrySelectId, phoneInputId) {
+        const countrySelect = document.getElementById(countrySelectId);
+        const phoneInput = document.getElementById(phoneInputId);
+        
+        if (!countrySelect || !phoneInput) {
+            return;
+        }
+        
+        const selectedCountryCode = countrySelect.value;
+        if (!selectedCountryCode) {
+            phoneInput.removeAttribute('minlength');
+            phoneInput.removeAttribute('maxlength');
+            phoneInput.setCustomValidity('Please select a country code');
+            return;
+        }
+        
+        const getPhoneValidationRulesFunc = window.getPhoneValidationRules || (typeof getPhoneValidationRules !== 'undefined' ? getPhoneValidationRules : null);
+        const getCountryByCodeFunc = window.getCountryByCode || (typeof getCountryByCode !== 'undefined' ? getCountryByCode : null);
+        
+        if (!getPhoneValidationRulesFunc) {
+            console.warn('getPhoneValidationRules function not available');
+            return;
+        }
+        
+        const rules = getPhoneValidationRulesFunc(selectedCountryCode);
+        if (rules) {
+            phoneInput.setAttribute('minlength', rules.min);
+            phoneInput.setAttribute('maxlength', rules.max);
+            phoneInput.setCustomValidity('');
+            
+            // Update placeholder with expected format
+            if (getCountryByCodeFunc) {
+                const countryData = getCountryByCodeFunc(selectedCountryCode);
+                if (countryData) {
+                    phoneInput.placeholder = `Phone (${rules.min}-${rules.max} digits)`;
+                }
+            }
+        } else {
+            phoneInput.removeAttribute('minlength');
+            phoneInput.removeAttribute('maxlength');
+            phoneInput.setCustomValidity('');
+        }
+        
+        // Validate current value if any
+        if (phoneInput.value) {
+            validatePhoneNumber(phoneInput, rules);
+        }
+    }
+    
+    function validatePhoneNumber(phoneInput, rules) {
+        if (!rules) {
+            return true;
+        }
+        
+        const phoneValue = phoneInput.value.replace(/\D/g, ''); // Remove non-digits
+        const length = phoneValue.length;
+        
+        if (length < rules.min || length > rules.max) {
+            phoneInput.setCustomValidity(`Phone number must be ${rules.min}-${rules.max} digits`);
+            return false;
+        } else {
+            phoneInput.setCustomValidity('');
+            return true;
+        }
+    }
+    
+    // Initialize country code dropdowns when DOM is ready
+    function tryInitializeCountryCodes() {
+        // Check for the direct initialization function first (from country-codes.js)
+        if (typeof window.initializeCountryDropdowns === 'function') {
+            console.log('Using direct initialization function from country-codes.js');
+            return window.initializeCountryDropdowns();
+        }
+        
+        // Fallback to checking individual functions
+        const getAllCountriesFunc = window.getAllCountries || (typeof getAllCountries !== 'undefined' ? getAllCountries : null);
+        const getPhoneValidationRulesFunc = window.getPhoneValidationRules || (typeof getPhoneValidationRules !== 'undefined' ? getPhoneValidationRules : null);
+        
+        if (!getAllCountriesFunc || !getPhoneValidationRulesFunc) {
+            console.warn('Country codes data not loaded yet. Retrying...');
+            console.log('window.getAllCountries:', typeof window.getAllCountries);
+            console.log('window.initializeCountryDropdowns:', typeof window.initializeCountryDropdowns);
+            return false;
+        }
+        
+        return initializeCountryCodeDropdowns();
+    }
+    
+    // Wait for country-codes.js to load
+    function waitForCountryCodes(maxAttempts = 20, attempt = 0) {
+        if (typeof window.initializeCountryDropdowns === 'function' || 
+            (typeof window.getAllCountries === 'function' && typeof window.getPhoneValidationRules === 'function')) {
+            console.log('Country codes loaded, initializing dropdowns');
+            tryInitializeCountryCodes();
+            return;
+        }
+        
+        if (attempt < maxAttempts) {
+            setTimeout(() => waitForCountryCodes(maxAttempts, attempt + 1), 100);
+        } else {
+            console.error('Country codes script failed to load after', maxAttempts, 'attempts');
+        }
+    }
+    
+    // Wait for country-codes.js to load, then initialize
+    waitForCountryCodes();
+    
+    // Also try after delays as backup
+    setTimeout(() => waitForCountryCodes(10, 0), 500);
+    setTimeout(() => waitForCountryCodes(5, 0), 1000);
+    
+    // Initialize when signup modal is shown (Bootstrap 5 event)
+    if (signupModalElement) {
+        signupModalElement.addEventListener('shown.bs.modal', function() {
+            console.log('Signup modal shown - initializing country codes');
+            setTimeout(function() {
+                // Wait for country codes to be available
+                let attempts = 0;
+                const maxAttempts = 10;
+                
+                function tryInitOnModalShow() {
+                    attempts++;
+                    
+                    if (typeof window.initializeCountryDropdowns === 'function') {
+                        console.log('Initializing dropdowns using country-codes.js function');
+                        window.initializeCountryDropdowns();
+                        return;
+                    }
+                    
+                    if (tryInitializeCountryCodes()) {
+                        console.log('Country codes initialized successfully');
+                        return;
+                    }
+                    
+                    if (attempts < maxAttempts) {
+                        setTimeout(tryInitOnModalShow, 100);
+                    } else {
+                        console.error('Failed to initialize country codes after', maxAttempts, 'attempts');
+                    }
+                }
+                
+                tryInitOnModalShow();
+            }, 100);
+        });
+    }
+    
+    // Also listen for modal show event using jQuery if available
+    if (typeof $ !== 'undefined') {
+        $(document).on('shown.bs.modal', '#signupModal', function() {
+            console.log('Signup modal shown (jQuery) - initializing country codes');
+            setTimeout(function() {
+                if (!tryInitializeCountryCodes() && typeof window.initializeCountryDropdowns === 'function') {
+                    window.initializeCountryDropdowns();
+                }
+            }, 100);
+        });
+    }
+    
+    // Force initialization on window load as backup
+    window.addEventListener('load', function() {
+        console.log('Window loaded - attempting to initialize country codes');
+        setTimeout(function() {
+            if (!tryInitializeCountryCodes() && typeof window.initializeCountryDropdowns === 'function') {
+                window.initializeCountryDropdowns();
+            }
+        }, 200);
+    });
+    
     // Handle login form submission
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
@@ -451,6 +728,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            // Validate phone number before submission
+            const countryCodeSelect = document.getElementById('signup-country-code');
+            const phoneInput = document.getElementById('signup-phone');
+            
+            if (!countryCodeSelect || !countryCodeSelect.value) {
+                errorElement.textContent = 'Please select a country code';
+                errorElement.classList.remove('d-none');
+                return;
+            }
+            
+            const countryCode = countryCodeSelect.value;
+            const getPhoneValidationRulesFunc = window.getPhoneValidationRules || (typeof getPhoneValidationRules !== 'undefined' ? getPhoneValidationRules : null);
+            const phoneRules = getPhoneValidationRulesFunc ? getPhoneValidationRulesFunc(countryCode) : null;
+            
+            if (phoneRules && !validatePhoneNumber(phoneInput, phoneRules)) {
+                errorElement.textContent = `Phone number must be ${phoneRules.min}-${phoneRules.max} digits`;
+                errorElement.classList.remove('d-none');
+                return;
+            }
+            
             // Show loader and disable button
             if (submitBtn && btnText && btnLoader) {
                 btnText.style.display = 'none';
@@ -463,7 +760,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 first_name: document.getElementById('signup-first-name').value,
                 last_name: document.getElementById('signup-last-name').value,
                 email: document.getElementById('signup-email').value,
-                phone: document.getElementById('signup-phone').value,
+                country_code: countryCode,
+                phone: phoneInput.value,
                 password: password,
                 password_confirmation: confirmPassword,
                 terms: document.getElementById('signup-terms').checked ? 1 : 0

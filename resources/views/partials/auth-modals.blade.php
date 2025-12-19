@@ -108,9 +108,158 @@
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <input type="tel" name="phone" class="form-control-login" id="signup-phone" placeholder="{{ __('app.auth.phone') }}" required>
+                                <div class="phone-input-group">
+                                    <select name="country_code" class="form-control-login country-code-select" id="signup-country-code" required data-initialized="false">
+                                        <option value="">{{ __('app.auth.select_country') }}</option>
+                                    </select>
+                                    
+                                    <input type="tel" name="phone" class="form-control-login phone-input" id="signup-phone" placeholder="{{ __('app.auth.phone') }}" required>
+                                </div>
                                 <div class="help-block with-errors"></div>
                             </div>
+                            
+                            <script>
+                            // Inline country data and initialization - embedded directly to ensure it works
+                            (function() {
+                                // Function to get flag emoji from country code
+                                function getCountryFlag(code) {
+                                    const flagMap = {
+                                        'US': '🇺🇸', 'GB': '🇬🇧', 'CA': '🇨🇦', 'AU': '🇦🇺', 'DE': '🇩🇪',
+                                        'FR': '🇫🇷', 'IT': '🇮🇹', 'ES': '🇪🇸', 'NL': '🇳🇱', 'BE': '🇧🇪',
+                                        'CH': '🇨🇭', 'AT': '🇦🇹', 'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰',
+                                        'FI': '🇫🇮', 'PL': '🇵🇱', 'PT': '🇵🇹', 'GR': '🇬🇷', 'IE': '🇮🇪',
+                                        'NZ': '🇳🇿', 'JP': '🇯🇵', 'KR': '🇰🇷', 'CN': '🇨🇳', 'IN': '🇮🇳',
+                                        'BR': '🇧🇷', 'MX': '🇲🇽', 'AR': '🇦🇷', 'ZA': '🇿🇦', 'AE': '🇦🇪',
+                                        'SA': '🇸🇦', 'EG': '🇪🇬', 'NG': '🇳🇬', 'KE': '🇰🇪', 'GH': '🇬🇭',
+                                        'MA': '🇲🇦', 'TN': '🇹🇳', 'DZ': '🇩🇿', 'TR': '🇹🇷', 'IL': '🇮🇱',
+                                        'RU': '🇷🇺', 'UA': '🇺🇦', 'PK': '🇵🇰', 'BD': '🇧🇩', 'PH': '🇵🇭',
+                                        'TH': '🇹🇭', 'VN': '🇻🇳', 'ID': '🇮🇩', 'MY': '🇲🇾', 'SG': '🇸🇬',
+                                        'HK': '🇭🇰', 'TW': '🇹🇼'
+                                    };
+                                    return flagMap[code] || '🏳️';
+                                }
+                                
+                                // Country list embedded directly
+                                const countryList = [
+                                    {code: 'US', name: 'United States', prefix: '+1'},
+                                    {code: 'GB', name: 'United Kingdom', prefix: '+44'},
+                                    {code: 'CA', name: 'Canada', prefix: '+1'},
+                                    {code: 'AU', name: 'Australia', prefix: '+61'},
+                                    {code: 'DE', name: 'Germany', prefix: '+49'},
+                                    {code: 'FR', name: 'France', prefix: '+33'},
+                                    {code: 'IT', name: 'Italy', prefix: '+39'},
+                                    {code: 'ES', name: 'Spain', prefix: '+34'},
+                                    {code: 'NL', name: 'Netherlands', prefix: '+31'},
+                                    {code: 'BE', name: 'Belgium', prefix: '+32'},
+                                    {code: 'CH', name: 'Switzerland', prefix: '+41'},
+                                    {code: 'AT', name: 'Austria', prefix: '+43'},
+                                    {code: 'SE', name: 'Sweden', prefix: '+46'},
+                                    {code: 'NO', name: 'Norway', prefix: '+47'},
+                                    {code: 'DK', name: 'Denmark', prefix: '+45'},
+                                    {code: 'FI', name: 'Finland', prefix: '+358'},
+                                    {code: 'PL', name: 'Poland', prefix: '+48'},
+                                    {code: 'PT', name: 'Portugal', prefix: '+351'},
+                                    {code: 'GR', name: 'Greece', prefix: '+30'},
+                                    {code: 'IE', name: 'Ireland', prefix: '+353'},
+                                    {code: 'NZ', name: 'New Zealand', prefix: '+64'},
+                                    {code: 'JP', name: 'Japan', prefix: '+81'},
+                                    {code: 'KR', name: 'South Korea', prefix: '+82'},
+                                    {code: 'CN', name: 'China', prefix: '+86'},
+                                    {code: 'IN', name: 'India', prefix: '+91'},
+                                    {code: 'BR', name: 'Brazil', prefix: '+55'},
+                                    {code: 'MX', name: 'Mexico', prefix: '+52'},
+                                    {code: 'AR', name: 'Argentina', prefix: '+54'},
+                                    {code: 'ZA', name: 'South Africa', prefix: '+27'},
+                                    {code: 'AE', name: 'UAE', prefix: '+971'},
+                                    {code: 'SA', name: 'Saudi Arabia', prefix: '+966'},
+                                    {code: 'EG', name: 'Egypt', prefix: '+20'},
+                                    {code: 'NG', name: 'Nigeria', prefix: '+234'},
+                                    {code: 'KE', name: 'Kenya', prefix: '+254'},
+                                    {code: 'GH', name: 'Ghana', prefix: '+233'},
+                                    {code: 'MA', name: 'Morocco', prefix: '+212'},
+                                    {code: 'TN', name: 'Tunisia', prefix: '+216'},
+                                    {code: 'DZ', name: 'Algeria', prefix: '+213'},
+                                    {code: 'TR', name: 'Turkey', prefix: '+90'},
+                                    {code: 'IL', name: 'Israel', prefix: '+972'},
+                                    {code: 'RU', name: 'Russia', prefix: '+7'},
+                                    {code: 'UA', name: 'Ukraine', prefix: '+380'},
+                                    {code: 'PK', name: 'Pakistan', prefix: '+92'},
+                                    {code: 'BD', name: 'Bangladesh', prefix: '+880'},
+                                    {code: 'PH', name: 'Philippines', prefix: '+63'},
+                                    {code: 'TH', name: 'Thailand', prefix: '+66'},
+                                    {code: 'VN', name: 'Vietnam', prefix: '+84'},
+                                    {code: 'ID', name: 'Indonesia', prefix: '+62'},
+                                    {code: 'MY', name: 'Malaysia', prefix: '+60'},
+                                    {code: 'SG', name: 'Singapore', prefix: '+65'},
+                                    {code: 'HK', name: 'Hong Kong', prefix: '+852'},
+                                    {code: 'TW', name: 'Taiwan', prefix: '+886'}
+                                ];
+                                
+                                function populateCountryDropdown() {
+                                    const select = document.getElementById('signup-country-code');
+                                    if (!select) {
+                                        console.log('Signup country select not found');
+                                        return false;
+                                    }
+                                    
+                                    if (select.getAttribute('data-initialized') === 'true') {
+                                        return true;
+                                    }
+                                    
+                                    // Clear placeholder
+                                    while (select.options.length > 1) {
+                                        select.remove(1);
+                                    }
+                                    
+                                    // Add countries with flags
+                                    countryList.forEach(function(country) {
+                                        const option = document.createElement('option');
+                                        option.value = country.code;
+                                        option.textContent = getCountryFlag(country.code) + ' ' + country.prefix;
+                                        select.appendChild(option);
+                                    });
+                                    
+                                    // Set default to US
+                                    const usOption = select.querySelector('option[value="US"]');
+                                    if (usOption) {
+                                        usOption.selected = true;
+                                    }
+                                    
+                                    select.setAttribute('data-initialized', 'true');
+                                    console.log('Country dropdown populated with', countryList.length, 'countries');
+                                    return true;
+                                }
+                                
+                                // Try immediately if element exists
+                                if (document.getElementById('signup-country-code')) {
+                                    populateCountryDropdown();
+                                }
+                                
+                                // Also try when modal is shown
+                                const modal = document.getElementById('signupModal');
+                                if (modal) {
+                                    modal.addEventListener('shown.bs.modal', function() {
+                                        setTimeout(function() {
+                                            populateCountryDropdown();
+                                        }, 50);
+                                    });
+                                }
+                                
+                                // jQuery fallback
+                                if (typeof $ !== 'undefined') {
+                                    $(document).on('shown.bs.modal', '#signupModal', function() {
+                                        setTimeout(function() {
+                                            populateCountryDropdown();
+                                        }, 50);
+                                    });
+                                }
+                                
+                                // Also try after delays
+                                setTimeout(populateCountryDropdown, 200);
+                                setTimeout(populateCountryDropdown, 500);
+                                setTimeout(populateCountryDropdown, 1000);
+                            })();
+                            </script>
 
                             <div class="form-group col-md-6 mb-4">
                                 <div class="input-group" style="flex-wrap: initial;">
@@ -506,4 +655,44 @@
     setTimeout(setupOAuthHandlers, 500);
     setTimeout(setupOAuthHandlers, 1000);
   })();
-</script>
+ </script>
+ 
+ <script>
+ // Initialize country dropdown when signup modal is shown
+ document.addEventListener('DOMContentLoaded', function() {
+     function initCountryDropdown() {
+         if (typeof window.initializeCountryDropdowns === 'function') {
+             window.initializeCountryDropdowns();
+         } else if (typeof window.getAllCountries === 'function') {
+             // Fallback: populate manually
+             const countries = window.getAllCountries();
+             const signupSelect = document.getElementById('signup-country-code');
+             if (signupSelect && signupSelect.options.length <= 1) {
+                 countries.forEach(country => {
+                     const option = document.createElement('option');
+                     option.value = country.code;
+                     option.textContent = country.prefix + ' - ' + country.name;
+                     signupSelect.appendChild(option);
+                 });
+                 const usOption = signupSelect.querySelector('option[value="US"]');
+                 if (usOption) usOption.selected = true;
+             }
+         }
+     }
+     
+     // Try when modal is shown
+     const signupModal = document.getElementById('signupModal');
+     if (signupModal) {
+         signupModal.addEventListener('shown.bs.modal', function() {
+             setTimeout(initCountryDropdown, 100);
+         });
+     }
+     
+     // Also try with jQuery
+     if (typeof $ !== 'undefined') {
+         $(document).on('shown.bs.modal', '#signupModal', function() {
+             setTimeout(initCountryDropdown, 100);
+         });
+     }
+ });
+ </script>

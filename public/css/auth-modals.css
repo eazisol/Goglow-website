@@ -489,3 +489,96 @@
         width: 150px;
     }
 }
+
+/* Phone Input Group Styling */
+.phone-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+.phone-input-group:focus-within {
+    border-color: var(--primary-color, #007bff);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.country-code-select {
+    flex-shrink: 0;
+    width: 95px;
+    border: none;
+    border-right: 1px solid #ddd;
+    border-radius: 0;
+    padding: 8px 12px;
+    background-color: #fff;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 30px;
+}
+
+.country-code-select:focus {
+    outline: none;
+    background-color: #fff;
+}
+
+.phone-divider {
+    flex-shrink: 0;
+    padding: 0 8px;
+    color: #999;
+    font-size: 16px;
+    user-select: none;
+}
+
+.phone-input {
+    flex: 1;
+    border: none;
+    border-radius: 0;
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 0;
+}
+
+.phone-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* For signup page form (not modal) */
+.appointment-form .phone-input-group {
+    border: 1px solid #ddd;
+}
+
+.appointment-form .phone-input-group:focus-within {
+    border-color: var(--primary-color, #007bff);
+}
+
+.appointment-form .country-code-select {
+    border-right: 1px solid #ddd;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .country-code-select {
+        width: 100px;
+        font-size: 13px;
+        padding: 8px 28px 8px 10px;
+    }
+    
+    .phone-divider {
+        padding: 0 6px;
+        font-size: 14px;
+    }
+    
+    .phone-input {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+}
