@@ -1282,13 +1282,52 @@ document.addEventListener('DOMContentLoaded', function () {
         // Wait for period selection to render slots, then restore time slot
         setTimeout(() => {
             if (state.selectedDate && state.selectedTime && selectedDateInput && selectedTimeInput) {
+                // Check if mobile or desktop view
+                const isMobile = isMobileView();
+                const slotSelector = isMobile 
+                    ? `.mobile-time-slot[data-date="${state.selectedDate}"][data-time="${state.selectedTime}"]`
+                    : `.time-slot[data-date="${state.selectedDate}"][data-time="${state.selectedTime}"]`;
+                
                 // Find and click the time slot
-                const timeSlot = document.querySelector(
-                    `.time-slot[data-date="${state.selectedDate}"][data-time="${state.selectedTime}"]`
-                );
+                let timeSlot = document.querySelector(slotSelector);
+                
+                // On mobile, if slot not found, it might be in "See More" section - try to expand it
+                if (!timeSlot && isMobile && state.selectedPeriod) {
+                    // Find the period container that should have this slot
+                    const periodContainer = document.querySelector(
+                        `.mobile-period-slots[data-period="${state.selectedPeriod}"]`
+                    );
+                    
+                    if (periodContainer && periodContainer.dataset.hasMore === 'true') {
+                        // Check if the slot is in remaining slots
+                        try {
+                            const remainingSlots = JSON.parse(periodContainer.dataset.remainingSlots || '[]');
+                            const slotExists = remainingSlots.some(slot => slot.time === state.selectedTime);
+                            
+                            if (slotExists) {
+                                // Click "See More" button to expand slots
+                                const seeMoreBtn = document.querySelector('.mobile-see-more-btn');
+                                if (seeMoreBtn) {
+                                    seeMoreBtn.click();
+                                    // Wait a bit for slots to render, then try again
+                                    setTimeout(() => {
+                                        timeSlot = document.querySelector(slotSelector);
+                                        if (timeSlot) {
+                                            timeSlot.click();
+                                            console.log('Restored mobile time slot selection (after expand):', state.selectedDate, state.selectedTime);
+                                        }
+                                    }, 300);
+                                }
+                            }
+                        } catch (e) {
+                            console.warn('Error checking remaining slots:', e);
+                        }
+                    }
+                }
+                
                 if (timeSlot && !timeSlot.classList.contains('unavailable')) {
                     timeSlot.click();
-                    console.log('Restored time slot selection:', state.selectedDate, state.selectedTime);
+                    console.log('Restored time slot selection:', state.selectedDate, state.selectedTime, isMobile ? '(mobile)' : '(desktop)');
                 } else {
                     // If exact slot not found or unavailable, try to set values directly
                     // This handles cases where slot might have become unavailable
@@ -1311,7 +1350,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         selectedSlotInfo.style.display = '';
                     }
                     if (!timeSlot) {
-                        console.warn('Time slot not found, restored values directly. Slot may no longer be available.');
+                        console.warn('Time slot not found, restored values directly. Slot may no longer be available.', isMobile ? '(mobile)' : '(desktop)');
                     } else {
                         console.warn('Time slot is unavailable, restored values directly.');
                     }
@@ -1356,6 +1395,52 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // Restore the week navigation position BEFORE clicking agent
+            // This ensures the correct week is displayed when the days header is rendered
+            if (state.currentWeekStartDate) {
+                const [yy, mm, dd] = state.currentWeekStartDate.split('-').map(Number);
+                const savedWeekStart = new Date(yy, mm - 1, dd);
+                savedWeekStart.setHours(0, 0, 0, 0);
+                
+                // Only restore if the saved date is valid and not in the past
+                if (!isNaN(savedWeekStart.getTime()) && savedWeekStart >= today) {
+                    currentWeekStart = savedWeekStart;
+                    console.log('Restored week start to:', currentWeekStart);
+                } else if (state.selectedDate) {
+                    // Fallback: calculate week start from the selected date
+                    const [sy, sm, sd] = state.selectedDate.split('-').map(Number);
+                    const selectedDateObj = new Date(sy, sm - 1, sd);
+                    selectedDateObj.setHours(0, 0, 0, 0);
+                    
+                    if (!isNaN(selectedDateObj.getTime()) && selectedDateObj >= today) {
+                        // Calculate the start of the week/period containing this date
+                        const daysToNavigate = isMobileView() ? 3 : 7;
+                        const daysDiff = Math.floor((selectedDateObj - today) / (1000 * 60 * 60 * 24));
+                        const periodsToAdvance = Math.floor(daysDiff / daysToNavigate);
+                        
+                        currentWeekStart = new Date(today);
+                        currentWeekStart.setDate(today.getDate() + (periodsToAdvance * daysToNavigate));
+                        console.log('Calculated week start from selected date:', currentWeekStart);
+                    }
+                }
+            } else if (state.selectedDate) {
+                // No saved week start, calculate from selected date
+                const [sy, sm, sd] = state.selectedDate.split('-').map(Number);
+                const selectedDateObj = new Date(sy, sm - 1, sd);
+                selectedDateObj.setHours(0, 0, 0, 0);
+                
+                if (!isNaN(selectedDateObj.getTime()) && selectedDateObj >= today) {
+                    // Calculate the start of the week/period containing this date
+                    const daysToNavigate = isMobileView() ? 3 : 7;
+                    const daysDiff = Math.floor((selectedDateObj - today) / (1000 * 60 * 60 * 24));
+                    const periodsToAdvance = Math.floor(daysDiff / daysToNavigate);
+                    
+                    currentWeekStart = new Date(today);
+                    currentWeekStart.setDate(today.getDate() + (periodsToAdvance * daysToNavigate));
+                    console.log('Calculated week start from selected date (no saved week):', currentWeekStart);
+                }
+            }
+
             // Check if agent still exists in the list
             let agentFound = false;
             if (state.agentId && agentList) {
@@ -1366,6 +1451,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (agent.id === state.agentId) {
                             agentFound = true;
                             // Trigger click on agent avatar to initialize everything
+                            // Note: The agent click will call renderDaysHeader() which uses the restored currentWeekStart
                             avatar.click();
                             console.log('Restored agent selection:', agent.name);
                             break;
@@ -1386,40 +1472,102 @@ document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
                 // Restore day selection first - find the day column by date
                 if (state.selectedDate && selectedDateInput) {
-                    const dayColumn = document.querySelector(`.day-column[data-date="${state.selectedDate}"]`);
+                    let dayColumn = document.querySelector(`.day-column[data-date="${state.selectedDate}"]`);
+                    
+                    // If day column not found, it might be because the week display doesn't show it yet
+                    // Navigate forward until we find it
+                    if (!dayColumn) {
+                        console.log('Day column not found in current view, attempting to navigate to correct week...');
+                        
+                        const [sy, sm, sd] = state.selectedDate.split('-').map(Number);
+                        const targetDate = new Date(sy, sm - 1, sd);
+                        targetDate.setHours(0, 0, 0, 0);
+                        
+                        // Calculate how many navigation steps needed
+                        const daysToNavigate = isMobileView() ? 3 : 7;
+                        let attempts = 0;
+                        const maxAttempts = 52; // Max 1 year of weeks
+                        
+                        while (!dayColumn && attempts < maxAttempts) {
+                            const periodEnd = new Date(currentWeekStart);
+                            periodEnd.setDate(periodEnd.getDate() + (daysToNavigate - 1));
+                            
+                            // Check if target date is within current period
+                            if (targetDate >= currentWeekStart && targetDate <= periodEnd) {
+                                // Refresh the display and try to find the day column again
+                                updateWeekDisplay();
+                                renderDaysHeader();
+                                updatePrevWeekButtonState();
+                                dayColumn = document.querySelector(`.day-column[data-date="${state.selectedDate}"]`);
+                                break;
+                            }
+                            
+                            // Navigate forward
+                            currentWeekStart.setDate(currentWeekStart.getDate() + daysToNavigate);
+                            updateWeekDisplay();
+                            renderDaysHeader();
+                            updatePrevWeekButtonState();
+                            
+                            dayColumn = document.querySelector(`.day-column[data-date="${state.selectedDate}"]`);
+                            attempts++;
+                        }
+                        
+                        if (dayColumn) {
+                            console.log('Found day column after navigating', attempts, 'periods');
+                        }
+                    }
+                    
                     if (dayColumn) {
                         // Click the day column to trigger day selection
                         dayColumn.click();
                         console.log('Restored day selection:', state.selectedDate);
                         
                         // Wait for day selection to complete, then restore period
+                        // Check if mobile view - on mobile, slots are rendered immediately after day selection
+                        const isMobile = isMobileView();
+                        const waitTime = isMobile ? 500 : 300; // Longer timeout on mobile to ensure slots are rendered
+                        
                         setTimeout(() => {
-                            // Restore period selection
-                            if (state.selectedPeriod && periodSelector) {
-                                selectedPeriod = state.selectedPeriod;
-                                const periodBtn = periodSelector.querySelector(`[data-period="${state.selectedPeriod}"]`);
-                                if (periodBtn) {
-                                    // Check if day is selected before clicking period button
-                                    const activeDay = document.querySelector('.day-column.active');
-                                    if (activeDay && selectedDayInput.value) {
-                                        periodBtn.click();
-                                        console.log('Restored period selection:', state.selectedPeriod);
-                                        
-                                        // Wait for period selection to render slots, then restore time slot
-                                        restoreTimeSlotAndPayment(state);
+                            if (isMobile) {
+                                // On mobile: slots are already rendered, just restore time slot and period highlight
+                                if (state.selectedPeriod && periodSelector) {
+                                    selectedPeriod = state.selectedPeriod;
+                                    const periodBtn = periodSelector.querySelector(`[data-period="${state.selectedPeriod}"]`);
+                                    if (periodBtn) {
+                                        periodBtn.classList.add('active');
+                                        console.log('Restored period selection (mobile):', state.selectedPeriod);
+                                    }
+                                }
+                                // Restore time slot directly (slots are already rendered on mobile)
+                                restoreTimeSlotAndPayment(state, false);
+                            } else {
+                                // On desktop: need to click period button to render slots
+                                if (state.selectedPeriod && periodSelector) {
+                                    selectedPeriod = state.selectedPeriod;
+                                    const periodBtn = periodSelector.querySelector(`[data-period="${state.selectedPeriod}"]`);
+                                    if (periodBtn) {
+                                        // Check if day is selected before clicking period button
+                                        const activeDay = document.querySelector('.day-column.active');
+                                        if (activeDay && selectedDayInput.value) {
+                                            periodBtn.click();
+                                            console.log('Restored period selection (desktop):', state.selectedPeriod);
+                                            
+                                            // Wait for period selection to render slots, then restore time slot
+                                            restoreTimeSlotAndPayment(state);
+                                        } else {
+                                            console.warn('Day not properly selected, cannot restore period');
+                                            restoreTimeSlotAndPayment(state, true); // Try to restore time slot anyway
+                                        }
                                     } else {
-                                        console.warn('Day not properly selected, cannot restore period');
-                                        restoreTimeSlotAndPayment(state, true); // Try to restore time slot anyway
+                                        console.warn('Period button not found');
+                                        restoreTimeSlotAndPayment(state, true);
                                     }
                                 } else {
-                                    console.warn('Period button not found');
+                                    // No period to restore, try to restore time slot directly
                                     restoreTimeSlotAndPayment(state, true);
                                 }
-                            } else {
-                                // No period to restore, try to restore time slot directly
-                                restoreTimeSlotAndPayment(state, true);
                             }
-                        }, 300); // Wait for day selection to complete
+                        }, waitTime);
                     } else {
                         console.warn('Day column not found for date:', state.selectedDate);
                         // Try to set values directly
@@ -1568,7 +1716,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 selectedDay: selectedDayInput?.value || '',
                 selectedPeriod: selectedPeriod || null,
                 paymentType: document.querySelector('input[name="paymentType"]:checked')?.value || null,
-                termsChecked: termsCheckbox?.checked || false
+                termsChecked: termsCheckbox?.checked || false,
+                // Save the current week start so we can navigate to the correct week after login
+                currentWeekStartDate: formatDateValue(currentWeekStart)
             };
             localStorage.setItem('pendingBookingState', JSON.stringify(pendingBookingState));
             console.log('Saved pending booking state:', pendingBookingState);
