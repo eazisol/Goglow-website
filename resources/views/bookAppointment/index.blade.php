@@ -285,6 +285,52 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Logged-in user ID:', bookingBootstrap.userId);
     console.log('Logged-in user data:', bookingBootstrap.userData);
     console.log('fire-base-status', firebase.auth().currentUser);
+
+    // Sync User Profile to External API
+    if (bookingBootstrap.userData && bookingBootstrap.userData.id) {
+        const SYNC_KEY = 'user_profile_synced_' + bookingBootstrap.userData.id;
+        
+        if (!sessionStorage.getItem(SYNC_KEY)) {
+            console.log('🔄 User data found, syncing profile to external API...', bookingBootstrap.userData);
+            
+            const userProfilePayload = {
+                id: bookingBootstrap.userData.id,
+                email: bookingBootstrap.userData.email,
+                name: bookingBootstrap.userData.name,
+                profileImg: bookingBootstrap.userData.photo || bookingBootstrap.userData.photoURL || "",
+                countryCode: "+33", // Default as per requirements
+                phone: bookingBootstrap.userData.phone || "",
+                platform: "web",
+                userRole: 0,
+                initialUserRole: 0
+            };
+
+            fetch('https://us-central1-beauty-984c8.cloudfunctions.net/createUserProfile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userProfilePayload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ User profile synced successfully');
+                    sessionStorage.setItem(SYNC_KEY, 'true');
+                    return response.json(); 
+                } else {
+                    console.warn('⚠️ User profile sync returned status:', response.status);
+                }
+            })
+            .then(data => {
+                if(data) console.log('Sync response:', data);
+            })
+            .catch(err => {
+                console.error('❌ Error syncing user profile:', err);
+            });
+        } else {
+            console.log('ℹ️ User profile already synced this session.');
+        }
+    }
     
     // Debug: Log service data to verify ownerMail and ownerProfile are present
     if (bookingBootstrap.service) {
