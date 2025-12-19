@@ -93,7 +93,12 @@
                         @csrf
                         <div class="row">
                             <div class="form-group col-md-6 mb-4">
-                                <input type="text" name="name" class="form-control-login" id="signup-name" placeholder="{{ __('app.auth.full_name') }}" required>
+                                <input type="text" name="first_name" class="form-control-login" id="signup-first-name" placeholder="{{ __('app.auth.first_name') }}" required>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            
+                            <div class="form-group col-md-6 mb-4">
+                                <input type="text" name="last_name" class="form-control-login" id="signup-last-name" placeholder="{{ __('app.auth.last_name') }}" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                             
@@ -103,7 +108,12 @@
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <div class="input-group">
+                                <input type="tel" name="phone" class="form-control-login" id="signup-phone" placeholder="{{ __('app.auth.phone') }}" required>
+                                <div class="help-block with-errors"></div>
+                            </div>
+
+                            <div class="form-group col-md-6 mb-4">
+                                <div class="input-group" style="flex-wrap: initial;">
                                     <input type="password" name="password" id="signup-password" class="form-control-login" placeholder="{{ __('app.auth.password_min_chars') }}" required minlength="6">
                                     <span class="input-group-text password-toggle" onclick="togglePassword('signup-password')">
                                         <i class="fa fa-eye"></i>

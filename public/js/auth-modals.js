@@ -460,8 +460,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Form data
             const formData = {
-                name: document.getElementById('signup-name').value,
+                first_name: document.getElementById('signup-first-name').value,
+                last_name: document.getElementById('signup-last-name').value,
                 email: document.getElementById('signup-email').value,
+                phone: document.getElementById('signup-phone').value,
                 password: password,
                 password_confirmation: confirmPassword,
                 terms: document.getElementById('signup-terms').checked ? 1 : 0

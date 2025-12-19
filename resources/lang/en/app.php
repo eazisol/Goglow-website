@@ -31,6 +31,8 @@ return [
         'password_min_chars' => 'Password (at least 6 characters)',
         'confirm_password' => 'Confirm Password',
         'full_name' => 'Full Name',
+        'first_name' => 'First Name',
+        'last_name' => 'Last Name',
         'phone' => 'Phone Number',
         'phone_with_country_code' => 'Phone Number (with country code)',
         'location' => 'Location',

@@ -102,8 +102,10 @@ class AuthController extends Controller
     public function register(Request $request, FirebaseAuth $auth)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'terms' => ['accepted'],
         ]);
@@ -113,7 +115,7 @@ class AuthController extends Controller
                 'email' => $validated['email'],
                 'emailVerified' => false,
                 'password' => $validated['password'],
-                'displayName' => $validated['name'],
+                'displayName' => $validated['first_name'] . ' ' . $validated['last_name'],
                 'disabled' => false,
             ];
 
