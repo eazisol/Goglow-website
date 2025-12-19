@@ -202,8 +202,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Ensure user ID is present
-        if (!userInfo.id && bookingPayload.user_id) {
-            userInfo.id = bookingPayload.user_id;
+        if (!userInfo.id && bookingPayload.userId) {
+            userInfo.id = bookingPayload.userId;
         }
         
         // Log userInfo for debugging
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // If userInfo is missing, try to reconstruct it
         console.warn('userInfo is missing, attempting to reconstruct from payload');
         bookingPayload.userInfo = [{
-            id: bookingPayload.user_id || null,
+            id: bookingPayload.userId || null,
             name: null,
             email: null,
             phone: null,

@@ -21,7 +21,7 @@ return [
         'welcome_back' => 'bon retour',
         'welcome_simple' => 'Connectez vous',
         'sign_in' => 'Se connecter',
-        'sign_in_header' => 'Votre Glow vous attend !',
+        'sign_in_header' => 'Votre Glaura vous attend !',
         'processing' => 'Traitement en cours...',
         'sign_in_to' => 'Connectez-vous à',
         'sign_up' => 'S\'inscrire',

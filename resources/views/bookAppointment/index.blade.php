@@ -1764,7 +1764,7 @@ document.addEventListener('DOMContentLoaded', function () {
             bookTime: bookTime,
             service_provider_id: serviceProviderId,
             serviceProviderInfo: serviceProviderInfo,
-            user_id: userId,
+            userId: userId,
             depositPercentage: depositPercentage,
             address: address,
             amount: amount,
