@@ -8,9 +8,29 @@
             <div class="modal-body">
                 <!-- Login Form Start -->
                 <div class="appointment-form">
+                    <!-- Logo/Icon Area -->
+                    <div class="login-options-logo">
+                        <div class="logo-circle">
+                            <img src="{{ asset('images/loginuplogo.png') }}" alt="Logo">
+                        </div>
+                    </div>
+                    
                     <div class="section-title mb-4">
-                        <h3 class="wow fadeInUp">{{ __('app.auth.welcome_simple') }}</h3>
+                        {{-- <h3 class="wow fadeInUp">{{ __('app.auth.welcome_simple') }}</h3> --}}
                         <h2 class="text-anime-style-2" >{{ __('app.auth.sign_in_header') }}</h2>
+                    </div>
+                    
+                    <div class="social-login-buttons mb-4">
+                        <button type="button" class="btn-social btn-google" id="google-signin-btn" title="{{ __('app.auth.sign_in_with_google') }}">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button type="button" class="btn-social btn-apple" id="apple-signin-btn" title="{{ __('app.auth.sign_in_with_apple') }}">
+                            <i class="fab fa-apple"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <span style="color: #999;">{{ __('app.auth.or') }}</span>
                     </div>
                     
                     <div class="alert alert-danger d-none" id="login-error"></div>
@@ -38,19 +58,6 @@
                                     </span>
                                 </button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
-                                
-                                <div class="text-center">
-                                    <span style="color: #999;">{{ __('app.auth.or') }}</span>
-                                </div>
-                                
-                                <div class="social-login-buttons">
-                                    <button type="button" class="btn-social btn-google" id="google-signin-btn" title="{{ __('app.auth.sign_in_with_google') }}">
-                                        <i class="fab fa-google"></i>
-                                    </button>
-                                    <button type="button" class="btn-social btn-apple" id="apple-signin-btn" title="{{ __('app.auth.sign_in_with_apple') }}">
-                                        <i class="fab fa-apple"></i>
-                                    </button>
-                                </div>
                                 
                                 <p class="mt-3 mb-0" style="text-align: center;">{{ __('app.auth.dont_have_account') }} <a href="#" id="show-signup-modal">{{ __('app.auth.create_one') }}</a></p>
                             </div>

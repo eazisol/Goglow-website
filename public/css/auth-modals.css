@@ -147,11 +147,11 @@
 }
 
 .btn-social {
-    width: 50px;
+    width: 215px;
     height: 50px;
     padding: 0;
     border: 1px solid #ddd;
-    border-radius: 40px;
+    border-radius: 7px;
     background: white;
     color: #333;
     cursor: pointer;
@@ -484,5 +484,8 @@
 
     .login-option-btn .option-text {
         font-size: 14px;
+    }
+    .btn-social{
+        width: 150px;
     }
 }
