@@ -424,6 +424,7 @@ return [
         'in_the_afternoon' => 'In The Afternoon',
         'in_the_evening' => 'In The Evening',
         'see_more' => 'See More',
+        'no_agent_assigned' => 'No agent is assigned to this service',
     ],
 
     // I Am Professional Page

@@ -111,6 +111,12 @@
                             <div id="mobileTimeSlotsContainer" class="mobile-time-slots-container" style="display: none;"></div>
                                     </div>
                                 </div>
+                                @else
+                                    <div class="mt-4 text-center">
+                                        <div class="alert alert-info">
+                                            {{ __('app.agent_page.no_agent_assigned') }}
+                                        </div>
+                                    </div>
                                 @endif
                 </div>
 

@@ -423,6 +423,7 @@ return [
         'in_the_afternoon' => 'L’après-midi',
         'in_the_evening' => 'La Soirée',
         'see_more' => 'Voir plus',
+        'no_agent_assigned' => "Aucun agent n'est affecté à ce service",
     ],
 
     // I Am Professional Page
