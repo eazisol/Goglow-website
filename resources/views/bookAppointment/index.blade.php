@@ -285,7 +285,26 @@ document.addEventListener('DOMContentLoaded', function () {
         servicesSlug: @json($servicesSlug ?? null) || servicesSlugFromPath,
         userId: @json($userId ?? null),
         userData: @json($userData ?? null),
+        stripeConfig: null, // Will be fetched from API
     };
+    
+    // Fetch Stripe configuration (test/live mode and publishable key) from API
+    fetch('{{ route("api.stripe.config") }}')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                bookingBootstrap.stripeConfig = {
+                    isLive: data.isLive,
+                    publishableKey: data.publishableKey
+                };
+                console.log('💳 Stripe config loaded:', bookingBootstrap.stripeConfig.isLive ? 'LIVE MODE' : 'TEST MODE');
+            } else {
+                console.warn('⚠️ Failed to load Stripe config, using fallback');
+            }
+        })
+        .catch(err => {
+            console.error('❌ Error fetching Stripe config:', err);
+        });
     
     // Log logged-in user data at page load
     console.log('Logged-in user ID:', bookingBootstrap.userId);
@@ -2128,9 +2147,16 @@ document.addEventListener('DOMContentLoaded', function () {
             // Clear pending booking state before redirecting to Stripe
             localStorage.removeItem('pendingBookingState');
             
-            // Initialize Stripe object with publishable key
-            const stripe = Stripe('pk_test_YvIcG9lWoxs6ITHB264wNchO');
-            console.log('Redirecting to Stripe checkout with session ID:', session.id);
+            // Initialize Stripe object with dynamically fetched publishable key
+            const stripePublishableKey = bookingBootstrap.stripeConfig?.publishableKey;
+            if (!stripePublishableKey) {
+                setButtonLoading(false);
+                alert('Stripe configuration not loaded. Please refresh the page and try again.');
+                console.error('Stripe publishable key not available');
+                return;
+            }
+            const stripe = Stripe(stripePublishableKey);
+            console.log('Redirecting to Stripe checkout with session ID:', session.id, '| Mode:', bookingBootstrap.stripeConfig?.isLive ? 'LIVE' : 'TEST');
             
             // For Stripe v7.0 compatibility
             // Redirect to Stripe Checkout
@@ -2155,9 +2181,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (testStripeBtn) {
         testStripeBtn.addEventListener('click', async function() {
         try {
-            // Initialize Stripe with the publishable key
-            const stripe = Stripe('pk_test_YvIcG9lWoxs6ITHB264wNchO');
-            console.log('Test button clicked, Stripe initialized');
+            // Initialize Stripe with dynamically fetched publishable key
+            const stripePublishableKey = bookingBootstrap.stripeConfig?.publishableKey;
+            if (!stripePublishableKey) {
+                alert('Stripe configuration not loaded. Please refresh the page and try again.');
+                console.error('Stripe publishable key not available');
+                return;
+            }
+            const stripe = Stripe(stripePublishableKey);
+            console.log('Test button clicked, Stripe initialized | Mode:', bookingBootstrap.stripeConfig?.isLive ? 'LIVE' : 'TEST');
             
             // Create a minimal test session directly
             const response = await fetch('{{ route("checkout.session") }}', {

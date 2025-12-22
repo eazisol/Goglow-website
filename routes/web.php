@@ -43,6 +43,7 @@ Route::get('/book-appointment', [\App\Http\Controllers\BookAppointmentController
 // Payment routes
 Route::post('/create-checkout-session', [\App\Http\Controllers\PaymentController::class, 'createCheckoutSession'])->name('checkout.session');
 Route::get('/payment-success', [\App\Http\Controllers\PaymentController::class, 'handlePaymentSuccess'])->name('payment.success');
+Route::get('/api/stripe-config', [\App\Http\Controllers\PaymentController::class, 'getStripeConfig'])->name('api.stripe.config');
 
 // i am a beauty professional
 // Route::get('/beauty-professional', function () {return view('iamProfessional.index');});

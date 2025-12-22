@@ -10,10 +10,74 @@ use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
+    /**
+     * Get the Stripe live/test status from API
+     * Fetches fresh data on every call
+     */
+    private function getStripeMode(): bool
+    {
+        try {
+            $response = Http::timeout(10)->get('https://us-central1-beauty-984c8.cloudfunctions.net/getPaymentStatus');
+            
+            if ($response->ok()) {
+                $data = $response->json();
+                $isLive = $data['data']['isStripeLive'] ?? false;
+                Log::info('Stripe mode fetched from API', ['isStripeLive' => $isLive]);
+                return $isLive;
+            }
+            
+            Log::warning('Failed to fetch Stripe mode from API, defaulting to test mode');
+            return false;
+        } catch (\Throwable $e) {
+            Log::error('Error fetching Stripe mode', ['error' => $e->getMessage()]);
+            return false; // Default to test mode on error
+        }
+    }
+
+    /**
+     * Get the appropriate Stripe secret key based on live/test mode
+     */
+    private function getStripeSecretKey(): string
+    {
+        $isLive = $this->getStripeMode();
+        return $isLive 
+            ? config('services.stripe.live_secret') 
+            : config('services.stripe.test_secret');
+    }
+
+    /**
+     * Get the appropriate Stripe publishable key based on live/test mode
+     */
+    public function getStripePublishableKey(): string
+    {
+        $isLive = $this->getStripeMode();
+        return $isLive 
+            ? config('services.stripe.live_key') 
+            : config('services.stripe.test_key');
+    }
+
+    /**
+     * API endpoint to get Stripe configuration for frontend
+     */
+    public function getStripeConfig()
+    {
+        $isLive = $this->getStripeMode();
+        $publishableKey = $this->getStripePublishableKey();
+        
+        return response()->json([
+            'success' => true,
+            'isLive' => $isLive,
+            'publishableKey' => $publishableKey,
+        ]);
+    }
+
     public function createCheckoutSession(Request $request)
     {
-        // Set Stripe API key directly (fallback in case env isn't working)
-        Stripe::setApiKey(config('services.stripe.secret'));
+        // Set Stripe API key dynamically based on payment status API
+        $stripeSecretKey = $this->getStripeSecretKey();
+        Stripe::setApiKey($stripeSecretKey);
+        
+        Log::info('Using Stripe mode', ['isLive' => $this->getStripeMode()]);
 
         // Log the request for debugging
         Log::info('Stripe checkout request', $request->all());
@@ -157,8 +221,9 @@ class PaymentController extends Controller
 
     public function handlePaymentSuccess(Request $request)
     {
-        // Set Stripe API key directly for consistency
-        Stripe::setApiKey(config('services.stripe.secret'));
+        // Set Stripe API key dynamically based on payment status API
+        $stripeSecretKey = $this->getStripeSecretKey();
+        Stripe::setApiKey($stripeSecretKey);
         
         // Log request data
         Log::info('Payment success callback received', $request->all());

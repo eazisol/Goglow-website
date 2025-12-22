@@ -37,7 +37,12 @@ return [
     ],
     
     'stripe' => [
-    'secret' => env('STRIPE_SECRET'),
+        // Test keys (used when isStripeLive = false)
+        'test_key' => env('TEST_STRIPE_PUBLISHABLE_KEY'),
+        'test_secret' => env('TEST_STRIPE_SECRET_KEY'),
+        // Live keys (used when isStripeLive = true)
+        'live_key' => env('LIVE_STRIPE_PUBLISHABLE_KEY'),
+        'live_secret' => env('LIVE_STRIPE_SECRET_KEY'),
     ],
 
 ];
