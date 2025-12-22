@@ -182,8 +182,8 @@
 @endsection
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/search.css') }}">
-<link rel="stylesheet" href="{{ asset('css/provider.videos.css') }}">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/search.css') }}">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/provider.videos.css') }}">
 @endsection
 
 @section('scripts')

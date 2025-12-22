@@ -149,13 +149,13 @@
 @endsection
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/search.css') }}">
-<link rel="stylesheet" href="{{ asset('css/provider-results.css') }}">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/search.css') }}">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/provider-results.css') }}">
 @endsection
 @section('scripts')
 <script>
     // Global variable for default image path (used in provider-results.js)
     window.defaultProviderImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
 </script>
-<script src="{{ asset('js/provider-results.js') }}?v={{ file_exists(public_path('js/provider-results.js')) ? filemtime(public_path('js/provider-results.js')) : '1' }}"></script>
+<script src="{{ \App\Helpers\AssetHelper::versioned('js/provider-results.js') }}"></script>
 @endsection

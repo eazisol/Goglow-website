@@ -36,11 +36,11 @@
 {{-- <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> --}}
     
     {{-- CSS Files - Load in correct order --}}
-    <link href="{{ asset('css/fonts.css') }}?v={{ file_exists(public_path('css/fonts.css')) ? filemtime(public_path('css/fonts.css')) : '1' }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/newdesign.css') }}?v={{ file_exists(public_path('css/newdesign.css')) ? filemtime(public_path('css/newdesign.css')) : '1' }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/header.css') }}?v={{ file_exists(public_path('css/header.css')) ? filemtime(public_path('css/header.css')) : '1' }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/form.css') }}?v={{ file_exists(public_path('css/form.css')) ? filemtime(public_path('css/form.css')) : '1' }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/auth-modals.css') }}?v={{ file_exists(public_path('css/auth-modals.css')) ? filemtime(public_path('css/auth-modals.css')) : '1' }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/fonts.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/newdesign.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/header.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/form.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/auth-modals.css') }}" rel="stylesheet" media="screen">
     
     {{-- External CSS (non-critical) --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">
@@ -89,10 +89,10 @@
 
 
     {{-- JavaScript Files - Load in correct order --}}
-    <script src="{{ asset('js/new-design.js') }}" defer></script>
-    <script src="{{ asset('js/professional-form.js') }}" defer></script>
-    <script src="{{ asset('js/auth-modals.js') }}" defer></script>
-    <script src="{{ asset('js/book-appointment-auth.js') }}" defer></script>
+    <script src="{{ \App\Helpers\AssetHelper::versioned('js/new-design.js') }}" defer></script>
+    <script src="{{ \App\Helpers\AssetHelper::versioned('js/professional-form.js') }}" defer></script>
+    <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-modals.js') }}" defer></script>
+    <script src="{{ \App\Helpers\AssetHelper::versioned('js/book-appointment-auth.js') }}" defer></script>
 
   {{-- External scripts - Moved to bottom and deferred for better performance --}}
   <!-- Datepicker - Deferred -->

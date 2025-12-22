@@ -18,11 +18,11 @@
 
     <!-- Open Graph / Facebook -->
     {{-- CSS Files - Load in correct order --}}
-    <link href="{{ asset('css/fonts.css') }}?v={{ file_exists(public_path('css/fonts.css')) ? filemtime(public_path('css/fonts.css')) : '1' }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/newdesign.css') }}?v={{ file_exists(public_path('css/newdesign.css')) ? filemtime(public_path('css/newdesign.css')) : '1' }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/header.css') }}?v={{ file_exists(public_path('css/header.css')) ? filemtime(public_path('css/header.css')) : '1' }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/form.css') }}?v={{ file_exists(public_path('css/form.css')) ? filemtime(public_path('css/form.css')) : '1' }}" rel="stylesheet" media="screen">
-    <link href="{{ asset('css/auth-modals.css') }}?v={{ file_exists(public_path('css/auth-modals.css')) ? filemtime(public_path('css/auth-modals.css')) : '1' }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/fonts.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/newdesign.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/header.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/form.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ \App\Helpers\AssetHelper::versioned('css/auth-modals.css') }}" rel="stylesheet" media="screen">
     <meta property="og:type" content="website">
     <meta property="og:title" content="GoGlow - Book Beauty Services | Discover Local Salons">
     <meta property="og:description" content="Discover and book trusted salon services with GoGlow. Connect with local beauty professionals for hair, nails, skincare, and wellness treatments.">
@@ -103,11 +103,11 @@
 
 
   {{-- JavaScript Files - Load in correct order --}}
-  <script src="{{ asset('js/new-design.js') }}" defer></script>
-  <script src="{{ asset('js/header.js') }}" defer></script>
-  <script src="{{ asset('js/professional-form.js') }}" defer></script>
-  <script src="{{ asset('js/auth-modals.js') }}" defer></script>
-  <script src="{{ asset('js/book-appointment-auth.js') }}" defer></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/new-design.js') }}" defer></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/header.js') }}" defer></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/professional-form.js') }}" defer></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-modals.js') }}" defer></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/book-appointment-auth.js') }}" defer></script>
 
   {{-- External scripts - Moved to bottom and deferred for better performance --}}
   <!-- Datepicker - Deferred -->

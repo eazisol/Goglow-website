@@ -15,16 +15,16 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet">
-<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
-<link href="{{ asset('css/slicknav.min.css') }}" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css') }}">
-<link href="{{ asset('css/all.min.css') }}" rel="stylesheet" media="screen">
-<link href="{{ asset('css/animate.css') }}" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-<link rel="stylesheet" href="{{ asset('css/mousecursor.css') }}">
-<link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="screen">
-<link href="{{ asset('css/auth-modals.css') }}" rel="stylesheet" media="screen">
-<link href="{{ asset('css/style.css') }}" rel="stylesheet" media="screen">
+<link href="{{ \App\Helpers\AssetHelper::versioned('css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+<link href="{{ \App\Helpers\AssetHelper::versioned('css/slicknav.min.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/swiper-bundle.min.css') }}">
+<link href="{{ \App\Helpers\AssetHelper::versioned('css/all.min.css') }}" rel="stylesheet" media="screen">
+<link href="{{ \App\Helpers\AssetHelper::versioned('css/animate.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/magnific-popup.css') }}">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/mousecursor.css') }}">
+<link href="{{ \App\Helpers\AssetHelper::versioned('css/custom.css') }}" rel="stylesheet" media="screen">
+<link href="{{ \App\Helpers\AssetHelper::versioned('css/auth-modals.css') }}" rel="stylesheet" media="screen">
+<link href="{{ \App\Helpers\AssetHelper::versioned('css/style.css') }}" rel="stylesheet" media="screen">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">
 
 
@@ -152,41 +152,41 @@
          
     <!-- General JS Scripts -->
     
-    <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
-  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('js/validator.min.js') }}"></script>
-  <script src="{{ asset('js/jquery.slicknav.js') }}"></script>
-  <script src="{{ asset('js/swiper-bundle.min.js') }}"></script>
-  <script src="{{ asset('js/jquery.waypoints.min.js') }}"></script>
-  <script src="{{ asset('js/jquery.counterup.min.js') }}"></script>
-  <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-  <script src="{{ asset('js/SmoothScroll.js') }}"></script>
-  <script src="{{ asset('js/parallaxie.js') }}"></script>
-  <script src="{{ asset('js/gsap.min.js') }}"></script>
-  <script src="{{ asset('js/magiccursor.js') }}"></script>
-  <script src="{{ asset('js/SplitText.js') }}"></script>
-  <script src="{{ asset('js/ScrollTrigger.min.js') }}"></script>
-  <script src="{{ asset('js/jquery.mb.YTPlayer.min.js') }}"></script>
-  <script src="{{ asset('js/wow.min.js') }}"></script>
-  <script src="{{ asset('js/function.js') }}"></script>
-  <script src="{{ asset('js/datepicker.js') }}"></script>
+    <script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery-3.7.1.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/bootstrap.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/validator.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery.slicknav.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/swiper-bundle.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery.waypoints.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery.counterup.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery.magnific-popup.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/SmoothScroll.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/parallaxie.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/gsap.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/magiccursor.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/SplitText.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/ScrollTrigger.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery.mb.YTPlayer.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/wow.min.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/function.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/datepicker.js') }}"></script>
   <!-- Add in the head section -->
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
 <!-- Add before closing body tag -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{{ asset('js/professional-form.js') }}"></script>
+<script src="{{ \App\Helpers\AssetHelper::versioned('js/professional-form.js') }}"></script>
   @yield('scripts')
   
   @include('partials.auth-modals')
   
   <!-- Country codes script must be loaded before auth-modals.js -->
-  <script src="{{ asset('js/country-codes.js') }}" onload="console.log('country-codes.js loaded successfully')" onerror="console.error('Failed to load country-codes.js')"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/country-codes.js') }}" onload="console.log('country-codes.js loaded successfully')" onerror="console.error('Failed to load country-codes.js')"></script>
   
   <!-- Auth modals script must be loaded after Bootstrap and modals are in the DOM -->
-  <script src="{{ asset('js/auth-modals.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-modals.js') }}"></script>
   
   <!-- Book appointment auth script -->
-  <script src="{{ asset('js/book-appointment-auth.js') }}"></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/book-appointment-auth.js') }}"></script>
 </body>
 </html>

@@ -306,9 +306,9 @@
 @endsection
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-<link rel="stylesheet" href="{{ asset('css/provider-services.css') }}">
-<link rel="stylesheet" href="{{ asset('css/specific-provider-videos.css') }}">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/magnific-popup.css') }}">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/provider-services.css') }}">
+<link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/specific-provider-videos.css') }}">
 <style>
 /* Tab Content Panel Styles */
 .tab-content-panel {
@@ -321,8 +321,8 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
-<script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+<script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery.magnific-popup.min.js') }}"></script>
 
 <!-- Tab Switching Script - Runs independently -->
 <script>
