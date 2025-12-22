@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const videosTabLink = document.getElementById('videosTabLink');
     
     // Use providerData if available, otherwise fall back to companyUserName from URL
-    const username = (providerData && (providerData.username || providerData.companyUserName)) || companyUserName;
+    const username = (providerData && (providerData.companyUserName || providerData.username)) || companyUserName;
     
     if (username) {
       if (listTabLink) {
@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams();
       
       // Use companyUserName if available (preferred), otherwise fallback to serviceProviderId
-      const username = companyUserName || (providerData && (providerData.username || providerData.companyUserName));
+      const username = companyUserName || (providerData && (providerData.companyUserName || providerData.username));
       
       console.log('Fetching videos with:', { companyUserName, username, providerId, providerData });
       
@@ -610,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (bookingBtn && video.services_slug) {
       // Use companyUserName from video data if available, otherwise from providerData or URL
       const username = video.companyUserName || 
-                      (providerData && (providerData.username || providerData.companyUserName)) ||
+                      (providerData && (providerData.companyUserName || providerData.username)) ||
                       companyUserName;
       
       if (username && video.services_slug) {
@@ -621,7 +621,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } else if (video.serviceProviderId) {
         // Fallback to provider page if service info not available
         const fallbackUsername = video.companyUserName || 
-                                (providerData && (providerData.username || providerData.companyUserName)) ||
+                                (providerData && (providerData.companyUserName || providerData.username)) ||
                                 companyUserName;
         if (fallbackUsername) {
           bookingBtn.href = `/${encodeURIComponent(fallbackUsername)}`;
@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (bookingBtn && video.serviceProviderId) {
       // Fallback to provider page
       const fallbackUsername = video.companyUserName || 
-                              (providerData && (providerData.username || providerData.companyUserName)) ||
+                              (providerData && (providerData.companyUserName || providerData.username)) ||
                               companyUserName;
       if (fallbackUsername) {
         bookingBtn.href = `/${encodeURIComponent(fallbackUsername)}`;

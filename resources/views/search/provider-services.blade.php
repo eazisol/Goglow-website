@@ -661,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 let fallbackUrl = '{{ route('search.provider.fallback') }}?';
                 if (companyUserName) {
-                    fallbackUrl += `username=${encodeURIComponent(companyUserName)}`;
+                    fallbackUrl += `companyUserName=${encodeURIComponent(companyUserName)}`;
                 } else if (providerId) {
                     fallbackUrl += `provider_id=${encodeURIComponent(providerId)}`;
                 } else {

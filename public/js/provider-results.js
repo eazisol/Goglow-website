@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', function () {
   // const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
   // Cache configuration - 24 hours
   const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-  
+
   // Fetch categories from API and display them
   fetchAndDisplayCategories();
-  
+
   // Fetch providers from API
   const searchParam = new URLSearchParams(window.location.search).get('search');
   const locationParam = new URLSearchParams(window.location.search).get('location');
-  
+
   // Only fetch if we're not viewing a specific provider (no provider_id in URL)
   const providerIdParam = new URLSearchParams(window.location.search).get('provider_id');
   if (!providerIdParam) {
@@ -21,12 +21,12 @@ document.addEventListener('DOMContentLoaded', function () {
   function displayCategories(categories) {
     const filterPillsContainer = document.getElementById('categoryFilterPills');
     if (!filterPillsContainer) return;
-    
+
     // Filter only active categories and sort by sortOrder
     const activeCategories = categories
       .filter(cat => cat.isActive === true)
       .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
-    
+
     // Add category buttons to the filter pills container
     activeCategories.forEach(category => {
       const button = document.createElement('button');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
       button.className = 'filter-pill';
       button.setAttribute('data-category', category.name);
       button.setAttribute('aria-current', 'false');
-      
+
       // Create icon image if imageUrl exists
       if (category.imageUrl) {
         const icon = document.createElement('img');
@@ -43,11 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
         icon.className = 'category-icon';
         button.appendChild(icon);
       }
-      
+
       // Add category name
       const textNode = document.createTextNode(category.name);
       button.appendChild(textNode);
-      
+
       filterPillsContainer.appendChild(button);
     });
   }
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
   async function fetchAndDisplayCategories() {
     const filterPillsContainer = document.getElementById('categoryFilterPills');
     if (!filterPillsContainer) return;
-    
+
     try {
       // Check cache for categories first
       const categoriesCacheKey = 'categories_cache';
@@ -76,20 +76,20 @@ document.addEventListener('DOMContentLoaded', function () {
       } catch (cacheError) {
         console.warn('Error reading categories cache:', cacheError);
       }
-      
+
       const response = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/getSortedCategories');
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const categories = await response.json();
-      
+
       if (!Array.isArray(categories)) {
         console.error('Categories API did not return an array');
         return;
       }
-      
+
       // Cache the categories
       try {
         const cacheData = {
@@ -100,30 +100,30 @@ document.addEventListener('DOMContentLoaded', function () {
       } catch (cacheError) {
         console.warn('Error caching categories:', cacheError);
       }
-      
+
       // Display categories
       displayCategories(categories);
-      
+
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
   }
-  
+
   // Helper function to get cache key for providers
   function getProvidersCacheKey(search, location) {
     return `salons_cache_${search || 'all'}_${location || 'all'}`;
   }
-  
+
   // Helper function to get cached providers
   function getCachedProviders(search, location) {
     try {
       const cacheKey = getProvidersCacheKey(search, location);
       const cached = localStorage.getItem(cacheKey);
       if (!cached) return null;
-      
+
       const cacheData = JSON.parse(cached);
       const now = Date.now();
-      
+
       // Check if cache is still valid
       if (now - cacheData.timestamp < CACHE_DURATION) {
         return cacheData.providers;
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return null;
     }
   }
-  
+
   // Helper function to cache providers
   function cacheProviders(search, location, providers) {
     try {
@@ -171,29 +171,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const errorEl = document.getElementById('providers-error');
     const emptyEl = document.getElementById('providers-empty');
     const gridEl = document.getElementById('providers-grid');
-    
+
     // Show loading, hide others
     if (loadingEl) loadingEl.style.display = 'flex';
     if (errorEl) errorEl.style.display = 'none';
     if (emptyEl) emptyEl.style.display = 'none';
     if (gridEl) gridEl.style.display = 'none';
-    
+
     // Check cache first
     const cachedProviders = getCachedProviders(search, location);
     if (cachedProviders) {
       // Use cached data
       if (loadingEl) loadingEl.style.display = 'none';
-      
+
       if (!Array.isArray(cachedProviders) || cachedProviders.length === 0) {
         if (emptyEl) emptyEl.style.display = 'flex';
         return;
       }
-      
+
       // Render cached providers
       renderProviders(cachedProviders);
       return;
     }
-    
+
     try {
       // Build API URL - fetch all providers (API handles filtering if params provided)
       let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
@@ -203,31 +203,31 @@ document.addEventListener('DOMContentLoaded', function () {
       if (params.toString()) {
         apiUrl += '?' + params.toString();
       }
-      
+
       const response = await fetch(apiUrl);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const providers = await response.json();
-      
+
       // Cache the providers
       if (Array.isArray(providers)) {
         cacheProviders(search, location, providers);
       }
-      
+
       // Hide loading
       if (loadingEl) loadingEl.style.display = 'none';
-      
+
       if (!Array.isArray(providers) || providers.length === 0) {
         if (emptyEl) emptyEl.style.display = 'flex';
         return;
       }
-      
+
       // Render providers
       renderProviders(providers);
-      
+
     } catch (error) {
       console.error('Error fetching providers:', error);
       if (loadingEl) loadingEl.style.display = 'none';
@@ -240,9 +240,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   }
-  
+
   // Make fetchProviders available globally for retry button
-  window.fetchProviders = function() {
+  window.fetchProviders = function () {
     const searchParam = new URLSearchParams(window.location.search).get('search');
     const locationParam = new URLSearchParams(window.location.search).get('location');
     fetchProviders(searchParam, locationParam);
@@ -252,24 +252,24 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderProviders(providers) {
     const gridEl = document.getElementById('providers-grid');
     if (!gridEl) return;
-    
+
     gridEl.innerHTML = '';
-    
+
     providers.forEach(provider => {
       const providerCard = createProviderCard(provider);
       gridEl.appendChild(providerCard);
     });
-    
+
     // Show grid
     gridEl.style.display = 'grid';
-    
+
     // Initialize tooltips for the new cards
     initializeProviderTooltips();
-    
+
     // Initialize category filtering (though categories are empty for now)
     initializeCategoryFilters();
   }
-  
+
   // Function to create a provider card element
   function createProviderCard(provider) {
     // Use global variable for default image, with fallback
@@ -280,20 +280,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalReviews = provider.total_review || 0;
     const address = provider.address || '';
     const providerId = provider.id || '';
-    const username = provider.username || provider.companyUserName || '';
+    const username = provider.companyUserName || provider.username || '';
     const timing = provider.timing || {};
-    
+
     // Create provider URL - use username if available, fallback to provider_id
     const providerUrl = username ? `/${encodeURIComponent(username)}` : `/search?provider_id=${encodeURIComponent(providerId)}`;
-    
+
     // Create timing status
     const timingStatus = calculateTimingStatus(timing);
-    
+
     // Create the card
     const item = document.createElement('div');
     item.className = 'results-item';
     item.setAttribute('data-categories', ''); // Empty for now
-    
+
     item.innerHTML = `
       <div class="provider-card">
         <a href="${providerUrl}" class="provider-link">
@@ -336,18 +336,18 @@ document.addEventListener('DOMContentLoaded', function () {
         </a>
       </div>
     `;
-    
+
     // Add tooltip if needed
     if (timingStatus.tooltipHtml) {
       const tooltipContainer = document.createElement('div');
       tooltipContainer.innerHTML = timingStatus.tooltipHtml;
       document.body.appendChild(tooltipContainer.firstElementChild);
     }
-    
+
     // Add click handler to store provider data in sessionStorage before navigation
     const providerLink = item.querySelector('.provider-link');
     if (providerLink) {
-      providerLink.addEventListener('click', function(e) {
+      providerLink.addEventListener('click', function (e) {
         // Store provider data in sessionStorage for fast loading on provider page
         const cacheKey = username ? `provider_data_${username}` : `provider_data_${providerId}`;
         const cacheData = {
@@ -363,32 +363,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     }
-    
+
     return item;
   }
-  
+
   // Function to calculate timing status and availability
   function calculateTimingStatus(timing) {
     if (!timing || typeof timing !== 'object') {
       return { html: '', tooltipHtml: '', availabilityHtml: '', cardId: '' };
     }
-    
-    const daysOrder = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+    const daysOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const dayNamesMap = {
       'Mon': 'Mon',
-      'Tue': 'Tue', 
+      'Tue': 'Tue',
       'Wed': 'Wed',
       'Thu': 'Thu',
       'Fri': 'Fri',
       'Sat': 'Sat',
       'Sun': 'Sun'
     };
-    
+
     const now = new Date();
-    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const todayKey = dayNames[now.getDay()];
     const cardId = 'prov_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    
+
     // Format time range helper
     function formatRange(range) {
       if (!Array.isArray(range) || range.length < 2 || !range[0] || !range[1]) {
@@ -404,11 +404,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return null;
       }
     }
-    
+
     const todayRange = timing[todayKey] || [];
     const todayRangeText = formatRange(todayRange);
     const isOpenToday = todayRangeText !== null;
-    
+
     // Build status HTML
     const statusHtml = `
       <div class="timing-status" data-tooltip-id="timing-tooltip-${cardId}">
@@ -416,31 +416,31 @@ document.addEventListener('DOMContentLoaded', function () {
           <span class="status-dot ${isOpenToday ? 'open' : 'closed'}"></span>
         </span>
         <span class="status-text">
-          ${isOpenToday 
-            ? 'Open · ' + todayRangeText 
-            : 'Closed · Hours unavailable'}
+          ${isOpenToday
+        ? 'Open · ' + todayRangeText
+        : 'Closed · Hours unavailable'}
         </span>
       </div>
     `;
-    
+
     // Build tooltip HTML
     const tooltipHtml = `
       <div class="timing-tooltip" id="timing-tooltip-${cardId}" aria-hidden="true">
         <div class="timing-tooltip-inner">
           ${daysOrder.map(day => {
-            const rangeText = formatRange(timing[day] || []);
-            const isToday = todayKey === day;
-            return `
+      const rangeText = formatRange(timing[day] || []);
+      const isToday = todayKey === day;
+      return `
               <div class="timing-row ${isToday ? 'today' : ''}">
                 <span class="timing-day">${dayNamesMap[day] || day}</span>
                 <span class="timing-hours">${rangeText || 'Closed'}</span>
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </div>
     `;
-    
+
     // Build availability section (next 3 days with morning/evening slots)
     const chipDays = [];
     for (let i = 0; i < 3; i++) {
@@ -449,11 +449,11 @@ document.addEventListener('DOMContentLoaded', function () {
       const dayKey = dayNames[d.getDay()];
       const dayLabel = dayNamesMap[dayKey] || dayKey;
       const dayNumber = d.getDate().toString().padStart(2, '0');
-      
+
       const dayTiming = timing[dayKey] || [];
       const hasTimeSlot = Array.isArray(dayTiming) && dayTiming.length >= 2 && dayTiming[0] && dayTiming[1];
       const timeSlotText = hasTimeSlot ? formatRange(dayTiming) : 'No time availability';
-      
+
       chipDays.push({
         label: dayLabel,
         day: dayNumber,
@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
         timeSlotText: timeSlotText
       });
     }
-    
+
     const availabilityHtml = `
       <div class="availability-section">
         <div class="availability-title">Next Availability</div>
@@ -492,15 +492,15 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
       </div>
     `;
-    
-    return { 
-      html: statusHtml, 
-      tooltipHtml: tooltipHtml, 
+
+    return {
+      html: statusHtml,
+      tooltipHtml: tooltipHtml,
       availabilityHtml: availabilityHtml,
-      cardId: cardId 
+      cardId: cardId
     };
   }
-  
+
   // Helper function to escape HTML
   function escapeHtml(text) {
     if (!text) return '';
@@ -508,22 +508,22 @@ document.addEventListener('DOMContentLoaded', function () {
     div.textContent = text;
     return div.innerHTML;
   }
-  
+
   // Function to initialize tooltips for provider cards
   function initializeProviderTooltips() {
     const containers = document.querySelectorAll('.provider-card');
-    containers.forEach(function(card) {
+    containers.forEach(function (card) {
       const status = card.querySelector('.timing-status');
       if (!status) return;
       const tooltipId = status.getAttribute('data-tooltip-id');
       const tooltip = tooltipId ? document.getElementById(tooltipId) : null;
       if (!tooltip) return;
-      
+
       // Ensure tooltip is in body
       if (tooltip.parentElement !== document.body) {
         document.body.appendChild(tooltip);
       }
-      
+
       function positionTooltip() {
         const rect = status.getBoundingClientRect();
         const top = rect.top + rect.height + 8;
@@ -533,28 +533,28 @@ document.addEventListener('DOMContentLoaded', function () {
         tooltip.style.top = top + 'px';
         tooltip.style.left = left + 'px';
       }
-      
+
       function show() {
         tooltip.style.display = 'block';
         positionTooltip();
       }
-      
+
       function hide() {
         tooltip.style.display = 'none';
       }
-      
+
       status.addEventListener('mouseenter', show);
-      status.addEventListener('mouseleave', function() {
-        setTimeout(function() {
+      status.addEventListener('mouseleave', function () {
+        setTimeout(function () {
           if (!tooltip.matches(':hover')) hide();
         }, 100);
       });
       tooltip.addEventListener('mouseleave', hide);
-      tooltip.addEventListener('mouseenter', function() {
+      tooltip.addEventListener('mouseenter', function () {
         tooltip.style.display = 'block';
       });
-      
-      status.addEventListener('click', function(e) {
+
+      status.addEventListener('click', function (e) {
         e.preventDefault();
         if (tooltip.style.display === 'block') {
           hide();
@@ -562,16 +562,16 @@ document.addEventListener('DOMContentLoaded', function () {
           show();
         }
       });
-      
-      window.addEventListener('scroll', function() {
+
+      window.addEventListener('scroll', function () {
         if (tooltip.style.display === 'block') positionTooltip();
       });
-      window.addEventListener('resize', function() {
+      window.addEventListener('resize', function () {
         if (tooltip.style.display === 'block') positionTooltip();
       });
     });
   }
-  
+
   // Function to initialize category filters (placeholder for now)
   function initializeCategoryFilters() {
     // Categories will be empty for now since we removed service fetching
@@ -580,12 +580,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Delegate hover/click for timing tooltips
   const containers = document.querySelectorAll('.provider-card');
-  containers.forEach(function(card){
+  containers.forEach(function (card) {
     const status = card.querySelector('.timing-status');
-    if(!status) return;
+    if (!status) return;
     const tooltipId = status.getAttribute('data-tooltip-id');
     const tooltip = tooltipId ? document.getElementById(tooltipId) : null;
-    if(!tooltip) return;
+    if (!tooltip) return;
 
     // Ensure tooltip is appended to body to avoid overflow clipping
     if (tooltip.parentElement !== document.body) {
@@ -593,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Position tooltip near status
-    function positionTooltip(){
+    function positionTooltip() {
       const rect = status.getBoundingClientRect();
       const top = rect.top + rect.height + 8; // pixels from viewport top
       let left = rect.left; // pixels from viewport left
@@ -604,54 +604,56 @@ document.addEventListener('DOMContentLoaded', function () {
       tooltip.style.left = left + 'px';
     }
 
-    function show(){ tooltip.style.display = 'block'; positionTooltip(); }
-    function hide(){ tooltip.style.display = 'none'; }
+    function show() { tooltip.style.display = 'block'; positionTooltip(); }
+    function hide() { tooltip.style.display = 'none'; }
 
     // Hover behavior
     status.addEventListener('mouseenter', show);
-    status.addEventListener('mouseleave', function(){ setTimeout(function(){
-      // Only hide if not hovered over tooltip
-      if(!tooltip.matches(':hover')) hide();
-    }, 100); });
+    status.addEventListener('mouseleave', function () {
+      setTimeout(function () {
+        // Only hide if not hovered over tooltip
+        if (!tooltip.matches(':hover')) hide();
+      }, 100);
+    });
     tooltip.addEventListener('mouseleave', hide);
     // Also keep visible when moving from status to tooltip
-    tooltip.addEventListener('mouseenter', function(){ tooltip.style.display = 'block'; });
-    tooltip.addEventListener('mouseenter', function(){ /* keep visible */ });
+    tooltip.addEventListener('mouseenter', function () { tooltip.style.display = 'block'; });
+    tooltip.addEventListener('mouseenter', function () { /* keep visible */ });
 
     // Click toggle for mobile
-    status.addEventListener('click', function(e){
+    status.addEventListener('click', function (e) {
       e.preventDefault();
-      if(tooltip.style.display === 'block'){ hide(); } else { show(); }
+      if (tooltip.style.display === 'block') { hide(); } else { show(); }
     });
 
-    window.addEventListener('scroll', function(){ if(tooltip.style.display==='block') positionTooltip(); });
-    window.addEventListener('resize', function(){ if(tooltip.style.display==='block') positionTooltip(); });
+    window.addEventListener('scroll', function () { if (tooltip.style.display === 'block') positionTooltip(); });
+    window.addEventListener('resize', function () { if (tooltip.style.display === 'block') positionTooltip(); });
   });
 
   // Category filtering functionality
   const filterPills = document.querySelectorAll('.filter-pill');
   const providerItems = document.querySelectorAll('.results-item');
 
-  filterPills.forEach(function(pill) {
-    pill.addEventListener('click', function() {
+  filterPills.forEach(function (pill) {
+    pill.addEventListener('click', function () {
       const selectedCategory = this.getAttribute('data-category');
-      
+
       // Update active state
-      filterPills.forEach(function(p) {
+      filterPills.forEach(function (p) {
         p.classList.remove('active');
         p.removeAttribute('aria-current');
       });
       this.classList.add('active');
       this.setAttribute('aria-current', 'true');
-      
+
       // Filter providers
-      providerItems.forEach(function(item) {
+      providerItems.forEach(function (item) {
         if (selectedCategory === 'all') {
           item.style.display = '';
         } else {
           const categories = item.getAttribute('data-categories');
           if (categories && categories.trim() !== '') {
-            const categoryList = categories.split(',').map(function(cat) { return cat.trim(); });
+            const categoryList = categories.split(',').map(function (cat) { return cat.trim(); });
             if (categoryList.includes(selectedCategory)) {
               item.style.display = '';
             } else {
@@ -676,7 +678,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (searchInput && suggestionsDropdown) {
     // Debounce function to limit API calls
     function debounce(func, wait) {
-      return function(...args) {
+      return function (...args) {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => func.apply(this, args), wait);
       };
@@ -696,13 +698,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const response = await fetch(
           `https://us-central1-beauty-984c8.cloudfunctions.net/searchServiceSuggestions?query=${encodeURIComponent(query)}`
         );
-        
+
         if (response.ok) {
           const data = await response.json();
           // Extract both providers and services from the response
           const providers = data.providers || [];
           const services = data.services || [];
-          
+
           if ((Array.isArray(providers) && providers.length > 0) || (Array.isArray(services) && services.length > 0)) {
             displaySuggestions(providers, services);
           } else {
@@ -723,19 +725,19 @@ document.addEventListener('DOMContentLoaded', function () {
       suggestionsDropdown.innerHTML = '';
       allSuggestions = [];
       selectedIndex = -1;
-      
+
       let hasContent = false;
 
       // Display Providers section
       if (providers && providers.length > 0) {
         hasContent = true;
-        
+
         // Create section heading
         const providerHeading = document.createElement('div');
         providerHeading.className = 'search-suggestion-heading';
         providerHeading.textContent = 'Salon';
         suggestionsDropdown.appendChild(providerHeading);
-        
+
         // Create provider items
         providers.forEach((provider) => {
           const item = createSuggestionItem(provider.name, 'provider', provider.id);
@@ -747,19 +749,19 @@ document.addEventListener('DOMContentLoaded', function () {
       // Display Services section
       if (services && services.length > 0) {
         hasContent = true;
-        
+
         // Create section heading (only if providers section exists)
         if (providers && providers.length > 0) {
           const divider = document.createElement('div');
           divider.className = 'search-suggestion-divider';
           suggestionsDropdown.appendChild(divider);
         }
-        
+
         const serviceHeading = document.createElement('div');
         serviceHeading.className = 'search-suggestion-heading';
         serviceHeading.textContent = 'Services';
         suggestionsDropdown.appendChild(serviceHeading);
-        
+
         // Create service items
         services.forEach((service) => {
           const item = createSuggestionItem(service.name, 'service', service.id, service.provider_id);
@@ -785,10 +787,10 @@ document.addEventListener('DOMContentLoaded', function () {
         item.setAttribute('data-provider-id', providerId);
       }
       item.textContent = name;
-      
+
       // Store original input value on first hover (only once)
       let isFirstHover = true;
-      
+
       // Fill input on hover (like Google search)
       item.addEventListener('mouseenter', () => {
         if (isFirstHover) {
@@ -802,7 +804,7 @@ document.addEventListener('DOMContentLoaded', function () {
           setSelectedIndex(index);
         }
       });
-      
+
       // Click handler - keep the value filled
       item.addEventListener('click', () => {
         searchInput.value = name;
@@ -811,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Optionally navigate or submit form
         searchInput.focus();
       });
-      
+
       return item;
     }
 
@@ -821,13 +823,13 @@ document.addEventListener('DOMContentLoaded', function () {
       if (selectedIndex >= 0 && allSuggestions[selectedIndex]) {
         allSuggestions[selectedIndex].element.classList.remove('selected');
       }
-      
+
       // Set new selection
       selectedIndex = index;
       if (selectedIndex >= 0 && selectedIndex < allSuggestions.length) {
         allSuggestions[selectedIndex].element.classList.add('selected');
         searchInput.value = allSuggestions[selectedIndex].name;
-        
+
         // Scroll into view if needed
         allSuggestions[selectedIndex].element.scrollIntoView({
           block: 'nearest',
@@ -842,7 +844,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      switch(e.key) {
+      switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
           if (selectedIndex < allSuggestions.length - 1) {
@@ -851,7 +853,7 @@ document.addEventListener('DOMContentLoaded', function () {
             setSelectedIndex(0); // Loop to first
           }
           break;
-          
+
         case 'ArrowUp':
           e.preventDefault();
           if (selectedIndex > 0) {
@@ -860,7 +862,7 @@ document.addEventListener('DOMContentLoaded', function () {
             setSelectedIndex(allSuggestions.length - 1); // Loop to last
           }
           break;
-          
+
         case 'Enter':
           e.preventDefault();
           if (selectedIndex >= 0 && selectedIndex < allSuggestions.length) {
@@ -872,7 +874,7 @@ document.addEventListener('DOMContentLoaded', function () {
             searchInput.focus();
           }
           break;
-          
+
         case 'Escape':
           e.preventDefault();
           hideSuggestions();
@@ -902,7 +904,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Get the search-title element
     const searchTitle = searchInput.closest('.search-content')?.querySelector('.search-title');
-    
+
     // Function to toggle search-title visibility
     function toggleSearchTitle() {
       if (searchTitle) {
@@ -931,9 +933,9 @@ document.addEventListener('DOMContentLoaded', function () {
       if (searchTitle) {
         searchTitle.style.display = 'none';
       }
-      if (searchInput.value.trim().length > 0 && 
-          ((currentSuggestions.providers && currentSuggestions.providers.length > 0) || 
-           (currentSuggestions.services && currentSuggestions.services.length > 0))) {
+      if (searchInput.value.trim().length > 0 &&
+        ((currentSuggestions.providers && currentSuggestions.providers.length > 0) ||
+          (currentSuggestions.services && currentSuggestions.services.length > 0))) {
         displaySuggestions(currentSuggestions.providers || [], currentSuggestions.services || []);
       }
     });
@@ -945,7 +947,7 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleSearchTitle();
       }, 200);
     });
-    
+
     // Initial check for existing value
     toggleSearchTitle();
   }
@@ -954,7 +956,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const locationInput = document.getElementById('locationInput');
   if (locationInput) {
     const locationTitle = locationInput.closest('.search-content')?.querySelector('.search-title');
-    
+
     // Function to toggle location title visibility
     function toggleLocationTitle() {
       if (locationTitle) {
@@ -982,7 +984,7 @@ document.addEventListener('DOMContentLoaded', function () {
     locationInput.addEventListener('blur', () => {
       toggleLocationTitle();
     });
-    
+
     // Initial check for existing value
     toggleLocationTitle();
 

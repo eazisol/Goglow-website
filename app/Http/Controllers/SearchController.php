@@ -24,9 +24,14 @@ class SearchController extends Controller
                 
                 $provider = collect($providers)->firstWhere('id', $providerId);
                 
-                if ($provider && isset($provider['username']) && $provider['username']) {
+                $username = null;
+                if ($provider) {
+                    $username = $provider['companyUserName'] ?? $provider['username'] ?? null;
+                }
+                
+                if ($username) {
                     // Redirect to username-based URL
-                    return redirect()->route('provider.by.username', ['companyUserName' => $provider['username']], 301);
+                    return redirect()->route('provider.by.username', ['companyUserName' => $username], 301);
                 }
             } catch (\Exception $e) {
                 // If redirect fails, fall back to old method
@@ -68,21 +73,21 @@ class SearchController extends Controller
     public function providerFallback(Request $request)
     {
         $providerId = $request->input('provider_id');
-        $username = $request->input('username');
+        $companyUserName = $request->input('companyUserName');
         
-        if (!$providerId && !$username) {
-            return response()->json(['error' => 'Provider ID or username is required'], 400);
+        if (!$providerId && !$companyUserName) {
+            return response()->json(['error' => 'Provider ID or companyUserName is required'], 400);
         }
         
         try {
             $provider = null;
             
-            // Try to fetch single provider by username first
-            if ($username) {
-                $cacheKey = "provider_by_username_{$username}";
-                $providers = Cache::remember($cacheKey, 900, function () use ($username) {
+            // Try to fetch single provider by companyUserName first
+            if ($companyUserName) {
+                $cacheKey = "provider_by_username_{$companyUserName}";
+                $providers = Cache::remember($cacheKey, 900, function () use ($companyUserName) {
                     return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders', [
-                        'companyUserName' => $username
+                        'companyUserName' => $companyUserName
                     ])->json() ?? [];
                 });
                 
@@ -91,7 +96,7 @@ class SearchController extends Controller
                 }
             }
             
-            // Fallback to providerId if username didn't work
+            // Fallback to providerId if companyUserName didn't work
             if (!$provider && $providerId) {
                 $cacheKey = "provider_by_id_{$providerId}";
                 $providers = Cache::remember($cacheKey, 900, function () use ($providerId) {
@@ -143,8 +148,13 @@ class SearchController extends Controller
             
             $provider = collect($providers)->firstWhere('id', $providerId);
             
-            if ($provider && isset($provider['username']) && $provider['username']) {
-                return redirect()->route('provider.videos.by.username', ['companyUserName' => $provider['username']], 301);
+            $username = null;
+            if ($provider) {
+                $username = $provider['companyUserName'] ?? $provider['username'] ?? null;
+            }
+            
+            if ($username) {
+                return redirect()->route('provider.videos.by.username', ['companyUserName' => $username], 301);
             }
         } catch (\Exception $e) {
             // Continue with old method if redirect fails
