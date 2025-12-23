@@ -13,6 +13,7 @@ return [
         'logout' => 'Déconnexion',
         'register' => 'S\'inscrire',
         'hero_section_button' => "JE SUIS PRO",
+        'my_bookings' => 'Mes réservations',
     ],
 
     // Authentication
@@ -109,6 +110,31 @@ return [
         'next_week' => 'Semaine suivante',
         'no_slots' => 'Aucun créneau disponible',
         'at' => 'à',
+    ],
+
+    // My Bookings
+    'bookings' => [
+        'title' => 'Mes réservations',
+        'subtitle' => 'Consultez et gérez vos rendez-vous',
+        'loading' => 'Chargement de vos réservations...',
+        'no_bookings' => 'Aucune réservation trouvée',
+        'no_bookings_desc' => "Vous n'avez pas encore effectué de réservation. Commencez à explorer nos services !",
+        'book_now' => 'Réserver maintenant',
+        'total_amount' => 'Montant total',
+        'paid' => 'Payé',
+        'remaining' => 'Restant',
+        'fully_paid' => 'Entièrement payé',
+        'booking_time' => 'Heure du rendez-vous',
+        'error_title' => 'Impossible de charger les réservations',
+        'error_desc' => 'Veuillez réessayer plus tard ou contacter le support.',
+        'status_unknown' => 'Inconnu',
+        'status_pending' => 'En attente',
+        'status_in_progress' => 'En cours',
+        'status_cancelled' => 'Annulé',
+        'status_booked' => 'Réservé',
+        'status_completed' => 'Terminé',
+        'status_reviewed' => 'Évalué',
+        'status_received' => 'Demande reçue',
     ],
 
     // Common

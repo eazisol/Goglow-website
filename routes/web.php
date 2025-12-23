@@ -64,6 +64,11 @@ Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginFor
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login.store');
 Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
+// My Bookings
+Route::get('/my-bookings', [\App\Http\Controllers\BookingsController::class, 'index'])
+    ->middleware('firebase.auth.modal')
+    ->name('my-bookings');
+
 // AJAX auth routes
 Route::post('/ajax/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('ajax.login');
 Route::post('/ajax/signup', [\App\Http\Controllers\AuthController::class, 'register'])->name('ajax.signup');

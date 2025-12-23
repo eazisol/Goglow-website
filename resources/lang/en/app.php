@@ -13,6 +13,7 @@ return [
         'logout' => 'Logout',
         'register' => 'Register',
         'hero_section_button' => "BECOME A GLOWER ",
+        'my_bookings' => 'My Bookings',
     ],
 
     // Authentication
@@ -111,6 +112,31 @@ return [
         'next_week' => 'Next Week',
         'no_slots' => 'No available slots',
         'at' => 'at',
+    ],
+
+    // My Bookings
+    'bookings' => [
+        'title' => 'My Bookings',
+        'subtitle' => 'View and manage your appointments',
+        'loading' => 'Loading your bookings...',
+        'no_bookings' => 'No bookings found',
+        'no_bookings_desc' => "You haven't made any bookings yet. Start exploring services!",
+        'book_now' => 'Book Now',
+        'total_amount' => 'Total Amount',
+        'paid' => 'Paid',
+        'remaining' => 'Remaining',
+        'fully_paid' => 'Fully Paid',
+        'booking_time' => 'Appointment Time',
+        'error_title' => 'Unable to load bookings',
+        'error_desc' => 'Please try again later or contact support.',
+        'status_unknown' => 'Unknown',
+        'status_pending' => 'Pending',
+        'status_in_progress' => 'In Progress',
+        'status_cancelled' => 'Cancelled',
+        'status_booked' => 'Booked',
+        'status_completed' => 'Completed',
+        'status_reviewed' => 'Reviewed',
+        'status_received' => 'Request Received',
     ],
 
     // Common

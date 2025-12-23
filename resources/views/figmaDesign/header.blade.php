@@ -30,6 +30,9 @@
                       <img src="{{ asset('images/images/flowbite_user-solid.svg') }}" alt="Profile" style="width:33px; margin-left: 5px; cursor: pointer;">
                   </button>
                   <div class="profile-dropdown-menu" id="profile-dropdown-menu">
+                      <a href="{{ route('my-bookings') }}" class="dropdown-item">
+                          <span>{{ __('app.nav.my_bookings') }}</span>
+                      </a>
                       <a href="#" class="dropdown-item logout-item" id="logout-link">
                           <span>{{ __('app.nav.logout') }}</span>
                       </a>
