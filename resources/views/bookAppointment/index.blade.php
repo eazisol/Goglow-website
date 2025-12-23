@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     
     // Fetch Stripe configuration (test/live mode and publishable key) from API
-    fetch('{{ route("api.stripe.config") }}')
+    fetch('/api/stripe-config')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
