@@ -184,7 +184,7 @@
                                                 <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
                                                 <label class="form-check-label" for="payDeposit" id="payDepositLabel">
                                                     @if($depositPercentage > 0)
-                                                        {{ $depositLabel }} (€{{ number_format($depositAmount, 2) }})
+                                                        {{ $depositLabel }} ({{ number_format($depositAmount, 2) }}€)
                                                     @else
                                                         {{ $depositLabel }}
                                                     @endif
@@ -194,7 +194,7 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
                                                 <label class="form-check-label" for="payFull">
-                                                    {{ __('app.agent_page.pay_full_amount_now') }} (€{{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }})
+                                                    {{ __('app.agent_page.pay_full_amount_now') }} ({{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }}€)
                                                 </label>
                                             </div>
                                         </div>

@@ -385,7 +385,7 @@ return [
     'provider' => [
         'searchbar_section_heading' => 'Trouvez des salons de confiance et réservez instantanémentueil',
         'searchbar_section_paragraph' => 'Découvrez les salons les mieux notés près de chez vous. Comparez les services, lisez les avis et inversez en quelques secondes',
-        'provider_open' => 'Ouvrir',
+        'provider_open' => 'Ouvert',
         'provider_close' => 'Fermée',
         'next_availability' => 'Prochaines disponibilités',
         'morning' => 'Matin',
@@ -396,7 +396,7 @@ return [
         'choose' => 'Choisir',
         'from' => 'depuis',
         'to_book' => 'Pour réserver',
-        'open' => 'Ouvrir',
+        'open' => 'Ouvert',
         'until' => 'jusquà',
         'back_to_search_page' => 'Retour aux résultats de recherche',
         'reviews' => 'Avis',
