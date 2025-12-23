@@ -44,7 +44,7 @@
                     <div class="terms-content">
                         <div class="terms-text">
                             {{-- <h2>GoGlow - Conditions Générales d'Utilisation</h2> --}}
-                            <p class="text-end">Dernière mise à jour : 24 juillet 2025</p>
+                            <p class="text-end">Dernière mise à jour : 23 décembre 2025</p>
                                                     <div class="section-title">
                                                         <h3 class="wow">Term & Conditions</h3>
                                                     </div>
@@ -104,19 +104,63 @@ You agree not to engage in any abusive behavior towards other users. Abusive beh
 We will act on reports of objectionable content within 24 hours by removing the content and ejecting the user who provided the offending content.</p>
                             {{-- /////////////////// --}}
 
-                            <h4>15. Obligations des Prestataires</h4>
+                            <h4>15. Intégration Instagram / Meta – Prestataires (Glowers)</h4>
+                            <p>Les Prestataires peuvent connecter leur compte Instagram professionnel à l'application Glaura afin d'afficher automatiquement certains contenus sur leur profil Glaura.</p>
+                            
+                            <h5>Conditions de connexion</h5>
+                            <p>En connectant leur compte Instagram, les Prestataires :</p>
+                            <ul>
+                                <li>autorisent Glaura à accéder à leurs contenus publics via les API officielles de Meta</li>
+                                <li>confirment disposer des droits nécessaires sur les contenus publiés</li>
+                                <li>acceptent que seules les publications contenant le hashtag #glaura puissent être affichées</li>
+                            </ul>
+                            <p>Glaura ne publie aucun contenu sur Instagram au nom du Prestataire.</p>
+                            
+                            <h4>16. Responsabilité du Contenu Importé (Instagram)</h4>
+                            <p>Le Prestataire reste seul responsable :</p>
+                            <ul>
+                                <li>du contenu publié sur Instagram</li>
+                                <li>de sa légalité, exactitude et conformité</li>
+                                <li>du respect des droits d'auteur, droits à l'image et règles Meta</li>
+                            </ul>
+                            <p>Glaura agit uniquement comme intermédiaire technique et ne saurait être tenue responsable du contenu importé depuis Instagram.</p>
+                            
+                            <h4>17. Suppression et Retrait des Contenus (Instagram)</h4>
+                            <ul>
+                                <li>Le Prestataire peut retirer l'accès Instagram à tout moment</li>
+                                <li>La suppression d'un post sur Instagram entraîne sa suppression sur Glaura</li>
+                                <li>Glaura se réserve le droit de retirer tout contenu jugé :
+                                    <ul>
+                                        <li>illégal</li>
+                                        <li>trompeur</li>
+                                        <li>offensant</li>
+                                        <li>non conforme aux présentes CGU ou aux règles Meta</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            
+                            <h4>18. Suspension liée aux Réseaux Sociaux</h4>
+                            <p>Glaura peut suspendre l'intégration Instagram ou le compte Prestataire en cas :</p>
+                            <ul>
+                                <li>d'abus de hashtags</li>
+                                <li>de contenu frauduleux ou trompeur</li>
+                                <li>de violation des politiques Meta</li>
+                                <li>de signalements répétés</li>
+                            </ul>
+
+                            <h4>19. Obligations des Prestataires</h4>
                             <p>Les Glowers doivent fournir des informations exactes et à jour, honorer les réservations acceptées et respecter la législation sur la protection des consommateurs.</p>
                             
-                            <h4>16. Responsabilité</h4>
+                            <h4>20. Responsabilité</h4>
                             <p>GoGlow décline toute responsabilité concernant l'exécution des prestations, le contenu généré par les utilisateurs ou les liens externes. L'application est fournie « en l'état » sans garantie.</p>
                             
-                            <h4>17. Liens Externes</h4>
+                            <h4>21. Liens Externes</h4>
                             <p>Des liens externes peuvent être présents à titre informatif. GoGlow n'est pas responsable de leur contenu ni de leurs pratiques.</p>
                             
-                            <h4>18. Droit Applicable</h4>
+                            <h4>22. Droit Applicable</h4>
                             <p>Les présentes CGU sont régies par le droit français. Tout litige relève de la compétence exclusive des tribunaux de Paris.</p>
                             
-                            <h4>19. Contact</h4>
+                            <h4>23. Contact</h4>
                             <p>Pour toute question : <a href="mailto:contact@goglow.com">contact@goglow.com</a></p>
                         </div>
                     </div>
