@@ -731,15 +731,32 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         
-        // Filter slots by period and availability
+        // Filter slots by period and availability AND time
         const filteredSlots = daySlots.filter(slot => {
             if (!slot.available) return false;
             
             // Extract hour from time string (format: "HH:MM")
-            const [hours] = slot.time.split(':').map(Number);
+            const [hours, minutes] = slot.time.split(':').map(Number);
             
             // Check if hour falls within the selected period range
-            return hours >= period.start && hours < period.end;
+            if (hours < period.start || hours >= period.end) {
+                return false;
+            }
+
+            // TIME CHECK: Filter out past slots if selected date is today
+            const now = new Date();
+            const currentDateStr = formatDateValue(now); // Use existing helper
+            
+            if (selectedDate === currentDateStr) {
+                 const currentHour = now.getHours();
+                 
+                 // If slot hour is earlier than current hour, hide it
+                 if (hours <= currentHour) {
+                     return false;
+                 }
+            }
+
+            return true;
         });
         
         if (filteredSlots.length === 0) {
