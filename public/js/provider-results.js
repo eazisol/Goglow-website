@@ -31,6 +31,28 @@ document.addEventListener('DOMContentLoaded', function () {
     const filterPillsContainer = document.getElementById('categoryFilterPills');
     if (!filterPillsContainer) return;
 
+    // Handle "All" button click (it's hardcoded in Blade)
+    const allButton = filterPillsContainer.querySelector('[data-category="all"]');
+    if (allButton) {
+      // Clone to remove old listeners if any, or just ensure we don't double bind if function re-runs
+      // But since fetchAndDisplayCategories runs once, simple addEventListener is fine? 
+      // Safest to remove old listener or just add it here only if not added. 
+      // Actually, let's just add it here.
+      allButton.addEventListener('click', function () {
+        // Visuals
+        const pills = filterPillsContainer.querySelectorAll('.filter-pill');
+        pills.forEach(p => {
+          p.classList.remove('active');
+          p.setAttribute('aria-current', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-current', 'true');
+
+        // Reset to default search
+        fetchProviders();
+      });
+    }
+
     // Filter only active categories and sort by sortOrder
     const activeCategories = categories
       .filter(cat => cat.isActive === true)
