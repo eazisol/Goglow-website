@@ -183,26 +183,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Function to setup infinite scroll
   function setupInfiniteScroll() {
+    // console.log('Infinite scroll listener setup');
+
+    // Throttle scroll event to improve performance
+    let tick = false;
+
     window.addEventListener('scroll', function () {
-      // Don't trigger if already loading or no more data
-      if (isLoadingMore || !hasMore) return;
-
-      // Check if user is near the bottom of the page (within 300px)
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const pageHeight = document.documentElement.scrollHeight;
-
-      if (scrollPosition >= pageHeight - 300) {
-        // Trigger load more
-        loadMoreProviders();
+      if (!tick) {
+        window.requestAnimationFrame(function () {
+          handleScroll();
+          tick = false;
+        });
+        tick = true;
       }
     });
   }
 
+  function handleScroll() {
+    // Don't trigger if already loading or no more data
+    if (isLoadingMore || !hasMore) return;
+
+    // Check if user is near the bottom of the page (within 300px)
+    const scrollPosition = window.scrollY + window.innerHeight;
+
+    // Robust height calculation
+    const body = document.body;
+    const html = document.documentElement;
+    const pageHeight = Math.max(
+      body.scrollHeight, body.offsetHeight,
+      html.clientHeight, html.scrollHeight, html.offsetHeight
+    );
+    // const pageHeight = document.documentElement.scrollHeight;
+
+    const distanceToBottom = pageHeight - scrollPosition;
+
+    // Debug log only if close to bottom to avoid spamming
+    if (distanceToBottom < 1000) {
+      // console.log(`Scroll: pos=${Math.round(scrollPosition)}, height=${pageHeight}, diff=${Math.round(distanceToBottom)}, hasMore=${hasMore}, lastDocId=${lastDocId}`);
+    }
+
+    if (distanceToBottom < 700) {
+      // Trigger load more
+      console.log('Triggering load more...');
+      loadMoreProviders();
+    }
+  }
+
   // Function to load more providers (for infinite scroll)
   async function loadMoreProviders() {
-    if (isLoadingMore || !hasMore || !lastDocId) return;
+    // Debug why it might return early
+    if (isLoadingMore) { console.log('Skipping: already loading'); return; }
+    if (!hasMore) { console.log('Skipping: no more data'); return; }
+    if (!lastDocId) { console.log('Skipping: no lastDocId'); return; }
 
     isLoadingMore = true;
+    console.log(`Loading more... lastDocId: ${lastDocId}`);
+
     const loadMoreEl = document.getElementById('providers-load-more');
     if (loadMoreEl) loadMoreEl.style.display = 'flex';
 
@@ -221,9 +257,13 @@ document.addEventListener('DOMContentLoaded', function () {
       const providers = data.providers || [];
       const pagination = data.pagination || {};
 
+      console.log(`Loaded ${providers.length} more providers`);
+
       // Update pagination state
       lastDocId = pagination.lastDocId || null;
       hasMore = pagination.hasMore === true;
+
+      console.log(`New state: lastDocId=${lastDocId}, hasMore=${hasMore}`);
 
       // Hide load more spinner
       if (loadMoreEl) loadMoreEl.style.display = 'none';
