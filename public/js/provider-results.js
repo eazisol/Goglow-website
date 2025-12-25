@@ -42,7 +42,25 @@ document.addEventListener('DOMContentLoaded', function () {
       button.type = 'button';
       button.className = 'filter-pill';
       button.setAttribute('data-category', category.name);
+      button.setAttribute('data-id', category.id);
       button.setAttribute('aria-current', 'false');
+
+      // Add click listener for filtering
+      button.addEventListener('click', function () {
+        const categoryId = this.getAttribute('data-id');
+
+        // Update active state
+        const pills = filterPillsContainer.querySelectorAll('.filter-pill');
+        pills.forEach(p => {
+          p.classList.remove('active');
+          p.setAttribute('aria-current', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-current', 'true');
+
+        // Fetch providers for this category
+        fetchProvidersByCategory(categoryId);
+      });
 
       // Create icon image if imageUrl exists
       if (category.imageUrl) {
@@ -404,6 +422,68 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Function to fetch providers by category
+  async function fetchProvidersByCategory(categoryId) {
+    if (!categoryId) return;
+
+    const loadingEl = document.getElementById('providers-loading');
+    const errorEl = document.getElementById('providers-error');
+    const emptyEl = document.getElementById('providers-empty');
+    const gridEl = document.getElementById('providers-grid');
+    const loadMoreEl = document.getElementById('providers-load-more');
+
+    // Reset pagination state (disable infinite scroll for category view)
+    hasMore = false;
+    lastDocId = null;
+    isLoadingMore = false;
+
+    // Show loading state
+    if (loadingEl) loadingEl.style.display = 'flex';
+    if (errorEl) errorEl.style.display = 'none';
+    if (emptyEl) emptyEl.style.display = 'none';
+    if (gridEl) {
+      gridEl.innerHTML = '';
+      gridEl.style.display = 'none';
+    }
+    if (loadMoreEl) loadMoreEl.style.display = 'none';
+
+    try {
+      const response = await fetch(`https://us-central1-beauty-984c8.cloudfunctions.net/getSalonsByCategory?categoryId=${categoryId}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const providers = await response.json();
+
+      if (loadingEl) loadingEl.style.display = 'none';
+
+      if (Array.isArray(providers) && providers.length > 0) {
+        if (gridEl) {
+          // Use appendProviders logic but we need to clear grid first which we did above
+          // Reuse createProviderCard logic inside appendProviders/renderProviders
+          providers.forEach(provider => {
+            const providerCard = createProviderCard(provider);
+            gridEl.appendChild(providerCard);
+          });
+          gridEl.style.display = 'grid';
+          initializeProviderTooltips();
+        }
+      } else {
+        if (emptyEl) emptyEl.style.display = 'block';
+      }
+
+    } catch (error) {
+      console.error('Error fetching category providers:', error);
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) {
+        errorEl.style.display = 'block';
+        const errorMsg = errorEl.querySelector('p');
+        if (errorMsg) errorMsg.textContent = 'Failed to load providers. Please try again.';
+      }
+    }
+  }
+
   // Make fetchProviders available globally for retry button
   window.fetchProviders = function () {
     const searchParam = new URLSearchParams(window.location.search).get('search');
@@ -429,8 +509,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize tooltips for the new cards
     initializeProviderTooltips();
 
-    // Initialize category filtering (though categories are empty for now)
-    initializeCategoryFilters();
+
   }
 
   // Function to append providers to the grid (for infinite scroll, doesn't clear)
@@ -807,42 +886,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', function () { if (tooltip.style.display === 'block') positionTooltip(); });
   });
 
-  // Category filtering functionality
-  const filterPills = document.querySelectorAll('.filter-pill');
-  const providerItems = document.querySelectorAll('.results-item');
 
-  filterPills.forEach(function (pill) {
-    pill.addEventListener('click', function () {
-      const selectedCategory = this.getAttribute('data-category');
-
-      // Update active state
-      filterPills.forEach(function (p) {
-        p.classList.remove('active');
-        p.removeAttribute('aria-current');
-      });
-      this.classList.add('active');
-      this.setAttribute('aria-current', 'true');
-
-      // Filter providers
-      providerItems.forEach(function (item) {
-        if (selectedCategory === 'all') {
-          item.style.display = '';
-        } else {
-          const categories = item.getAttribute('data-categories');
-          if (categories && categories.trim() !== '') {
-            const categoryList = categories.split(',').map(function (cat) { return cat.trim(); });
-            if (categoryList.includes(selectedCategory)) {
-              item.style.display = '';
-            } else {
-              item.style.display = 'none';
-            }
-          } else {
-            item.style.display = 'none';
-          }
-        }
-      });
-    });
-  });
 
   // Search autocomplete functionality
   const searchInput = document.getElementById('searchInput');
