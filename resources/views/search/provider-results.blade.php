@@ -143,6 +143,12 @@
         <div id="providers-grid" class="results-grid" style="display: none;">
             {{-- Providers will be rendered here by JavaScript --}}
                                     </div>
+
+        <!-- Infinite Scroll Loading Indicator -->
+        <div id="providers-load-more" class="providers-load-more" style="display: none;">
+            <div class="providers-spinner"></div>
+            <p>Loading more...</p>
+        </div>
                                             </div>
                                     </div>
 <!-- Search Results Section End -->

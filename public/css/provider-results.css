@@ -30,6 +30,22 @@
         color: #75213e;
     }
 
+    /* Infinite Scroll Load More Spinner */
+    .providers-load-more {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .providers-load-more p {
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        color: #75213e;
+        margin-top: 10px;
+    }
+
     /* Error State */
     .providers-error {
         text-align: center;

@@ -4,6 +4,12 @@ document.addEventListener('DOMContentLoaded', function () {
   // Cache configuration - 24 hours
   const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
+  // Pagination state variables
+  let lastDocId = null;
+  let hasMore = true;
+  let isLoadingMore = false;
+  let isInitialLoad = true;
+
   // Fetch categories from API and display them
   fetchAndDisplayCategories();
 
@@ -16,6 +22,9 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!providerIdParam) {
     fetchProviders(searchParam, locationParam);
   }
+
+  // Setup infinite scroll listener
+  setupInfiniteScroll();
 
   // Helper function to display categories
   function displayCategories(categories) {
@@ -109,12 +118,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Helper function to get cache key for providers
+  // Helper function to get cache key for providers (first page only)
   function getProvidersCacheKey(search, location) {
     return `salons_cache_${search || 'all'}_${location || 'all'}`;
   }
 
-  // Helper function to get cached providers
+  // Helper function to get cached providers (first page only)
   function getCachedProviders(search, location) {
     try {
       const cacheKey = getProvidersCacheKey(search, location);
@@ -126,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Check if cache is still valid
       if (now - cacheData.timestamp < CACHE_DURATION) {
-        return cacheData.providers;
+        return cacheData;
       } else {
         // Cache expired, remove it
         localStorage.removeItem(cacheKey);
@@ -138,12 +147,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Helper function to cache providers
-  function cacheProviders(search, location, providers) {
+  // Helper function to cache providers (first page only with pagination info)
+  function cacheProviders(search, location, providers, pagination) {
     try {
       const cacheKey = getProvidersCacheKey(search, location);
       const cacheData = {
         providers: providers,
+        pagination: pagination,
         timestamp: Date.now()
       };
       localStorage.setItem(cacheKey, JSON.stringify(cacheData));
@@ -158,6 +168,12 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         });
         // Retry caching
+        const cacheKey = getProvidersCacheKey(search, location);
+        const cacheData = {
+          providers: providers,
+          pagination: pagination,
+          timestamp: Date.now()
+        };
         localStorage.setItem(cacheKey, JSON.stringify(cacheData));
       } catch (retryError) {
         console.warn('Failed to cache providers after cleanup:', retryError);
@@ -165,44 +181,35 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Function to fetch providers from API
-  async function fetchProviders(search = null, location = null) {
-    const loadingEl = document.getElementById('providers-loading');
-    const errorEl = document.getElementById('providers-error');
-    const emptyEl = document.getElementById('providers-empty');
-    const gridEl = document.getElementById('providers-grid');
+  // Function to setup infinite scroll
+  function setupInfiniteScroll() {
+    window.addEventListener('scroll', function () {
+      // Don't trigger if already loading or no more data
+      if (isLoadingMore || !hasMore) return;
 
-    // Show loading, hide others
-    if (loadingEl) loadingEl.style.display = 'flex';
-    if (errorEl) errorEl.style.display = 'none';
-    if (emptyEl) emptyEl.style.display = 'none';
-    if (gridEl) gridEl.style.display = 'none';
+      // Check if user is near the bottom of the page (within 300px)
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const pageHeight = document.documentElement.scrollHeight;
 
-    // Check cache first
-    const cachedProviders = getCachedProviders(search, location);
-    if (cachedProviders) {
-      // Use cached data
-      if (loadingEl) loadingEl.style.display = 'none';
-
-      if (!Array.isArray(cachedProviders) || cachedProviders.length === 0) {
-        if (emptyEl) emptyEl.style.display = 'flex';
-        return;
+      if (scrollPosition >= pageHeight - 300) {
+        // Trigger load more
+        loadMoreProviders();
       }
+    });
+  }
 
-      // Render cached providers
-      renderProviders(cachedProviders);
-      return;
-    }
+  // Function to load more providers (for infinite scroll)
+  async function loadMoreProviders() {
+    if (isLoadingMore || !hasMore || !lastDocId) return;
+
+    isLoadingMore = true;
+    const loadMoreEl = document.getElementById('providers-load-more');
+    if (loadMoreEl) loadMoreEl.style.display = 'flex';
 
     try {
-      // Build API URL - fetch all providers (API handles filtering if params provided)
-      let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
-      const params = new URLSearchParams();
-      if (search) params.append('name', search);
-      if (location) params.append('location', location);
-      if (params.toString()) {
-        apiUrl += '?' + params.toString();
-      }
+      // Build API URL with lastDocId for pagination
+      let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllProviders';
+      apiUrl += '?lastDocId=' + encodeURIComponent(lastDocId);
 
       const response = await fetch(apiUrl);
 
@@ -210,11 +217,126 @@ document.addEventListener('DOMContentLoaded', function () {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const providers = await response.json();
+      const data = await response.json();
+      const providers = data.providers || [];
+      const pagination = data.pagination || {};
 
-      // Cache the providers
-      if (Array.isArray(providers)) {
-        cacheProviders(search, location, providers);
+      // Update pagination state
+      lastDocId = pagination.lastDocId || null;
+      hasMore = pagination.hasMore === true;
+
+      // Hide load more spinner
+      if (loadMoreEl) loadMoreEl.style.display = 'none';
+
+      if (providers.length > 0) {
+        // Append providers to the grid (don't clear existing)
+        appendProviders(providers);
+      }
+
+    } catch (error) {
+      console.error('Error loading more providers:', error);
+      if (loadMoreEl) loadMoreEl.style.display = 'none';
+    } finally {
+      isLoadingMore = false;
+    }
+  }
+
+  // Function to fetch providers from API (initial load)
+  async function fetchProviders(search = null, location = null) {
+    const loadingEl = document.getElementById('providers-loading');
+    const errorEl = document.getElementById('providers-error');
+    const emptyEl = document.getElementById('providers-empty');
+    const gridEl = document.getElementById('providers-grid');
+
+    // Reset pagination state for fresh search
+    lastDocId = null;
+    hasMore = true;
+    isInitialLoad = true;
+
+    // Show loading, hide others
+    if (loadingEl) loadingEl.style.display = 'flex';
+    if (errorEl) errorEl.style.display = 'none';
+    if (emptyEl) emptyEl.style.display = 'none';
+    if (gridEl) gridEl.style.display = 'none';
+
+    // Determine if this is a search with parameters or just listing all providers
+    const hasSearchParams = search || location;
+
+    // Check cache first (only for initial load without search params)
+    if (!hasSearchParams) {
+      const cachedData = getCachedProviders(search, location);
+      if (cachedData && cachedData.providers) {
+        // Use cached data
+        if (loadingEl) loadingEl.style.display = 'none';
+
+        if (!Array.isArray(cachedData.providers) || cachedData.providers.length === 0) {
+          if (emptyEl) emptyEl.style.display = 'flex';
+          return;
+        }
+
+        // Restore pagination state from cache
+        if (cachedData.pagination) {
+          lastDocId = cachedData.pagination.lastDocId || null;
+          hasMore = cachedData.pagination.hasMore === true;
+        }
+
+        // Render cached providers
+        renderProviders(cachedData.providers);
+        isInitialLoad = false;
+        return;
+      }
+    }
+
+    try {
+      let apiUrl;
+      let providers;
+      let pagination = null;
+
+      if (hasSearchParams) {
+        // USE OLD searchProviders API for search with parameters (no pagination changes)
+        apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
+        const params = new URLSearchParams();
+        if (search) params.append('name', search);
+        if (location) params.append('location', location);
+        if (params.toString()) {
+          apiUrl += '?' + params.toString();
+        }
+
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // searchProviders returns array directly
+        providers = await response.json();
+
+        // Disable infinite scroll for search results (no pagination)
+        hasMore = false;
+        lastDocId = null;
+
+      } else {
+        // USE NEW getAllProviders API for listing all providers (with pagination)
+        apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllProviders';
+
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        providers = data.providers || [];
+        pagination = data.pagination || {};
+
+        // Update pagination state
+        lastDocId = pagination.lastDocId || null;
+        hasMore = pagination.hasMore === true;
+
+        // Cache the first page of providers (only when no search params)
+        if (Array.isArray(providers)) {
+          cacheProviders(search, location, providers, pagination);
+        }
       }
 
       // Hide loading
@@ -227,6 +349,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Render providers
       renderProviders(providers);
+      isInitialLoad = false;
 
     } catch (error) {
       console.error('Error fetching providers:', error);
@@ -248,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchProviders(searchParam, locationParam);
   };
 
-  // Function to render providers in the grid
+  // Function to render providers in the grid (clears existing)
   function renderProviders(providers) {
     const gridEl = document.getElementById('providers-grid');
     if (!gridEl) return;
@@ -268,6 +391,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize category filtering (though categories are empty for now)
     initializeCategoryFilters();
+  }
+
+  // Function to append providers to the grid (for infinite scroll, doesn't clear)
+  function appendProviders(providers) {
+    const gridEl = document.getElementById('providers-grid');
+    if (!gridEl) return;
+
+    providers.forEach(provider => {
+      const providerCard = createProviderCard(provider);
+      gridEl.appendChild(providerCard);
+    });
+
+    // Initialize tooltips for the new cards
+    initializeProviderTooltips();
   }
 
   // Function to create a provider card element
