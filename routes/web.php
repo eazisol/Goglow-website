@@ -81,6 +81,25 @@ Route::get('/api/locale', [\App\Http\Controllers\LanguageController::class, 'get
 // Test language page
 Route::get('/test-language', function () {return view('test.language');});
 
+// Android App Links - Digital Asset Links for deep linking
+Route::get('/.well-known/assetlinks.json', function () {
+    return response()->json([
+        [
+            'relation' => [
+                'delegate_permission/common.handle_all_urls',
+                'delegate_permission/common.get_login_creds'
+            ],
+            'target' => [
+                'namespace' => 'android_app',
+                'package_name' => 'com.salif.beautyapp',
+                'sha256_cert_fingerprints' => [
+                    '1C:06:81:B8:3E:7F:AB:9D:00:09:27:BD:30:F2:D4:AA:CC:7D:88:72:C5:9E:8E:7C:F0:0A:5F:29:02:90:E9:9D'
+                ]
+            ]
+        ]
+    ]);
+});
+
 // Provider by username routes (must be at the end to avoid conflicts with other routes)
 // IMPORTANT: Videos route must come BEFORE the slug route to prevent "videos" from being matched as a slug
 Route::get('/{companyUserName}/videos', [\App\Http\Controllers\SearchController::class, 'showProviderVideosByUsername'])->name('provider.videos.by.username');
