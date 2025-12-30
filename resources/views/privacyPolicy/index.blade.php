@@ -42,7 +42,7 @@
                     <div class="privacy-content">
                         <div class="privacy-text">
                             {{-- <h2>GoGlow - Politique de Confidentialité</h2> --}}
-                            <p class="text-end">Dernière mise à jour : 23 décembre 2025</p>
+                            <p class="text-end">Dernière mise à jour : 29 décembre 2025</p>
                             <div class="section-title">
                                 <h3 class="wow">Privacy Policy</h3>
                             </div>
@@ -54,7 +54,7 @@
                             Numéro SIRET : [Insérer le SIRET]</p> --}}
                             
                             <h3>1. Introduction</h3>
-                            <p>GoGlow s'engage à protéger vos données personnelles conformément au RGPD et à la législation française sous la supervision de la CNIL. Cette politique s'applique à tous les utilisateurs âgés de 16 ans et plus. Les utilisateurs de moins de 16 ans doivent fournir un consentement parental explicite en contactant dpo@goglow.com.</p>
+                            <p>Glaura s'engage à protéger vos données personnelles conformément au RGPD et à la législation française sous la supervision de la CNIL. Cette politique s'applique à tous les utilisateurs âgés de 16 ans et plus. Les utilisateurs de moins de 16 ans doivent fournir un consentement parental explicite en contactant dpo@glaura.ai.</p>
                             
                             <h3>2. Données Collectées</h3>
                             <ul>
@@ -184,25 +184,41 @@
                             <p>Nous appliquons le chiffrement, les protocoles HTTPS, des audits de sécurité réguliers, des tests d'intrusion, la traçabilité des accès et des politiques internes. Le personnel reçoit une formation régulière.</p>
                             
                             <h3>10. Droits des Utilisateurs (RGPD)</h3>
-                            <p>Vous avez le droit d'accéder, de corriger, d'effacer, de limiter, de vous opposer au traitement, de demander la portabilité et de définir des directives post-mortem. Contact : <a href="mailto:dpo@goglow.com">dpo@goglow.com</a>. Une preuve d'identité peut être exigée.</p>
+                            <p>Vous avez le droit d'accéder, de corriger, d'effacer, de limiter, de vous opposer au traitement, de demander la portabilité et de définir des directives post-mortem. Contact : <a href="mailto:dpo@glaura.ai">dpo@glaura.ai</a>. Une preuve d'identité peut être exigée.</p>
                             
                             <h3>11. Durée de Conservation</h3>
                             <p>Les données sont conservées uniquement le temps nécessaire aux finalités décrites. En cas de suppression du compte, toutes les données sont définitivement effacées sous 30 jours, sauf obligations légales.</p>
                             
-                            <h3>12. Confidentialité des Enfants</h3>
+                            <h3>12. Account Deletion / Suppression de Compte</h3>
+                            <p>You have the right to delete your account and all associated data at any time.</p>
+                            
+                            <h4>How to request deletion:</h4>
+                            <ul>
+                                <li><strong>In-App:</strong> Log in to the app, go to Profile > Settings, and tap "Delete Account".</li>
+                                <li><strong>By Web/Email:</strong> If you cannot access the app, you can request deletion by emailing our Data Protection Officer at <a href="mailto:dpo@glaura.ai">dpo@glaura.ai</a> with the subject line "Account Deletion Request". Please provide your registered email address or phone number so we can verify your identity.</li>
+                            </ul>
+                            
+                            <h4>Data Deletion & Retention:</h4>
+                            <ul>
+                                <li><strong>What is deleted:</strong> Your profile information, chat history, usage data, and authentication tokens will be permanently removed.</li>
+                                <li><strong>Timeline:</strong> Data is deleted within 30 days of your request.</li>
+                                <li><strong>What is kept:</strong> We may retain certain financial record data (e.g., transaction invoices) for a period of 5-10 years solely to comply with legal tax obligations.</li>
+                            </ul>
+                            
+                            <h3>13. Confidentialité des Enfants</h3>
                             <p>Notre application n'est pas destinée aux enfants de moins de 13 ans. Nous ne collectons pas sciemment leurs données. Les utilisateurs de moins de 16 ans doivent fournir un consentement parental.</p>
                             
-                            <h3>13. Cookies</h3>
+                            <h3>14. Cookies</h3>
                             <p>Les cookies sont utilisés pour améliorer l'expérience utilisateur et sont conservés 13 mois maximum. Consultez notre Politique de Cookies pour plus de détails.</p>
                             
-                            <h3>14. Plaintes et CNIL</h3>
-                            <p>Pour toute préoccupation, contactez notre DPO à <a href="mailto:dpo@goglow.com">dpo@goglow.com</a> ou la CNIL :</p>
+                            <h3>15. Plaintes et CNIL</h3>
+                            <p>Pour toute préoccupation, contactez notre DPO à <a href="mailto:dpo@glaura.ai">dpo@glaura.ai</a> ou la CNIL :</p>
                             <p>Commission Nationale de l'Informatique et des Libertés (CNIL)<br>
                             3 place de Fontenoy – TSA 80751, 75334 Paris Cedex 07<br>
                             Téléphone : 01.53.73.22.22<br>
                             <a href="https://www.cnil.fr" target="_blank">https://www.cnil.fr</a></p>
                             
-                            <h3>15. Modifications</h3>
+                            <h3>16. Modifications</h3>
                             <p>Nous pouvons mettre à jour cette Politique de Confidentialité pour refléter les évolutions légales ou de service. La date de la dernière révision sera toujours indiquée.</p>
                         </div>
                     </div>
