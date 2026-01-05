@@ -10,47 +10,84 @@
 
 {{-- Content --}}
 @section('content')
-    <!-- Page Header Start -->
-    <div class="bookings-page-header">
+    <div class="account-layout">
         <div class="container">
-            <h1>{{ __('app.bookings.title') }}</h1>
-            <p>{{ __('app.bookings.subtitle') }}</p>
-        </div>
-    </div>
-    <!-- Page Header End -->
-
-    <!-- Bookings Section Start -->
-    <div class="bookings-container">
-        <div class="container">
-            <!-- Loading State -->
-            <div id="bookingsLoading" class="bookings-loading">
-                <div class="spinner"></div>
-                <p>{{ __('app.bookings.loading') }}</p>
-            </div>
-
-            <!-- Error State (hidden by default) -->
-            <div id="bookingsError" class="bookings-error" style="display: none;">
-                <h3>{{ __('app.bookings.error_title') }}</h3>
-                <p>{{ __('app.bookings.error_desc') }}</p>
-            </div>
-
-            <!-- Empty State (hidden by default) -->
-            <div id="bookingsEmpty" class="bookings-empty" style="display: none;">
-                <div class="bookings-empty-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+            <div class="layout-grid">
+                <!-- Sidebar -->
+                <div class="account-sidebar">
+                    <div class="sidebar-menu">
+                        <div class="menu-group">
+                            <h3 class="menu-title">{{ __('app.bookings.my_account') ?? 'My account' }}</h3>
+                            <ul class="menu-list">
+                                <li>
+                                    <a href="{{ route('my-bookings') }}" class="menu-link active">
+                                        {{ __('app.bookings.my_appointments') ?? 'My appointments' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="menu-link placeholder-link">
+                                        {{ __('app.bookings.my_information') ?? 'My information' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="menu-link placeholder-link">
+                                        {{ __('app.bookings.my_loved_ones') ?? 'My loved ones' }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="menu-group">
+                            <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                                @csrf
+                                <button type="submit" class="menu-link logout-btn">
+                                    {{ __('app.bookings.log_out') ?? 'Log out' }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <h3>{{ __('app.bookings.no_bookings') }}</h3>
-                <p>{{ __('app.bookings.no_bookings_desc') }}</p>
-                <a href="{{ url('/search') }}" class="btn-book-now">{{ __('app.bookings.book_now') }}</a>
-            </div>
 
-            <!-- Bookings Grid (populated by JavaScript) -->
-            <div id="bookingsGrid" class="bookings-grid" style="display: none;"></div>
+                <!-- Main Content -->
+                <div class="account-content">
+
+
+                    <!-- Bookings Section -->
+                    <div class="bookings-list-container">
+                        <div class="content-header">
+                            <h1>{{ __('app.bookings.my_past_appointments') ?? 'My past appointments' }}</h1>
+                        </div>
+                        <!-- Loading State -->
+                        <div id="bookingsLoading" class="bookings-loading">
+                            <div class="spinner"></div>
+                            <p>{{ __('app.bookings.loading') }}</p>
+                        </div>
+
+                        <!-- Error State -->
+                        <div id="bookingsError" class="bookings-error" style="display: none;">
+                            <h3>{{ __('app.bookings.error_title') }}</h3>
+                            <p>{{ __('app.bookings.error_desc') }}</p>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="bookingsEmpty" class="bookings-empty" style="display: none;">
+                            <div class="bookings-empty-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3>{{ __('app.bookings.no_bookings') }}</h3>
+                            <p>{{ __('app.bookings.no_bookings_desc') }}</p>
+                            <a href="{{ url('/search') }}" class="btn-book-now">{{ __('app.bookings.book_now') }}</a>
+                        </div>
+
+                        <!-- Bookings List (populated by JavaScript) -->
+                        <div id="bookingsGrid" class="bookings-list" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Bookings Section End -->
 @endsection
 
 
@@ -71,118 +108,146 @@ document.addEventListener('DOMContentLoaded', function () {
         totalAmount: @json(__('app.bookings.total_amount')),
         paid: @json(__('app.bookings.paid')),
         remaining: @json(__('app.bookings.remaining')),
-        fullyPaid: @json(__('app.bookings.fully_paid')),
-        bookingTime: @json(__('app.bookings.booking_time')),
+        with: @json(__('app.bookings.with') ?? 'with'),
+        statusCancelled: @json(__('app.bookings.status_cancelled')),
+        
+        // Status Translations
         statusUnknown: @json(__('app.bookings.status_unknown')),
+        fullyPaid: @json(__('app.bookings.fully_paid')),
         statusPending: @json(__('app.bookings.status_pending')),
         statusInProgress: @json(__('app.bookings.status_in_progress')),
-        statusCancelled: @json(__('app.bookings.status_cancelled')),
         statusBooked: @json(__('app.bookings.status_booked')),
         statusCompleted: @json(__('app.bookings.status_completed')),
         statusReviewed: @json(__('app.bookings.status_reviewed')),
         statusReceived: @json(__('app.bookings.status_received')),
     };
-    
-    // Status mapping
+
+    // Status mapping based on user provided codes
     function getStatusInfo(status) {
+        const s = String(status);
         const statusMap = {
-            '-1': { label: translations.statusUnknown, class: 'status-unknown' },
-            '0': { label: translations.statusPending, class: 'status-pending' },
-            '1': { label: translations.statusInProgress, class: 'status-in-progress' },
-            '2': { label: translations.statusCancelled, class: 'status-cancelled' },
-            '3': { label: translations.statusCancelled, class: 'status-cancelled' },
-            '4': { label: translations.statusBooked, class: 'status-booked' },
-            '5': { label: translations.statusCompleted, class: 'status-completed' },
-            '6': { label: translations.statusCancelled, class: 'status-cancelled' },
-            '7': { label: translations.statusReviewed, class: 'status-reviewed' },
-            '8': { label: translations.statusCompleted, class: 'status-completed' },
-            '9': { label: translations.statusReceived, class: 'status-pending' },
+            '-1': { label: translations.statusUnknown, class: 'status-unknown' },      // Unknown
+            '0':  { label: translations.statusPending, class: 'status-pending' },      // Pending
+            '1':  { label: translations.statusInProgress, class: 'status-in-progress' }, // Progress
+            '2':  { label: translations.statusCancelled, class: 'status-cancelled' },  // CancelledByCustomer
+            '3':  { label: translations.statusCancelled, class: 'status-cancelled' },  // CancelledByServiceProvider
+            '4':  { label: translations.statusBooked, class: 'status-booked' },        // Booked
+            '5':  { label: translations.statusCompleted, class: 'status-completed' },  // Completed
+            '6':  { label: translations.statusCancelled, class: 'status-cancelled' },  // Cancelled fallback
+            '7':  { label: translations.statusReviewed, class: 'status-reviewed' },    // Reviewed
+            '8':  { label: translations.statusCompleted, class: 'status-completed' },  // CompletedAlt
+            '9':  { label: translations.statusReceived, class: 'status-pending' },     // ReceivedRequest
         };
-        return statusMap[String(status)] || statusMap['-1'];
+        return statusMap[s] || statusMap['-1'];
     }
-    
-    // Format booking time
-    function formatBookingTime(bookingTime, bookTime) {
-        if (!bookingTime) return 'N/A';
-        
+
+    // Format booking time for the new design: "Tuesday, December 16, 1:30 PM"
+    function formatBookingDate(bookingTime) {
+        if (!bookingTime) return '';
         try {
             const date = new Date(bookingTime);
             const locale = '{{ app()->getLocale() }}' === 'fr' ? 'fr-FR' : 'en-US';
-            const dateStr = date.toLocaleDateString(locale, {
-                weekday: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
             
-            const timeStr = bookTime || date.toLocaleTimeString(locale, {
-                hour: '2-digit',
+            // Format: Tuesday, December 16, 1:30 PM
+            return date.toLocaleDateString(locale, {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
                 minute: '2-digit'
             });
-            
-            return `${dateStr} @ ${timeStr}`;
         } catch (e) {
             return bookingTime;
         }
     }
     
-    // Calculate payment amounts
-    function calculatePayment(amount, depositPercentage, paymentType) {
-        if (paymentType === 'full') {
-            return {
-                paid: amount,
-                remaining: 0,
-                isFullyPaid: true
-            };
-        }
-        
-        const paidAmount = (amount * depositPercentage) / 100;
-        const remainingAmount = amount - paidAmount;
-        
-        return {
-            paid: paidAmount,
-            remaining: remainingAmount,
-            isFullyPaid: false
-        };
-    }
-    
-    // Create booking card HTML
+    // Create new horizontal booking card HTML
     function createBookingCard(booking) {
         const providerPhoto = booking.serviceProviderInfo?.photo || '{{ asset("images/istockphoto-1300845620-612x612.jpg") }}';
         const providerName = booking.serviceProviderInfo?.name || 'Service Provider';
         const serviceName = booking.services?.[0]?.serviceName || 'Service';
-        const statusInfo = getStatusInfo(booking.status);
-        const bookingTimeStr = formatBookingTime(booking.booking_time, booking.bookTime);
-        const payment = calculatePayment(booking.amount || 0, booking.depositPercentage || 0, booking.paymentType);
         
+        // Address check: Root address first, then provider info
+        const address = booking.address || booking.serviceProviderInfo?.address || 'Location details unavailable';
+        
+        const bookingDateStr = formatBookingDate(booking.booking_time);
+        
+        // Duration: Root duration_minutes or first service durationMinutes
+        const durationVal = booking.duration_minutes || booking.services?.[0]?.durationMinutes || ''; 
+        const durationHtml = durationVal ? `<span>${durationVal} min</span> <span class="separator">•</span>` : '';
+        
+        const price = booking.amount?.toFixed(2) || '0.00';
+        
+        // Status Info
+        const statusInfo = getStatusInfo(booking.status);
+        const statusLabel = statusInfo.label;
+        const statusClass = statusInfo.class; // e.g., 'status-cancelled', 'status-booked'
+        
+        // Handle cancelled style for the whole card if needed
+        const isCancelled = ['2', '3', '6'].includes(String(booking.status));
+        const cardClass = isCancelled ? 'card-cancelled' : '';
+
         return `
-            <div class="booking-card">
-                <div class="booking-card-header">
-                    <img class="provider-avatar" src="${providerPhoto}" alt="${providerName}" onerror="this.src='{{ asset("images/istockphoto-1300845620-612x612.jpg") }}'">
-                    <div class="provider-info">
-                        <h4 class="provider-name">${providerName}</h4>
-                        <p class="service-name">${serviceName}</p>
-                    </div>
-                    <span class="status-badge ${statusInfo.class}">${statusInfo.label}</span>
+            <div class="booking-card-horizontal ${cardClass}">
+                <div class="card-header-date">
+                    <span>${bookingDateStr}</span>
+                    <span class="status-badge-inline ${statusClass}">${statusLabel}</span>
                 </div>
-                <div class="booking-card-body">
-                    <div class="booking-detail">
-                        <span class="detail-label">${translations.bookingTime}</span>
-                        <span class="detail-value">${bookingTimeStr}</span>
+                <div class="card-body-flex">
+                    <div class="card-image-col">
+                        <img src="${providerPhoto}" alt="${providerName}" class="provider-image" onerror="this.src='{{ asset("images/istockphoto-1300845620-612x612.jpg") }}'">
                     </div>
-                    <div class="booking-detail">
-                        <span class="detail-label">${translations.totalAmount}</span>
-                        <span class="detail-value amount">${booking.amount?.toFixed(2) || '0.00'}€</span>
-                    </div>
-                    <div class="booking-detail">
-                        <span class="detail-label">${translations.paid}</span>
-                        <span class="detail-value paid">${payment.paid.toFixed(2)}€</span>
-                    </div>
-                    <div class="booking-detail">
-                        <span class="detail-label">${translations.remaining}</span>
-                        <span class="detail-value ${payment.isFullyPaid ? 'fully-paid' : 'remaining'}">
-                            ${payment.isFullyPaid ? translations.fullyPaid : payment.remaining.toFixed(2) + '€'}
-                        </span>
+                    <div class="card-details-col">
+                        <h4 class="provider-title">${providerName}</h4>
+                        
+                        <div class="location-row">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-location"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span class="location-text">${address}</span>
+                        </div>
+                        
+                        <div class="services-row">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-diamond"><path d="M6 3h12l4 6-10 13L2 9z"></path></svg>
+                            <span class="services-text">${serviceName}</span>
+                        </div>
+                        
+                        <div class="meta-row">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            ${durationHtml}
+                            
+                            <div class="price-info">
+                                <span class="price">€${price}</span>
+                                ${(() => {
+                                    // Payment Logic
+                                    const isDeposit = booking.paymentType === 'deposit' || booking.payment_type === 'deposit';
+                                    
+                                    if (isDeposit) {
+                                        const totalVal = booking.amount || 0;
+                                        // Use dynamic depositPercentage if available, default to 15%
+                                        const percentage = booking.depositPercentage ? (booking.depositPercentage / 100) : 0.15;
+                                        const paidVal = (totalVal * percentage).toFixed(2);
+                                        const remainingVal = (totalVal - paidVal).toFixed(2);
+                                        return `
+                                            <div class="payment-breakdown">
+                                                <span class="paid-text text-success">${translations.paid}: €${paidVal}</span>
+                                                <span class="separator">•</span>
+                                                <span class="remaining-text text-danger">${translations.remaining}: €${remainingVal}</span>
+                                            </div>
+                                        `;
+                                    } else {
+                                        // Assume full payment if not deposit (or explicitly 'full')
+                                        return `
+                                            <div class="payment-breakdown" style="background: #e8f5e9;">
+                                                <span class="text-success" style="color: #1b5e20;">${translations.fullyPaid}</span>
+                                            </div>
+                                        `;
+                                    }
+                                })()}
+                            </div>
+
+                            <span class="separator">•</span>
+                            <span class="with-provider">${translations.with} ${providerName}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -238,6 +303,21 @@ document.addEventListener('DOMContentLoaded', function () {
             const bookings = Array.isArray(data) ? data : (data.bookings || []);
             renderBookings(bookings);
             
+            // Mocking data for UI testing if empty (Uncomment for testing visual design if API has no data)
+            /*
+            if (bookings.length === 0) {
+                 renderBookings([
+                     {
+                         booking_time: new Date().toISOString(),
+                         amount: 29,
+                         serviceProviderInfo: { name: 'Kervin Barber', photo: '', address: '15 Rue Étienne Marcel, 75001 Paris' },
+                         services: [{ serviceName: 'Haircut, Styling, Layered, Taper', duration: 30 }]
+                     }
+                 ]);
+                 emptyEl.style.display = 'none';
+            }
+            */
+            
         } catch (error) {
             console.error('Error fetching bookings:', error);
             showError();
@@ -246,6 +326,11 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Initialize
     fetchBookings();
+    
+    // Placeholder links prevention
+    document.querySelectorAll('.placeholder-link').forEach(link => {
+        link.addEventListener('click', (e) => e.preventDefault());
+    });
 });
 </script>
 @endsection

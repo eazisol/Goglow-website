@@ -135,6 +135,13 @@ return [
         'status_completed' => 'Terminé',
         'status_reviewed' => 'Évalué',
         'status_received' => 'Demande reçue',
+        'my_account' => 'Mon Compte',
+        'my_appointments' => 'Mes Rendez-vous',
+        'my_information' => 'Mes Informations',
+        'my_loved_ones' => 'Mes Proches',
+        'log_out' => 'Se Déconnecter',
+        'my_past_appointments' => 'Mes Rendez-vous Passés',
+        'with' => 'avec',
     ],
 
     // Common

@@ -137,6 +137,13 @@ return [
         'status_completed' => 'Completed',
         'status_reviewed' => 'Reviewed',
         'status_received' => 'Request Received',
+        'my_account' => 'My Account',
+        'my_appointments' => 'My Appointments',
+        'my_information' => 'My Information',
+        'my_loved_ones' => 'My Loved Ones',
+        'log_out' => 'Log Out',
+        'my_past_appointments' => 'My Past Appointments',
+        'with' => 'with',
     ],
 
     // Common
