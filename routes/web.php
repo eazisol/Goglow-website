@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // figma
-Route::get('/', function () {return view('figmaDesign.index');});
+Route::get('/', function () {return view('comingSoon.index');})->name('coming-soon');
+Route::get('/coming-soon', function () {return view('figmaDesign.index');});
 Route::get('/header', function () {return view('figmaDesign.header');});
 Route::get('/slider', function () {return view('figmaDesign.slider');});
 Route::get('/become-glower', function () {return view('figmaDesign.becomeAglower');});
@@ -93,11 +94,31 @@ Route::get('/.well-known/assetlinks.json', function () {
                 'namespace' => 'android_app',
                 'package_name' => 'com.salif.beautyapp',
                 'sha256_cert_fingerprints' => [
-                    '1C:06:81:B8:3E:7F:AB:9D:00:09:27:BD:30:F2:D4:AA:CC:7D:88:72:C5:9E:8E:7C:F0:0A:5F:29:02:90:E9:9D'
+                    "1C:06:81:B8:3E:7F:AB:9D:00:09:27:BD:30:F2:D4:AA:CC:7D:88:72:C5:9E:8E:7C:F0:0A:5F:29:02:90:E9:9D",
+                    "53:6B:F1:3F:5B:9D:A8:AC:57:26:EA:FC:08:D2:0F:B8:02:D0:C4:E9:53:8C:2F:C0:51:9E:7D:6C:CB:83:77:2D"
                 ]
             ]
         ]
     ]);
+});
+
+// Apple Universal Links - App Site Association for deep linking
+Route::get('/.well-known/apple-app-site-association', function () {
+    return response()->json([
+        'applinks' => [
+            'details' => [
+                [
+                    'appIDs' => ['53FA863RPS.com.salif.beautyapp'],
+                    'components' => [
+                        [
+                            '/' => '/sp*',
+                            'comment' => 'Matches only service provider profile links'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ])->header('Content-Type', 'application/json');
 });
 
 // Provider by username routes (must be at the end to avoid conflicts with other routes)
