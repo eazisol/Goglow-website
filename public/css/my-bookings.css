@@ -388,10 +388,14 @@
 
 /* Payment Breakdown */
 .price-info {
-    display: inline-flex;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.payment-row {
+    margin-top: 8px;
+    display: flex;
     align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
 }
 
 .payment-breakdown {
@@ -399,15 +403,25 @@
     align-items: center;
     gap: 4px;
     font-size: 13px;
-    background: #f5f5f5;
-    padding: 2px 6px;
+    background: #f8f9fa;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.badge-fully-paid {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 2px 8px;
     border-radius: 4px;
 }
 
 .text-success {
-    color: #28a745;
+    color: #28a745 !important;
 }
 
 .text-danger {
-    color: #dc3545;
+    color: #dc3545 !important;
 }

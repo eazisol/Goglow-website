@@ -188,6 +188,37 @@ document.addEventListener('DOMContentLoaded', function () {
         const isCancelled = ['2', '3', '6'].includes(String(booking.status));
         const cardClass = isCancelled ? 'card-cancelled' : '';
 
+        // Payment Logic (Pre-calculation)
+        let paymentHtml = '';
+        const isDeposit = booking.paymentType === 'deposit' || booking.payment_type === 'deposit';
+        
+        // Use dynamic depositPercentage if available, default to 15%
+        // Check both possible keys or just depositPercentage
+        
+        if (isDeposit) {
+            const totalVal = booking.amount || 0;
+            const percentage = booking.depositPercentage ? (booking.depositPercentage / 100) : 0.15;
+            const paidVal = (totalVal * percentage).toFixed(2);
+            const remainingVal = (totalVal - paidVal).toFixed(2);
+            
+            paymentHtml = `
+                <div class="payment-row">
+                    <div class="payment-breakdown">
+                        <span class="paid-text text-success">${translations.paid}: €${paidVal}</span>
+                        <span class="separator">•</span>
+                        <span class="remaining-text text-danger">${translations.remaining}: €${remainingVal}</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Full payment (or default)
+            paymentHtml = `
+                <div class="payment-row">
+                    <span class="badge-fully-paid">${translations.fullyPaid}</span>
+                </div>
+            `;
+        }
+
         return `
             <div class="booking-card-horizontal ${cardClass}">
                 <div class="card-header-date">
@@ -217,37 +248,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             
                             <div class="price-info">
                                 <span class="price">€${price}</span>
-                                ${(() => {
-                                    // Payment Logic
-                                    const isDeposit = booking.paymentType === 'deposit' || booking.payment_type === 'deposit';
-                                    
-                                    if (isDeposit) {
-                                        const totalVal = booking.amount || 0;
-                                        // Use dynamic depositPercentage if available, default to 15%
-                                        const percentage = booking.depositPercentage ? (booking.depositPercentage / 100) : 0.15;
-                                        const paidVal = (totalVal * percentage).toFixed(2);
-                                        const remainingVal = (totalVal - paidVal).toFixed(2);
-                                        return `
-                                            <div class="payment-breakdown">
-                                                <span class="paid-text text-success">${translations.paid}: €${paidVal}</span>
-                                                <span class="separator">•</span>
-                                                <span class="remaining-text text-danger">${translations.remaining}: €${remainingVal}</span>
-                                            </div>
-                                        `;
-                                    } else {
-                                        // Assume full payment if not deposit (or explicitly 'full')
-                                        return `
-                                            <div class="payment-breakdown" style="background: #e8f5e9;">
-                                                <span class="text-success" style="color: #1b5e20;">${translations.fullyPaid}</span>
-                                            </div>
-                                        `;
-                                    }
-                                })()}
                             </div>
 
                             <span class="separator">•</span>
                             <span class="with-provider">${translations.with} ${providerName}</span>
                         </div>
+                        ${paymentHtml}
                     </div>
                 </div>
             </div>
@@ -302,21 +308,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // API returns bookings array directly or wrapped in a property
             const bookings = Array.isArray(data) ? data : (data.bookings || []);
             renderBookings(bookings);
-            
-            // Mocking data for UI testing if empty (Uncomment for testing visual design if API has no data)
-            /*
-            if (bookings.length === 0) {
-                 renderBookings([
-                     {
-                         booking_time: new Date().toISOString(),
-                         amount: 29,
-                         serviceProviderInfo: { name: 'Kervin Barber', photo: '', address: '15 Rue Étienne Marcel, 75001 Paris' },
-                         services: [{ serviceName: 'Haircut, Styling, Layered, Taper', duration: 30 }]
-                     }
-                 ]);
-                 emptyEl.style.display = 'none';
-            }
-            */
             
         } catch (error) {
             console.error('Error fetching bookings:', error);
