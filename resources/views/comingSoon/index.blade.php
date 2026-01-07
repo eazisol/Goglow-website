@@ -150,19 +150,43 @@
                 font-size: 0.7rem;
             }
         }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            background-color: #E50050;
+            color: #ffffff;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            margin-top: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(229, 0, 80, 0.4);
+            animation: fadeIn 1s ease-out 1s forwards;
+            opacity: 0;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(229, 0, 80, 0.6);
+            background-color: #ff1a6b;
+        }
     </style>
 </head>
 <body>
     <div class="coming-soon-page">
         <div class="content">
             <!-- Logo -->
-            <img src="{{ asset('images/loginuplogo.png') }}" alt="Glaura" class="brand-logo">
+            <img src="{{ asset('images/coming-soon-logo-removebg-preview.png') }}" alt="Glaura" class="brand-logo">
 
             <!-- Coming Soon Label -->
             <p class="coming-soon-text">Coming Soon</p>
 
             <!-- Main Text -->
-            <p class="subtext">Level up your beauty business with ease.</p>
+            <p class="subtext">Faites évoluer votre entreprise de beauté en toute simplicité.</p>
 
             <!-- Countdown Timer -->
             <div id="countdown" class="countdown-container">
@@ -183,13 +207,16 @@
                     <span class="label">Secs</span>
                 </div>
             </div>
+
+            <!-- CTA Button -->
+            <a href="https://glaura.typeform.com/carte-salons" class="cta-button" target="_blank">Inscrivez vous</a>
         </div>
     </div>
 
     <script>
         // Set the date we're counting down to: Jan 7, 2026
         // Assuming 00:00:00 start of day, or user might want end of day. Defaulting to midnight start of Jan 7.
-        const countDownDate = new Date("Jan 7, 2026 00:00:00").getTime();
+        const countDownDate = new Date("Jan 15, 2026 00:00:00").getTime();
 
         const x = setInterval(function() {
             const now = new Date().getTime();
