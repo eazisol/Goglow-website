@@ -498,7 +498,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // Track existing categories for smart append
     let existingCategories = new Set();
     
-    // Default image
+    // Category-specific placeholder images
+    const categoryImages = {
+        // Coiffure (Hair)
+        'ixgMn0e5RlzAztxVhfgm': 'https://firebasestorage.googleapis.com/v0/b/beauty-984c8.appspot.com/o/service_placeholder%2FHair.png?alt=media&token=5bc20f35-0dbc-4a12-ab6b-a489139015e7',
+        // Barber
+        'W3em4NFLX2aRAu1BFNNN': 'https://firebasestorage.googleapis.com/v0/b/beauty-984c8.appspot.com/o/service_placeholder%2FBarber.png?alt=media&token=7a0395ca-6d1d-49fb-8ab9-f3d5cf2a1a54',
+        // Makeup
+        'XGA7rpOhgHFMr3W3sCnU': 'https://firebasestorage.googleapis.com/v0/b/beauty-984c8.appspot.com/o/service_placeholder%2FMakeup.png?alt=media&token=84e0960f-255b-48c9-9e99-9997800a5767',
+        // Nails
+        'vZQNDw2KCuEUSyXTTZMf': 'https://firebasestorage.googleapis.com/v0/b/beauty-984c8.appspot.com/o/service_placeholder%2FNails.png?alt=media&token=1a1def47-9c70-4fcf-bcb8-8a7c94ec7b37',
+        // Epilation (Waxing)
+        'pCMUpz8GoD4md1Rqt2cs': 'https://firebasestorage.googleapis.com/v0/b/beauty-984c8.appspot.com/o/service_placeholder%2FWaxing.png?alt=media&token=b797f3a2-4745-4bdd-94aa-2676a975780f',
+        // Bien Etre
+        'SceVTrEpBGjSrHO7pwFS': 'https://firebasestorage.googleapis.com/v0/b/beauty-984c8.appspot.com/o/service_placeholder%2FbienEtre.jpeg?alt=media&token=f8bebf29-24d4-4aea-b67e-341cedd82af5',
+        // Beauté visage (Eyelash)
+        'qlwRNcbICdWVZd0CfJ7z': 'https://firebasestorage.googleapis.com/v0/b/beauty-984c8.appspot.com/o/service_placeholder%2FEyelash.png?alt=media&token=262d3ddb-801c-4fcc-8917-a59523274b1a',
+        // Default
+        'pzuJmZnZb5ooR73NZ4OH': 'https://firebasestorage.googleapis.com/v0/b/beauty-984c8.appspot.com/o/service_placeholder%2Fdefault.jpeg?alt=media&token=7f71facb-3d47-4a33-844c-33a66fde1a6d'
+    };
+    
+    // Default fallback image
+    const defaultFallbackImage = 'https://firebasestorage.googleapis.com/v0/b/beauty-984c8.appspot.com/o/service_placeholder%2Fdefault.jpeg?alt=media&token=7f71facb-3d47-4a33-844c-33a66fde1a6d';
+    
+    /**
+     * Get category-specific placeholder image URL based on categoryId
+     * @param {string} categoryId - The service category ID
+     * @returns {string} - The placeholder image URL for the category
+     */
+    function getCategoryImageUrl(categoryId) {
+        if (!categoryId) {
+            return defaultFallbackImage;
+        }
+        return categoryImages[categoryId] || defaultFallbackImage;
+    }
+    
+    // Legacy default image for provider images (keep for backward compatibility)
     const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
     
     // Clean up old sessionStorage cache entries
@@ -1116,13 +1151,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Helper function to create service row HTML
     function createServiceRowHTML(service) {
-        const defaultImg = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
         const providerId = (providerData && providerData.id) ? providerData.id : '{{ $providerId ?? "" }}';
         const currentCompanyUserName = (providerData && (providerData.username || providerData.companyUserName)) 
             ? (providerData.username || providerData.companyUserName) 
             : (typeof companyUserName !== 'undefined' ? companyUserName : '');
         
-        const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : defaultImg;
+        // Use category-specific placeholder image
+        const categoryPlaceholder = getCategoryImageUrl(service.category_id || service.categoryId);
+        const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : categoryPlaceholder;
         const serviceName = service.service_name || 'Unnamed Service';
         const serviceDetails = service.service_details || '';
         const duration = service.duration_minutes || 0;
@@ -1145,7 +1181,7 @@ document.addEventListener('DOMContentLoaded', function() {
                              alt="${serviceName}" 
                              class="services-img-fluid services-rounded-circle"
                              loading="lazy"
-                             onerror="this.src='${defaultImg}'">
+                             onerror="this.src='${categoryPlaceholder}'">
                     </div>
                     <div class="service-list-details" style="margin-left: 35px;">
                         <div class="service-name services-fw-semibold">
@@ -1489,7 +1525,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Build services HTML for visible services only
             const servicesHTML = visibleServices.map(service => {
-                const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : defaultImage;
+                const categoryPlaceholder = getCategoryImageUrl(service.category_id || service.categoryId);
+                const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : categoryPlaceholder;
                 const serviceName = service.service_name || 'Unnamed Service';
                 const serviceDetails = service.service_details || '';
                 const duration = service.duration_minutes || 0;
@@ -1514,7 +1551,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                      alt="${serviceName}" 
                                      class="services-img-fluid services-rounded-circle"
                                      loading="lazy"
-                                     onerror="this.src='${defaultImage}'">
+                                     onerror="this.src='${categoryPlaceholder}'">
                             </div>
                             <div class="service-list-details" style="margin-left: 35px;">
                                 <div class="service-name services-fw-semibold">
@@ -1537,7 +1574,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Build hidden services HTML (only if there are hidden services)
             const hiddenServicesHTML = hiddenServices.map(service => {
-                const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : defaultImage;
+                const categoryPlaceholder = getCategoryImageUrl(service.category_id || service.categoryId);
+                const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : categoryPlaceholder;
                 const serviceName = service.service_name || 'Unnamed Service';
                 const serviceDetails = service.service_details || '';
                 const duration = service.duration_minutes || 0;
@@ -1562,7 +1600,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                      alt="${serviceName}" 
                                      class="services-img-fluid services-rounded-circle"
                                      loading="lazy"
-                                     onerror="this.src='${defaultImage}'">
+                                     onerror="this.src='${categoryPlaceholder}'">
                             </div>
                             <div class="service-list-details" style="margin-left: 35px;">
                                 <div class="service-name services-fw-semibold">
