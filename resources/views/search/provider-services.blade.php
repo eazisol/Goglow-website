@@ -180,13 +180,13 @@
                 </svg>
                 <span>Service List</span>
             </button>
-            <button type="button" class="view-tab" id="videosTabBtn" data-view="videos">
+            {{-- <button type="button" class="view-tab" id="videosTabBtn" data-view="videos">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="2.5" y="4.16667" width="15" height="11.6667" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M8.33333 7.5L13.3333 10L8.33333 12.5V7.5Z" fill="currentColor"/>
                 </svg>
                 <span>Service Videos</span>
-            </button>
+            </button> --}}
         </div>
     </div>
     <!-- View Type Tabs Section End -->
@@ -1379,7 +1379,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const handleInfiniteScroll = debounce(function() {
         if (paginationState.hasMore && !paginationState.isLoading && paginationState.providerId) {
             const scrollPosition = window.innerHeight + window.scrollY;
-            const threshold = document.body.offsetHeight - 300;
+            const threshold = document.body.offsetHeight - 1000;
             
             if (scrollPosition >= threshold) {
                 fetchProviderServices(paginationState.providerId, paginationState.lastDocId);

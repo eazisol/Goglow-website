@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let hasMore = true;
   let isLoadingMore = false;
   let isInitialLoad = true;
+  let currentCategoryId = null;
 
   // Fetch categories from API and display them
   fetchAndDisplayCategories();
@@ -284,8 +285,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     try {
       // Build API URL with lastDocId for pagination
-      let apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllProviders';
-      apiUrl += '?lastDocId=' + encodeURIComponent(lastDocId);
+      let apiUrl;
+      if (currentCategoryId) {
+        apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/getSalonsByCategory?categoryId=${currentCategoryId}&lastDocId=${encodeURIComponent(lastDocId)}`;
+      } else {
+        apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllProviders';
+        apiUrl += '?lastDocId=' + encodeURIComponent(lastDocId);
+      }
 
       const response = await fetch(apiUrl);
 
@@ -332,6 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
     lastDocId = null;
     hasMore = true;
     isInitialLoad = true;
+    currentCategoryId = null;
 
     // Show loading, hide others
     if (loadingEl) loadingEl.style.display = 'flex';
@@ -454,8 +461,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const gridEl = document.getElementById('providers-grid');
     const loadMoreEl = document.getElementById('providers-load-more');
 
-    // Reset pagination state (disable infinite scroll for category view)
-    hasMore = false;
+    // Reset pagination state (enable infinite scroll for category view)
+    currentCategoryId = categoryId;
+    hasMore = true;
     lastDocId = null;
     isLoadingMore = false;
 
@@ -476,7 +484,13 @@ document.addEventListener('DOMContentLoaded', function () {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const providers = await response.json();
+      const data = await response.json();
+      const providers = data.providers || data;
+      const pagination = data.pagination || {};
+
+      // Update pagination state
+      lastDocId = pagination.lastDocId || null;
+      hasMore = pagination.hasMore === true;
 
       if (loadingEl) loadingEl.style.display = 'none';
 
