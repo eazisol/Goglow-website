@@ -212,6 +212,12 @@
                 {{-- Services container - will be populated by JavaScript --}}
                 <div id="servicesContainer"></div>
                 
+                {{-- Pagination loading state (shown at bottom when loading more) --}}
+                <div id="paginationLoading" class="services-loading" style="display: none;">
+                    <div class="services-spinner"></div>
+                    <p>Loading more services...</p>
+                </div>
+                
                 {{-- Empty state --}}
                 <div id="servicesEmpty" class="custom-service-list" style="display: none;">
                     <div class="services-text-center services-py-4">
@@ -480,6 +486,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Global variable to store gallery items for direct access
     let globalGalleryItems = [];
+    
+    // Pagination state for infinite scroll
+    let paginationState = {
+        hasMore: false,
+        lastDocId: null,
+        isLoading: false,
+        providerId: null
+    };
+    
+    // Track existing categories for smart append
+    let existingCategories = new Set();
     
     // Default image
     const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
@@ -1014,48 +1031,364 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
     
-    async function fetchProviderServices(providerId) {
+    async function fetchProviderServices(providerId, lastDocId = null) {
         const loadingEl = document.getElementById('servicesLoading');
+        const paginationLoadingEl = document.getElementById('paginationLoading');
         const errorEl = document.getElementById('servicesError');
         const emptyEl = document.getElementById('servicesEmpty');
         const containerEl = document.getElementById('servicesContainer');
         
-        // Show loading
-        loadingEl.style.display = 'flex';
+        // Prevent duplicate calls
+        if (paginationState.isLoading) return;
+        paginationState.isLoading = true;
+        paginationState.providerId = providerId;
+        
+        // Show appropriate loader
+        if (lastDocId) {
+            // Subsequent pages: show pagination loader at bottom
+            if (paginationLoadingEl) paginationLoadingEl.style.display = 'flex';
+        } else {
+            // First page: show main loader and clear container
+            loadingEl.style.display = 'flex';
+            emptyEl.style.display = 'none';
+            containerEl.innerHTML = '';
+            existingCategories.clear();
+        }
         errorEl.style.display = 'none';
-        emptyEl.style.display = 'none';
-        containerEl.innerHTML = '';
         
         try {
-            const apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider?provider_id=${encodeURIComponent(providerId)}`;
+            // Build API URL with pagination param if applicable
+            let apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/getServicesOfProvider?provider_id=${encodeURIComponent(providerId)}`;
+            if (lastDocId) {
+                apiUrl += `&lastDocId=${encodeURIComponent(lastDocId)}`;
+            }
+            
             const response = await fetch(apiUrl);
             
             if (!response.ok) {
                 throw new Error('Failed to fetch services');
             }
             
-            const services = await response.json();
+            const data = await response.json();
             
-            // Hide loading
+            // Hide loaders
             loadingEl.style.display = 'none';
+            if (paginationLoadingEl) paginationLoadingEl.style.display = 'none';
+            paginationState.isLoading = false;
             
+            // Handle new API response format: { services: [], pagination: {} }
+            const services = data.services || data;
+            const pagination = data.pagination || { hasMore: false, lastDocId: null };
+            
+            // Update pagination state
+            paginationState.hasMore = pagination.hasMore;
+            paginationState.lastDocId = pagination.lastDocId;
+            
+            // Check for empty services
             if (!Array.isArray(services) || services.length === 0) {
-                emptyEl.style.display = 'block';
+                if (!lastDocId) {
+                    // Only show empty state on first page
+                    emptyEl.style.display = 'block';
+                }
                 return;
             }
             
-            // Render services
-            renderServices(services);
-            
-            // Update provider images with service images
-            updateProviderImages(services);
+            if (!lastDocId) {
+                // First page: use existing renderServices
+                renderServices(services);
+                // Update provider images with service images
+                updateProviderImages(services);
+            } else {
+                // Subsequent pages: append to existing sections
+                appendServices(services);
+            }
             
         } catch (error) {
             console.error('Error fetching services:', error);
             loadingEl.style.display = 'none';
-            errorEl.style.display = 'block';
+            if (paginationLoadingEl) paginationLoadingEl.style.display = 'none';
+            paginationState.isLoading = false;
+            if (!lastDocId) {
+                errorEl.style.display = 'block';
+            }
         }
     }
+    
+    // Helper function to create service row HTML
+    function createServiceRowHTML(service) {
+        const defaultImg = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+        const providerId = (providerData && providerData.id) ? providerData.id : '{{ $providerId ?? "" }}';
+        const currentCompanyUserName = (providerData && (providerData.username || providerData.companyUserName)) 
+            ? (providerData.username || providerData.companyUserName) 
+            : (typeof companyUserName !== 'undefined' ? companyUserName : '');
+        
+        const serviceImage = (service.images && service.images.length > 0) ? service.images[0] : defaultImg;
+        const serviceName = service.service_name || 'Unnamed Service';
+        const serviceDetails = service.service_details || '';
+        const duration = service.duration_minutes || 0;
+        const price = service.service_price || 0;
+        const serviceId = service.id || '';
+        const servicesSlug = service.services_slug || '';
+        
+        let bookUrl;
+        if (currentCompanyUserName && servicesSlug) {
+            bookUrl = `/${encodeURIComponent(currentCompanyUserName)}/${encodeURIComponent(servicesSlug)}`;
+        } else {
+            bookUrl = `/book-appointment?serviceId=${serviceId}&service_provider_id=${providerId}`;
+        }
+        
+        return `
+            <div class="service-row services-d-flex services-justify-between services-flex-wrap">
+                <div class="service-info services-d-flex services-align-center">
+                    <div class="service-image">
+                        <img src="${serviceImage}" 
+                             alt="${serviceName}" 
+                             class="services-img-fluid services-rounded-circle"
+                             loading="lazy"
+                             onerror="this.src='${defaultImg}'">
+                    </div>
+                    <div class="service-list-details" style="margin-left: 35px;">
+                        <div class="service-name services-fw-semibold">
+                            <a href="${bookUrl}">${truncateText(serviceName, 50)}</a>
+                        </div>
+                        ${serviceDetails ? `<div class="service-desc services-text-muted">${truncateText(serviceDetails, 50)}</div>` : ''}
+                    </div>
+                </div>
+                <div class="service-meta services-text-end">
+                    <div class="services-text-muted services-small services-mb-1">
+                        ${duration} min &bull; {{ __('app.service.from') }} €${price}
+                    </div>
+                    <div class="choose-button">
+                        <a href="${bookUrl}" class="choose-btn">{{ __('app.service.choose') }}</a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Helper function to find category section in DOM
+    function findCategorySection(categoryName) {
+        return document.querySelector(`.category-section[data-category="${categoryName}"]`);
+    }
+    
+    // Helper function to find subcategory section in DOM
+    function findSubcategorySection(categorySection, subcategoryName) {
+        const subKey = subcategoryName || '__no_subcategory__';
+        if (subKey === '__no_subcategory__') {
+            // Services without subcategory are direct children of category-services-list
+            return null;
+        }
+        return categorySection.querySelector(`.subcategory-section[data-subcategory="${subcategoryName}"]`);
+    }
+    
+    // Add category filter pill if not exists
+    function addCategoryFilterPill(categoryName) {
+        const filterContainer = document.querySelector('.service-filter-pills');
+        if (!filterContainer) return;
+        
+        // Check if pill already exists
+        const existingPill = filterContainer.querySelector(`[data-category="${categoryName}"]`);
+        if (existingPill) return;
+        
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'filter-pill';
+        button.setAttribute('data-category', categoryName);
+        button.textContent = categoryName;
+        filterContainer.appendChild(button);
+        
+        // Re-initialize filter click handler for new pill
+        button.addEventListener('click', function() {
+            const pills = filterContainer.querySelectorAll('.filter-pill');
+            pills.forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            
+            const category = this.getAttribute('data-category');
+            const sections = document.querySelectorAll('.category-section');
+            sections.forEach(section => {
+                if (category === 'all' || section.getAttribute('data-category') === category) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+    }
+    
+    // Append services to existing DOM structure (for pagination)
+    function appendServices(services) {
+        const containerEl = document.getElementById('servicesContainer');
+        
+        services.forEach(service => {
+            const categoryName = service.category?.name || 'Uncategorized';
+            const subcategoryName = service.subcategory?.name || null;
+            const subKey = subcategoryName || '__no_subcategory__';
+            
+            let categorySection = findCategorySection(categoryName);
+            
+            if (categorySection) {
+                // Category exists - find or create subcategory
+                const categoryServicesList = categorySection.querySelector('.category-services-list');
+                
+                if (subKey === '__no_subcategory__') {
+                    // Append directly to category services list (before any subcategory sections)
+                    const serviceRowHTML = createServiceRowHTML(service);
+                    const firstSubcategory = categoryServicesList.querySelector('.subcategory-section');
+                    if (firstSubcategory) {
+                        firstSubcategory.insertAdjacentHTML('beforebegin', serviceRowHTML);
+                    } else {
+                        categoryServicesList.insertAdjacentHTML('beforeend', serviceRowHTML);
+                    }
+                } else {
+                    let subcategorySection = findSubcategorySection(categorySection, subcategoryName);
+                    
+                    if (subcategorySection) {
+                        // Subcategory exists - append service to it
+                        const subcategoryServicesList = subcategorySection.querySelector('.subcategory-services-list');
+                        if (subcategoryServicesList) {
+                            const serviceRowHTML = createServiceRowHTML(service);
+                            // Insert before hidden-services-container or see-more button if exists
+                            const hiddenContainer = subcategoryServicesList.querySelector('.hidden-services-container');
+                            const seeMoreBtn = subcategoryServicesList.querySelector('.see-more-services-btn');
+                            if (hiddenContainer) {
+                                hiddenContainer.insertAdjacentHTML('beforebegin', serviceRowHTML);
+                            } else if (seeMoreBtn) {
+                                seeMoreBtn.insertAdjacentHTML('beforebegin', serviceRowHTML);
+                            } else {
+                                subcategoryServicesList.insertAdjacentHTML('beforeend', serviceRowHTML);
+                            }
+                        }
+                    } else {
+                        // Create new subcategory section
+                        const subcategoryHTML = `
+                            <div class="subcategory-section" data-subcategory="${subcategoryName}">
+                                <div class="subcategory-header" style="display: flex; align-items: center; padding: 12px 0; margin-left: 10px; cursor: pointer;">
+                                    <h4 style="font-size: 18px; font-weight: 500; color: #333; margin: 0;">${subcategoryName}</h4>
+                                    <i class="fas fa-chevron-up subcategory-chevron" style="color: #666; font-size: 12px; transition: transform 0.3s ease; margin-left: 10px;"></i>
+                                </div>
+                                <div class="subcategory-services-list">
+                                    ${createServiceRowHTML(service)}
+                                </div>
+                            </div>
+                        `;
+                        categoryServicesList.insertAdjacentHTML('beforeend', subcategoryHTML);
+                        
+                        // Initialize toggle for new subcategory
+                        const newSubcategory = categoryServicesList.querySelector(`.subcategory-section[data-subcategory="${subcategoryName}"]`);
+                        if (newSubcategory) {
+                            initializeSubcategoryToggle(newSubcategory);
+                        }
+                    }
+                }
+            } else {
+                // Create new category section
+                existingCategories.add(categoryName);
+                addCategoryFilterPill(categoryName);
+                
+                let subcategorySectionHTML = '';
+                if (subKey === '__no_subcategory__') {
+                    subcategorySectionHTML = createServiceRowHTML(service);
+                } else {
+                    subcategorySectionHTML = `
+                        <div class="subcategory-section" data-subcategory="${subcategoryName}">
+                            <div class="subcategory-header" style="display: flex; align-items: center; padding: 12px 0; margin-left: 10px; cursor: pointer;">
+                                <h4 style="font-size: 18px; font-weight: 500; color: #333; margin: 0;">${subcategoryName}</h4>
+                                <i class="fas fa-chevron-up subcategory-chevron" style="color: #666; font-size: 12px; transition: transform 0.3s ease; margin-left: 10px;"></i>
+                            </div>
+                            <div class="subcategory-services-list">
+                                ${createServiceRowHTML(service)}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                const categoryHTML = `
+                    <div class="category-section" data-category="${categoryName}">
+                        <div class="section-title category-toggle-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; margin-top: 20px; cursor: pointer;" data-category-toggle="${categoryName}">
+                            <h3 class="wow" style="font-size:30px; font-weight:500; letter-spacing: -1px; color:rgba(229, 0, 80, 1); margin: 0;">${categoryName}</h3>
+                            <i class="fas fa-chevron-up category-chevron" style="color: rgba(229, 0, 80, 1); font-size: 16px; transition: transform 0.3s ease; margin-left: 15px;"></i>
+                        </div>
+                        <div class="custom-service-list category-services-list">
+                            ${subcategorySectionHTML}
+                        </div>
+                    </div>
+                `;
+                containerEl.insertAdjacentHTML('beforeend', categoryHTML);
+                
+                // Initialize toggles for new category
+                const newCategory = containerEl.querySelector(`.category-section[data-category="${categoryName}"]`);
+                if (newCategory) {
+                    initializeCategoryToggle(newCategory);
+                    const newSubcategory = newCategory.querySelector('.subcategory-section');
+                    if (newSubcategory) {
+                        initializeSubcategoryToggle(newSubcategory);
+                    }
+                }
+            }
+        });
+    }
+    
+    // Initialize toggle for a single category
+    function initializeCategoryToggle(categorySection) {
+        const header = categorySection.querySelector('.category-toggle-header');
+        const servicesList = categorySection.querySelector('.category-services-list');
+        const chevron = header.querySelector('.category-chevron');
+        
+        if (header && servicesList) {
+            header.addEventListener('click', function() {
+                const isCollapsed = servicesList.style.display === 'none';
+                servicesList.style.display = isCollapsed ? 'block' : 'none';
+                if (chevron) {
+                    chevron.style.transform = isCollapsed ? 'rotate(0deg)' : 'rotate(180deg)';
+                }
+            });
+        }
+    }
+    
+    // Initialize toggle for a single subcategory
+    function initializeSubcategoryToggle(subcategorySection) {
+        const header = subcategorySection.querySelector('.subcategory-header');
+        const servicesList = subcategorySection.querySelector('.subcategory-services-list');
+        const chevron = header.querySelector('.subcategory-chevron');
+        
+        if (header && servicesList) {
+            header.addEventListener('click', function() {
+                const isCollapsed = servicesList.style.display === 'none';
+                servicesList.style.display = isCollapsed ? 'block' : 'none';
+                if (chevron) {
+                    chevron.style.transform = isCollapsed ? 'rotate(0deg)' : 'rotate(180deg)';
+                }
+            });
+        }
+    }
+    
+    // Debounce helper for scroll event
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    // Infinite scroll handler
+    const handleInfiniteScroll = debounce(function() {
+        if (paginationState.hasMore && !paginationState.isLoading && paginationState.providerId) {
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const threshold = document.body.offsetHeight - 300;
+            
+            if (scrollPosition >= threshold) {
+                fetchProviderServices(paginationState.providerId, paginationState.lastDocId);
+            }
+        }
+    }, 200);
+    
+    // Attach infinite scroll listener
+    window.addEventListener('scroll', handleInfiniteScroll);
     
     function renderServices(services) {
         // Group services by category, then by subcategory
