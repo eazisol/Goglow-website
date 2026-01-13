@@ -412,6 +412,7 @@ return [
         'bag_benefits_badge' => 'Why <span class="badge-highlight">Choose Us</span>',
         'bag_benefits_subtitle' => 'More than a booking app. Your all-in-one beauty business system',
         'bag_app_store' => 'App Store',
+        'bag_google_play_store' => 'Google Play',
         'bag_reviews_rating' => '4.9 (29k reviews)',
     ],
     // providers Page

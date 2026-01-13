@@ -412,6 +412,7 @@ return [
         'bag_benefits_badge' => 'Pourquoi <span class="badge-highlight">rejoindre glaura ?</span>',
         'bag_benefits_subtitle' => 'Plus qu’une application de réservation, Glaura est le 1er réseau social de beauté. Votre solution tout-en-un pour la gestion de votre activité beauté',
         'bag_app_store' => 'App Store',
+        'bag_google_play_store' => 'Google Play',
         'bag_reviews_rating' => '4,9 (29k avis)',
     ],
         // providers Page

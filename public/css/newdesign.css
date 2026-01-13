@@ -1774,9 +1774,18 @@
     }
     .bag-hero-buttons{
       margin-bottom: 70px;
+
+    }
+    .app-store-buttons-become-glower{
       display: flex;
       justify-content: center;
       gap: 16px;
+
+    }
+    .hero-button-become-a-glowee{
+      margin-top: 10px;
+    justify-content: center;
+    display: flex;
     }
     .bag-hero-carosal{
       margin-top: 60px;
@@ -2267,7 +2276,7 @@
         font-size: 14px;
       }
       .hero-buttons{
-        bottom: 100px!important;
+        bottom: 35px!important;
         flex-direction: row!important;
         flex-wrap: nowrap!important;
         gap: 12px!important;
@@ -3138,14 +3147,23 @@
      /* Hero Buttons */
      .hero-buttons {
        position: absolute;
-       bottom: 200px;
+       bottom: 85px;
        left: 50%;
        transform: translateX(-50%);
-       display: flex;
-       justify-content: center;
-       gap: 16px;
-       flex-wrap: wrap;
+       /* display: flex;
+       justify-content: center; */
+       /* gap: 16px; */
+       /* flex-wrap: wrap; */
        z-index: 10;
+     }
+     .app-store-buttons{
+       display: flex;
+       gap: 16px;
+     }
+     .hero-button-become-glowee{
+      justify-content: center;
+      display: flex;
+      margin-top: 10px;
      }
 
      .app-store-btn {

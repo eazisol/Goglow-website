@@ -51,21 +51,37 @@
 
            <!-- App Store Buttons -->
            <div class="bag-hero-buttons">
-             <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
-               <div class="app-store-content">
-                 <div class="apple-logo">
-                   <img src="images/images/apple.svg" alt="Apple" width="36">
-                 </div>
-                <div class="app-store-text">
-                  <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
-                  <span class="store-text">{{ __('app.home.bag_app_store') }}</span>
-                </div>
-               </div>
-             </a>
-             <a href="{{ url('/contact-us') }}" class="btn-secondary">
-               {{ __('app.salon_page.become_glower') }}
-               <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
-             </a>
+              <div class="app-store-buttons-become-glower">
+                      <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
+                        <div class="app-store-content">
+                          <div class="apple-logo">
+                            <img src="images/images/apple.svg" alt="Apple" width="36">
+                          </div>
+                          <div class="app-store-text">
+                            <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
+                            <span class="store-text">{{ __('app.home.bag_app_store') }}</span>
+                          </div>
+                        </div>
+                      </a>
+                      <a href="https://play.google.com/store/apps/details?id=com.salif.beautyapp" class="app-store-btn">
+                        <div class="app-store-content">
+                          <div class="apple-logo">
+                            <img src="images/images/google-play.png" alt="Apple" width="36">
+                          </div>
+                          <div class="app-store-text">
+                            <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
+                            <span class="store-text">{{ __('app.home.bag_google_play_store') }}</span>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                          <div class="hero-button-become-a-glowee">
+                <a href="{{ url('/contact-us') }}" class="btn-secondary">
+                  {{ __('app.salon_page.become_glower') }}
+                  <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
+                </a>
+              </div>
+                
            </div>
       </div>
     </section>
