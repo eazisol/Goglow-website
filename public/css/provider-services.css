@@ -666,9 +666,9 @@
 }
 
 .custom-service-list .service-meta>div:first-child {
-    color: rgba(44, 13, 24, 0.5);
-    font-size: 14px;
-    font-weight: 500;
+    color: #1A1A1A;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .custom-service-list .choose-btn {

@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   <span class="search-icon search-icon-sm" aria-hidden="true">
                     <img src="images/images/mage_map-marker-fill.svg" alt="Location" width="20" height="20">
                   </span>
-                  <span>${escapeHtml(address)}</span>
+                  <span style="color: #666666;">${escapeHtml(address)}</span>
                 </div>
               ` : ''}
             </div>
@@ -707,7 +707,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <span class="search-icon search-icon-sm" aria-hidden="true">
           <span class="status-dot ${isOpenToday ? 'open' : 'closed'}"></span>
         </span>
-        <span class="status-text">
+        <span class="status-text" style="color: #666666;">
           ${isOpenToday
         ? 'Open · ' + todayRangeText
         : 'Closed · Hours unavailable'}

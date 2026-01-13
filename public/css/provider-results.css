@@ -170,7 +170,7 @@
 
     /* Provider card redesign */
     .search-results .provider-card {
-        background: #fff6f8;
+        background: #ffffff;
         border-radius: 40px;
         overflow: hidden;
         box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
@@ -180,6 +180,7 @@
     }
 
     .search-results .provider-card:hover {
+        border: 1px solid #E50050;
         transform: translateY(-2px);
         box-shadow: 0 12px 24px rgba(16, 24, 40, 0.12);
     }
