@@ -24,7 +24,7 @@
                                         {{ __('app.bookings.my_appointments') ?? 'My appointments' }}
                                     </a>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <a href="#" class="menu-link placeholder-link">
                                         {{ __('app.bookings.my_information') ?? 'My information' }}
                                     </a>
@@ -33,7 +33,7 @@
                                     <a href="#" class="menu-link placeholder-link">
                                         {{ __('app.bookings.my_loved_ones') ?? 'My loved ones' }}
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                         
