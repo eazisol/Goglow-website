@@ -311,6 +311,27 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Logged-in user data:', bookingBootstrap.userData);
     console.log('fire-base-status', firebase.auth().currentUser);
 
+    // Clean up old user_profile_synced keys from previous sessions
+    // Keep only the current user's key
+    if (bookingBootstrap.userData && bookingBootstrap.userData.id) {
+        try {
+            const currentUserId = bookingBootstrap.userData.id;
+            const keysToRemove = [];
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key && key.startsWith('user_profile_synced_') && !key.endsWith(currentUserId)) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => {
+                sessionStorage.removeItem(key);
+                console.log('Cleaned up old sessionStorage key:', key);
+            });
+        } catch (error) {
+            console.error('Error cleaning up sessionStorage:', error);
+        }
+    }
+    
     // Sync User Profile to External API
     if (bookingBootstrap.userData && bookingBootstrap.userData.id) {
         const SYNC_KEY = 'user_profile_synced_' + bookingBootstrap.userData.id;

@@ -43,6 +43,42 @@
     
     // Make sure bootstrap is defined globally
     window.bootstrap = window.bootstrap || {};
+    
+    // Clean up old user_profile_synced keys from sessionStorage
+    // Keep only the current logged-in user's key
+    (function() {
+        try {
+            const currentUserId = {{ session()->has('firebase_uid') ? "'" . session('firebase_uid') . "'" : 'null' }};
+            if (currentUserId) {
+                const keysToRemove = [];
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    if (key && key.startsWith('user_profile_synced_') && !key.endsWith(currentUserId)) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => {
+                    sessionStorage.removeItem(key);
+                    console.log('Cleaned up old sessionStorage key:', key);
+                });
+            } else {
+                // If no user is logged in, clear all user_profile_synced keys
+                const keysToRemove = [];
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    if (key && key.startsWith('user_profile_synced_')) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => {
+                    sessionStorage.removeItem(key);
+                    console.log('Cleared sessionStorage key (no user logged in):', key);
+                });
+            }
+        } catch (error) {
+            console.error('Error cleaning up sessionStorage:', error);
+        }
+    })();
 </script>
 </head>
 <body>

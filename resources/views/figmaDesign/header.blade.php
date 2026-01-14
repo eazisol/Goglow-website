@@ -54,9 +54,26 @@
             logoutLink.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Function to submit form
+                // Function to clear sessionStorage and submit form
                 const submitLogout = () => {
-                   logoutForm.submit();
+                    // Clear all user_profile_synced keys from sessionStorage
+                    try {
+                        const keysToRemove = [];
+                        for (let i = 0; i < sessionStorage.length; i++) {
+                            const key = sessionStorage.key(i);
+                            if (key && key.startsWith('user_profile_synced_')) {
+                                keysToRemove.push(key);
+                            }
+                        }
+                        keysToRemove.forEach(key => {
+                            sessionStorage.removeItem(key);
+                            console.log('Cleared sessionStorage key:', key);
+                        });
+                    } catch (error) {
+                        console.error('Error clearing sessionStorage:', error);
+                    }
+                    
+                    logoutForm.submit();
                 };
                 
                 // Try to sign out from Firebase first

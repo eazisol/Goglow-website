@@ -322,6 +322,44 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.placeholder-link').forEach(link => {
         link.addEventListener('click', (e) => e.preventDefault());
     });
+    
+    // Handle logout form submission - clear sessionStorage
+    const logoutForm = document.querySelector('.logout-form');
+    if (logoutForm) {
+        logoutForm.addEventListener('submit', function(e) {
+            // Clear all user_profile_synced keys from sessionStorage before logout
+            try {
+                const keysToRemove = [];
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    if (key && key.startsWith('user_profile_synced_')) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => {
+                    sessionStorage.removeItem(key);
+                    console.log('Cleared sessionStorage key:', key);
+                });
+            } catch (error) {
+                console.error('Error clearing sessionStorage:', error);
+            }
+            
+            // Try to sign out from Firebase first
+            if (window.firebase && window.firebase.auth) {
+                e.preventDefault(); // Prevent form submission until Firebase signout completes
+                firebase.auth().signOut()
+                    .then(() => {
+                        console.log('Firebase signed out successfully');
+                        logoutForm.submit(); // Now submit the form
+                    })
+                    .catch((error) => {
+                        console.error('Firebase sign out error:', error);
+                        // Still submit form even if firebase logout fails
+                        logoutForm.submit();
+                    });
+            }
+        });
+    }
 });
 </script>
 @endsection
