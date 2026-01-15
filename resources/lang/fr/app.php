@@ -295,7 +295,7 @@ return [
         'benefits_badge_our' => 'Les',
         'benefits_badge_benefits' => 'avantages',
         'benefits_title' => 'Pourquoi les Glowees aiment lapplication Glow',
-        'benefits_title_goglow' => 'Pourquoi les pros ',
+        'benefits_title_goglow' => 'Pourquoi les',
         'benefits_title_love' => 'adorent ',
         'benefits_title_glowApp' => 'Glaura ?',
         'benefits_subtitle_text' => 'La beauté réinventée : Combinez l’inspiration vidéo et la réservation en un clic',

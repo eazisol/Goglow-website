@@ -376,8 +376,8 @@
 .hero-left-card-image{
   width: 305px;
   position: absolute;
-  top: -180px;
-  left: 0;
+  top: -95px;
+  left: 18px;
 }
 
 .hero-center-mockup{
@@ -879,7 +879,7 @@
 
     .phone-image {
       position: absolute;
-      top: 0;
+      top: 14px;
       left: 8px;
       width: 290px;
       height: 390px;

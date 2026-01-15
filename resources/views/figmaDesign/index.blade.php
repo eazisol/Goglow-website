@@ -42,7 +42,7 @@
                 {{ __('app.home.figma_design_hero_450_salons') }}<br><span>{{ __('app.home.have joined Glow') }}<br></span>{{ __('app.home.figma_design_already') }}
               </p>
             </div>
-            <img src="images/images/47abffa77278693eaa65f93217cd9d6a2ea127b5.png" alt="Beauty glove" class="hero-left-card-image">
+            <img src="images/images/banner_left_picture_-removebg-preview.png" alt="Beauty glove" class="hero-left-card-image">
           </div>
 
           <!-- Center phone mockup -->
@@ -55,7 +55,7 @@
             <div class="hero-phone">
               <div class="phone-bg"></div>
               <div class="phone-image">
-                <img src="images/images/img_3a3ade2330872de.png" alt="App Screenshot" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="images/images/picture_on_banner_-removebg-preview.png" alt="App Screenshot" style="width: 100%; height: 77%; object-fit: cover;">
               </div>
               <div class="phone-stats">
                 <div style="display: flex;align-items: center;gap: 10px;">
@@ -101,7 +101,7 @@
              </div>
 
              <div class="hero-button-become-glowee">
-              <a href="{{ url('/contact-us') }}" class="btn-secondary-hero-section">
+              <a href="{{ url('/become-glower') }}" class="btn-secondary-hero-section">
                 {{ __('app.home.become_a_glowee_button') }}
                 <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
               </a>
@@ -365,7 +365,7 @@
     </section>
 
     <!-- Reviews Section -->
-    <section class="reviews-section">
+    {{-- <section class="reviews-section">
       <div class="container">
         <div class="reviews-header">
           <div>
@@ -399,116 +399,7 @@
         </div>
       </div>
       @include('figmaDesign.slider')
-        {{-- <div class="reviews-slider">
-          <div class="review-card">
-            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
-            <p class="review-text">
-              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
-            </p>
-            <div class="review-author">
-              <div class="author-info">
-                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
-                <div class="author-details">
-                  <p class="author-name">emma loy</p>
-                  <p class="author-title">ceo of silo</p>
-                </div>
-              </div>
-              <div class="review-stars">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-              </div>
-            </div>
-          </div>
-          <div class="review-card">
-            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
-            <p class="review-text">
-              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
-            </p>
-            <div class="review-author">
-              <div class="author-info">
-                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
-                <div class="author-details">
-                  <p class="author-name">emma loy</p>
-                  <p class="author-title">ceo of silo</p>
-                </div>
-              </div>
-              <div class="review-stars">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-              </div>
-            </div>
-          </div>
-
-          <div class="review-card">
-            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
-            <p class="review-text">
-              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
-            </p>
-            <div class="review-author">
-              <div class="author-info">
-                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
-                <div class="author-details">
-                  <p class="author-name">emma loy</p>
-                  <p class="author-title">ceo of silo</p>
-                </div>
-              </div>
-              <div class="review-stars">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-              </div>
-            </div>
-          </div>
-
-          <div class="review-card">
-            <img src="images/images/coms.svg" alt="Quote" class="review-quote">
-            <p class="review-text">
-              <em>Booking</em> through this platform was so easy and smooth. I found a great salon near me, picked a convenient time, and was impressed by the professionalism from start to finish. The service was top-notch, and I walked out feeling refreshed and confident.
-            </p>
-            <div class="review-author">
-              <div class="author-info">
-                <img src="images/images/img_ellipse_232.png" alt="Emma Loy" class="author-avatar">
-                <div class="author-details">
-                  <p class="author-name">emma loy</p>
-                  <p class="author-title">ceo of silo</p>
-                </div>
-              </div>
-              <div class="review-stars">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-                <img src="images/images/pink_start.svg" alt="Star" class="star">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pagination">
-          <button class="pagination-btn">
-            <img src="images/images/left_arrow.svg" alt="Previous" width="16" height="16">
-          </button>
-          <div class="pagination-dots">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot active"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-          </div>
-          <button class="pagination-btn">
-            <img src="images/images/right_arrow.svg" alt="Next" width="16" height="16">
-          </button>
-        </div> --}}
-
-    </section>
+    </section> --}}
 
     <!-- Partners Section -->
     <section class="section">
@@ -563,7 +454,7 @@
     </section>
 
     <!-- Pricing Section -->
-    <section class="pricing-section">
+    {{-- <section class="pricing-section">
       <div style="background-image: url('images/images/img_group_33524.png'); background-size: cover; background-position: center; position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
       <div class="container" style="position: relative; z-index: 2;">
         <div class="flex-col" style="align-items: flex-start;">
@@ -668,7 +559,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> --}}
 
     <!-- App Section -->
     <section class="app-section">
