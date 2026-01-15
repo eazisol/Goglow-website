@@ -581,4 +581,18 @@ return [
         'whychoose_bag_fourth_title' => 'INSTANT NOTIFICATIONS',
         'whychoose_bag_fourth_des' => 'new booking? you receive an instant ping. no waiting, no missing a thing. this is how real beauty business should work.',
     ],
+        'blog' => [
+        'blog_heading' => 'Our Blog',
+        'blog_des' => 'Discover the latest articles and insights',
+        'read_more' => 'Read More',
+        'loading_articles' => 'Loading articles...',
+        'error_title' => 'Oops! Something went wrong',
+        'error_message' => 'Failed to load articles. Please try again later.',
+        'try_again' => 'Try Again',
+        'no_articles_title' => 'No articles found',
+        'no_articles_message' => 'There are no articles available at the moment. Please check back later.',
+        'previous' => 'Previous',
+        'next' => 'Next',
+        'page_info' => 'Page :current of :total',
+    ],
 ];

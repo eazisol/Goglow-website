@@ -654,7 +654,7 @@
                  </div>
                </div>
              </a>
-              <a href="#" class="app-store-btn">
+              <a href="https://play.google.com/store/apps/details?id=com.salif.beautyapp" class="app-store-btn">
                <div class="app-store-content">
                  <div class="apple-logo">
                    <img src="images/images/googleplay.svg" alt="Apple" width="36">

@@ -11,7 +11,7 @@
         p{
             margin-top: 10px;
             border-radius: 8px;
-            background: aliceblue;
+            /* background: aliceblue; */
             padding: 10px;
         }
         .terms-text ul li {
@@ -24,6 +24,15 @@
             border-bottom: none;
             margin-bottom: 0;
         }
+        .terms-text h4 {
+            color: #000000ff;
+        }
+        .terms-text h3 {
+            color: #000000ff;
+            font-size: 35px;
+            margin-bottom: 25px;
+        }
+
 
     </style>
 @endsection
@@ -45,9 +54,9 @@
                         <div class="terms-text">
                             {{-- <h2>GoGlow - Conditions Générales d'Utilisation</h2> --}}
                             <p class="text-end">Dernière mise à jour : 23 décembre 2025</p>
-                                                    <div class="section-title">
-                                                        <h3 class="wow">Term & Conditions</h3>
-                                                    </div>
+                                                   
+                                                        <h3>Term & Conditions</h3>
+                                                
                             
                             <h4>1. Introduction</h4>
                             <p>Les présentes Conditions Générales d'Utilisation régissent l'utilisation de l'application mobile Glaura, exploitée par Glaura, reliant les clients (Glowees) et les prestataires (Glowers) pour la réservation et la gestion de services de beauté. L'application est destinée aux utilisateurs en France, à Paris et dans l'UE et respecte le RGPD et la législation française sous la supervision de la CNIL.</p>
@@ -66,7 +75,7 @@
                             <p>L'application facilite la découverte, la réservation et la communication entre salons et clients. Elle n'est pas destinée à la promotion non sollicitée ni à un annuaire public sans consentement. Glaura agit uniquement comme intermédiaire technique et n'est pas responsable de l'exécution ou de la qualité des services.</p>
                             
                             <h4>5. Paiements et Acompte</h4>
-                            <p>Un acompte de 15 % est facturé lors de la réservation via Stripe (conforme PCI-DSS). Les informations de carte ne sont pas stockées. Les remboursements sont gérés entre le client et le prestataire selon la politique de ce dernier. Glaura peut percevoir une commission pour les services de la plateforme.</p>
+                            <p>Les informations de carte ne sont pas stockées. Les remboursements sont gérés entre le client et le prestataire selon la politique de ce dernier. Glaura peut percevoir une commission pour les services de la plateforme.</p>
 
                             <h4>6. Accès à la Localisation</h4>
                             <p>Glaura demande l'accès à la localisation uniquement pour afficher les salons à proximité via l'API Google Maps. Les prestataires peuvent épingler l'adresse de leur salon. Les données de localisation ne sont pas conservées au-delà de cet usage et sont retenues 2 mois maximum.</p>

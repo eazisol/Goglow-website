@@ -11,7 +11,7 @@
         p{
             margin-top: 10px;
             border-radius: 8px;
-            background: aliceblue;
+            /* background: aliceblue; */
             padding: 10px;
         }
         .privacy-text ul li {
@@ -24,6 +24,15 @@
             border-bottom: none;
             margin-bottom: 0;
         }
+        .privacy-text h4 {
+            color: #000000ff;
+        }
+        .privacy-text h3 {
+            color: #000000ff;
+            font-size: 30px;
+            margin-bottom: 25px;
+        }
+
     </style>
 @endsection
 
@@ -43,9 +52,9 @@
                         <div class="privacy-text">
                             {{-- <h2>GoGlow - Politique de Confidentialité</h2> --}}
                             <p class="text-end">Dernière mise à jour : 29 décembre 2025</p>
-                            <div class="section-title">
-                                <h3 class="wow">Privacy Policy</h3>
-                            </div>
+                            
+                                <h3>Privacy Policy</h3>
+                            
                             {{-- <h3>1. Responsable du Traitement</h3>
                             <p>[Nom de l'entreprise]<br>
                             [Adresse de l'entreprise, France/UE]<br>

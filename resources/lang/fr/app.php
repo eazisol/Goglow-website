@@ -582,4 +582,18 @@ return [
         
 
     ],
+    'blog' => [
+        'blog_heading' => 'Notre Blog',
+        'blog_des' => 'Découvrez les derniers articles et analyses',
+        'read_more' => 'En savoir plus',
+        'loading_articles' => 'Chargement des articles...',
+        'error_title' => 'Oups ! Quelque chose s\'est mal passé',
+        'error_message' => 'Échec du chargement des articles. Veuillez réessayer plus tard.',
+        'try_again' => 'Réessayer',
+        'no_articles_title' => 'Aucun article trouvé',
+        'no_articles_message' => 'Il n\'y a pas d\'articles disponibles pour le moment. Veuillez réessayer plus tard.',
+        'previous' => 'Précédent',
+        'next' => 'Suivant',
+        'page_info' => 'Page :current sur :total',
+    ],
 ];

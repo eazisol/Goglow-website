@@ -17,9 +17,9 @@
             <div class="footer-section">
               <h3>{{ __('app.footer.menus') }}</h3>
               <ul>
-                <li><a href="#">{{ __('app.footer.how_it_works') }}</a></li>
+                {{-- <li><a href="#">{{ __('app.footer.how_it_works') }}</a></li>
                 <li><a href="#">{{ __('app.footer.help_support') }}</a></li>
-                <li><a href="{{ url('/contact-us') }}">{{ __('app.footer.contact') }}</a></li>
+                <li><a href="{{ url('/contact-us') }}">{{ __('app.footer.contact') }}</a></li> --}}
                 <li><a href="{{ url('/privacy_policy') }}">{{ __('app.footer.privacy_policy') }}</a></li>
                 <li><a href="{{ url('/terms_condition') }}">{{ __('app.footer.terms_conditions') }}</a></li>
               </ul>
@@ -30,8 +30,8 @@
               <ul>
                 <li><a href="#">Facebook</a></li>
                 <li><a href="#">instagram</a></li>
-                <li><a href="#">twitter</a></li>
-                <li><a href="#">linkedIn</a></li>
+                {{-- <li><a href="#">twitter</a></li>
+                <li><a href="#">linkedIn</a></li> --}}
               </ul>
             </div>
           </div>

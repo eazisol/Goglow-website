@@ -441,7 +441,7 @@
     </section>
 
     <!-- Reviews Section -->
-    <section class="reviews-section">
+    {{-- <section class="reviews-section">
       <div class="container">
         <div class="reviews-header">
           <div>
@@ -475,7 +475,7 @@
         </div>
       </div>
       @include('figmaDesign.slider')
-    </section>
+    </section> --}}
 
 
 

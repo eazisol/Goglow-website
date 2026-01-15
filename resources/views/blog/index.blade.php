@@ -16,14 +16,14 @@
     <div class="container">
         <!-- Page Header -->
         <div class="blog-page-header">
-            <h1 class="blog-page-title">Our Blog</h1>
-            <p class="blog-page-subtitle">Discover the latest articles and insights</p>
+            <h1 class="blog-page-title">{{ __('app.blog.blog_heading') }}</h1>
+            <p class="blog-page-subtitle">{{ __('app.blog.blog_des') }}</p>
         </div>
 
         <!-- Loading State -->
         <div id="blog-loading" class="blog-loading">
             <div class="blog-spinner"></div>
-            <p>Loading articles...</p>
+            <p>{{ __('app.blog.loading_articles') }}</p>
         </div>
 
         <!-- Error State -->
@@ -31,9 +31,9 @@
             <div class="blog-error-icon">
                 <i class="fas fa-exclamation-circle"></i>
             </div>
-            <h3>Oops! Something went wrong</h3>
-            <p id="blog-error-message">Failed to load articles. Please try again later.</p>
-            <button class="blog-retry-btn" onclick="fetchArticles(currentPage)">Try Again</button>
+            <h3>{{ __('app.blog.error_title') }}</h3>
+            <p id="blog-error-message">{{ __('app.blog.error_message') }}</p>
+            <button class="blog-retry-btn" onclick="fetchArticles(currentPage)">{{ __('app.blog.try_again') }}</button>
         </div>
 
         <!-- Empty State -->
@@ -41,8 +41,8 @@
             <div class="blog-empty-icon">
                 <i class="fas fa-book-open"></i>
             </div>
-            <h3>No articles found</h3>
-            <p>There are no articles available at the moment. Please check back later.</p>
+            <h3>{{ __('app.blog.no_articles_title') }}</h3>
+            <p>{{ __('app.blog.no_articles_message') }}</p>
         </div>
 
         <!-- Articles Grid -->
@@ -54,13 +54,13 @@
         <div id="blog-pagination" class="blog-pagination" style="display: none;">
             <button id="blog-prev-btn" class="blog-pagination-btn blog-pagination-btn-prev" onclick="goToPreviousPage()" disabled>
                 <i class="fas fa-chevron-left"></i>
-                <span>Previous</span>
+                <span>{{ __('app.blog.previous') }}</span>
             </button>
             <div class="blog-pagination-info">
-                <span id="blog-page-info">Page 1 of 1</span>
+                <span id="blog-page-info">{{ __('app.blog.page_info', ['current' => 1, 'total' => 1]) }}</span>
             </div>
             <button id="blog-next-btn" class="blog-pagination-btn blog-pagination-btn-next" onclick="goToNextPage()" disabled>
-                <span>Next</span>
+                <span>{{ __('app.blog.next') }}</span>
                 <i class="fas fa-chevron-right"></i>
             </button>
         </div>
