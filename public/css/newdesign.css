@@ -902,7 +902,7 @@
 
     /* Search section */
     .search-section {
-      background-color: #fff4f8;
+      background-color: #FAFAFA;
       border: 1px solid #d5bec6;
       border-radius: 14px;
       padding: 24px;
@@ -925,7 +925,7 @@
     .search-icon {
       width: 72px;
       height: 72px;
-      background-color: #fff4f8;
+      background-color: #FAFAFA;
       border: 1px solid #d5bec6;
       border-radius: 36px;
       display: flex;

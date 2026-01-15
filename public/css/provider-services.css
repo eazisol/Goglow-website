@@ -583,7 +583,7 @@
     padding: 7px 20px;
     border: 1px solid rgba(213, 190, 198, 1);
     border-radius: 20px;
-    background: rgba(255, 240, 245, 0.5);
+    background: #FAFAFA;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -721,7 +721,7 @@
 /* Provider Info Card Styles */
 .provider-info-card {
     border: 1px solid rgba(213, 190, 198, 1);
-    background: rgba(255, 240, 245, 0.5);
+    background: #FAFAFA;
     border-radius: 20px;
     padding: 25px;
     margin-top: 20px;
