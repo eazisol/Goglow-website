@@ -421,27 +421,43 @@
       </div>
               <div class="partners-grid">
                 <div class="partners-marquee">
-                  <img src="images/images/img_rectangle_35.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_36.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_39.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_41.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_42.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_43.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_44.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_38.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_45.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/velvety-paris.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.03 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.03.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.04.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.05 (2).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.05 (3).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06 (3).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.08 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.09.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.02.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.05 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06 (2).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.07 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06 (3).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.07.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.08 (2).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.08.jpeg" alt="Partner Logo" class="partner-logo">
                   <!-- Duplicate logos for seamless looping -->
-                  <img src="images/images/img_rectangle_35.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_36.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_39.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_41.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_42.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_43.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_44.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_38.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/img_rectangle_45.png" alt="Partner Logo" class="partner-logo">
-                  <img src="images/images/velvety-paris.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.03 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.03.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.04.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.05 (2).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.05 (3).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06 (3).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.08 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.09.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.02.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.05 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06 (2).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.07 (1).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.06 (3).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.07.jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.08 (2).jpeg" alt="Partner Logo" class="partner-logo">
+                  <img src="images/images/WhatsApp Image 2026-01-14 at 16.43.08.jpeg" alt="Partner Logo" class="partner-logo">
                 </div>
               </div>
 

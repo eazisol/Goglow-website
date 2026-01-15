@@ -76,7 +76,7 @@
                       </a>
                     </div>
                           <div class="hero-button-become-a-glowee">
-                <a href="{{ url('/contact-us') }}" class="btn-secondary">
+                <a href="https://glaura.typeform.com/carte-salons" class="btn-secondary">
                   {{ __('app.salon_page.become_glower') }}
                   <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
                 </a>
