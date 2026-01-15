@@ -147,6 +147,13 @@ return [
     // Common
     'common' => [
         'loading' => 'Chargement...',
+        'loading_provider_info' => 'Chargement des informations du prestataire...',
+        'loading_services' => 'Chargement des services...',
+        'loading_more_services' => 'Chargement de plus de services...',
+        'loading_providers' => 'Chargement des prestataires...',
+        'loading_more' => 'Chargement...',
+        'loading_videos' => 'Chargement des vidéos...',
+        'loading_article' => 'Chargement de l\'article...',
         'error' => 'Erreur',
         'success' => 'Succès',
         'cancel' => 'Annuler',

@@ -149,6 +149,13 @@ return [
     // Common
     'common' => [
         'loading' => 'Loading...',
+        'loading_provider_info' => 'Loading provider information...',
+        'loading_services' => 'Loading services...',
+        'loading_more_services' => 'Loading more services...',
+        'loading_providers' => 'Loading providers...',
+        'loading_more' => 'Loading more...',
+        'loading_videos' => 'Loading videos...',
+        'loading_article' => 'Loading article...',
         'error' => 'Error',
         'success' => 'Success',
         'cancel' => 'Cancel',

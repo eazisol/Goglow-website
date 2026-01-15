@@ -109,7 +109,7 @@
         <!-- Loading State -->
         <div id="videos-loading" class="videos-loading">
             <div class="videos-spinner"></div>
-            <p>Loading videos...</p>
+            <p>{{ __('app.common.loading_videos') }}</p>
         </div>
 
         <!-- Error State -->

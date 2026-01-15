@@ -7,7 +7,7 @@
 <!-- Videos Loading State -->
 <div id="videos-loading" class="videos-loading" style="display: none;">
     <div class="videos-spinner"></div>
-    <p>Loading videos...</p>
+    <p>{{ __('app.common.loading_videos') }}</p>
 </div>
 
 <!-- Videos Error State -->

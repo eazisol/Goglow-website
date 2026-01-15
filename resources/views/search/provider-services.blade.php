@@ -27,7 +27,7 @@
                 {{-- Provider Loading State --}}
                 <div id="providerLoading" class="provider-loading" style="display: flex;">
                     <div class="provider-spinner"></div>
-                    <p>Loading provider information...</p>
+                    <p>{{ __('app.common.loading_provider_info') }}</p>
                 </div>
                 
                 {{-- Provider Error State --}}
@@ -199,7 +199,7 @@
                 {{-- Loading state --}}
                 <div id="servicesLoading" class="services-loading" style="display: none;">
                     <div class="services-spinner"></div>
-                    <p>Loading services...</p>
+                    <p>{{ __('app.common.loading_services') }}</p>
                 </div>
                 
                 {{-- Error state --}}
@@ -215,7 +215,7 @@
                 {{-- Pagination loading state (shown at bottom when loading more) --}}
                 <div id="paginationLoading" class="services-loading" style="display: none;">
                     <div class="services-spinner"></div>
-                    <p>Loading more services...</p>
+                    <p>{{ __('app.common.loading_more_services') }}</p>
                 </div>
                 
                 {{-- Empty state --}}

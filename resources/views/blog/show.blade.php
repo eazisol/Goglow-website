@@ -25,7 +25,7 @@
         <!-- Loading State -->
         <div id="blog-detail-loading" class="blog-detail-loading">
             <div class="blog-spinner"></div>
-            <p>Loading article...</p>
+            <p>{{ __('app.common.loading_article') }}</p>
         </div>
 
         <!-- Error State -->

@@ -117,7 +117,7 @@
         <!-- Loading State -->
         <div id="providers-loading" class="providers-loading">
             <div class="providers-spinner"></div>
-            <p>Loading providers...</p>
+            <p>{{ __('app.common.loading_providers') }}</p>
         </div>
 
         <!-- Error State -->
@@ -147,7 +147,7 @@
         <!-- Infinite Scroll Loading Indicator -->
         <div id="providers-load-more" class="providers-load-more" style="display: none;">
             <div class="providers-spinner"></div>
-            <p>Loading more...</p>
+            <p>{{ __('app.common.loading_more') }}</p>
         </div>
                                             </div>
                                     </div>
