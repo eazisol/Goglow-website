@@ -2650,6 +2650,9 @@
       .page-book-appointment{
           padding: 0;
       }
+      .app-buttons{
+        top: 165px;
+      }
     }
 
 

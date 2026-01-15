@@ -4,7 +4,7 @@
         display: flex;
         justify-content: center;
         padding: 60px 0 80px;
-        background: rgba(255, 244, 248, 1);
+        background: #FAFAFA;
     }
 
     .page-book-appointment > .container {

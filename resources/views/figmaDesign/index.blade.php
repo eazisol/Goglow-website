@@ -462,7 +462,7 @@
               </div>
 
         <div class="partner-section-button" style="text-align: center; margin-top: 35px; margin-bottom: 60px;">
-          <a href="{{ url('/contact-us') }}" class="btn-gradient">
+          <a href="https://glaura.typeform.com/carte-salons" class="btn-gradient">
             {{ __('app.home.become_a_glowee_button') }}
             <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
           </a>
@@ -594,7 +594,7 @@
         </div>
 
         <div class="app-mockup">
-          <img src="images/images/Group 36125.png" alt="App Mockup" class="app-mockup-image">
+          <img src="images/images/Group 3612512.png" alt="App Mockup" class="app-mockup-image">
           {{-- <div style="position: relative; background-color: #fff4f8; border-radius: 74px 74px 0 0; padding: 100px 56px; box-shadow: 0px 4px 100px rgba(136, 136, 136, 1);">
             <div style="position: relative; max-width: 716px; margin: 0 auto;">
               <img src="images/images/img_0d51a4231806639_6890ab39dc7b2.png" alt="Phone Mockup Background" style="width: 100%; height: 528px; object-fit: cover;">
