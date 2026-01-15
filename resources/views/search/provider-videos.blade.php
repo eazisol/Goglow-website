@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function () {
         bookingBtn.href = `/${encodeURIComponent(video.companyUserName)}`;
       } else {
         // Fallback to old format if username not available
-        bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+        bookingBtn.href = '/recherche?provider_id=' + encodeURIComponent(video.serviceProviderId);
       }
     }
     

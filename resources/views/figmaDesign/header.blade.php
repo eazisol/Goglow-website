@@ -13,7 +13,7 @@
       <span class="plus">+</span>
       <a href="#">{{ __('app.nav.services') }}</a>
       <span class="plus">+</span> --}}
-      <a href="{{ url('/search') }}" class="{{ request()->is('search*') ? 'active' : '' }}" @if(request()->is('search*')) aria-current="page" @endif>{{ __('app.nav.book_service') }}</a>
+      <a href="{{ url('/recherche') }}" class="{{ request()->is('recherche*') ? 'active' : '' }}" @if(request()->is('recherche*')) aria-current="page" @endif>{{ __('app.nav.book_service') }}</a>
       <span class="plus">+</span>
       <a href="{{ url('/blogs') }}">{{ __('app.nav.blogs') }}</a>
     </div>
@@ -106,7 +106,7 @@
     <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">{{ __('app.nav.home') }}</a>
     {{-- <a href="#">About Us</a>
     <a href="#">Services</a> --}}
-    <a href="{{ url('/search') }}" class="{{ request()->is('search*') ? 'active' : '' }}">{{ __('app.nav.book_service') }}</a>
+    <a href="{{ url('/recherche') }}" class="{{ request()->is('recherche*') ? 'active' : '' }}">{{ __('app.nav.book_service') }}</a>
     <a href="{{ url('/blogs') }}">{{ __('app.nav.blogs') }}</a>
         <a href="https://glaura.typeform.com/carte-salons" class="mobile-sidebar-button">{{ __('app.nav.hero_section_button') }} <img src="{{ asset('images/images/Arrow_Right_white_color.svg') }}" alt="" width="16" height="16"></a>
     {{-- <button class="mobile-sidebar-button">BECOME A GLOWER <img src="{{ asset('images/images/Arrow_Right_white_color.svg') }}" alt="" width="16" height="16"></button> --}}

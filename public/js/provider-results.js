@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const timing = provider.timing || {};
 
     // Create provider URL - use username if available, fallback to provider_id
-    const providerUrl = username ? `/${encodeURIComponent(username)}` : `/search?provider_id=${encodeURIComponent(providerId)}`;
+    const providerUrl = username ? `/${encodeURIComponent(username)}` : `/recherche?provider_id=${encodeURIComponent(providerId)}`;
 
     // Create timing status
     const timingStatus = calculateTimingStatus(timing);

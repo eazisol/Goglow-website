@@ -78,7 +78,7 @@
                             </div>
                             <h3>{{ __('app.bookings.no_bookings') }}</h3>
                             <p>{{ __('app.bookings.no_bookings_desc') }}</p>
-                            <a href="{{ url('/search') }}" class="btn-book-now">{{ __('app.bookings.book_now') }}</a>
+                            <a href="{{ url('/recherche') }}" class="btn-book-now">{{ __('app.bookings.book_now') }}</a>
                         </div>
 
                         <!-- Bookings List (populated by JavaScript) -->

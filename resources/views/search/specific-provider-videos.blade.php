@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (providerId) {
       // Fallback to old format
       if (listTabLink) {
-        listTabLink.href = `/search?provider_id=${encodeURIComponent(providerId)}`;
+        listTabLink.href = `/recherche?provider_id=${encodeURIComponent(providerId)}`;
       }
       if (videosTabLink) {
         videosTabLink.href = `{{ route('search.videos.provider') }}?provider_id=${encodeURIComponent(providerId)}`;
@@ -626,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (fallbackUsername) {
           bookingBtn.href = `/${encodeURIComponent(fallbackUsername)}`;
         } else {
-          bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+          bookingBtn.href = '/recherche?provider_id=' + encodeURIComponent(video.serviceProviderId);
         }
       }
     } else if (bookingBtn && video.serviceId && video.serviceProviderId) {
@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (fallbackUsername) {
         bookingBtn.href = `/${encodeURIComponent(fallbackUsername)}`;
       } else {
-        bookingBtn.href = '/search?provider_id=' + encodeURIComponent(video.serviceProviderId);
+        bookingBtn.href = '/recherche?provider_id=' + encodeURIComponent(video.serviceProviderId);
       }
     }
     

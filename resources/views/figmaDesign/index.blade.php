@@ -356,7 +356,7 @@
                  </div>
                </div>
             </a>
-          <a href="{{ url('/search') }}" class="btn-primary">
+          <a href="{{ url('/recherche') }}" class="btn-primary">
             {{ __('app.home.hiw_book_a_service') }}
             <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
           </a>
