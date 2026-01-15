@@ -112,7 +112,7 @@ Route::get('/.well-known/apple-app-site-association', function () {
                     'appIDs' => ['53FA863RPS.com.salif.beautyapp'],
                     'components' => [
                         [
-                            '/' => '/sp*',
+                            '/' => '/app/*',
                             'comment' => 'Matches only service provider profile links'
                         ]
                     ]
