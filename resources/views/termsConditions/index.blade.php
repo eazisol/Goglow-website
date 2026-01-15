@@ -55,7 +55,7 @@
                             {{-- <h2>GoGlow - Conditions Générales d'Utilisation</h2> --}}
                             <p class="text-end">Dernière mise à jour : 23 décembre 2025</p>
                                                    
-                                                        <h3>Term & Conditions</h3>
+                                                        <h3>Termes et conditions</h3>
                                                 
                             
                             <h4>1. Introduction</h4>

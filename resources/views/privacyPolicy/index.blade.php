@@ -53,7 +53,7 @@
                             {{-- <h2>GoGlow - Politique de Confidentialité</h2> --}}
                             <p class="text-end">Dernière mise à jour : 29 décembre 2025</p>
                             
-                                <h3>Privacy Policy</h3>
+                                <h3>Politique de Confidentialité</h3>
                             
                             {{-- <h3>1. Responsable du Traitement</h3>
                             <p>[Nom de l'entreprise]<br>
