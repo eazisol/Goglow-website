@@ -59,7 +59,7 @@
                             </div>
                     </div>
                     @php
-                        $defaultImage = asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg');
+                        $defaultImage = asset('/images/default.jpeg');
                     @endphp
                     
                     <!-- Desktop Grid View -->
@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Legacy default image for provider images (keep for backward compatibility)
-    const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+    const defaultImage = '{{ asset("/images/default.jpeg") }}';
     
     // Clean up old sessionStorage cache entries
     function cleanupOldCacheEntries() {
@@ -1496,7 +1496,7 @@ document.addEventListener('DOMContentLoaded', function() {
         section.className = 'category-section';
         section.setAttribute('data-category', categoryName);
         
-        const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+        const defaultImage = '{{ asset("/images/default.jpeg") }}';
         // Get provider ID from providerData if available, otherwise from server
         const providerId = (providerData && providerData.id) ? providerData.id : '{{ $providerId ?? "" }}';
         // Get companyUserName from providerData or use the global companyUserName variable from URL path
@@ -1840,7 +1840,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Collect service images for provider gallery
         const providerImages = [];
-        const defaultImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+        const defaultImage = '{{ asset("/images/default.jpeg") }}';
         const providerProfileImg = providerData.profileImg || defaultImage;
         
         // First image is provider profile
@@ -2354,7 +2354,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let isVideoLoading = false;
     let currentVideoIndex = -1;
     const defaultThumbnail = '{{ asset("images/images/default-video-thumbnail.jpg") }}';
-    const defaultUserImage = '{{ asset("images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+    const defaultUserImage = '{{ asset("images/default.jpeg") }}';
     
     // Track if mouse is over video modal for touchpad scroll
     let isMouseOverModal = false;

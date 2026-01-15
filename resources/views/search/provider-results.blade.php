@@ -161,7 +161,7 @@
 @section('scripts')
 <script>
     // Global variable for default image path (used in provider-results.js)
-    window.defaultProviderImage = '{{ asset("/images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+    window.defaultProviderImage = '{{ asset("/images/default.jpeg") }}';
 </script>
 <script src="{{ \App\Helpers\AssetHelper::versioned('js/provider-results.js') }}"></script>
 @endsection

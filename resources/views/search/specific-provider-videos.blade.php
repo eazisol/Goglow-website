@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let isLoading = false;
   let currentVideoIndex = -1;
   const defaultThumbnail = '{{ asset("images/images/default-video-thumbnail.jpg") }}';
-  const defaultUserImage = '{{ asset("images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+  const defaultUserImage = '{{ asset("images/default.jpeg") }}';
   // Get username from URL path or provider_id from server (for backward compatibility)
   const companyUserNameFromServer = '{{ $companyUserName ?? "" }}';
   const pathParts = window.location.pathname.split('/').filter(part => part);

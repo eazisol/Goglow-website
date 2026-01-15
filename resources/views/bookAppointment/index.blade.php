@@ -35,9 +35,9 @@
                     <!-- Service summary card Start -->
                     <div class="service-summary-card">
                         {{-- <div class="card-cover">
-                            <img src="{{ (isset($selectedService['images']) && count($selectedService['images']) > 0) ? $selectedService['images'][0] : asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}"
+                            <img src="{{ (isset($selectedService['images']) && count($selectedService['images']) > 0) ? $selectedService['images'][0] : asset('/images/default.jpeg') }}"
                                  alt="{{ $selectedService['service_name'] ?? 'Service' }}"
-                                 onerror="this.src='{{ asset('/images/adam-winger-FkAZqQJTbXM-unsplash.jpg') }}'">
+                                 onerror="this.src='{{ asset('/images/default.jpeg') }}'">
                         </div> --}}
                         <div class="card-body">
                             <h4 class="service-summary-title">{{ $selectedService['service_name'] ?? 'Selected Service' }}</h4>

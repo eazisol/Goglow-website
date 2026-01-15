@@ -565,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Function to create a provider card element
   function createProviderCard(provider) {
     // Use global variable for default image, with fallback
-    const defaultImage = window.defaultProviderImage || '/images/adam-winger-FkAZqQJTbXM-unsplash.jpg';
+    const defaultImage = window.defaultProviderImage || '/images/default.jpeg';
     const providerImage = provider.profileImg || defaultImage;
     const companyName = provider.companyName || provider.name || 'No Name';
     const avgRating = provider.avg_ratting || 0;

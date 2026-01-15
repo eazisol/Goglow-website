@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let isLoading = false;
   let currentVideoIndex = -1;
   const defaultThumbnail = '{{ asset("images/images/default-video-thumbnail.jpg") }}';
-  const defaultUserImage = '{{ asset("images/adam-winger-FkAZqQJTbXM-unsplash.jpg") }}';
+  const defaultUserImage = '{{ asset("images/default.jpeg") }}';
 
   // Drag functionality
   let isDragging = false;
