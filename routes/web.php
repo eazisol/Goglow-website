@@ -127,3 +127,8 @@ Route::get('/.well-known/apple-app-site-association', function () {
 Route::get('/{companyUserName}/videos', [\App\Http\Controllers\SearchController::class, 'showProviderVideosByUsername'])->name('provider.videos.by.username');
 Route::get('/{companyUserName}/{servicesSlug}', [\App\Http\Controllers\BookAppointmentController::class, 'showBySlug'])->middleware('firebase.auth.modal')->name('book-appointment.slug')->where('servicesSlug', '[a-zA-Z0-9\-]+');
 Route::get('/{companyUserName}', [\App\Http\Controllers\SearchController::class, 'showProviderByUsername'])->name('provider.by.username');
+
+// Fallback route - catch all unmatched routes and redirect to 404 page
+Route::fallback(function () {
+    return redirect('/404');
+});

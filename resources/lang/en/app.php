@@ -595,4 +595,11 @@ return [
         'next' => 'Next',
         'page_info' => 'Page :current of :total',
     ],
+    'error_404' => [
+        'title' => 'Oops! Page Not Found',
+        'title_highlight' => 'Not Found',
+        'description' => 'The page you\'re looking for doesn\'t exist or has been moved. Don\'t worry, let\'s get you back on track!',
+        'go_home' => 'Go to Homepage',
+        'go_back' => 'Go Back',
+    ],
 ];

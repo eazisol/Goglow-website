@@ -596,4 +596,11 @@ return [
         'next' => 'Suivant',
         'page_info' => 'Page :current sur :total',
     ],
+    'error_404' => [
+        'title' => 'Oups ! Page introuvable',
+        'title_highlight' => 'introuvable',
+        'description' => 'La page que vous recherchez n\'existe pas ou a été déplacée. Ne vous inquiétez pas, remettons-vous sur la bonne voie !',
+        'go_home' => 'Aller à l\'accueil',
+        'go_back' => 'Retour',
+    ],
 ];
