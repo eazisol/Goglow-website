@@ -53,9 +53,9 @@
                                 <button class="desktop-control-btn share-btn" aria-label="Share">
                                     <img src="{{ asset('images/images/share-icon.svg') }}" alt="Location" width="25" height="25">
                                 </button>
-                                <button class="desktop-control-btn heart-btn" aria-label="Favorite">
+                                {{-- <button class="desktop-control-btn heart-btn" aria-label="Favorite">
                                     <img src="{{ asset('images/images/si_heart-line.svg') }}" alt="Location" width="25" height="25">
-                                </button>
+                                </button> --}}
                             </div>
                     </div>
                     @php
@@ -119,9 +119,9 @@
                             <button class="carousel-btn-mobile share-btn" aria-label="Share">
                                 <img src="{{ asset('images/images/share-icon.svg') }}" alt="Location" width="25" height="25">
                             </button>
-                            <button class="carousel-btn-mobile heart-btn" aria-label="Favorite">
+                            {{-- <button class="carousel-btn-mobile heart-btn" aria-label="Favorite">
                                 <img src="{{ asset('images/images/si_heart-line.svg') }}" alt="Location" width="25" height="25">
-                            </button>
+                            </button> --}}
                         </div>
                         <div class="carousel-container">
                             <div class="carousel-track" id="carouselTrack">
