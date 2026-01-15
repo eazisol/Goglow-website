@@ -101,7 +101,7 @@
              </div>
 
              <div class="hero-button-become-glowee">
-              <a href="{{ url('/become-glower') }}" class="btn-secondary-hero-section">
+              <a href="{{ url('/pro') }}" class="btn-secondary-hero-section">
                 {{ __('app.home.become_a_glowee_button') }}
                 <img src="images/images/Arrow_Right_white_color.svg" alt="" width="16" height="16">
               </a>

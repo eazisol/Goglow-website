@@ -19,7 +19,7 @@
     </div>
     <div class="switcher-button">
           @include('partials.language-switcher')
-          <a href="{{ url('/become-glower') }}" class="cta-btn">{{ __('app.nav.hero_section_button') }}<img src="{{ asset('images/images/Arrow_Right.svg') }}" alt="" width="16" height="16"></a>
+          <a href="{{ url('/pro') }}" class="cta-btn">{{ __('app.nav.hero_section_button') }}<img src="{{ asset('images/images/Arrow_Right.svg') }}" alt="" width="16" height="16"></a>
           {{-- <button class="cta-btn">BECOME A GLOWER <img src="{{ asset('images/images/Arrow_Right.svg') }}" alt="" width="16" height="16"></button> --}}
           <button class="menu-icon" id="menu-toggle">
             <img src="{{ asset('images/images/Frame 1618873824.svg') }}" alt="Menu" class="menu-icon">

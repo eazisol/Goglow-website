@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // figma
-Route::get('/', function () {return view('comingSoon.index');})->name('coming-soon');
-Route::get('/coming-soon', function () {return view('figmaDesign.index');});
+Route::get('/coming-soon', function () {return view('comingSoon.index');})->name('coming-soon');
+Route::get('/', function () {return view('figmaDesign.index');});
 Route::get('/header', function () {return view('figmaDesign.header');});
 Route::get('/slider', function () {return view('figmaDesign.slider');});
-Route::get('/become-glower', function () {return view('figmaDesign.becomeAglower');});
+Route::get('/pro', function () {return view('figmaDesign.becomeAglower');});
 Route::get('/ui-testing', function () {return view('figmaDesign.uiTesting');});
 
 Route::get('/testing', function () {return view('figmaDesign.testing');});
