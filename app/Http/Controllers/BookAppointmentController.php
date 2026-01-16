@@ -116,22 +116,22 @@ class BookAppointmentController extends Controller
     public function showBySlug(Request $request, $companyUserName, $servicesSlug)
     {
         // First, validate that the provider exists
-        try {
-            $cacheKey = "provider_by_username_{$companyUserName}";
-            $providers = Cache::remember($cacheKey, 900, function () use ($companyUserName) {
-                return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders', [
-                    'companyUserName' => $companyUserName
-                ])->json() ?? [];
-            });
+        // try {
+        //     $cacheKey = "provider_by_username_{$companyUserName}";
+        //     $providers = Cache::remember($cacheKey, 900, function () use ($companyUserName) {
+        //         return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders', [
+        //             'companyUserName' => $companyUserName
+        //         ])->json() ?? [];
+        //     });
             
-            // If provider doesn't exist, redirect to 404
-            if (!is_array($providers) || count($providers) === 0) {
-                return redirect('/404');
-            }
-        } catch (\Exception $e) {
-            // Error fetching provider, redirect to 404
-            return redirect('/404');
-        }
+        //     // If provider doesn't exist, redirect to 404
+        //     if (!is_array($providers) || count($providers) === 0) {
+        //         return redirect('/404');
+        //     }
+        // } catch (\Exception $e) {
+        //     // Error fetching provider, redirect to 404
+        //     return redirect('/404');
+        // }
         
         $firebaseUid = session('firebase_uid');
         
@@ -195,10 +195,10 @@ class BookAppointmentController extends Controller
                     $selectedCategory = $json['category'] ?? null;
                     $agents = $json['agents'] ?? [];
                     
-                    // If service doesn't exist, redirect to 404
-                    if (!$selectedService) {
-                        return redirect('/404');
-                    }
+                    // // If service doesn't exist, redirect to 404
+                    // if (!$selectedService) {
+                    //     return redirect('/404');
+                    // }
                     
                     // Merge spDeposit and commission into selectedService if they exist
                     if ($selectedService && isset($json['spDeposit'])) {
@@ -215,11 +215,17 @@ class BookAppointmentController extends Controller
                     }
                 } else {
                     // Service not found, redirect to 404
-                    return redirect('/404');
+                    // return redirect('/404');
+                    $selectedService = null;
+                    $selectedCategory = null;
+                    $agents = [];
                 }
             } catch (\Throwable $e) {
                 // Service not found or error, redirect to 404
-                return redirect('/404');
+                // return redirect('/404');
+                    $selectedService = null;
+                    $selectedCategory = null;
+                    $agents = [];
             }
         }
 

@@ -57,23 +57,23 @@ class SearchController extends Controller
     
     public function showProviderByUsername($companyUserName)
     {
-        // Validate that the provider exists
-        try {
-            $cacheKey = "provider_by_username_{$companyUserName}";
-            $providers = Cache::remember($cacheKey, 900, function () use ($companyUserName) {
-                return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders', [
-                    'companyUserName' => $companyUserName
-                ])->json() ?? [];
-            });
+        // // Validate that the provider exists
+        // try {
+        //     $cacheKey = "provider_by_username_{$companyUserName}";
+        //     $providers = Cache::remember($cacheKey, 900, function () use ($companyUserName) {
+        //         return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders', [
+        //             'companyUserName' => $companyUserName
+        //         ])->json() ?? [];
+        //     });
             
-            // If provider doesn't exist, redirect to 404
-            if (!is_array($providers) || count($providers) === 0) {
-                return redirect('/404');
-            }
-        } catch (\Exception $e) {
-            // Error fetching provider, redirect to 404
-            return redirect('/404');
-        }
+        //     // If provider doesn't exist, redirect to 404
+        //     if (!is_array($providers) || count($providers) === 0) {
+        //         return redirect('/404');
+        //     }
+        // } catch (\Exception $e) {
+        //     // Error fetching provider, redirect to 404
+        //     return redirect('/404');
+        // }
         
         // Provider data will be fetched via JavaScript from frontend using username
         return view('search.provider-services', [
@@ -196,23 +196,23 @@ class SearchController extends Controller
     
     public function showProviderVideosByUsername($companyUserName)
     {
-        // Validate that the provider exists
-        try {
-            $cacheKey = "provider_by_username_{$companyUserName}";
-            $providers = Cache::remember($cacheKey, 900, function () use ($companyUserName) {
-                return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders', [
-                    'companyUserName' => $companyUserName
-                ])->json() ?? [];
-            });
+        // // Validate that the provider exists
+        // try {
+        //     $cacheKey = "provider_by_username_{$companyUserName}";
+        //     $providers = Cache::remember($cacheKey, 900, function () use ($companyUserName) {
+        //         return Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders', [
+        //             'companyUserName' => $companyUserName
+        //         ])->json() ?? [];
+        //     });
             
-            // If provider doesn't exist, redirect to 404
-            if (!is_array($providers) || count($providers) === 0) {
-                return redirect('/404');
-            }
-        } catch (\Exception $e) {
-            // Error fetching provider, redirect to 404
-            return redirect('/404');
-        }
+        //     // If provider doesn't exist, redirect to 404
+        //     if (!is_array($providers) || count($providers) === 0) {
+        //         return redirect('/404');
+        //     }
+        // } catch (\Exception $e) {
+        //     // Error fetching provider, redirect to 404
+        //     return redirect('/404');
+        // }
         
         // Use the same provider-services view - it will detect /videos URL and show videos tab
         return view('search.provider-services', [

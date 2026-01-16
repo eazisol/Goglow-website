@@ -129,6 +129,6 @@ Route::get('/{companyUserName}/{servicesSlug}', [\App\Http\Controllers\BookAppoi
 Route::get('/{companyUserName}', [\App\Http\Controllers\SearchController::class, 'showProviderByUsername'])->name('provider.by.username');
 
 // Fallback route - catch all unmatched routes and redirect to 404 page
-Route::fallback(function () {
-    return redirect('/404');
-});
+// Route::fallback(function () {
+//     return redirect('/404');
+// });
