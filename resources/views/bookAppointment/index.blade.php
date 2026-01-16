@@ -1704,6 +1704,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // Restore pending booking state if user just logged in
     restorePendingBookingState();
 
+    // Function to fetch user data from API (phone and countryCode)
+    async function fetchUserDataFromAPI(userId) {
+        try {
+            const response = await fetch(`https://us-central1-beauty-984c8.cloudfunctions.net/getCurrentUserData?UserId=${encodeURIComponent(userId)}`);
+            if (response.ok) {
+                const data = await response.json();
+                return {
+                    phone: data.phone || null,
+                    countryCode: data.countryCode || null
+                };
+            }
+        } catch (error) {
+            console.error('Error fetching user data from API:', error);
+        }
+        return { phone: null, countryCode: null };
+    }
+
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
@@ -1746,13 +1763,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Get user data from bookingBootstrap
         const userData = bookingBootstrap.userData || {};
-        // Ensure we have valid values, not empty strings
-        const name = (userData.name && userData.name.trim()) ? userData.name.trim() : null;
-        const email = (userData.email && userData.email.trim()) ? userData.email.trim() : null;
-        const phone = (userData.phone && userData.phone.trim()) ? userData.phone.trim() : null;
         
         // Get userId from bookingBootstrap or userData as fallback
         const userId = bookingBootstrap.userId || userData.id || null;
+        
+        // Fetch user data from API if user is logged in (to get phone and countryCode)
+        let apiUserData = { phone: null, countryCode: null };
+        if (userId) {
+            apiUserData = await fetchUserDataFromAPI(userId);
+            console.log('API user data fetched:', apiUserData);
+        }
+        
+        // Ensure we have valid values, not empty strings
+        // Use API phone if available, otherwise fall back to userData.phone
+        const name = (userData.name && userData.name.trim()) ? userData.name.trim() : null;
+        const email = (userData.email && userData.email.trim()) ? userData.email.trim() : null;
+        const phone = apiUserData.phone || ((userData.phone && userData.phone.trim()) ? userData.phone.trim() : null);
         
         // Log user data being used for the booking
         console.log('User data for booking:', {
@@ -1760,6 +1786,7 @@ document.addEventListener('DOMContentLoaded', function () {
             name: name,
             email: email,
             phone: phone,
+            apiUserData: apiUserData,
             userData: userData,
             bookingBootstrap: bookingBootstrap
         });
@@ -2006,9 +2033,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // Always save the full service amount regardless of payment type
         const amount = Math.round(servicePrice * 100) / 100;
         
-        // Extract country code from phone number if available (e.g., +33 from +33123456789)
-        let countryCode = null;
-        if (phone) {
+        // Use countryCode from API if available, otherwise extract from phone number
+        let countryCode = apiUserData.countryCode || null;
+        if (!countryCode && phone) {
             const phoneMatch = phone.match(/^\+(\d{1,3})/);
             if (phoneMatch) {
                 countryCode = '+' + phoneMatch[1];
