@@ -234,6 +234,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Still update the UI status to show booking was successful
         document.getElementById('apiResponseStatus').innerHTML = 
             '<strong class="text-success">' + successTranslations.booking_confirmed_server + '</strong>';
+        
+        // Send booking emails even for already submitted free bookings
+        sendBookingEmails(bookingPayload).catch(error => {
+            console.error('Error sending emails for free booking:', error);
+        });
     } else {
         submitBooking(bookingPayload);
     }
@@ -458,11 +463,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Function to generate Google Maps directions link
+    function getMapLink(lat, lng, address) {
+        if (lat != null && lng != null) {
+            return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=transit`;
+        } else if (address != null && address !== '') {
+            return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&travelmode=transit`;
+        }
+        return "";
+    }
+    
     // Function to send booking emails
     async function sendBookingEmails(payload) {
         try {
-            console.log('Preparing to send booking emails...');
-            
             // Extract required data from payload
             const userInfo = payload.userInfo || {};
             const serviceInfo = payload.services?.[0] || {};
@@ -478,33 +491,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const address = payload.address || serviceData.companyAddress || '';
             const bookingAmount = serviceInfo.servicePrice || payload.amount || 0;
             
+            // Extract location data from spLocation
+            const spLocation = serviceData.spLocation || {};
+            const geometry = spLocation.geometry || {};
+            const location = geometry.location || {};
+            const lat = location.lat;
+            const lng = location.lng;
+            
+            // Generate map link using coordinates or address
+            const mapLink = getMapLink(lat, lng, address);
+            
             // Parse date and time from booking_time
             const bookingDate = parseBookingDate(payload.booking_time);
             const bookingTime = parseBookingTime(payload.booking_time, payload.bookTime);
-            
-            console.log('Email data:', {
-                clientName,
-                clientEmail,
-                serviceName,
-                salonName,
-                ownerName,
-                ownerEmail,
-                address,
-                bookingDate,
-                bookingTime,
-                bookingAmount
-            });
-            
-            // Validate required data
-            if (!clientEmail) {
-                console.warn('Cannot send customer email: client email is missing');
-            }
-            if (!ownerEmail) {
-                console.warn('Cannot send provider email: owner email is missing');
-            }
-            if (!bookingDate || !bookingTime) {
-                console.warn('Cannot send emails: booking date or time is missing');
-            }
             
             // Send customer email (bookingCreated)
             if (clientEmail && bookingDate && bookingTime) {
@@ -519,11 +518,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             salonName: salonName,
                             date: bookingDate,
                             time: bookingTime,
-                            address: address
+                            address: address,
+                            mapLink: mapLink
                         }
                     };
-                    
-                    console.log('Sending customer email:', customerEmailPayload);
                     
                     const customerEmailResponse = await fetch('https://backend.glaura.ai/api/send-email', {
                         method: 'POST',
@@ -534,9 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     
                     const customerEmailResult = await customerEmailResponse.json();
-                    if (customerEmailResponse.ok) {
-                        console.log('Customer email sent successfully:', customerEmailResult);
-                    } else {
+                    if (!customerEmailResponse.ok) {
                         console.error('Error sending customer email:', customerEmailResult);
                     }
                 } catch (customerEmailError) {
@@ -564,8 +560,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     };
                     
-                    console.log('Sending provider email:', providerEmailPayload);
-                    
                     const providerEmailResponse = await fetch('https://backend.glaura.ai/api/send-email', {
                         method: 'POST',
                         headers: {
@@ -575,9 +569,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     
                     const providerEmailResult = await providerEmailResponse.json();
-                    if (providerEmailResponse.ok) {
-                        console.log('Provider email sent successfully:', providerEmailResult);
-                    } else {
+                    if (!providerEmailResponse.ok) {
                         console.error('Error sending provider email:', providerEmailResult);
                     }
                 } catch (providerEmailError) {
@@ -595,8 +587,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('apiResponseStatus').innerHTML = 
                 '<span class="text-warning">' + successTranslations.sending_booking + '</span>';
             
-            console.log('Submitting booking with payment info:', payload);
-            
             const response = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/bookService', {
                 method: 'POST',
                 headers: {
@@ -606,7 +596,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const responseData = await response.json();
-            console.log('API response:', responseData);
             
             if (response.ok) {
                 document.getElementById('apiResponseStatus').innerHTML = 
