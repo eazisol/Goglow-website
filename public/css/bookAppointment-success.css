@@ -10,7 +10,7 @@
     }
 
     .success-page {
-        background: var(--success-bg);
+        background: #FAFAFA;
         padding: 60px 0 90px;
         display: flex;
         justify-content: center;
