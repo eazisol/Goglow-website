@@ -436,6 +436,10 @@ return [
         'next_availability' => 'Next Availability',
         'morning' => 'Morning',
         'evening' => 'Afternoon',
+        'hours_unavailable' => 'Hours unavailable',
+        'no_time_availability' => 'No time availability',
+        'closed' => 'Closed',
+        'salon_list' => 'Salon List',
     ],
 
     // service page
@@ -456,6 +460,7 @@ return [
         'sunday' => 'Sunday',
         'see_more' => 'See More',
         'see_less' => 'See Less',
+        'service_list' => 'Service List',
     ],
     // Agent Page
     'agent_page' => [

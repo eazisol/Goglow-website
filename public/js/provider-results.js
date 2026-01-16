@@ -665,15 +665,43 @@ document.addEventListener('DOMContentLoaded', function () {
       return { html: '', tooltipHtml: '', availabilityHtml: '', cardId: '' };
     }
 
+    // Get translations from global variable (fallback to English if not available)
+    const translations = window.providerTranslations || {};
+    const t = {
+      open: translations.open || 'Open',
+      closed: translations.closed || 'Closed',
+      hours_unavailable: translations.hours_unavailable || 'Hours unavailable',
+      next_availability: translations.next_availability || 'Next Availability',
+      morning: translations.morning || 'Morning',
+      evening: translations.evening || 'Evening',
+      no_time_availability: translations.no_time_availability || 'No time availability',
+      monday: translations.monday || 'Monday',
+      tuesday: translations.tuesday || 'Tuesday',
+      wednesday: translations.wednesday || 'Wednesday',
+      thursday: translations.thursday || 'Thursday',
+      friday: translations.friday || 'Friday',
+      saturday: translations.saturday || 'Saturday',
+      sunday: translations.sunday || 'Sunday',
+    };
+
     const daysOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const dayNamesMap = {
-      'Mon': 'Mon',
-      'Tue': 'Tue',
-      'Wed': 'Wed',
-      'Thu': 'Thu',
-      'Fri': 'Fri',
-      'Sat': 'Sat',
-      'Sun': 'Sun'
+      'Mon': t.monday.substring(0, 3), // Short day names
+      'Tue': t.tuesday.substring(0, 3),
+      'Wed': t.wednesday.substring(0, 3),
+      'Thu': t.thursday.substring(0, 3),
+      'Fri': t.friday.substring(0, 3),
+      'Sat': t.saturday.substring(0, 3),
+      'Sun': t.sunday.substring(0, 3)
+    };
+    const fullDayNamesMap = {
+      'Mon': t.monday,
+      'Tue': t.tuesday,
+      'Wed': t.wednesday,
+      'Thu': t.thursday,
+      'Fri': t.friday,
+      'Sat': t.saturday,
+      'Sun': t.sunday
     };
 
     const now = new Date();
@@ -709,8 +737,8 @@ document.addEventListener('DOMContentLoaded', function () {
         </span>
         <span class="status-text" style="color: #666666;">
           ${isOpenToday
-        ? 'Open · ' + todayRangeText
-        : 'Closed · Hours unavailable'}
+        ? t.open + ' · ' + todayRangeText
+        : t.closed + ' · ' + t.hours_unavailable}
         </span>
       </div>
     `;
@@ -724,8 +752,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const isToday = todayKey === day;
       return `
               <div class="timing-row ${isToday ? 'today' : ''}">
-                <span class="timing-day">${dayNamesMap[day] || day}</span>
-                <span class="timing-hours">${rangeText || 'Closed'}</span>
+                <span class="timing-day">${fullDayNamesMap[day] || day}</span>
+                <span class="timing-hours">${rangeText || t.closed}</span>
               </div>
             `;
     }).join('')}
@@ -744,7 +772,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const dayTiming = timing[dayKey] || [];
       const hasTimeSlot = Array.isArray(dayTiming) && dayTiming.length >= 2 && dayTiming[0] && dayTiming[1];
-      const timeSlotText = hasTimeSlot ? formatRange(dayTiming) : 'No time availability';
+      const timeSlotText = hasTimeSlot ? formatRange(dayTiming) : t.no_time_availability;
 
       chipDays.push({
         label: dayLabel,
@@ -757,9 +785,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const availabilityHtml = `
       <div class="availability-section">
-        <div class="availability-title">Next Availability</div>
+        <div class="availability-title">${t.next_availability}</div>
         <div class="availability-row">
-          <span class="time-of-day">Morning</span>
+          <span class="time-of-day">${t.morning}</span>
           <div class="chip-group">
             ${chipDays.map(cd => `
               <span class="date-chip ${cd.hasTimeSlot ? 'has-slot' : 'no-slot'}" 
@@ -771,7 +799,7 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
         </div>
         <div class="availability-row">
-          <span class="time-of-day">Evening</span>
+          <span class="time-of-day">${t.evening}</span>
           <div class="chip-group">
             ${chipDays.map(cd => `
               <span class="date-chip ${cd.hasTimeSlot ? 'has-slot' : 'no-slot'}" 

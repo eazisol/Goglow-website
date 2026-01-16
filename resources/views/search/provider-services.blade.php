@@ -178,7 +178,7 @@
                     <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     <path d="M2.5 2.5H5.83333V5H2.5V2.5Z" fill="currentColor"/>
                 </svg>
-                <span>Service List</span>
+                <span>{{ __('app.service.service_list') }}</span>
             </button>
             {{-- <button type="button" class="view-tab" id="videosTabBtn" data-view="videos">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

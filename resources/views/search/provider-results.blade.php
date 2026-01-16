@@ -101,7 +101,7 @@
                     <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     <path d="M2.5 2.5H5.83333V5H2.5V2.5Z" fill="currentColor"/>
                 </svg>
-                <span>Salon List</span>
+                <span>{{ __('app.provider.salon_list') }}</span>
             </a>
             {{-- <a href="{{ route('search.videos') }}{{ request()->getQueryString() ? '?' . request()->getQueryString() : '' }}" class="view-tab" data-view="videos">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -162,6 +162,24 @@
 <script>
     // Global variable for default image path (used in provider-results.js)
     window.defaultProviderImage = '{{ asset("/images/default.jpeg") }}';
+    
+    // Translations for provider results
+    window.providerTranslations = {
+        open: @json(__('app.provider.provider_open')),
+        closed: @json(__('app.provider.closed')),
+        hours_unavailable: @json(__('app.provider.hours_unavailable')),
+        next_availability: @json(__('app.provider.next_availability')),
+        morning: @json(__('app.provider.morning')),
+        evening: @json(__('app.provider.evening')),
+        no_time_availability: @json(__('app.provider.no_time_availability')),
+        monday: @json(__('app.service.monday')),
+        tuesday: @json(__('app.service.tuesday')),
+        wednesday: @json(__('app.service.wednesday')),
+        thursday: @json(__('app.service.thursday')),
+        friday: @json(__('app.service.friday')),
+        saturday: @json(__('app.service.saturday')),
+        sunday: @json(__('app.service.sunday')),
+    };
 </script>
 <script src="{{ \App\Helpers\AssetHelper::versioned('js/provider-results.js') }}"></script>
 @endsection

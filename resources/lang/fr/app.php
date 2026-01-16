@@ -436,6 +436,10 @@ return [
         'next_availability' => 'Prochaines disponibilités',
         'morning' => 'Matin',
         'evening' => 'Après-midi',
+        'hours_unavailable' => 'Horaires indisponibles',
+        'no_time_availability' => 'Aucune disponibilité horaire',
+        'closed' => 'Fermé',
+        'salon_list' => 'Liste des salons',
     ],
         // service page
     'service' => [
@@ -455,6 +459,7 @@ return [
         'sunday' => 'Dimanche',
         'see_more' => 'Voir plus',
         'see_less' => 'Voir moins',
+        'service_list' => 'Liste des services',
     ],
         // Agent Page
     'agent_page' => [
