@@ -344,8 +344,9 @@
           </div>
         </div>
 
-        <div class="how-it-work-buttons" style="display: flex; justify-content: center; gap: 14px; margin-top: 110px; flex-wrap: wrap;">
-            <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
+        <div class="how-it-work-buttons" style="justify-content: center; gap: 14px; margin-top: 110px; flex-wrap: wrap;">
+          <div class="how-it-work-button-for-store">
+                        <a href="https://apps.apple.com/us/app/glaura-beauty-booking/id6743101981" class="app-store-btn">
                <div class="app-store-content">
                  <div class="apple-logo">
                    <img src="images/images/apple.svg" alt="Apple" width="36">
@@ -356,10 +357,24 @@
                  </div>
                </div>
             </a>
-          <a href="{{ url('/recherche') }}" class="btn-primary">
-            {{ __('app.home.hiw_book_a_service') }}
-            <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
-          </a>
+            <a href="https://play.google.com/store/apps/details?id=com.salif.beautyapp" class="app-store-btn">
+               <div class="app-store-content">
+                 <div class="apple-logo">
+                   <img src="images/images/google-play.png" alt="Apple" width="36">
+                 </div>
+                 <div class="app-store-text">
+                   <span class="download-text">{{ __('app.home.figma_design_Download') }}</span>
+                   <span class="store-text">Google Store</span>
+                 </div>
+               </div>
+            </a>
+          </div>
+          <div class="how-it-work-button-glower">
+                      <a href="{{ url('/recherche') }}" class="btn-primary">
+                        {{ __('app.home.hiw_book_a_service') }}
+                        <img src="images/images/Arrow_Right.svg" alt="" width="16" height="16">
+                      </a>
+          </div>
         </div>
       </div>
     </section>

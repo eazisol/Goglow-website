@@ -2122,6 +2122,16 @@
           justify-content: center;
           display: grid;
         }
+        .how-it-work-button-for-store{
+          gap: 20px;
+          justify-content: center;
+          display: flex;
+        }
+        .how-it-work-button-glower{
+          margin-top: 15px;
+          justify-content: center;
+          display: flex;
+        }
 
 
     /* Responsive Design */
