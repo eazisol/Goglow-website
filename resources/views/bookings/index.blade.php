@@ -17,7 +17,7 @@
                 <div class="account-sidebar">
                     <div class="sidebar-menu">
                         <div class="menu-group">
-                            <h3 class="menu-title">{{ __('app.bookings.my_account') ?? 'My account' }}</h3>
+                            {{-- <h3 class="menu-title">{{ __('app.bookings.my_account') ?? 'My account' }}</h3> --}}
                             <ul class="menu-list">
                                 <li>
                                     <a href="{{ route('my-bookings') }}" class="menu-link active">

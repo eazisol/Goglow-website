@@ -268,8 +268,8 @@
               <img src="images/images/mdi_stars.svg" alt="" width="24" height="24">
             </div>
             
-            <h2 class="benefits-title">{{ __('app.home.benefits_title_goglow') }}</h2>
-            <h2 class="benefits-title2">{{ __('app.home.benefits_title_love') }} <span style="font-family: Raflesia; font-weight:500;">{{ __('app.home.benefits_title_glowApp') }} </span></h2>
+            <h2 class="benefits-title">{{ __('app.home.benefits_title_goglow_pro') }}</h2>
+            <h2 class="benefits-title2">{{ __('app.home.benefits_title_love_pro') }} <span style="font-family: Raflesia; font-weight:500;">{{ __('app.home.benefits_title_glowApp_pro') }} </span></h2>
             
             
             <p class="benefits-subtitle">{{ __('app.home.bag_benefits_subtitle') }}</p>
