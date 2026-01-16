@@ -2041,16 +2041,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     agentName: chosenAgent?.name || 'Selected Agent'
                 }
             ],
-            userInfo:[
-                {
-                    id: userId,
-                    name: name,
-                    email: email || null,
-                    phone: phone,
-                    countryCode: countryCode,
-                    photo: userPhoto
-                }
-            ],
+            userInfo: {
+                id: userId,
+                name: name,
+                email: email || null,
+                phone: phone,
+                countryCode: countryCode,
+                photo: userPhoto
+            },
             // Include service data for deposit calculation on success page
             serviceData: bookingBootstrap.service || null
         };

@@ -163,8 +163,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Ensure userInfo has countryCode and photo, and validate values
-    if (bookingPayload.userInfo && bookingPayload.userInfo.length > 0) {
-        const userInfo = bookingPayload.userInfo[0];
+    if (bookingPayload.userInfo) {
+        const userInfo = bookingPayload.userInfo;
         
         // Clean up empty strings and ensure proper values
         if (userInfo.name === '' || (userInfo.name && !userInfo.name.trim())) {
@@ -211,14 +211,14 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         // If userInfo is missing, try to reconstruct it
         console.warn('userInfo is missing, attempting to reconstruct from payload');
-        bookingPayload.userInfo = [{
+        bookingPayload.userInfo = {
             id: bookingPayload.userId || null,
             name: null,
             email: null,
             phone: null,
             countryCode: null,
             photo: null
-        }];
+        };
     }
     
     console.log('After conditions booking payload:', bookingPayload);
@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('amount-paid').textContent = formatCurrency(amountPaid);
             
             // Customer Information
-            const userInfo = bookingPayload.userInfo?.[0] || {};
+            const userInfo = bookingPayload.userInfo || {};
             document.getElementById('customer-name').textContent = userInfo.name || successTranslations.not_available;
             document.getElementById('customer-email').textContent = userInfo.email || successTranslations.not_available;
             document.getElementById('customer-phone').textContent = userInfo.phone || successTranslations.not_available;
@@ -464,7 +464,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Preparing to send booking emails...');
             
             // Extract required data from payload
-            const userInfo = payload.userInfo?.[0] || {};
+            const userInfo = payload.userInfo || {};
             const serviceInfo = payload.services?.[0] || {};
             const serviceProviderInfo = payload.serviceProviderInfo || {};
             const serviceData = payload.serviceData || {};
@@ -663,7 +663,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Customer info
-            const userInfo = bookingPayload.userInfo?.[0] || {};
+            const userInfo = bookingPayload.userInfo || {};
             const customerName = userInfo.name || 'Not available';
             const customerEmail = userInfo.email || 'Not available';
             const customerPhone = userInfo.phone || 'Not available';
