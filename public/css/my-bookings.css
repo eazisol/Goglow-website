@@ -386,6 +386,16 @@
     color: #383d41;
 }
 
+.status-upcoming {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+.status-past {
+    background: #d3d3d3;
+    color: #495057;
+}
+
 /* Payment Breakdown */
 .price-info {
     font-weight: 600;

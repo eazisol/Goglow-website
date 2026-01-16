@@ -132,6 +132,8 @@ return [
         'status_in_progress' => 'En cours',
         'status_cancelled' => 'Annulé',
         'status_booked' => 'Réservé',
+        'status_upcoming' => 'Prochaine',
+        'status_past' => 'Passé',
         'status_completed' => 'Terminé',
         'status_reviewed' => 'Évalué',
         'status_received' => 'Demande reçue',

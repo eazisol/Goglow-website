@@ -117,21 +117,44 @@ document.addEventListener('DOMContentLoaded', function () {
         statusPending: @json(__('app.bookings.status_pending')),
         statusInProgress: @json(__('app.bookings.status_in_progress')),
         statusBooked: @json(__('app.bookings.status_booked')),
+        statusUpcoming: @json(__('app.bookings.status_upcoming')),
+        statusPast: @json(__('app.bookings.status_past')),
         statusCompleted: @json(__('app.bookings.status_completed')),
         statusReviewed: @json(__('app.bookings.status_reviewed')),
         statusReceived: @json(__('app.bookings.status_received')),
     };
 
     // Status mapping based on user provided codes
-    function getStatusInfo(status) {
+    function getStatusInfo(status, bookingTime) {
         const s = String(status);
+        
+        // Special handling for status 4 (Booked) - check if booking time is past or future
+        if (s === '4' && bookingTime) {
+            try {
+                const bookingDate = new Date(bookingTime);
+                const now = new Date();
+                
+                // Compare booking time with current time
+                if (bookingDate > now) {
+                    // Booking time is in the future - show "Upcoming"
+                    return { label: translations.statusUpcoming, class: 'status-upcoming' };
+                } else {
+                    // Booking time is in the past - show "Past"
+                    return { label: translations.statusPast, class: 'status-past' };
+                }
+            } catch (e) {
+                // If date parsing fails, fall back to default "Booked"
+                console.error('Error parsing booking time:', e);
+            }
+        }
+        
         const statusMap = {
             '-1': { label: translations.statusUnknown, class: 'status-unknown' },      // Unknown
             '0':  { label: translations.statusPending, class: 'status-pending' },      // Pending
             '1':  { label: translations.statusInProgress, class: 'status-in-progress' }, // Progress
             '2':  { label: translations.statusCancelled, class: 'status-cancelled' },  // CancelledByCustomer
             '3':  { label: translations.statusCancelled, class: 'status-cancelled' },  // CancelledByServiceProvider
-            '4':  { label: translations.statusBooked, class: 'status-booked' },        // Booked
+            '4':  { label: translations.statusBooked, class: 'status-booked' },        // Booked (fallback)
             '5':  { label: translations.statusCompleted, class: 'status-completed' },  // Completed
             '6':  { label: translations.statusCancelled, class: 'status-cancelled' },  // Cancelled fallback
             '7':  { label: translations.statusReviewed, class: 'status-reviewed' },    // Reviewed
@@ -179,10 +202,10 @@ document.addEventListener('DOMContentLoaded', function () {
         
         const price = booking.amount?.toFixed(2) || '0.00';
         
-        // Status Info
-        const statusInfo = getStatusInfo(booking.status);
+        // Status Info (pass booking_time for status 4 to check if it's upcoming or past)
+        const statusInfo = getStatusInfo(booking.status, booking.booking_time);
         const statusLabel = statusInfo.label;
-        const statusClass = statusInfo.class; // e.g., 'status-cancelled', 'status-booked'
+        const statusClass = statusInfo.class; // e.g., 'status-cancelled', 'status-booked', 'status-upcoming', 'status-past'
         
         // Handle cancelled style for the whole card if needed
         const isCancelled = ['2', '3', '6'].includes(String(booking.status));

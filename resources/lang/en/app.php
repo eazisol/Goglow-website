@@ -134,6 +134,8 @@ return [
         'status_in_progress' => 'In Progress',
         'status_cancelled' => 'Cancelled',
         'status_booked' => 'Booked',
+        'status_upcoming' => 'Upcoming',
+        'status_past' => 'Passed',
         'status_completed' => 'Completed',
         'status_reviewed' => 'Reviewed',
         'status_received' => 'Request Received',
