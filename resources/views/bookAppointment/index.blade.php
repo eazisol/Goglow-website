@@ -491,6 +491,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let chosenAgent = null;
     let chosenAgentSlots = null;
     let selectedPeriod = null;
+    let cachedAvailableSlots = null; // Cache for API-fetched slots
+    let cachedSlotsDate = null; // Track which date the cached slots are for
     
     // Start with today's date as the reference point
     const today = new Date();
@@ -537,67 +539,65 @@ document.addEventListener('DOMContentLoaded', function () {
     // Current locale (fr or en)
     const currentLocale = '{{ app()->getLocale() }}';
     
-    // Convert timing data to slots format
-    function convertTimingToSlots(timing) {
-        const slots = {};
-        
-        Object.keys(timing).forEach(day => {
-            const range = timing[day];
-            if (Array.isArray(range) && range.length === 2) {
-                const [start, end] = range;
-                
-                // Skip if closed or invalid range
-                if (typeof start !== 'number' || typeof end !== 'number' || start === end) {
-                    return;
-                }
-                
-                // Convert seconds to hours and generate hourly slots
-                const startHour = Math.floor(start / 3600);
-                const endHour = Math.floor(end / 3600);
-                
-                slots[day] = [];
-                
-                // Generate hourly slots from start to end
-                for (let hour = startHour; hour < endHour; hour++) {
-                    const timeStr = `${hour.toString().padStart(2, '0')}:00`;
-                    slots[day].push({
-                        time: timeStr,
-                        available: true
-                    });
-                }
+    // Fetch available time slots from API
+    async function fetchAvailableSlots(serviceId, agentId, date) {
+        try {
+            console.log('Fetching slots for:', { serviceId, agentId, date });
+            
+            const apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/getAvailableTimeSlots?serviceId=${encodeURIComponent(serviceId)}&agentId=${encodeURIComponent(agentId)}&date=${encodeURIComponent(date)}`;
+            
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error(`API returned ${response.status}`);
             }
-        });
-        
-        return slots;
+            
+            const data = await response.json();
+            console.log('API response:', data);
+            
+            // Filter to only return available slots
+            const availableSlots = (data.slots || []).filter(slot => slot.available === true);
+            
+            console.log('Available slots:', availableSlots);
+            
+            return availableSlots;
+        } catch (error) {
+            console.error('Error fetching time slots:', error);
+            throw error;
+        }
     }
     
-    // Create sample slots for testing
-    function createSampleSlots() {
-        const slots = {};
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-        
-        // Create sample slots for each day
-        days.forEach(day => {
-            slots[day] = [];
-            
-            // Morning slots
-            for (let hour = 9; hour <= 12; hour++) {
-                slots[day].push({
-                    time: `${hour.toString().padStart(2, '0')}:00`,
-                    available: Math.random() > 0.3 // 70% chance of being available
-                });
+    // Show loading state in time slot grid
+    function showSlotsLoading() {
+        if (isMobileView()) {
+            if (mobileTimeSlotsContainer) {
+                mobileTimeSlotsContainer.innerHTML = '<div class="slots-loading" style="text-align: center; padding: 40px; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>Loading available slots...</div>';
+                mobileTimeSlotsContainer.style.display = '';
             }
-            
-            // Afternoon slots
-            for (let hour = 14; hour <= 17; hour++) {
-                slots[day].push({
-                    time: `${hour.toString().padStart(2, '0')}:00`,
-                    available: Math.random() > 0.3 // 70% chance of being available
-                });
+        } else {
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>Loading available slots...</div>';
+            if (timeSlotsStrip) {
+                timeSlotsStrip.style.display = '';
+                if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
+                if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
             }
-        });
-        
-        return slots;
+        }
+    }
+    
+    // Show error state in time slot grid
+    function showSlotsError(message = 'Failed to load time slots. Please try again.') {
+        if (isMobileView()) {
+            if (mobileTimeSlotsContainer) {
+                mobileTimeSlotsContainer.innerHTML = `<div class="slots-error" style="text-align: center; padding: 40px; color: #d9534f;"><i class="fas fa-exclamation-circle" style="font-size: 24px; margin-bottom: 10px;"></i><br>${message}</div>`;
+            }
+        } else {
+            timeSlotGrid.innerHTML = `<div class="col-12 text-center py-3" style="padding: 20px; color: #d9534f;"><i class="fas fa-exclamation-circle" style="font-size: 24px; margin-bottom: 10px;"></i><br>${message}</div>`;
+            if (timeSlotsStrip) {
+                timeSlotsStrip.style.display = '';
+                if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
+                if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
+            }
+        }
     }
     
     // Format time from "HH:MM" to 24-hour format (for timeSlotsStrip)
@@ -709,22 +709,54 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Check if mobile view
                 if (isMobileView()) {
                     // On mobile: Show period selector + render all time slots vertically
-                    if (chosenAgentSlots) {
-                        renderTimeSlotsMobile(chosenAgentSlots, dayKey, formatDateValue(date));
-                        if (mobileTimeSlotsContainer) {
-                            mobileTimeSlotsContainer.style.display = '';
-                        }
+                    renderTimeSlotsMobile(dayKey, formatDateValue(date));
+                    if (mobileTimeSlotsContainer) {
+                        mobileTimeSlotsContainer.style.display = '';
                     }
                     // Hide desktop time slots strip
                     if (timeSlotsStrip) {
                         timeSlotsStrip.style.display = 'none';
                     }
                 } else {
-                    // On desktop: Show period selector only, wait for period selection
-                    timeSlotGrid.innerHTML = '';
+                    // On desktop: Fetch slots when date is selected (not on period change)
+                    const selectedDate = formatDateValue(date);
+                    
+                    // Clear cache and fetch new slots for this date
+                    cachedAvailableSlots = null;
+                    cachedSlotsDate = selectedDate;
+                    
+                    // Show loading state in desktop view
+                    timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>Loading available slots...</div>';
                     if (timeSlotsStrip) {
-                        timeSlotsStrip.style.display = 'none';
+                        timeSlotsStrip.style.display = '';
                     }
+                    
+                    // Fetch slots from API
+                    (async () => {
+                        try {
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const serviceId = bookingBootstrap.service?.id || bookingBootstrap.serviceId || urlParams.get('serviceId');
+                            
+                            if (!serviceId) {
+                                throw new Error('Service ID not found');
+                            }
+                            
+                            // Fetch and cache slots
+                            cachedAvailableSlots = await fetchAvailableSlots(serviceId, chosenAgent.id, selectedDate);
+                            
+                            // Clear the grid after fetch completes
+                            timeSlotGrid.innerHTML = '';
+                            if (timeSlotsStrip) {
+                                timeSlotsStrip.style.display = 'none';
+                            }
+                            
+                            console.log('Cached slots for desktop:', cachedAvailableSlots);
+                        } catch (error) {
+                            console.error('Error fetching slots on date selection:', error);
+                            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #d9534f;"><i class="fas fa-exclamation-circle" style="font-size: 24px; margin-bottom: 10px;"></i><br>Failed to load time slots. Please try again.</div>';
+                        }
+                    })();
+                    
                     // Hide mobile container
                     if (mobileTimeSlotsContainer) {
                         mobileTimeSlotsContainer.style.display = 'none';
@@ -746,8 +778,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function filterTimeSlotsByDay(dayKey) {}
     
     // Render time slots for selected day and period (horizontal layout)
-    function renderTimeSlots(slots, selectedDay, selectedPeriod, selectedDate) {
-        console.log('Rendering time slots:', { slots, selectedDay, selectedPeriod, selectedDate });
+    // Now uses cached API results (fetched on date selection)
+    function renderTimeSlots(selectedDay, selectedPeriod, selectedDate) {
+        console.log('Rendering time slots:', { selectedDay, selectedPeriod, selectedDate });
         timeSlotGrid.innerHTML = '';
         
         // Hide time slots strip initially
@@ -760,7 +793,7 @@ document.addEventListener('DOMContentLoaded', function () {
             mobileTimeSlotsContainer.style.display = 'none';
         }
         
-        if (!slots || !selectedDay || !selectedPeriod || !selectedDate) {
+        if (!selectedDay || !selectedPeriod || !selectedDate || !chosenAgent) {
             timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
             // Show strip to display message, but hide arrows
             if (timeSlotsStrip) {
@@ -771,10 +804,10 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         
-        // Get slots for the selected day
-        const daySlots = slots[selectedDay] || [];
+        // Use cached slots (already fetched on date selection)
+        const availableSlots = cachedAvailableSlots;
         
-        if (!Array.isArray(daySlots) || daySlots.length === 0) {
+        if (!availableSlots || availableSlots.length === 0) {
             timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
             // Show strip to display message, but hide arrows
             if (timeSlotsStrip) {
@@ -795,7 +828,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const period = periodRanges[selectedPeriod];
         if (!period) {
             timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
-            // Show strip to display message, but hide arrows
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = '';
                 if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
@@ -804,37 +836,17 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         
-        // Filter slots by period and availability AND time
-        const filteredSlots = daySlots.filter(slot => {
-            if (!slot.available) return false;
-            
+        // Filter slots by selected period (API already filtered by availability)
+        const filteredSlots = availableSlots.filter(slot => {
             // Extract hour from time string (format: "HH:MM")
             const [hours, minutes] = slot.time.split(':').map(Number);
             
             // Check if hour falls within the selected period range
-            if (hours < period.start || hours >= period.end) {
-                return false;
-            }
-
-            // TIME CHECK: Filter out past slots if selected date is today
-            const now = new Date();
-            const currentDateStr = formatDateValue(now); // Use existing helper
-            
-            if (selectedDate === currentDateStr) {
-                 const currentHour = now.getHours();
-                 
-                 // If slot hour is earlier than current hour, hide it
-                 if (hours <= currentHour) {
-                     return false;
-                 }
-            }
-
-            return true;
+            return hours >= period.start && hours < period.end;
         });
         
         if (filteredSlots.length === 0) {
             timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
-            // Show strip to display message, but hide arrows
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = '';
                 if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
@@ -905,213 +917,232 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     // Render time slots for mobile (3 vertical columns - one for each period)
-    function renderTimeSlotsMobile(slots, selectedDay, selectedDate) {
-        console.log('Rendering mobile time slots:', { slots, selectedDay, selectedDate });
+    // Now fetches slots from API
+    async function renderTimeSlotsMobile(selectedDay, selectedDate) {
+        console.log('Rendering mobile time slots:', { selectedDay, selectedDate });
         
         if (!mobileTimeSlotsContainer) return;
         
         mobileTimeSlotsContainer.innerHTML = '';
         
-        if (!slots || !selectedDay || !selectedDate) {
+        if (!selectedDay || !selectedDate || !chosenAgent) {
             mobileTimeSlotsContainer.innerHTML = '<div class="mobile-no-slots">There is no slot available</div>';
             return;
         }
         
-        // Get slots for the selected day
-        const daySlots = slots[selectedDay] || [];
+        // Show loading state
+        showSlotsLoading();
         
-        if (!Array.isArray(daySlots) || daySlots.length === 0) {
-            mobileTimeSlotsContainer.innerHTML = '<div class="mobile-no-slots">There is no slot available</div>';
-            return;
-        }
-        
-        // Define time period ranges (hours) - in order: Morning, Afternoon, Evening
-        const periodRanges = [
-            { key: 'morning', start: 6, end: 12, label: '{{ __('app.agent_page.the_morning') }}' },
-            { key: 'afternoon', start: 12, end: 17, label: '{{ __('app.agent_page.in_the_afternoon') }}' },
-            { key: 'evening', start: 17, end: 21, label: '{{ __('app.agent_page.in_the_evening') }}' }
-        ];
-        
-        // Create a container for the 3 columns
-        const columnsContainer = document.createElement('div');
-        columnsContainer.className = 'mobile-slots-columns-container';
-        
-        // Create a column for each period (Morning, Afternoon, Evening)
-        periodRanges.forEach(period => {
-            // Filter slots by period and availability
-            const filteredSlots = daySlots.filter(slot => {
-                if (!slot.available) return false;
-                const [hours] = slot.time.split(':').map(Number);
-                return hours >= period.start && hours < period.end;
-            });
+        try {
+            // Get serviceId from bookingBootstrap
+            const urlParams = new URLSearchParams(window.location.search);
+            const serviceId = bookingBootstrap.service?.id || bookingBootstrap.serviceId || urlParams.get('serviceId');
             
-            // Create column container
-            const column = document.createElement('div');
-            column.className = 'mobile-period-column';
-            column.id = `mobile-period-${period.key}`;
-            
-            // Create time slots container for this period (vertical list)
-            const slotsContainer = document.createElement('div');
-            slotsContainer.className = 'mobile-period-slots';
-            slotsContainer.dataset.period = period.key;
-            slotsContainer.dataset.allSlots = JSON.stringify(filteredSlots);
-            
-            if (filteredSlots.length === 0) {
-                const noSlotsMsg = document.createElement('div');
-                noSlotsMsg.className = 'mobile-period-no-slots';
-                noSlotsMsg.textContent = 'No slot';
-                slotsContainer.appendChild(noSlotsMsg);
-            } else {
-                // Show only first 3 slots initially
-                const initialSlots = filteredSlots.slice(0, 3);
-                const remainingSlots = filteredSlots.slice(3);
-                
-                // Create time slot buttons vertically (only first 3 visible)
-                initialSlots.forEach(slot => {
-                    const timeSlot = document.createElement('div');
-                    timeSlot.className = 'mobile-time-slot';
-                    timeSlot.dataset.day = selectedDay;
-                    timeSlot.dataset.time = slot.time;
-                    timeSlot.dataset.date = selectedDate;
-                    timeSlot.dataset.period = period.key;
-                    timeSlot.textContent = formatTimeDisplay24(slot.time);
-                    
-                    // Add click handler for slot selection
-                    timeSlot.addEventListener('click', function() {
-                        // Deselect any previously selected slot
-                        document.querySelectorAll('.mobile-time-slot, .time-slot').forEach(s => s.classList.remove('selected'));
-                        
-                        // Select this slot
-                        this.classList.add('selected');
-                        
-                        // Update hidden inputs
-                        selectedDateInput.value = this.dataset.date;
-                        selectedTimeInput.value = this.dataset.time;
-                        selectedDayInput.value = this.dataset.day;
-                        
-                        // Set selected period
-                        selectedPeriod = this.dataset.period;
-                        
-                        // Highlight the corresponding period button
-                        periodSelector.querySelectorAll('.period-btn').forEach(btn => {
-                            if (btn.dataset.period === period.key) {
-                                btn.classList.add('active');
-                            } else {
-                                btn.classList.remove('active');
-                            }
-                        });
-                        
-                        // Show selected date/time info
-                        const [yy, mm, dd] = this.dataset.date.split('-').map(Number);
-                        const selectedDateObj = new Date(yy, mm - 1, dd);
-                        const formattedDate = formatDate(selectedDateObj);
-                        const formattedTime = formatTimeDisplay(this.dataset.time);
-                        selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
-                        selectedSlotInfo.style.display = '';
-                        
-                        // Show payment options section after time slot selection
-                        if (paymentOptionsSection) {
-                            paymentOptionsSection.style.display = '';
-                        }
-                    });
-                    
-                    slotsContainer.appendChild(timeSlot);
-                });
-                
-                // Store remaining slots data for "See More" functionality
-                slotsContainer.dataset.hasMore = remainingSlots.length > 0 ? 'true' : 'false';
-                slotsContainer.dataset.remainingSlots = JSON.stringify(remainingSlots);
+            if (!serviceId) {
+                throw new Error('Service ID not found');
             }
             
-            column.appendChild(slotsContainer);
-            columnsContainer.appendChild(column);
-        });
-        
-        mobileTimeSlotsContainer.appendChild(columnsContainer);
-        
-        // Add "See More" button if any column has more slots
-        const hasMoreSlots = Array.from(columnsContainer.querySelectorAll('.mobile-period-slots')).some(
-            container => container.dataset.hasMore === 'true'
-        );
-        
-        if (hasMoreSlots) {
-            const seeMoreBtn = document.createElement('button');
-            seeMoreBtn.className = 'mobile-see-more-btn';
-            seeMoreBtn.textContent = '{{ __('app.agent_page.see_more') }}';
-            seeMoreBtn.type = 'button';
+            // Fetch available slots from API
+            const availableSlots = await fetchAvailableSlots(serviceId, chosenAgent.id, selectedDate);
             
-            seeMoreBtn.addEventListener('click', function() {
-                // Expand all columns to show all slots
-                const allSlotsContainers = columnsContainer.querySelectorAll('.mobile-period-slots');
-                allSlotsContainers.forEach(container => {
-                    if (container.dataset.hasMore === 'true') {
-                        const remainingSlots = JSON.parse(container.dataset.remainingSlots);
-                        const selectedDay = container.querySelector('.mobile-time-slot')?.dataset.day || selectedDayInput.value;
-                        const selectedDate = container.querySelector('.mobile-time-slot')?.dataset.date || selectedDateInput.value;
-                        const periodKey = container.dataset.period;
+            if (!availableSlots || availableSlots.length === 0) {
+                mobileTimeSlotsContainer.innerHTML = '<div class="mobile-no-slots">There is no slot available</div>';
+                mobileTimeSlotsContainer.style.display = '';
+                return;
+            }
+            
+            // Define time period ranges (hours) - in order: Morning, Afternoon, Evening
+            const periodRanges = [
+                { key: 'morning', start: 6, end: 12, label: '{{ __('app.agent_page.the_morning') }}' },
+                { key: 'afternoon', start: 12, end: 17, label: '{{ __('app.agent_page.in_the_afternoon') }}' },
+                { key: 'evening', start: 17, end: 21, label: '{{ __('app.agent_page.in_the_evening') }}' }
+            ];
+            
+            // Create a container for the 3 columns
+            const columnsContainer = document.createElement('div');
+            columnsContainer.className = 'mobile-slots-columns-container';
+            
+            // Create a column for each period (Morning, Afternoon, Evening)
+            periodRanges.forEach(period => {
+                // Filter available slots by period
+                const filteredSlots = availableSlots.filter(slot => {
+                    const [hours] = slot.time.split(':').map(Number);
+                    return hours >= period.start && hours < period.end;
+                });
+                
+                // Create column container
+                const column = document.createElement('div');
+                column.className = 'mobile-period-column';
+                column.id = `mobile-period-${period.key}`;
+                
+                // Create time slots container for this period (vertical list)
+                const slotsContainer = document.createElement('div');
+                slotsContainer.className = 'mobile-period-slots';
+                slotsContainer.dataset.period = period.key;
+                slotsContainer.dataset.allSlots = JSON.stringify(filteredSlots);
+                
+                if (filteredSlots.length === 0) {
+                    const noSlotsMsg = document.createElement('div');
+                    noSlotsMsg.className = 'mobile-period-no-slots';
+                    noSlotsMsg.textContent = 'No slot';
+                    slotsContainer.appendChild(noSlotsMsg);
+                } else {
+                    // Show only first 3 slots initially
+                    const initialSlots = filteredSlots.slice(0, 3);
+                    const remainingSlots = filteredSlots.slice(3);
+                    
+                    // Create time slot buttons vertically (only first 3 visible)
+                    initialSlots.forEach(slot => {
+                        const timeSlot = document.createElement('div');
+                        timeSlot.className = 'mobile-time-slot';
+                        timeSlot.dataset.day = selectedDay;
+                        timeSlot.dataset.time = slot.time;
+                        timeSlot.dataset.date = selectedDate;
+                        timeSlot.dataset.period = period.key;
+                        timeSlot.textContent = formatTimeDisplay24(slot.time);
                         
-                        // Add remaining slots
-                        remainingSlots.forEach(slot => {
-                            const timeSlot = document.createElement('div');
-                            timeSlot.className = 'mobile-time-slot';
-                            timeSlot.dataset.day = selectedDay;
-                            timeSlot.dataset.time = slot.time;
-                            timeSlot.dataset.date = selectedDate;
-                            timeSlot.dataset.period = periodKey;
-                            timeSlot.textContent = formatTimeDisplay24(slot.time);
+                        // Add click handler for slot selection
+                        timeSlot.addEventListener('click', function() {
+                            // Deselect any previously selected slot
+                            document.querySelectorAll('.mobile-time-slot, .time-slot').forEach(s => s.classList.remove('selected'));
                             
-                            // Add click handler for slot selection
-                            timeSlot.addEventListener('click', function() {
-                                // Deselect any previously selected slot
-                                document.querySelectorAll('.mobile-time-slot, .time-slot').forEach(s => s.classList.remove('selected'));
-                                
-                                // Select this slot
-                                this.classList.add('selected');
-                                
-                                // Update hidden inputs
-                                selectedDateInput.value = this.dataset.date;
-                                selectedTimeInput.value = this.dataset.time;
-                                selectedDayInput.value = this.dataset.day;
-                                
-                                // Set selected period
-                                selectedPeriod = this.dataset.period;
-                                
-                                // Highlight the corresponding period button
-                                periodSelector.querySelectorAll('.period-btn').forEach(btn => {
-                                    if (btn.dataset.period === periodKey) {
-                                        btn.classList.add('active');
-                                    } else {
-                                        btn.classList.remove('active');
-                                    }
-                                });
-                                
-                                // Show selected date/time info
-                                const [yy, mm, dd] = this.dataset.date.split('-').map(Number);
-                                const selectedDateObj = new Date(yy, mm - 1, dd);
-                                const formattedDate = formatDate(selectedDateObj);
-                                const formattedTime = formatTimeDisplay(this.dataset.time);
-                                selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
-                                selectedSlotInfo.style.display = '';
-                                
-                                // Show payment options section after time slot selection
-                                if (paymentOptionsSection) {
-                                    paymentOptionsSection.style.display = '';
+                            // Select this slot
+                            this.classList.add('selected');
+                            
+                            // Update hidden inputs
+                            selectedDateInput.value = this.dataset.date;
+                            selectedTimeInput.value = this.dataset.time;
+                            selectedDayInput.value = this.dataset.day;
+                            
+                            // Set selected period
+                            selectedPeriod = this.dataset.period;
+                            
+                            // Highlight the corresponding period button
+                            periodSelector.querySelectorAll('.period-btn').forEach(btn => {
+                                if (btn.dataset.period === period.key) {
+                                    btn.classList.add('active');
+                                } else {
+                                    btn.classList.remove('active');
                                 }
                             });
                             
-                            container.appendChild(timeSlot);
+                            // Show selected date/time info
+                            const [yy, mm, dd] = this.dataset.date.split('-').map(Number);
+                            const selectedDateObj = new Date(yy, mm - 1, dd);
+                            const formattedDate = formatDate(selectedDateObj);
+                            const formattedTime = formatTimeDisplay(this.dataset.time);
+                            selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
+                            selectedSlotInfo.style.display = '';
+                            
+                            // Show payment options section after time slot selection
+                            if (paymentOptionsSection) {
+                                paymentOptionsSection.style.display = '';
+                            }
                         });
                         
-                        // Mark as expanded
-                        container.dataset.hasMore = 'false';
-                    }
-                });
+                        slotsContainer.appendChild(timeSlot);
+                    });
+                    
+                    // Store remaining slots data for "See More" functionality
+                    slotsContainer.dataset.hasMore = remainingSlots.length > 0 ? 'true' : 'false';
+                    slotsContainer.dataset.remainingSlots = JSON.stringify(remainingSlots);
+                }
                 
-                // Hide the "See More" button after expanding
-                this.style.display = 'none';
+                column.appendChild(slotsContainer);
+                columnsContainer.appendChild(column);
             });
             
-            mobileTimeSlotsContainer.appendChild(seeMoreBtn);
+            mobileTimeSlotsContainer.innerHTML = '';
+            mobileTimeSlotsContainer.appendChild(columnsContainer);
+            mobileTimeSlotsContainer.style.display = '';
+            
+            // Add "See More" button if any column has more slots
+            const hasMoreSlots = Array.from(columnsContainer.querySelectorAll('.mobile-period-slots')).some(
+                container => container.dataset.hasMore === 'true'
+            );
+            
+            if (hasMoreSlots) {
+                const seeMoreBtn = document.createElement('button');
+                seeMoreBtn.className = 'mobile-see-more-btn';
+                seeMoreBtn.textContent = '{{ __('app.agent_page.see_more') }}';
+                seeMoreBtn.type = 'button';
+                
+                seeMoreBtn.addEventListener('click', function() {
+                    // Expand all columns to show all slots
+                    const allSlotsContainers = columnsContainer.querySelectorAll('.mobile-period-slots');
+                    allSlotsContainers.forEach(container => {
+                        if (container.dataset.hasMore === 'true') {
+                            const remainingSlots = JSON.parse(container.dataset.remainingSlots);
+                            const selectedDay = container.querySelector('.mobile-time-slot')?.dataset.day || selectedDayInput.value;
+                            const selectedDate = container.querySelector('.mobile-time-slot')?.dataset.date || selectedDateInput.value;
+                            const periodKey = container.dataset.period;
+                            
+                            // Add remaining slots
+                            remainingSlots.forEach(slot => {
+                                const timeSlot = document.createElement('div');
+                                timeSlot.className = 'mobile-time-slot';
+                                timeSlot.dataset.day = selectedDay;
+                                timeSlot.dataset.time = slot.time;
+                                timeSlot.dataset.date = selectedDate;
+                                timeSlot.dataset.period = periodKey;
+                                timeSlot.textContent = formatTimeDisplay24(slot.time);
+                                
+                                // Add click handler for slot selection
+                                timeSlot.addEventListener('click', function() {
+                                    // Deselect any previously selected slot
+                                    document.querySelectorAll('.mobile-time-slot, .time-slot').forEach(s => s.classList.remove('selected'));
+                                    
+                                    // Select this slot
+                                    this.classList.add('selected');
+                                    
+                                    // Update hidden inputs
+                                    selectedDateInput.value = this.dataset.date;
+                                    selectedTimeInput.value = this.dataset.time;
+                                    selectedDayInput.value = this.dataset.day;
+                                    
+                                    // Set selected period
+                                    selectedPeriod = this.dataset.period;
+                                    
+                                    // Highlight the corresponding period button
+                                    periodSelector.querySelectorAll('.period-btn').forEach(btn => {
+                                        if (btn.dataset.period === periodKey) {
+                                            btn.classList.add('active');
+                                        } else {
+                                            btn.classList.remove('active');
+                                        }
+                                    });
+                                    
+                                    // Show selected date/time info
+                                    const [yy, mm, dd] = this.dataset.date.split('-').map(Number);
+                                    const selectedDateObj = new Date(yy, mm - 1, dd);
+                                    const formattedDate = formatDate(selectedDateObj);
+                                    const formattedTime = formatTimeDisplay(this.dataset.time);
+                                    selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
+                                    selectedSlotInfo.style.display = '';
+                                    
+                                    // Show payment options section after time slot selection
+                                    if (paymentOptionsSection) {
+                                        paymentOptionsSection.style.display = '';
+                                    }
+                                });
+                                
+                                container.appendChild(timeSlot);
+                            });
+                            
+                            // Mark as expanded
+                            container.dataset.hasMore = 'false';
+                        }
+                    });
+                    
+                    // Hide the "See More" button after expanding
+                    this.style.display = 'none';
+                });
+                
+                mobileTimeSlotsContainer.appendChild(seeMoreBtn);
+            }
+        } catch (error) {
+            console.error('Error rendering mobile time slots:', error);
+            showSlotsError();
         }
     }
     
@@ -1303,20 +1334,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Initialize the button state
             updatePrevWeekButtonState();
             
-            // Store agent slots data for later use (don't render immediately)
-            if (!agent.slots && agent.timing) {
-                console.log('Converting timing to slots format');
-                chosenAgentSlots = convertTimingToSlots(agent.timing);
-                console.log('Generated slots:', chosenAgentSlots);
-            } else if (agent.slots) {
-                // Store time slots from agent data
-                chosenAgentSlots = agent.slots;
-            } else {
-                // No slots or timing data, create sample data for testing
-                console.log('No slots or timing data found, creating sample data');
-                chosenAgentSlots = createSampleSlots();
-                console.log('Sample slots:', chosenAgentSlots);
-            }
+            // No longer need to store agent slots - they will be fetched from API when needed
             
             // Automatically select today's date
             setTimeout(() => {
@@ -1376,18 +1394,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } else {
                 // On desktop: Render horizontal time slots for selected period
-                if (chosenAgentSlots) {
-                    const selectedDate = selectedDateInput.value;
-                    renderTimeSlots(chosenAgentSlots, dayKey, period, selectedDate);
-                } else {
-                    timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
-                    // Show strip to display message, but hide arrows
-                    if (timeSlotsStrip) {
-                        timeSlotsStrip.style.display = '';
-                        if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
-                        if (nextTimeSlotBtn) nextTimeSlotBtn.style.display = 'none';
-                    }
-                }
+                const selectedDate = selectedDateInput.value;
+                renderTimeSlots(dayKey, period, selectedDate);
             }
         });
     }
