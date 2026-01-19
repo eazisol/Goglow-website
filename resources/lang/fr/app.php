@@ -444,7 +444,7 @@ return [
         // service page
     'service' => [
         'choose' => 'Choisir',
-        'from' => 'depuis',
+        'from' => 'A partir de',
         'to_book' => 'Pour réserver',
         'open' => 'Ouvert',
         'until' => 'jusquà',

@@ -466,6 +466,63 @@
 </script>
 
 <script>
+    // Global helper functions - defined outside the main DOMContentLoaded block to ensure availability
+    
+    // Global translation strings from Blade
+    window.serviceTranslations = {
+        seeMore: "{{ __('app.service.see_more') }}",
+        seeLess: "{{ __('app.service.see_less') }}"
+    };
+    
+    // Helper function to truncate text by word count
+    window.truncateWords = function(text, wordLimit, checkOnly = false) {
+        if (!text) return checkOnly ? false : '';
+        
+        const words = text.trim().split(/\s+/);
+        
+        // If checkOnly is true, return whether truncation is needed
+        if (checkOnly) {
+            return words.length > wordLimit;
+        }
+        
+        // If within limit, return original text
+        if (words.length <= wordLimit) {
+            return text;
+        }
+        
+        // Truncate to word limit and add ellipsis
+        return words.slice(0, wordLimit).join(' ') + '...';
+    };
+    
+    // Global function to toggle description visibility
+    window.toggleDescription = function(descId, event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        const descText = document.querySelector(`.desc-text[data-desc-id="${descId}"]`);
+        const descFull = document.querySelector(`.desc-full[data-desc-id="${descId}"]`);
+        const btn = document.querySelector(`.see-more-desc-btn[data-desc-id="${descId}"]`);
+        
+        if (!descText || !descFull || !btn) return;
+        
+        // Toggle visibility
+        if (descText.style.display === 'none') {
+            // Show truncated, hide full
+            descText.style.display = 'inline';
+            descFull.style.display = 'none';
+            btn.textContent = window.serviceTranslations.seeMore;
+        } else {
+            // Show full, hide truncated
+            descText.style.display = 'none';
+            descFull.style.display = 'inline';
+            btn.textContent = window.serviceTranslations.seeLess;
+        }
+    };
+</script>
+
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     // Translation strings
     const translations = {
@@ -1187,7 +1244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="service-name services-fw-semibold">
                             <a href="${bookUrl}">${truncateText(serviceName, 50)}</a>
                         </div>
-                        ${serviceDetails ? `<div class="service-desc services-text-muted">${truncateText(serviceDetails, 50)}</div>` : ''}
+                        ${createDescriptionHTML(serviceDetails, serviceId)}
                     </div>
                 </div>
                 <div class="service-meta services-text-end">
@@ -1557,7 +1614,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div class="service-name services-fw-semibold">
                                     <a href="${bookUrl}">${truncateText(serviceName, 50)}</a>
                                 </div>
-                                ${serviceDetails ? `<div class="service-desc services-text-muted">${truncateText(serviceDetails, 50)}</div>` : ''}
+                                ${createDescriptionHTML(serviceDetails, serviceId)}
                             </div>
                         </div>
                         <div class="service-meta services-text-end">
@@ -1606,7 +1663,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div class="service-name services-fw-semibold">
                                     <a href="${bookUrl}">${truncateText(serviceName, 50)}</a>
                                 </div>
-                                ${serviceDetails ? `<div class="service-desc services-text-muted">${truncateText(serviceDetails, 50)}</div>` : ''}
+                                ${createDescriptionHTML(serviceDetails, serviceId)}
                             </div>
                         </div>
                         <div class="service-meta services-text-end">
@@ -1669,6 +1726,37 @@ document.addEventListener('DOMContentLoaded', function() {
     function truncateText(text, length) {
         if (text.length <= length) return text;
         return text.substring(0, length) + '...';
+    }
+    
+
+    
+    // Helper function to create description HTML with See More functionality
+    function createDescriptionHTML(serviceDetails, serviceId) {
+        if (!serviceDetails) return '';
+        
+        // Generate unique ID for this service's description
+        const descId = `desc-${serviceId || Math.random().toString(36).substr(2, 9)}`;
+        
+        // Check if description needs truncation (more than 8 words)
+        // Note: Previous implementation was 50 characters (approx 8 words). 
+        // User requested "50 words" but likely meant "matches previous length but with full words".
+        const wordLimit = 8;
+        const needsTruncation = window.truncateWords(serviceDetails, wordLimit, true);
+        const truncatedDesc = needsTruncation ? window.truncateWords(serviceDetails, wordLimit) : serviceDetails;
+        
+        if (needsTruncation) {
+            return `
+                <div class="service-desc services-text-muted">
+                    <span class="desc-text" data-desc-id="${descId}">${escapeHtml(truncatedDesc)}</span>
+                    <span class="desc-full" data-desc-id="${descId}" style="display: none;">${escapeHtml(serviceDetails)}</span>
+                    <button type="button" class="see-more-desc-btn" data-desc-id="${descId}" onclick="window.toggleDescription('${descId}', event)" style="color: rgba(229, 0, 80, 1); background: none; border: none; cursor: pointer; font-size: 14px; padding: 0; margin-left: 5px; text-decoration: underline;">
+                        ${window.serviceTranslations.seeMore}
+                    </button>
+                </div>
+            `;
+        } else {
+            return `<div class="service-desc services-text-muted">${escapeHtml(serviceDetails)}</div>`;
+        }
     }
     
     // Attach click handler to overlay
