@@ -1026,7 +1026,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const hoursRow = document.createElement('div');
             hoursRow.className = 'hours-row';
             
-            let hoursTime = 'Closed';
+            let hoursTime = '{{ __('app.provider.closed') }}';
             if (timing[shortDay] && Array.isArray(timing[shortDay]) && timing[shortDay].length === 2) {
                 const openTime = new Date(timing[shortDay][0] * 1000);
                 const closeTime = new Date(timing[shortDay][1] * 1000);
@@ -1249,7 +1249,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="service-meta services-text-end">
                     <div class="services-text-muted services-small services-mb-1">
-                        ${duration} min &bull; {{ __('app.service.from') }} €${price}
+                        ${duration} min &bull; {{ __('app.service.from') }} ${price}€
                     </div>
                     <div class="choose-button">
                         <a href="${bookUrl}" class="choose-btn">{{ __('app.service.choose') }}</a>
@@ -1619,7 +1619,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="service-meta services-text-end">
                             <div class="services-text-muted services-small services-mb-1">
-                                ${duration} min &bull; {{ __('app.service.from') }} €${price}
+                                ${duration} min &bull; {{ __('app.service.from') }} ${price}€
                             </div>
                             <div class="choose-button">
                                 <a href="${bookUrl}" class="choose-btn">{{ __('app.service.choose') }}</a>
@@ -1668,7 +1668,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="service-meta services-text-end">
                             <div class="services-text-muted services-small services-mb-1">
-                                ${duration} min &bull; {{ __('app.service.from') }} €${price}
+                                ${duration} min &bull; {{ __('app.service.from') }} ${price}€
                             </div>
                             <div class="choose-button">
                                 <a href="${bookUrl}" class="choose-btn">{{ __('app.service.choose') }}</a>
