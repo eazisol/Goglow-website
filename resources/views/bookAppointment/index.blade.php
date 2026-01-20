@@ -607,11 +607,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     // Format time from "HH:MM" to 12-hour display format (for selectedDateTimeDisplay)
+    // UPDATE: Switched to 24-hour format as per user request
     function formatTimeDisplay(timeStr) {
         const [hours, minutes] = timeStr.split(':').map(Number);
-        const ampm = hours >= 12 ? 'p.m.' : 'a.m.';
-        const displayHours = hours % 12 || 12;
-        return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+        // Return 24-hour format: 14:00
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     }
     
     // Format date for display (with locale support)
@@ -751,6 +751,56 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                             
                             console.log('Cached slots for desktop:', cachedAvailableSlots);
+                            
+                            // Only auto-select period if there's a saved time (for restoration after login)
+                            // Check input first, then fallback to localStorage to robustly handle restoration timing
+                            let savedTime = selectedTimeInput?.value;
+                            
+                            if (!savedTime) {
+                                try {
+                                    const pendingStateStr = localStorage.getItem('pendingBookingState');
+                                    if (pendingStateStr) {
+                                        const state = JSON.parse(pendingStateStr);
+                                        // Ensure state matches current selection
+                                        if (state && state.selectedTime && state.selectedDate === selectedDate) {
+                                            console.log('Found pending state in localStorage:', state);
+                                            savedTime = state.selectedTime;
+                                            // Pre-fill input so renderTimeSlots auto-clicker works
+                                            selectedTimeInput.value = savedTime;
+                                        }
+                                    }
+                                } catch (e) {
+                                    console.error('Error reading pending state:', e);
+                                }
+                            }
+                            
+                            if (savedTime) {
+                                // Parse the saved time to determine which period it belongs to
+                                const [hours] = savedTime.split(':').map(Number);
+                                let periodToSelect = 'morning';
+                                
+                                if (hours >= 6 && hours < 12) {
+                                    periodToSelect = 'morning';
+                                } else if (hours >= 12 && hours < 17) {
+                                    periodToSelect = 'afternoon';
+                                } else if (hours >= 17 && hours < 21) {
+                                    periodToSelect = 'evening';
+                                }
+                                
+                                console.log('Restoring saved time:', savedTime, '→ period:', periodToSelect);
+                                
+                                selectedPeriod = periodToSelect;
+                                const periodBtn = periodSelector.querySelector(`[data-period="${periodToSelect}"]`);
+                                if (periodBtn) {
+                                    // Highlight the period button
+                                    periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+                                    periodBtn.classList.add('active');
+                                    
+                                    // Render slots for the restored period
+                                    renderTimeSlots(dayKey, periodToSelect, selectedDate);
+                                }
+                            }
+                            // If no saved time, user needs to manually select a period
                         } catch (error) {
                             console.error('Error fetching slots on date selection:', error);
                             timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #d9534f;"><i class="fas fa-exclamation-circle" style="font-size: 24px; margin-bottom: 10px;"></i><br>Failed to load time slots. Please try again.</div>';
@@ -904,10 +954,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         
         // Update arrow button states after rendering and center the view
+        // Update arrow button states after rendering and center the view
         setTimeout(() => {
             updateTimeSlotArrows();
-            // Center scroll position to show middle slots (like days header)
-            if (timeSlotGrid && filteredSlots.length > 6) {
+            
+            // Auto-select time slot if there's a pre-selected value (for restoration after login)
+            const preSelectedTime = selectedTimeInput?.value;
+            let slotAutoSelected = false;
+            
+            if (preSelectedTime) {
+                const matchingSlot = timeSlotGrid.querySelector(`[data-time="${preSelectedTime}"]`);
+                if (matchingSlot) {
+                    console.log('Auto-selecting restored time slot:', preSelectedTime);
+                    matchingSlot.click();
+                    slotAutoSelected = true;
+                    
+                    // Scroll to centered position of the selected slot
+                    // Use scrollIntoView with inline: 'center' which handles the math reliably
+                    setTimeout(() => {
+                        matchingSlot.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }, 50); // Small delay to ensure layout is stable
+                    
+                    updateTimeSlotArrows();
+                }
+            }
+            
+            // If no slot was auto-selected, just center the list generally
+            if (!slotAutoSelected && timeSlotGrid && filteredSlots.length > 6) {
+                // Default centering logic for when nothing is selected
                 const scrollWidth = timeSlotGrid.scrollWidth;
                 const clientWidth = timeSlotGrid.clientWidth;
                 timeSlotGrid.scrollLeft = (scrollWidth - clientWidth) / 2;
@@ -1140,6 +1214,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 mobileTimeSlotsContainer.appendChild(seeMoreBtn);
             }
+            
+            // Auto-select time slot if there's a pre-selected value (for restoration after login)
+            setTimeout(() => {
+                const preSelectedTime = selectedTimeInput?.value;
+                if (preSelectedTime) {
+                    const matchingSlot = mobileTimeSlotsContainer.querySelector(`.mobile-time-slot[data-time="${preSelectedTime}"]`);
+                    if (matchingSlot) {
+                        console.log('Auto-selecting restored time slot (mobile):', preSelectedTime);
+                        matchingSlot.click();
+                    }
+                }
+            }, 150);
         } catch (error) {
             console.error('Error rendering mobile time slots:', error);
             showSlotsError();
@@ -1866,7 +1952,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const [hour, minute] = selectedTimeInput.value.split(':').map(Number);
         const localDate = new Date(year, (month - 1), day, hour, minute, 0, 0);
 
-        // Format as: July 17, 2025 at 6:24:00 PM UTC+5
+        // Format as: July 17, 2025 at 18:24:00 UTC+5
         function formatForApi(d) {
             const monthNames = [
                 'January','February','March','April','May','June','July','August','September','October','November','December'
@@ -1874,24 +1960,24 @@ document.addEventListener('DOMContentLoaded', function () {
             const months = monthNames[d.getMonth()];
             const dayNum = d.getDate();
             const yearNum = d.getFullYear();
-            let hours = d.getHours();
+            const hours = String(d.getHours()).padStart(2, '0');
             const minutes = String(d.getMinutes()).padStart(2, '0');
             const seconds = '00';
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12; if (hours === 0) hours = 12;
-
+            // No AM/PM needed for 24-hour format
+            
             const tzOffsetMin = -d.getTimezoneOffset(); // e.g., +300 for UTC+5
             const sign = tzOffsetMin >= 0 ? '+' : '-';
             const absMin = Math.abs(tzOffsetMin);
             const tzHours = Math.floor(absMin / 60);
             const tzStr = `UTC${sign}${tzHours}`;
 
-            return `${months} ${dayNum}, ${yearNum} at ${hours}:${minutes}:${seconds} ${ampm} ${tzStr}`;
+            return `${months} ${dayNum}, ${yearNum} at ${hours}:${minutes}:${seconds} ${tzStr}`;
         }
 
         const bookingTime = formatForApi(localDate);
         
-        // Extract bookTime (e.g., "6:24" from "July 17, 2025 at 6:24:00 PM UTC+5")
+        // Extract bookTime (e.g., "18:24" from "July 17, 2025 at 18:24:00 UTC+5")
+        // Updated regex to handle 24-hour format (no AM/PM)
         const bookTimeMatch = bookingTime.match(/at (\d+):(\d+):/);
         const bookTime = bookTimeMatch ? `${bookTimeMatch[1]}:${bookTimeMatch[2]}` : null;
         
