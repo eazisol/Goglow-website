@@ -289,8 +289,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if (currentCategoryId) {
         apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/getSalonsByCategory?categoryId=${currentCategoryId}&lastDocId=${encodeURIComponent(lastDocId)}`;
       } else {
-        apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllProviders';
-        apiUrl += '?lastDocId=' + encodeURIComponent(lastDocId);
+        apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllProviders?status=active';
+        apiUrl += '&lastDocId=' + encodeURIComponent(lastDocId);
       }
 
       const response = await fetch(apiUrl);
@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       } else {
         // USE NEW getAllProviders API for listing all providers (with pagination)
-        apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllProviders';
+        apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllProviders?status=active';
 
         const response = await fetch(apiUrl);
 
