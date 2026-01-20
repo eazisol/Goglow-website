@@ -42,9 +42,9 @@
                         <div class="card-body">
                             <h4 class="service-summary-title">{{ $selectedService['service_name'] ?? 'Selected Service' }}</h4>
                             <p class="service-summary-price">
-                                €{{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }}
+                                {{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }}€
                                 @if(isset($selectedService['discounted_price']) && isset($selectedService['service_price']) && $selectedService['discounted_price'] < $selectedService['service_price'])
-                                    <span class="old-price">€{{ $selectedService['service_price'] }}</span>
+                                    <span class="old-price">{{ $selectedService['service_price'] }}€</span>
                                 @endif
                             </p>
                             @if(!empty($selectedService['service_details']))
@@ -203,16 +203,16 @@
                                             <div class="payment-details-container" style="max-width: 100%;">
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                                     <span style="font-size: 16px; color: #333;">{{ __('app.booking.service_amount') }}</span>
-                                                    <span style="font-size: 16px; font-weight: 600;">€{{ number_format($servicePrice, 2) }}</span>
+                                                    <span style="font-size: 16px; font-weight: 600;">{{ number_format($servicePrice, 2) }}€</span>
                                                 </div>
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                                     <span style="font-size: 16px; color: #333;">{{ __('app.booking.deposit_amount') }}</span>
-                                                    <span style="font-size: 16px; font-weight: 600;">€0.00</span>
+                                                    <span style="font-size: 16px; font-weight: 600;">0.00€</span>
                                                 </div>
                                                 <hr style="margin: 15px 0; border-top: 1px solid #ddd;">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <span style="font-size: 16px; color: #333;">{{ __('app.booking.total_remaining') }}</span>
-                                                    <span style="font-size: 18px; font-weight: 700;">€{{ number_format($servicePrice, 2) }}</span>
+                                                    <span style="font-size: 18px; font-weight: 700;">{{ number_format($servicePrice, 2) }}€</span>
                                                 </div>
                                                 
                                                 <!-- Hidden input for JS compatibility -->
