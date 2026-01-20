@@ -286,8 +286,20 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       // Build API URL with lastDocId for pagination
       let apiUrl;
+      const searchParam = new URLSearchParams(window.location.search).get('search');
+      const locationParam = new URLSearchParams(window.location.search).get('location');
+
       if (currentCategoryId) {
         apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/getSalonsByCategory?categoryId=${currentCategoryId}&lastDocId=${encodeURIComponent(lastDocId)}`;
+      } else if (searchParam || locationParam) {
+        // Build search URL with pagination
+        apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
+        const params = new URLSearchParams();
+        if (searchParam) params.append('name', searchParam);
+        if (locationParam) params.append('location', locationParam);
+        params.append('status', 'active');
+        params.append('lastDocId', lastDocId);
+        apiUrl += '?' + params.toString();
       } else {
         apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/getAllProviders?status=active';
         apiUrl += '&lastDocId=' + encodeURIComponent(lastDocId);
@@ -380,11 +392,13 @@ document.addEventListener('DOMContentLoaded', function () {
       let pagination = null;
 
       if (hasSearchParams) {
-        // USE OLD searchProviders API for search with parameters (no pagination changes)
+        // USE UPDATED searchProviders API with pagination and status=active
         apiUrl = 'https://us-central1-beauty-984c8.cloudfunctions.net/searchProviders';
         const params = new URLSearchParams();
         if (search) params.append('name', search);
         if (location) params.append('location', location);
+        params.append('status', 'active');
+
         if (params.toString()) {
           apiUrl += '?' + params.toString();
         }
@@ -395,12 +409,15 @@ document.addEventListener('DOMContentLoaded', function () {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        // searchProviders returns array directly
-        providers = await response.json();
+        const data = await response.json();
 
-        // Disable infinite scroll for search results (no pagination)
-        hasMore = false;
-        lastDocId = null;
+        // Handle new response structure with pagination
+        providers = data.providers || [];
+        pagination = data.pagination || {};
+
+        // Update pagination state
+        lastDocId = pagination.lastDocId || null;
+        hasMore = pagination.hasMore === true;
 
       } else {
         // USE NEW getAllProviders API for listing all providers (with pagination)
