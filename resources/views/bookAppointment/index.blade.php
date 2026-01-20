@@ -163,59 +163,87 @@
                                 <!-- Payment Options (hidden initially, shown after time slot selection) -->
                                 <div id="paymentOptionsSection" class="col-12" style="display: none;">
                                     <div class="form-group col-md-12 mb-4">
-                                        <label class="form-label">{{ __('app.agent_page.payment_options') }}</label>
-                                        <div class="payment-options">
-                                            @php
-                                                // Calculate deposit percentage based on priority: spDeposit > minimum_booking_percentage > commission
-                                                $depositPercentage = null;
-                                                $depositLabel = '';
+                                        @php
+                                            // Calculate deposit percentage based on priority: spDeposit > minimum_booking_percentage > commission
+                                            $depositPercentage = null;
+                                            $depositLabel = '';
+                                            $servicePrice = $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0);
+                                            
+                                            if (!empty($selectedService)) {
+                                                $spDeposit = $selectedService['spDeposit'] ?? 0;
+                                                $commission = $selectedService['commission'] ?? [];
+                                                $minimumBookingPercentage = $commission['minimum_booking_percentage'] ?? 0;
+                                                $commissionValue = $commission['commission'] ?? 0;
                                                 
-                                                if (!empty($selectedService)) {
-                                                    $spDeposit = $selectedService['spDeposit'] ?? 0;
-                                                    $commission = $selectedService['commission'] ?? [];
-                                                    $minimumBookingPercentage = $commission['minimum_booking_percentage'] ?? 0;
-                                                    $commissionValue = $commission['commission'] ?? 0;
-                                                    
-                                                    if ($spDeposit > 0) {
-                                                        $depositPercentage = $spDeposit;
-                                                        $depositLabel = $spDeposit . '% deposit now';
-                                                    } elseif ($minimumBookingPercentage > 0) {
-                                                        $depositPercentage = $minimumBookingPercentage;
-                                                        $depositLabel = $minimumBookingPercentage . '% deposit now';
-                                                    } elseif ($commissionValue > 0) {
-                                                        $depositPercentage = $commissionValue;
-                                                        $depositLabel = $commissionValue . '% deposit now';
-                                                    } else {
-                                                        $depositPercentage = 0;
-                                                        $depositLabel = 'Free booking';
-                                                    }
-                                                    
-                                                    $servicePrice = $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0);
-                                                    $depositAmount = ($depositPercentage > 0) ? ($servicePrice * ($depositPercentage / 100)) : 0;
+                                                if ($spDeposit > 0) {
+                                                    $depositPercentage = $spDeposit;
+                                                    $depositLabel = $spDeposit . '% deposit now';
+                                                } elseif ($minimumBookingPercentage > 0) {
+                                                    $depositPercentage = $minimumBookingPercentage;
+                                                    $depositLabel = $minimumBookingPercentage . '% deposit now';
+                                                } elseif ($commissionValue > 0) {
+                                                    $depositPercentage = $commissionValue;
+                                                    $depositLabel = $commissionValue . '% deposit now';
                                                 } else {
                                                     $depositPercentage = 0;
                                                     $depositLabel = 'Free booking';
-                                                    $depositAmount = 0;
                                                 }
-                                            @endphp
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
-                                                <label class="form-check-label" for="payDeposit" id="payDepositLabel">
-                                                    @if($depositPercentage > 0)
-                                                        {{ $depositLabel }} ({{ number_format($depositAmount, 2) }}€)
-                                                    @else
-                                                        {{ $depositLabel }}
-                                                    @endif
-                                                </label>
+                                                
+                                                $depositAmount = ($depositPercentage > 0) ? ($servicePrice * ($depositPercentage / 100)) : 0;
+                                            } else {
+                                                $depositPercentage = 0;
+                                                $depositLabel = 'Free booking';
+                                                $depositAmount = 0;
+                                            }
+                                        @endphp
+
+                                        @if($depositPercentage == 0)
+                                            <!-- Free Booking UI -->
+                                            <label class="form-label" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">{{ __('app.booking.booking_payment_detail') }}</label>
+                                            <div class="payment-details-container" style="max-width: 100%;">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <span style="font-size: 16px; color: #333;">{{ __('app.booking.service_amount') }}</span>
+                                                    <span style="font-size: 16px; font-weight: 600;">€{{ number_format($servicePrice, 2) }}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <span style="font-size: 16px; color: #333;">{{ __('app.booking.deposit_amount') }}</span>
+                                                    <span style="font-size: 16px; font-weight: 600;">€0.00</span>
+                                                </div>
+                                                <hr style="margin: 15px 0; border-top: 1px solid #ddd;">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span style="font-size: 16px; color: #333;">{{ __('app.booking.total_remaining') }}</span>
+                                                    <span style="font-size: 18px; font-weight: 700;">€{{ number_format($servicePrice, 2) }}</span>
+                                                </div>
+                                                
+                                                <!-- Hidden input for JS compatibility -->
+                                                <input type="radio" name="paymentType" id="payDeposit" value="deposit" checked style="display:none;">
                                                 <input type="hidden" id="depositPercentage" value="{{ $depositPercentage }}">
+                                                <!-- Hidden label for deposit logic referencing -->
+                                                <span id="payDepositLabel" style="display:none;">{{ $depositLabel }} ({{ number_format($depositAmount, 2) }}€)</span>
                                             </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
-                                                <label class="form-check-label" for="payFull">
-                                                    {{ __('app.agent_page.pay_full_amount_now') }} ({{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }}€)
-                                                </label>
+                                        @else
+                                            <!-- Paid Booking UI (Existing) -->
+                                            <label class="form-label">{{ __('app.agent_page.payment_options') }}</label>
+                                            <div class="payment-options">
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
+                                                    <label class="form-check-label" for="payDeposit" id="payDepositLabel">
+                                                        @if($depositPercentage > 0)
+                                                            {{ $depositLabel }} ({{ number_format($depositAmount, 2) }}€)
+                                                        @else
+                                                            {{ $depositLabel }}
+                                                        @endif
+                                                    </label>
+                                                    <input type="hidden" id="depositPercentage" value="{{ $depositPercentage }}">
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
+                                                    <label class="form-check-label" for="payFull">
+                                                        {{ __('app.agent_page.pay_full_amount_now') }} ({{ $selectedService['discounted_price'] ?? ($selectedService['service_price'] ?? 0) }}€)
+                                                    </label>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     </div>
 
                                     <!-- Notes Section -->
@@ -726,9 +754,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     cachedSlotsDate = selectedDate;
                     
                     // Show loading state in desktop view
-                    timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>Loading available slots...</div>';
+                    // UPDATE: User requested to remove loader on date selection
+                    // timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>Loading available slots...</div>';
+                    timeSlotGrid.innerHTML = '';
                     if (timeSlotsStrip) {
-                        timeSlotsStrip.style.display = '';
+                        timeSlotsStrip.style.display = 'none';
                     }
                     
                     // Fetch slots from API

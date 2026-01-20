@@ -76,6 +76,10 @@ return [
         'select_time' => 'Sélectionner l\'heure',
         'notes' => 'Notes',
         'special_requests' => 'Des demandes spéciales ou des notes pour votre rendez-vous',
+        'booking_payment_detail' => 'Détails du paiement de la réservation :',
+        'service_amount' => 'Montant du service :',
+        'deposit_amount' => 'Acompte :',
+        'total_remaining' => 'Total restant :',
     ],
 
     // Schedule

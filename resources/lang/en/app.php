@@ -78,6 +78,10 @@ return [
         'select_time' => 'Select Time',
         'notes' => 'Notes',
         'special_requests' => 'Any special requests or notes for your appointment',
+        'booking_payment_detail' => 'Booking Payment Detail:',
+        'service_amount' => 'Service Amount :',
+        'deposit_amount' => 'Deposit :',
+        'total_remaining' => 'Total Remaining :',
     ],
 
     // Schedule
