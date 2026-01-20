@@ -114,6 +114,8 @@ return [
         'next_week' => 'Semaine suivante',
         'no_slots' => 'Aucun créneau disponible',
         'at' => 'à',
+        'no_slot_available' => 'Il n’y a plus de créneaux',
+        'no_slot' => 'vide',
     ],
 
     // My Bookings
@@ -179,6 +181,10 @@ return [
         'upload' => 'Téléverser',
         'yes' => 'Oui',
         'no' => 'Non',
+        'share_this_page' => 'Partager cette page',
+        'copy' => 'Copier',
+        'url_copied' => 'URL copiée dans le presse-papier !',
+        'share' => 'Partager',
     ],
 
     // Messages

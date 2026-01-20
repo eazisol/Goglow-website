@@ -873,8 +873,8 @@ document.addEventListener('DOMContentLoaded', function () {
             mobileTimeSlotsContainer.style.display = 'none';
         }
         
-        if (!selectedDay || !selectedPeriod || !selectedDate || !chosenAgent) {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+            if (!selectedDay || !selectedDate || !chosenAgent) {
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">{{ __('app.schedule.no_slot_available') }}</div>';
             // Show strip to display message, but hide arrows
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = '';
@@ -888,7 +888,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const availableSlots = cachedAvailableSlots;
         
         if (!availableSlots || availableSlots.length === 0) {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">{{ __('app.schedule.no_slot_available') }}</div>';
             // Show strip to display message, but hide arrows
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = '';
@@ -907,7 +907,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         const period = periodRanges[selectedPeriod];
         if (!period) {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">{{ __('app.schedule.no_slot_available') }}</div>';
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = '';
                 if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
@@ -926,7 +926,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         
         if (filteredSlots.length === 0) {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">There is no slot available</div>';
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;">{{ __('app.schedule.no_slot_available') }}</div>';
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = '';
                 if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';
@@ -1030,7 +1030,7 @@ document.addEventListener('DOMContentLoaded', function () {
         mobileTimeSlotsContainer.innerHTML = '';
         
         if (!selectedDay || !selectedDate || !chosenAgent) {
-            mobileTimeSlotsContainer.innerHTML = '<div class="mobile-no-slots">There is no slot available</div>';
+            mobileTimeSlotsContainer.innerHTML = '<div class="mobile-no-slots">{{ __('app.schedule.no_slot_available') }}</div>';
             return;
         }
         
@@ -1050,7 +1050,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const availableSlots = await fetchAvailableSlots(serviceId, chosenAgent.id, selectedDate);
             
             if (!availableSlots || availableSlots.length === 0) {
-                mobileTimeSlotsContainer.innerHTML = '<div class="mobile-no-slots">There is no slot available</div>';
+                mobileTimeSlotsContainer.innerHTML = '<div class="mobile-no-slots">{{ __('app.schedule.no_slot_available') }}</div>';
                 mobileTimeSlotsContainer.style.display = '';
                 return;
             }
@@ -1088,7 +1088,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (filteredSlots.length === 0) {
                     const noSlotsMsg = document.createElement('div');
                     noSlotsMsg.className = 'mobile-period-no-slots';
-                    noSlotsMsg.textContent = 'No slot';
+                    noSlotsMsg.textContent = '{{ __('app.schedule.no_slot') }}';
                     slotsContainer.appendChild(noSlotsMsg);
                 } else {
                     // Show only first 3 slots initially

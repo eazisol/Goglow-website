@@ -116,6 +116,8 @@ return [
         'next_week' => 'Next Week',
         'no_slots' => 'No available slots',
         'at' => 'at',
+        'no_slot_available' => 'There is no slot available',
+        'no_slot' => 'No slot',
     ],
 
     // My Bookings
@@ -181,6 +183,10 @@ return [
         'upload' => 'Upload',
         'yes' => 'Yes',
         'no' => 'No',
+        'share_this_page' => 'Share this page',
+        'copy' => 'Copy',
+        'url_copied' => 'URL copied to clipboard!',
+        'share' => 'Share',
     ],
 
     // Messages
