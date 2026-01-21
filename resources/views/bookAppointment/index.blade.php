@@ -1880,6 +1880,143 @@ document.addEventListener('DOMContentLoaded', function () {
     // Restore pending booking state if user just logged in
     restorePendingBookingState();
 
+    // === Email Sending Helper Functions (for direct redirect flow) ===
+    // Note: currentLocale is already defined earlier in this file (around line 568)
+    
+    // Helper function to parse date from booking_time string
+    function parseBookingDate(bookingTimeString) {
+        if (!bookingTimeString) return null;
+        try {
+            const datePart = bookingTimeString.split(' at ')[0];
+            if (!datePart) return null;
+            const date = new Date(datePart);
+            if (isNaN(date.getTime())) return null;
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        } catch (error) {
+            console.error('Error parsing booking date:', error);
+            return null;
+        }
+    }
+    
+    // Helper function to parse time from booking_time string
+    function parseBookingTime(bookingTimeString, bookTimeField) {
+        if (bookTimeField) return bookTimeField;
+        if (!bookingTimeString) return null;
+        try {
+            const timePart = bookingTimeString.split(' at ')[1];
+            if (!timePart) return null;
+            const timeMatch = timePart.match(/(\d+):(\d+):\d+\s+(AM|PM)/i);
+            if (timeMatch) {
+                let hour = parseInt(timeMatch[1]);
+                const minute = timeMatch[2];
+                const ampm = timeMatch[3].toUpperCase();
+                if (ampm === 'PM' && hour !== 12) hour += 12;
+                else if (ampm === 'AM' && hour === 12) hour = 0;
+                return `${hour}:${minute}`;
+            }
+            const fallbackMatch = timePart.match(/(\d+):(\d+):/);
+            if (fallbackMatch) {
+                return `${parseInt(fallbackMatch[1])}:${fallbackMatch[2]}`;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error parsing booking time:', error);
+            return null;
+        }
+    }
+    
+    // Function to generate Google Maps directions link
+    function getMapLink(lat, lng, address) {
+        if (lat != null && lng != null) {
+            return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=transit`;
+        } else if (address != null && address !== '') {
+            return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&travelmode=transit`;
+        }
+        return "";
+    }
+    
+    // Function to send booking emails
+    async function sendBookingEmails(payload) {
+        try {
+            const userInfo = payload.userInfo || {};
+            const serviceInfo = payload.services?.[0] || {};
+            const serviceProviderInfo = payload.serviceProviderInfo || {};
+            const serviceData = payload.serviceData || {};
+            
+            const clientName = userInfo.name || 'Customer';
+            const clientEmail = userInfo.email;
+            const serviceName = serviceInfo.serviceName || '';
+            const salonName = serviceData.companyName || '';
+            const ownerName = serviceProviderInfo.name || serviceData.ownerName || '';
+            const ownerEmail = serviceProviderInfo.email || serviceData.ownerMail || null;
+            const address = payload.address || serviceData.companyAddress || '';
+            const bookingAmount = serviceInfo.servicePrice || payload.amount || 0;
+            
+            const spLocation = serviceData.spLocation || {};
+            const geometry = spLocation.geometry || {};
+            const location = geometry.location || {};
+            const lat = location.lat;
+            const lng = location.lng;
+            const mapLink = getMapLink(lat, lng, address);
+            
+            const bookingDate = parseBookingDate(payload.booking_time);
+            const bookingTime = parseBookingTime(payload.booking_time, payload.bookTime);
+            
+            // Send customer email
+            if (clientEmail && bookingDate && bookingTime) {
+                try {
+                    await fetch('https://backend.glaura.ai/api/send-email', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            to: clientEmail,
+                            type: 'bookingCreated',
+                            lang: currentLocale,
+                            data: {
+                                clientName: clientName,
+                                serviceName: serviceName,
+                                salonName: salonName,
+                                date: bookingDate,
+                                time: bookingTime,
+                                address: address,
+                                mapLink: mapLink
+                            }
+                        })
+                    });
+                } catch (e) { console.error('Error sending customer email:', e); }
+            }
+            
+            // Send provider email
+            if (ownerEmail && bookingDate && bookingTime) {
+                try {
+                    const formattedAmount = `€${parseFloat(bookingAmount).toFixed(2)}`;
+                    await fetch('https://backend.glaura.ai/api/send-email', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            to: ownerEmail,
+                            type: 'providerNewBookingReceived',
+                            lang: currentLocale,
+                            data: {
+                                proName: ownerName,
+                                clientName: clientName,
+                                serviceName: serviceName,
+                                date: bookingDate,
+                                time: bookingTime,
+                                bookingAmount: formattedAmount
+                            }
+                        })
+                    });
+                } catch (e) { console.error('Error sending provider email:', e); }
+            }
+        } catch (error) {
+            console.error('Error in sendBookingEmails:', error);
+        }
+    }
+
     // Function to fetch user data from API (phone and countryCode)
     async function fetchUserDataFromAPI(userId) {
         try {
@@ -2322,15 +2459,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log('Booking API response:', bookingResponseData);
                     
                     if (bookingResponse.ok) {
-                        // Clear pending booking state after successful booking
-                        localStorage.removeItem('pendingBookingState');
+                        // Send booking confirmation emails
+                        console.log('Booking successful, sending confirmation emails...');
+                        await sendBookingEmails(bookingPayload);
                         
-                        // Redirect to success page
-                        const successUrl = '{{ route("payment.success") }}?session_id=' + freeBookingTransactionId + 
-                            '&serviceId=' + encodeURIComponent(serviceId) +
-                            '&serviceProviderId=' + encodeURIComponent(serviceProviderId) +
-                            '&paymentType=deposit';
-                        window.location.href = successUrl;
+                        // Clear all booking data from localStorage
+                        localStorage.removeItem('pendingBookingState');
+                        localStorage.removeItem('bookingFormData');
+                        localStorage.removeItem('bookingPayload');
+                        
+                        // Redirect directly to My Bookings page
+                        window.location.href = '{{ route("my-bookings") }}';
                     } else {
                         setButtonLoading(false);
                         alert('Error submitting booking: ' + (bookingResponseData.message || 'Unknown error'));

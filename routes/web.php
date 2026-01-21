@@ -67,7 +67,7 @@ Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->n
 Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
 // My Bookings
-Route::get('/my-bookings', [\App\Http\Controllers\BookingsController::class, 'index'])
+Route::get('/mes-reservations', [\App\Http\Controllers\BookingsController::class, 'index'])
     ->middleware('firebase.auth.modal')
     ->name('my-bookings');
 

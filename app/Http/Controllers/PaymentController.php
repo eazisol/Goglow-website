@@ -208,6 +208,18 @@ class PaymentController extends Controller
             Log::info('Session params', $sessionParams);
             
             $session = Session::create($sessionParams);
+            
+            // Store booking data in session to retrieve after payment success
+            $pendingBookingData = [
+                'bookingData' => $bookingData,
+                'formData' => $formData,
+                'serviceProviderId' => $serviceProviderId,
+                'paymentType' => $paymentType,
+                'serviceName' => $serviceName,
+                'serviceId' => $serviceId,
+                'servicePrice' => $servicePrice,
+            ];
+            session(['pending_booking_' . $session->id => $pendingBookingData]);
 
             // Return the session ID
             Log::info('Stripe session created', ['id' => $session->id]);
@@ -271,28 +283,159 @@ class PaymentController extends Controller
             
             Log::info('Payment ID', ['paymentIntentId' => $paymentIntentId]);
 
-            // We'll handle the API call client-side to maintain the same flow as before
-            // Just log payment information
-            Log::info('Payment successful', [
-                'transactionId' => $paymentIntentId,
-                'paymentType' => $paymentType,
-                'serviceId' => $serviceId,
-                'serviceProviderId' => $serviceProviderId,
-                'isFreeBooking' => $isFreeBooking
-            ]);
+            // Retrieve booking data from session
+            $sessionKey = 'pending_booking_' . $sessionId;
+            $pendingBooking = session($sessionKey);
             
-            // Return the success view with payment information
-            // The form submission to API will happen client-side with the original form data
-            return view('bookAppointment.success', [
-                'transactionId' => $paymentIntentId,
-                'serviceName' => 'Beauty Service',
-                'paymentType' => $paymentType ?? 'full',
-            ]);
+            if ($pendingBooking) {
+                // We have booking data from the session - finalize server-side
+                Log::info('Found pending booking in session', ['sessionKey' => $sessionKey]);
+                
+                $bookingPayload = $pendingBooking['bookingData'];
+                if (is_string($bookingPayload)) {
+                    $bookingPayload = json_decode($bookingPayload, true);
+                }
+                
+                // Update payload with payment info
+                $bookingPayload['payment_id'] = $paymentIntentId;
+                $bookingPayload['payment_type'] = $pendingBooking['paymentType'] ?? 'full';
+                $bookingPayload['payment_status'] = 'completed';
+                $bookingPayload['payed'] = ($bookingPayload['payment_type'] === 'full');
+                
+                // Call bookService Cloud Function
+                Log::info('Submitting booking to Cloud Function', ['payload_keys' => array_keys($bookingPayload ?? [])]);
+                $bookResponse = Http::post('https://us-central1-beauty-984c8.cloudfunctions.net/bookService', $bookingPayload);
+                
+                if ($bookResponse->ok()) {
+                    Log::info('Booking created successfully');
+                    
+                    // Send emails
+                    $this->sendBookingEmails($bookingPayload, $pendingBooking);
+                    
+                    // Clear session data
+                    session()->forget($sessionKey);
+                    
+                    // Redirect to My Bookings
+                    return redirect()->route('my-bookings');
+                } else {
+                    Log::error('Booking API failed', ['response' => $bookResponse->body()]);
+                    // Still redirect to my-bookings even if there was an issue
+                    session()->forget($sessionKey);
+                    return redirect()->route('my-bookings');
+                }
+            } else {
+                // No session data - fallback to success page (for backwards compatibility)
+                Log::warning('No pending booking data found in session', ['sessionKey' => $sessionKey]);
+                return view('bookAppointment.success', [
+                    'transactionId' => $paymentIntentId,
+                    'serviceName' => 'Beauty Service',
+                    'paymentType' => $paymentType ?? 'full',
+                ]);
+            }
         } catch (\Exception $e) {
             Log::error('Error in payment success handler', ['error' => $e->getMessage()]);
             return view('bookAppointment.error', [
                 'message' => 'Error processing payment: ' . $e->getMessage()
             ]);
+        }
+    }
+    
+    /**
+     * Send booking confirmation emails
+     */
+    private function sendBookingEmails($payload, $pendingBooking)
+    {
+        try {
+            $lang = app()->getLocale();
+            $userInfo = $payload['userInfo'] ?? [];
+            $serviceInfo = $payload['services'][0] ?? [];
+            $serviceData = $payload['serviceData'] ?? [];
+            $serviceProviderInfo = $payload['serviceProviderInfo'] ?? [];
+            
+            $clientEmail = $userInfo['email'] ?? null;
+            $ownerEmail = $serviceProviderInfo['email'] ?? $serviceData['ownerMail'] ?? null;
+            
+            // Parse booking date/time
+            $bookingTime = $payload['booking_time'] ?? null;
+            $bookTime = $payload['bookTime'] ?? null;
+            $bookingDate = $this->parseBookingDate($bookingTime);
+            $parsedTime = $bookTime ?: $this->parseBookingTime($bookingTime);
+            
+            // Prepare address and map link
+            $address = $payload['address'] ?? $serviceData['companyAddress'] ?? '';
+            $spLocation = $serviceData['spLocation'] ?? [];
+            $lat = $spLocation['geometry']['location']['lat'] ?? null;
+            $lng = $spLocation['geometry']['location']['lng'] ?? null;
+            $mapLink = '';
+            if ($lat && $lng) {
+                $mapLink = "https://www.google.com/maps/dir/?api=1&destination={$lat},{$lng}&travelmode=transit";
+            } elseif ($address) {
+                $mapLink = "https://www.google.com/maps/dir/?api=1&destination=" . urlencode($address) . "&travelmode=transit";
+            }
+            
+            // Customer email
+            if ($clientEmail && $bookingDate && $parsedTime) {
+                Http::post('https://backend.glaura.ai/api/send-email', [
+                    'to' => $clientEmail,
+                    'type' => 'bookingCreated',
+                    'lang' => $lang,
+                    'data' => [
+                        'clientName' => $userInfo['name'] ?? 'Customer',
+                        'serviceName' => $serviceInfo['serviceName'] ?? $pendingBooking['serviceName'] ?? '',
+                        'salonName' => $serviceData['companyName'] ?? '',
+                        'date' => $bookingDate,
+                        'time' => $parsedTime,
+                        'address' => $address,
+                        'mapLink' => $mapLink
+                    ]
+                ]);
+            }
+            
+            // Provider email
+            if ($ownerEmail && $bookingDate && $parsedTime) {
+                $amount = $serviceInfo['servicePrice'] ?? $payload['amount'] ?? 0;
+                Http::post('https://backend.glaura.ai/api/send-email', [
+                    'to' => $ownerEmail,
+                    'type' => 'providerNewBookingReceived',
+                    'lang' => $lang,
+                    'data' => [
+                        'proName' => $serviceProviderInfo['name'] ?? $serviceData['ownerName'] ?? '',
+                        'clientName' => $userInfo['name'] ?? 'Customer',
+                        'serviceName' => $serviceInfo['serviceName'] ?? $pendingBooking['serviceName'] ?? '',
+                        'date' => $bookingDate,
+                        'time' => $parsedTime,
+                        'bookingAmount' => '€' . number_format($amount, 2)
+                    ]
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error sending booking emails', ['error' => $e->getMessage()]);
+        }
+    }
+    
+    private function parseBookingDate($bookingTimeString)
+    {
+        if (!$bookingTimeString) return null;
+        try {
+            $parts = explode(' at ', $bookingTimeString);
+            if (count($parts) < 1) return null;
+            $date = strtotime($parts[0]);
+            return $date ? date('Y-m-d', $date) : null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+    
+    private function parseBookingTime($bookingTimeString)
+    {
+        if (!$bookingTimeString) return null;
+        try {
+            $parts = explode(' at ', $bookingTimeString);
+            if (count($parts) < 2) return null;
+            $time = strtotime($parts[1]);
+            return $time ? date('H:i', $time) : null;
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }
