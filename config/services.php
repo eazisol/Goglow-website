@@ -34,6 +34,7 @@ return [
         'web_api_key' => env('FIREBASE_WEB_API_KEY'),
         'project_id' => env('FIREBASE_PROJECT_ID'),
         'auth_domain' => env('FIREBASE_AUTH_DOMAIN'),
+        'cloud_functions_url' => env('FIREBASE_CLOUD_FUNCTIONS_URL', 'https://us-central1-beauty-984c8.cloudfunctions.net'),
     ],
     
     'stripe' => [

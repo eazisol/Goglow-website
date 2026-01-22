@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Illuminate\Support\Facades\Log;
@@ -11,27 +12,55 @@ use Illuminate\Support\Facades\Log;
 class PaymentController extends Controller
 {
     /**
+     * Cache TTL for payment settings (in seconds)
+     */
+    private const PAYMENT_SETTINGS_CACHE_TTL = 60;
+
+    /**
+     * Get all payment settings from API (cached for 60 seconds)
+     * Returns: isStripeLive, useStripeConnect, isStripeConnectLive
+     */
+    private function getPaymentSettings(): array
+    {
+        return Cache::remember('payment_settings', self::PAYMENT_SETTINGS_CACHE_TTL, function () {
+            try {
+                $response = Http::timeout(10)->get(config('services.firebase.cloud_functions_url') . '/getPaymentStatus');
+
+                if ($response->ok()) {
+                    $data = $response->json();
+                    $settings = $data['data'] ?? [];
+
+                    $result = [
+                        'isStripeLive' => $settings['isStripeLive'] ?? false,
+                        'useStripeConnect' => $settings['useStripeConnect'] ?? false,
+                        'isStripeConnectLive' => $settings['isStripeConnectLive'] ?? false,
+                    ];
+
+                    Log::info('Payment settings fetched from API', $result);
+                    return $result;
+                }
+
+                Log::warning('Failed to fetch payment settings from API, using defaults');
+            } catch (\Throwable $e) {
+                Log::error('Error fetching payment settings', ['error' => $e->getMessage()]);
+            }
+
+            // Default values on error (not cached - will retry next request)
+            return [
+                'isStripeLive' => false,
+                'useStripeConnect' => false,
+                'isStripeConnectLive' => false,
+            ];
+        });
+    }
+
+    /**
      * Get the Stripe live/test status from API
      * Fetches fresh data on every call
      */
     private function getStripeMode(): bool
     {
-        try {
-            $response = Http::timeout(10)->get('https://us-central1-beauty-984c8.cloudfunctions.net/getPaymentStatus');
-            
-            if ($response->ok()) {
-                $data = $response->json();
-                $isLive = $data['data']['isStripeLive'] ?? false;
-                Log::info('Stripe mode fetched from API', ['isStripeLive' => $isLive]);
-                return $isLive;
-            }
-            
-            Log::warning('Failed to fetch Stripe mode from API, defaulting to test mode');
-            return false;
-        } catch (\Throwable $e) {
-            Log::error('Error fetching Stripe mode', ['error' => $e->getMessage()]);
-            return false; // Default to test mode on error
-        }
+        return $this->getPaymentSettings()['isStripeLive'];
     }
 
     /**
@@ -61,26 +90,108 @@ class PaymentController extends Controller
      */
     public function getStripeConfig()
     {
-        $isLive = $this->getStripeMode();
+        $settings = $this->getPaymentSettings();
         $publishableKey = $this->getStripePublishableKey();
-        
+
         return response()->json([
             'success' => true,
-            'isLive' => $isLive,
+            'isLive' => $settings['isStripeLive'],
+            'useStripeConnect' => $settings['useStripeConnect'],
+            'isStripeConnectLive' => $settings['isStripeConnectLive'],
             'publishableKey' => $publishableKey,
         ]);
     }
 
+    /**
+     * Call Firebase Cloud Function to create Stripe Connect Payment Intent
+     * This handles commission calculation and destination charges
+     *
+     * @param array $params Payment parameters
+     * @return array Response from Cloud Function
+     */
+    private function createStripeConnectPaymentIntent(array $params): array
+    {
+        $settings = $this->getPaymentSettings();
+
+        $payload = [
+            'amount' => $params['amountInCents'],
+            'totalBookingAmount' => $params['totalAmountInCents'],
+            'currency' => 'eur',
+            'providerId' => $params['providerId'],
+            'customerId' => $params['customerId'] ?? null,
+            'customerEmail' => $params['customerEmail'],
+            'customerName' => $params['customerName'] ?? null,
+            'customerPhone' => $params['customerPhone'] ?? null,
+            'bookingId' => $params['bookingId'] ?? null,
+            'isStripeConnectLive' => $settings['isStripeConnectLive'],
+        ];
+
+        // Log sanitized payload (no PII)
+        Log::info('Calling createStripeConnectPaymentIntent Cloud Function', [
+            'amount' => $payload['amount'],
+            'totalBookingAmount' => $payload['totalBookingAmount'],
+            'providerId' => $payload['providerId'],
+            'isStripeConnectLive' => $payload['isStripeConnectLive'],
+        ]);
+
+        try {
+            // Get Firebase ID token for authentication
+            $firebaseIdToken = session('firebase_id_token');
+
+            $headers = ['Content-Type' => 'application/json'];
+            if ($firebaseIdToken) {
+                $headers['Authorization'] = 'Bearer ' . $firebaseIdToken;
+            }
+
+            $response = Http::timeout(30)
+                ->withHeaders($headers)
+                ->post(config('services.firebase.cloud_functions_url') . '/createStripeConnectPaymentIntent', $payload);
+
+            if ($response->ok()) {
+                $data = $response->json();
+                if ($data['success'] ?? false) {
+                    Log::info('Stripe Connect Payment Intent created', [
+                        'paymentIntentId' => $data['data']['paymentIntentId'] ?? null,
+                        'paymentMode' => $data['data']['paymentMode'] ?? null,
+                    ]);
+                    return [
+                        'success' => true,
+                        'data' => $data['data'],
+                    ];
+                } else {
+                    Log::error('Stripe Connect Payment Intent failed', ['response' => $data]);
+                    return [
+                        'success' => false,
+                        'error' => $data['error'] ?? $data['message'] ?? 'Unknown error',
+                    ];
+                }
+            }
+
+            Log::error('Stripe Connect Cloud Function HTTP error', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+            return [
+                'success' => false,
+                'error' => 'Cloud Function returned status ' . $response->status(),
+            ];
+        } catch (\Throwable $e) {
+            Log::error('Stripe Connect Cloud Function exception', ['error' => $e->getMessage()]);
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+            ];
+        }
+    }
+
     public function createCheckoutSession(Request $request)
     {
-        // Set Stripe API key dynamically based on payment status API
-        $stripeSecretKey = $this->getStripeSecretKey();
-        Stripe::setApiKey($stripeSecretKey);
-        
-        Log::info('Using Stripe mode', ['isLive' => $this->getStripeMode()]);
-
-        // Log the request for debugging
-        Log::info('Stripe checkout request', $request->all());
+        // Log the request for debugging (sanitized - no PII)
+        Log::info('Stripe checkout request', [
+            'serviceId' => $request->input('serviceId'),
+            'serviceProviderId' => $request->input('serviceProviderId'),
+            'paymentType' => $request->input('paymentType'),
+        ]);
         
         // Get data from request
         $serviceId = $request->input('serviceId');
@@ -116,7 +227,7 @@ class PaymentController extends Controller
         // If still not available, try to fetch service data from API
         if ($depositPercentage === null && $serviceId) {
             try {
-                $response = Http::get('https://us-central1-beauty-984c8.cloudfunctions.net/getServiceById', [
+                $response = Http::get(config('services.firebase.cloud_functions_url') . '/getServiceById', [
                     'service_id' => $serviceId,
                 ]);
                 
@@ -164,19 +275,97 @@ class PaymentController extends Controller
         }
         
         $amountInCents = (int) ($amount * 100); // Stripe requires amounts in cents
+        $totalAmountInCents = (int) ($servicePrice * 100); // Total booking amount for commission calculation
 
-        // Create a checkout session
+        // Check if Stripe Connect is enabled
+        $settings = $this->getPaymentSettings();
+        $useStripeConnect = $settings['useStripeConnect'] ?? false;
+
+        // Log the amount being charged
+        Log::info('Creating payment', [
+            'amount' => $amount,
+            'amountInCents' => $amountInCents,
+            'totalAmountInCents' => $totalAmountInCents,
+            'paymentType' => $paymentType,
+            'serviceName' => $serviceName,
+            'useStripeConnect' => $useStripeConnect,
+        ]);
+
         try {
-            // Log the amount being charged
-            Log::info('Creating Stripe session', [
-                'amount' => $amount,
-                'amountInCents' => $amountInCents,
-                'paymentType' => $paymentType,
-                'serviceName' => $serviceName
-            ]);
-            
-            // For Stripe v7.0, we need to use a different format
-            
+            // ========================================
+            // STRIPE CONNECT FLOW
+            // ========================================
+            if ($useStripeConnect) {
+                // Extract customer info from bookingData or formData
+                $bookingDataArray = is_string($bookingData) ? json_decode($bookingData, true) : $bookingData;
+                $formDataArray = is_string($formData) ? json_decode($formData, true) : $formData;
+
+                $userInfo = $bookingDataArray['userInfo'] ?? [];
+                $customerEmail = $userInfo['email'] ?? $formDataArray['email'] ?? session('firebase_email');
+                $customerName = $userInfo['name'] ?? $formDataArray['name'] ?? null;
+                $customerPhone = $userInfo['phone'] ?? $formDataArray['phone'] ?? null;
+                $customerId = $userInfo['userId'] ?? $bookingDataArray['userId'] ?? session('firebase_uid');
+
+                if (empty($customerEmail)) {
+                    Log::error('Stripe Connect requires customer email');
+                    return response()->json(['error' => 'Customer email is required for payment'], 400);
+                }
+
+                // Call Firebase Cloud Function for Stripe Connect payment
+                $connectResult = $this->createStripeConnectPaymentIntent([
+                    'amountInCents' => max(50, $amountInCents), // Minimum 50 cents
+                    'totalAmountInCents' => $totalAmountInCents,
+                    'providerId' => $serviceProviderId,
+                    'customerId' => $customerId,
+                    'customerEmail' => $customerEmail,
+                    'customerName' => $customerName,
+                    'customerPhone' => $customerPhone,
+                ]);
+
+                if (!$connectResult['success']) {
+                    Log::error('Stripe Connect payment intent creation failed', ['error' => $connectResult['error']]);
+                    return response()->json(['error' => $connectResult['error']], 500);
+                }
+
+                $connectData = $connectResult['data'];
+
+                // Store booking data in session for later retrieval
+                $pendingBookingData = [
+                    'bookingData' => $bookingData,
+                    'formData' => $formData,
+                    'serviceProviderId' => $serviceProviderId,
+                    'paymentType' => $paymentType,
+                    'serviceName' => $serviceName,
+                    'serviceId' => $serviceId,
+                    'servicePrice' => $servicePrice,
+                    'useStripeConnect' => true,
+                    'paymentMode' => $connectData['paymentMode'] ?? 'stripe_connect',
+                ];
+                session(['pending_booking_' . $connectData['paymentIntentId'] => $pendingBookingData]);
+
+                Log::info('Stripe Connect payment intent created', [
+                    'paymentIntentId' => $connectData['paymentIntentId'],
+                    'paymentMode' => $connectData['paymentMode'] ?? 'stripe_connect',
+                ]);
+
+                // Return data for frontend Payment Element
+                return response()->json([
+                    'id' => $connectData['paymentIntentId'],
+                    'clientSecret' => $connectData['clientSecret'],
+                    'useStripeConnect' => true,
+                    'paymentMode' => $connectData['paymentMode'] ?? 'stripe_connect',
+                    'applicationFee' => $connectData['applicationFee'] ?? 0,
+                    'feeType' => $connectData['feeType'] ?? null,
+                    'providerReceives' => $connectData['providerReceives'] ?? 0,
+                ]);
+            }
+
+            // ========================================
+            // STANDARD STRIPE CHECKOUT FLOW
+            // ========================================
+            $stripeSecretKey = $this->getStripeSecretKey();
+            Stripe::setApiKey($stripeSecretKey);
+
             // Generate success URL
             $successUrl = route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}';
             $successParams = [
@@ -186,14 +375,14 @@ class PaymentController extends Controller
             ];
             $fullSuccessUrl = $successUrl . '&' . http_build_query($successParams);
             $cancelUrl = route('book-appointment', ['serviceId' => $serviceId]);
-            
+
             // Create session with proper format for v7.0
             $sessionParams = [
                 'payment_method_types' => ['card'],
                 'line_items' => [
                     [
                         'name' => $serviceName ?: 'Beauty Service',
-                        'description' => ($paymentType === 'deposit') 
+                        'description' => ($paymentType === 'deposit')
                             ? ($depositPercentage > 0 ? $depositPercentage . '% Deposit' : 'Free Booking')
                             : 'Full Payment',
                         'amount' => max(50, $amountInCents), // Minimum 50 cents
@@ -204,11 +393,11 @@ class PaymentController extends Controller
                 'success_url' => $fullSuccessUrl,
                 'cancel_url' => $cancelUrl,
             ];
-            
+
             Log::info('Session params', $sessionParams);
-            
+
             $session = Session::create($sessionParams);
-            
+
             // Store booking data in session to retrieve after payment success
             $pendingBookingData = [
                 'bookingData' => $bookingData,
@@ -218,6 +407,7 @@ class PaymentController extends Controller
                 'serviceName' => $serviceName,
                 'serviceId' => $serviceId,
                 'servicePrice' => $servicePrice,
+                'useStripeConnect' => false,
             ];
             session(['pending_booking_' . $session->id => $pendingBookingData]);
 
@@ -226,7 +416,7 @@ class PaymentController extends Controller
             return response()->json(['id' => $session->id]);
 
         } catch (\Exception $e) {
-            Log::error('Stripe session creation failed', ['error' => $e->getMessage()]);
+            Log::error('Payment creation failed', ['error' => $e->getMessage()]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -236,55 +426,65 @@ class PaymentController extends Controller
         // Set Stripe API key dynamically based on payment status API
         $stripeSecretKey = $this->getStripeSecretKey();
         Stripe::setApiKey($stripeSecretKey);
-        
+
         // Log request data
         Log::info('Payment success callback received', $request->all());
 
+        // Support both Stripe Checkout (session_id) and Stripe Connect (payment_intent_id)
         $sessionId = $request->get('session_id');
+        $paymentIntentIdParam = $request->get('payment_intent_id');
         $serviceId = $request->get('serviceId');
         $serviceProviderId = $request->get('serviceProviderId');
         $paymentType = $request->get('paymentType');
-        
+
         // These might not be present if we're using the simplified flow
         $formData = $request->has('formData') ? json_decode($request->get('formData'), true) : [];
         $bookingData = $request->has('bookingData') ? json_decode($request->get('bookingData'), true) : [];
 
         try {
-            if (empty($sessionId)) {
-                throw new \Exception('Session ID is missing from the request.');
+            // Determine which identifier we have
+            $isStripeConnect = !empty($paymentIntentIdParam) && empty($sessionId);
+            $identifier = $isStripeConnect ? $paymentIntentIdParam : $sessionId;
+
+            if (empty($identifier)) {
+                throw new \Exception('Payment identifier is missing (session_id or payment_intent_id required).');
             }
-            
-            // Check if this is a free booking (session_id starts with "free-booking")
-            $isFreeBooking = strpos($sessionId, 'free-booking') === 0;
-            
+
+            // Check if this is a free booking (identifier starts with "free-booking")
+            $isFreeBooking = strpos($identifier, 'free-booking') === 0;
+
             if ($isFreeBooking) {
-                // For free bookings, skip Stripe session retrieval
-                Log::info('Free booking detected, skipping Stripe session retrieval', ['sessionId' => $sessionId]);
-                $paymentIntentId = $sessionId; // Use the free-booking transaction ID
+                // For free bookings, skip Stripe retrieval
+                Log::info('Free booking detected, skipping Stripe retrieval', ['identifier' => $identifier]);
+                $paymentIntentId = $identifier;
+            } elseif ($isStripeConnect) {
+                // Stripe Connect flow - we already have the payment intent ID
+                Log::info('Stripe Connect payment success', ['paymentIntentId' => $paymentIntentIdParam]);
+                $paymentIntentId = $paymentIntentIdParam;
             } else {
-                // Retrieve the session to get payment information
+                // Standard Stripe Checkout flow - retrieve session
                 Log::info('Retrieving Stripe session', ['sessionId' => $sessionId]);
                 $session = Session::retrieve($sessionId);
-                
+
                 if (!is_object($session)) {
                     throw new \Exception('Failed to retrieve a valid session object');
                 }
-                
+
                 Log::info('Session retrieved', ['sessionId' => $session->id]);
-                
+
                 // Use safe property access for Stripe v7.0 compatibility
                 $paymentIntentId = $sessionId; // Default to session ID
-                
+
                 // Try to get payment_intent if it exists
                 if (isset($session->payment_intent)) {
                     $paymentIntentId = $session->payment_intent;
                 }
             }
-            
-            Log::info('Payment ID', ['paymentIntentId' => $paymentIntentId]);
 
-            // Retrieve booking data from session
-            $sessionKey = 'pending_booking_' . $sessionId;
+            Log::info('Payment ID', ['paymentIntentId' => $paymentIntentId, 'isStripeConnect' => $isStripeConnect]);
+
+            // Retrieve booking data from session (key is based on the identifier)
+            $sessionKey = 'pending_booking_' . $identifier;
             $pendingBooking = session($sessionKey);
             
             if ($pendingBooking) {
@@ -304,7 +504,7 @@ class PaymentController extends Controller
                 
                 // Call bookService Cloud Function
                 Log::info('Submitting booking to Cloud Function', ['payload_keys' => array_keys($bookingPayload ?? [])]);
-                $bookResponse = Http::post('https://us-central1-beauty-984c8.cloudfunctions.net/bookService', $bookingPayload);
+                $bookResponse = Http::post(config('services.firebase.cloud_functions_url') . '/bookService', $bookingPayload);
                 
                 if ($bookResponse->ok()) {
                     Log::info('Booking created successfully');
