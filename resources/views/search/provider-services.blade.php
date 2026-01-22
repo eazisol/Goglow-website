@@ -1505,8 +1505,8 @@ document.addEventListener('DOMContentLoaded', function() {
             groupedServices[categoryName][subKey].push(service);
         });
         
-        // Sort categories
-        const sortedCategories = Array.from(categories).sort();
+        // Use categories in order of appearance (no sorting)
+        const sortedCategories = Array.from(categories);
         
         // Render category filter pills
         renderCategoryFilters(sortedCategories);
@@ -1564,12 +1564,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Build subcategory sections HTML
         let subcategorySectionsHTML = '';
         
-        // Sort subcategory keys, putting '__no_subcategory__' last
-        const subcategoryKeys = Object.keys(subcategoryGroups).sort((a, b) => {
-            if (a === '__no_subcategory__') return 1;
-            if (b === '__no_subcategory__') return -1;
-            return a.localeCompare(b);
-        });
+        // Get subcategory keys in insertion order (no sorting)
+        const subcategoryKeys = Object.keys(subcategoryGroups);
         
         subcategoryKeys.forEach(subKey => {
             const services = subcategoryGroups[subKey];
