@@ -1,0 +1,52 @@
+# Implementation Plan - Consecutive Booking Slots Validation
+
+The objective is to prevent users from selecting or booking time slots that don't have enough subsequent consecutive 15-minute segments available to accommodate the full service duration.
+
+## Proposed Changes
+
+### Localization (ARB Files)
+
+#### [MODIFY] [app_en.arb](file:///d:/Eazisols/goglow-mobileapp/lib/l10n/app_en.arb)
+#### [MODIFY] [app_fr.arb](file:///d:/Eazisols/goglow-mobileapp/lib/l10n/app_fr.arb)
+
+- Add a new localized string with parameters for a professional and friendly user experience.
+- **Key**: `insufficientConsecutiveSlots`
+- **Key**: `insufficientConsecutiveSlots`
+- **English**: `"The selected time doesn't have enough agent availability for this {duration}-minute service. Please try another slot."`
+- **French**: `"L'horaire sélectionné n'a pas assez de disponibilité d'agent pour ce service de {duration} minutes. Veuillez essayer un autre créneau."`
+
+### Mobile App (Flutter)
+
+#### [MODIFY] [date_time_selection_widget.dart](file:///d:/Eazisols/goglow-mobileapp/lib/features/customer/salon/view/widgets/date_time_selection_widget.dart)
+
+- Update the [buildSlotRow](file:///d:/Eazisols/goglow-mobileapp/lib/features/customer/salon/view/widgets/date_time_selection_widget.dart#600-690) helper to accept the full list of API slots (`result['slots']`).
+- Add a validation check in the `onPressed` callback of the slot buttons.
+- Calculate required slots: [(serviceDuration / 15).ceil()](file:///d:/Eazisols/goglow-mobileapp/lib/features/customer/salon/view/widgets/date_time_selection_widget.dart#60-765).
+- Logic:
+  1. Find the index of the selected slot in the full availability array.
+  2. Calculate required 15-minute segments: `requiredSlots = (serviceDuration / 15).ceil()`. This automatically handles non-standard durations (e.g., 65 mins = 5 slots, 125 mins = 9 slots, 50 mins = 4 slots, 95 mins = 7 slots).
+  3. Check the next `requiredSlots - 1` slots starting from the selected one.
+  4. If any of them are `available: false`, stop the selection.
+- Display the localized message using `context.localization.insufficientConsecutiveSlots(serviceDuration, requiredSlots)`.
+
+#### [MODIFY] [service_details_controller.dart](file:///d:/Eazisols/goglow-mobileapp/lib/features/customer/salon/controllers/service_details_controller.dart)
+
+- Ensure [validateBooking](file:///d:/Eazisols/goglow-mobileapp/lib/features/customer/salon/controllers/service_details_controller.dart#520-553) also performs this check for double-validation before proceeding to payment.
+
+## Verification Plan
+
+### Manual Verification
+1. **Scenario 1: Insufficient Consecutive Slots**
+   - Select a service with 90-minute duration.
+   - Choose a date where there is a 11:30 and 11:45 slot available, but 12:00 is blocked.
+   - Tap on the 11:30 slot.
+   - **Expected Result**: A snackbar appears saying "90 mins require 6 slots consecutively", and the slot is not selected.
+
+2. **Scenario 2: Dynamic Duration Scaling**
+   - Select a service with 75-minute duration.
+   - Try to book a slot that only has 4 consecutive 15-minute segments available.
+   - **Expected Result**: Message says "75 mins require 5 slots consecutively".
+
+3. **Scenario 3: Valid Booking**
+   - Select a slot with 8 consecutive segments available for a 120-minute service.
+   - **Expected Result**: Slot is selected successfully.
