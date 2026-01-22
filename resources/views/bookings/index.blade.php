@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (isDeposit) {
             const totalVal = booking.amount || 0;
-            const percentage = booking.depositPercentage ? (booking.depositPercentage / 100) : 0.15;
+            const percentage = booking.depositPercentage ? (booking.depositPercentage / 100) : 0;
             const paidVal = (totalVal * percentage).toFixed(2);
             const remainingVal = (totalVal - paidVal).toFixed(2);
             
