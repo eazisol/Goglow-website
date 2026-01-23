@@ -89,7 +89,7 @@
 <div class="search-results" style="margin: 0 0 50px 0;">
     <div class="container">
                             <div class="service-filter-pills" role="tablist" aria-label="Service categories" id="categoryFilterPills">
-                                <button type="button" class="filter-pill active" data-category="all" aria-current="true">All</button>
+                                <button type="button" class="filter-pill active" data-category="all" aria-current="true">{{ __('app.provider.filter_all') }}</button>
                                 {{-- Categories will be loaded via JavaScript from API --}}
                             </div>
 
@@ -135,8 +135,8 @@
             <div class="providers-empty-icon">
                 <i class="fas fa-search"></i>
                                     </div>
-            <h3>No providers found</h3>
-            <p>No providers found matching your search criteria. Try adjusting your search terms or location.</p>
+            <h3>{{ __('app.provider.no_providers_title') }}</h3>
+            <p>{{ __('app.provider.no_providers_message') }}</p>
                                     </div>
 
         <!-- Providers Grid Container -->

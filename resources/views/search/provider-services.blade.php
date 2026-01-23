@@ -166,7 +166,7 @@
                             </div> --}}
                             {{-- Category filter pills - will be populated by JavaScript --}}
                             <div class="service-filter-pills" role="tablist" aria-label="Service categories" style="margin-bottom:0!important;">
-                                <button type="button" class="filter-pill active" data-category="all" aria-current="true">All</button>
+                                <button type="button" class="filter-pill active" data-category="all" aria-current="true">{{ __('app.provider.filter_all') }}</button>
                                 {{-- Categories will be added here by JavaScript --}}
                             </div>
 
@@ -290,6 +290,7 @@
             <h3>{{ __('app.common.share_this_page') }}</h3>
             <button class="share-popup-close" aria-label="Close">&times;</button>
         </div>
+        
         <div class="share-popup-body">
             <div class="share-url-container">
                 <input type="text" id="shareUrlInput" class="share-url-input" readonly value="{{ url()->current() }}">

@@ -451,6 +451,9 @@ return [
         'no_time_availability' => 'Aucune disponibilité horaire',
         'closed' => 'Fermé',
         'salon_list' => 'Liste des salons',
+        'no_providers_title' => 'Aucun salon trouvé',
+        'no_providers_message' => 'Aucun prestataire ne correspond à vos critères de recherche. Veuillez modifier vos termes de recherche ou votre localisation.',
+        'filter_all' => 'Tout',
     ],
         // service page
     'service' => [

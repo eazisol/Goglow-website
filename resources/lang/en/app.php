@@ -451,6 +451,9 @@ return [
         'no_time_availability' => 'No time availability',
         'closed' => 'Closed',
         'salon_list' => 'Salon List',
+        'no_providers_title' => 'No providers found',
+        'no_providers_message' => 'No providers found matching your search criteria. Try adjusting your search terms or location.',
+        'filter_all' => 'All',
     ],
 
     // service page
