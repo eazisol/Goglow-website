@@ -124,6 +124,7 @@ class PaymentController extends Controller
             'customerPhone' => $params['customerPhone'] ?? null,
             'bookingId' => $params['bookingId'] ?? null,
             'isStripeConnectLive' => $settings['isStripeConnectLive'],
+            'idempotencyKey' => \Illuminate\Support\Str::uuid()->toString(),
         ];
 
         // Log sanitized payload (no PII)
