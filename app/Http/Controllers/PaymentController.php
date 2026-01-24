@@ -123,7 +123,7 @@ class PaymentController extends Controller
             'customerName' => $params['customerName'] ?? null,
             'customerPhone' => $params['customerPhone'] ?? null,
             'bookingId' => $params['bookingId'] ?? null,
-            'isStripeConnectLive' => $settings['isStripeConnectLive'],
+            'isStripeLive' => $settings['isStripeConnectLive'],
             'idempotencyKey' => \Illuminate\Support\Str::uuid()->toString(),
         ];
 
@@ -132,7 +132,7 @@ class PaymentController extends Controller
             'amount' => $payload['amount'],
             'totalBookingAmount' => $payload['totalBookingAmount'],
             'providerId' => $payload['providerId'],
-            'isStripeConnectLive' => $payload['isStripeConnectLive'],
+            'isStripeLive' => $payload['isStripeLive'],
         ]);
 
         try {
