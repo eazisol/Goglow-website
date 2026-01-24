@@ -38,12 +38,16 @@ return [
     ],
     
     'stripe' => [
-        // Test keys (used when isStripeLive = false)
+        // Regular Stripe keys
         'test_key' => env('TEST_STRIPE_PUBLISHABLE_KEY'),
         'test_secret' => env('TEST_STRIPE_SECRET_KEY'),
-        // Live keys (used when isStripeLive = true)
         'live_key' => env('LIVE_STRIPE_PUBLISHABLE_KEY'),
         'live_secret' => env('LIVE_STRIPE_SECRET_KEY'),
+        // Stripe Connect keys
+        'test_connect_key' => env('TEST_STRIPE_CONNECT_PUBLISHABLE_KEY'),
+        'test_connect_secret' => env('TEST_STRIPE_CONNECT_SECRET_KEY'),
+        'live_connect_key' => env('LIVE_STRIPE_CONNECT_PUBLISHABLE_KEY'),
+        'live_connect_secret' => env('LIVE_STRIPE_CONNECT_SECRET_KEY'),
     ],
 
 ];

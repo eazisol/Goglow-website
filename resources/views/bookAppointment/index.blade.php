@@ -2641,7 +2641,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Clear pending booking state before redirecting to Stripe
             localStorage.removeItem('pendingBookingState');
-            
+
             // Initialize Stripe object with dynamically fetched publishable key
             const stripePublishableKey = bookingBootstrap.stripeConfig?.publishableKey;
             if (!stripePublishableKey) {
@@ -2651,10 +2651,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             const stripe = Stripe(stripePublishableKey);
-            console.log('Redirecting to Stripe checkout with session ID:', session.id, '| Mode:', bookingBootstrap.stripeConfig?.isLive ? 'LIVE' : 'TEST');
-            
-            // For Stripe v7.0 compatibility
-            // Redirect to Stripe Checkout
+
+            // Both Stripe Connect and regular Stripe now use Checkout Sessions
+            // Always redirect to Stripe's hosted checkout page
+            const isStripeConnect = session.useStripeConnect || false;
+            console.log('Redirecting to Stripe checkout with session ID:', session.id, '| Mode:', bookingBootstrap.stripeConfig?.isLive ? 'LIVE' : 'TEST', '| Connect:', isStripeConnect);
+
             const result = await stripe.redirectToCheckout({
                 sessionId: session.id
             });
