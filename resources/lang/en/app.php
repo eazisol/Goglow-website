@@ -82,7 +82,8 @@ return [
         'service_amount' => 'Service Amount :',
         'deposit_amount' => 'Deposit :',
         'total_remaining' => 'Total Remaining :',
-        // 'slot_conflict_alert' => 'This service requires :duration minutes. The next available slots are not free. Please select an earlier time or a different slot.',
+        'slot_conflict_alert' => 'This service requires :duration minutes. The next available slots are not free. Please select an earlier time or a different slot.',
+        'please_accept_terms' => 'Please check this box to proceed.',
     ],
 
     // Schedule
