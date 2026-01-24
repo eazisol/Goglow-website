@@ -633,4 +633,13 @@ return [
         'go_home' => 'Go to Homepage',
         'go_back' => 'Go Back',
     ],
+    'payment' => [
+        'complete_payment' => 'Payment',
+        'pay_now' => 'Pay Now',
+        'processing' => 'Processing...',
+        'deposit_percent' => ':percent% Deposit',
+        'free_booking' => 'Free Booking',
+        'full_payment' => 'Full Payment',
+        'beauty_service' => 'Beauty Service',
+    ],
 ];

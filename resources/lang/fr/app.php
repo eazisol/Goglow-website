@@ -634,4 +634,13 @@ return [
         'go_home' => 'Aller à l\'accueil',
         'go_back' => 'Retour',
     ],
+    'payment' => [
+        'complete_payment' => 'Paiement',
+        'pay_now' => 'Payer',
+        'processing' => 'Traitement...',
+        'deposit_percent' => 'Acompte :percent%',
+        'free_booking' => 'Réservation gratuite',
+        'full_payment' => 'Paiement intégral',
+        'beauty_service' => 'Service beauté',
+    ],
 ];
