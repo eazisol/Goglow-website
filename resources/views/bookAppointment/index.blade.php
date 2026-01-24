@@ -2603,8 +2603,9 @@ document.addEventListener('DOMContentLoaded', function () {
             // For paid bookings, proceed with Stripe checkout
             const checkoutUrl = '{{ route("checkout.session") }}';
             console.log('Checkout URL:', checkoutUrl);
-            
-            const response = await fetch(checkoutUrl, {
+
+            // Use authFetch to handle token refresh on 401 errors
+            const response = await (window.authFetch || fetch)(checkoutUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2613,7 +2614,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({
                     serviceId,
                     serviceProviderId,
-                    serviceName, 
+                    serviceName,
                     servicePrice,
                     paymentType,
                     depositPercentage,
@@ -2622,7 +2623,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     bookingData: bookingPayload
                 })
             });
-            
+
             if (!response.ok) {
                 setButtonLoading(false);
                 const errorText = await response.text();
@@ -2688,8 +2689,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const stripe = Stripe(stripePublishableKey);
             console.log('Test button clicked, Stripe initialized | Mode:', bookingBootstrap.stripeConfig?.isLive ? 'LIVE' : 'TEST');
             
-            // Create a minimal test session directly
-            const response = await fetch('{{ route("checkout.session") }}', {
+            // Create a minimal test session directly (use authFetch for token refresh)
+            const response = await (window.authFetch || fetch)('{{ route("checkout.session") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

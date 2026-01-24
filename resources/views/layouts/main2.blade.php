@@ -127,6 +127,7 @@
     {{-- JavaScript Files - Load in correct order --}}
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/new-design.js') }}" defer></script>
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/professional-form.js') }}" defer></script>
+    <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-fetch.js') }}" defer></script>
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-modals.js') }}" defer></script>
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/book-appointment-auth.js') }}" defer></script>
 

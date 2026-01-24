@@ -202,6 +202,7 @@ class PaymentController extends Controller
             return [
                 'success' => false,
                 'error' => 'Cloud Function returned status ' . $response->status(),
+                'httpStatus' => $response->status(), // Pass through for auth error detection
             ];
         } catch (\Throwable $e) {
             Log::error('Stripe Connect Cloud Function exception', ['error' => $e->getMessage()]);
@@ -372,6 +373,11 @@ class PaymentController extends Controller
 
                 if (!$connectResult['success']) {
                     Log::error('Stripe Connect checkout creation failed', ['error' => $connectResult['error']]);
+                    // Return 401 if Cloud Function returned auth error (token expired)
+                    $httpStatus = $connectResult['httpStatus'] ?? 500;
+                    if ($httpStatus === 401 || $httpStatus === 403) {
+                        return response()->json(['error' => 'Authentication expired. Please refresh and try again.'], 401);
+                    }
                     return response()->json(['error' => $connectResult['error']], 500);
                 }
 
