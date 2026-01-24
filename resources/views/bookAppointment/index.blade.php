@@ -261,7 +261,9 @@
                                     <div class="form-group col-md-12 mb-4">
                                         <div class="terms-checkbox-wrapper" style="padding: 15px; background: rgba(255, 244, 248, 0.5); border: 1px solid rgba(213, 190, 198, 0.5); border-radius: 12px;">
                                             <div class="terms-checkbox-container" style="display: flex; align-items: flex-start; gap: 12px;">
-                                                <input type="checkbox" name="terms_conditions" id="termsConditions" class="terms-checkbox-input" required style="width: 20px; height: 20px; margin: 0; cursor: pointer; flex-shrink: 0; margin-top: 2px;">
+                                                <input type="checkbox" name="terms_conditions" id="termsConditions" class="terms-checkbox-input" required style="width: 20px; height: 20px; margin: 0; cursor: pointer; flex-shrink: 0; margin-top: 2px;"
+                                                    oninvalid="this.setCustomValidity('{{ __('app.booking.please_accept_terms') }}')"
+                                                    oninput="this.setCustomValidity('')">
                                                 <label class="terms-checkbox-label" for="termsConditions" style="font-size: 14px; line-height: 1.5; color: #2c0d18; cursor: pointer; margin: 0; flex: 1;">
                                                     {{ __('app.auth.i_agree_to') }} <a href="{{ url('/terms_condition') }}" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.terms') }}</a> {{ __('app.auth.and') }} <a href="{{ url('/privacy_policy') }}" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.privacy_policy') }}</a>
                                                 </label>
@@ -1680,10 +1682,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Helper function to wait for an element to appear (with timeout)
+    function waitForElement(selector, maxWait = 500, interval = 20) {
+        return new Promise((resolve) => {
+            const element = document.querySelector(selector);
+            if (element) {
+                resolve(element);
+                return;
+            }
+
+            const startTime = Date.now();
+            const checkInterval = setInterval(() => {
+                const el = document.querySelector(selector);
+                if (el) {
+                    clearInterval(checkInterval);
+                    resolve(el);
+                } else if (Date.now() - startTime >= maxWait) {
+                    clearInterval(checkInterval);
+                    resolve(null);
+                }
+            }, interval);
+        });
+    }
+
     // Helper function to restore time slot and payment options
     function restoreTimeSlotAndPayment(state, skipSlotClick = false) {
-        // Wait for period selection to render slots, then restore time slot
-        setTimeout(() => {
+        // Use requestAnimationFrame for faster DOM sync
+        requestAnimationFrame(() => {
             if (state.selectedDate && state.selectedTime && selectedDateInput && selectedTimeInput) {
                 // Check if mobile or desktop view
                 const isMobile = isMobileView();
@@ -1712,14 +1737,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const seeMoreBtn = document.querySelector('.mobile-see-more-btn');
                                 if (seeMoreBtn) {
                                     seeMoreBtn.click();
-                                    // Wait a bit for slots to render, then try again
-                                    setTimeout(() => {
-                                        timeSlot = document.querySelector(slotSelector);
-                                        if (timeSlot) {
-                                            timeSlot.click();
+                                    // Poll for slot to appear (faster than fixed timeout)
+                                    (async () => {
+                                        const expandedSlot = await waitForElement(slotSelector, 300, 20);
+                                        if (expandedSlot) {
+                                            expandedSlot.click();
                                             console.log('Restored mobile time slot selection (after expand):', state.selectedDate, state.selectedTime);
                                         }
-                                    }, 300);
+                                    })();
                                 }
                             }
                         } catch (e) {
@@ -1778,7 +1803,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Clear the saved state after successful restoration
             localStorage.removeItem('pendingBookingState');
             console.log('Booking state restored successfully');
-        }, skipSlotClick ? 100 : 500); // Shorter timeout if skipping slot click
+        });
     }
 
     // Function to restore pending booking state after login
@@ -1924,15 +1949,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Click the day column to trigger day selection
                         dayColumn.click();
                         console.log('Restored day selection:', state.selectedDate);
-                        
-                        // Wait for day selection to complete, then restore period
-                        // Check if mobile view - on mobile, slots are rendered immediately after day selection
+
+                        // Use async/await with polling instead of fixed timeouts
                         const isMobile = isMobileView();
-                        const waitTime = isMobile ? 500 : 300; // Longer timeout on mobile to ensure slots are rendered
-                        
-                        setTimeout(() => {
+
+                        (async () => {
                             if (isMobile) {
-                                // On mobile: slots are already rendered, just restore time slot and period highlight
+                                // On mobile: slots render sync, just need a frame for DOM update
+                                await new Promise(r => requestAnimationFrame(r));
+
+                                // Restore period highlight
                                 if (state.selectedPeriod && periodSelector) {
                                     selectedPeriod = state.selectedPeriod;
                                     const periodBtn = periodSelector.querySelector(`[data-period="${state.selectedPeriod}"]`);
@@ -1941,36 +1967,39 @@ document.addEventListener('DOMContentLoaded', function () {
                                         console.log('Restored period selection (mobile):', state.selectedPeriod);
                                     }
                                 }
-                                // Restore time slot directly (slots are already rendered on mobile)
+                                // Restore time slot directly
                                 restoreTimeSlotAndPayment(state, false);
                             } else {
-                                // On desktop: need to click period button to render slots
+                                // On desktop: wait for period selector to appear (means day selection complete)
+                                await waitForElement('.period-btn', 300, 20);
+
                                 if (state.selectedPeriod && periodSelector) {
                                     selectedPeriod = state.selectedPeriod;
                                     const periodBtn = periodSelector.querySelector(`[data-period="${state.selectedPeriod}"]`);
                                     if (periodBtn) {
-                                        // Check if day is selected before clicking period button
                                         const activeDay = document.querySelector('.day-column.active');
                                         if (activeDay && selectedDayInput.value) {
                                             periodBtn.click();
                                             console.log('Restored period selection (desktop):', state.selectedPeriod);
-                                            
-                                            // Wait for period selection to render slots, then restore time slot
+
+                                            // Wait for time slots to render (API call + DOM)
+                                            const slotSelector = `.time-slot[data-date="${state.selectedDate}"][data-time="${state.selectedTime}"]`;
+                                            await waitForElement(slotSelector, 800, 30);
+
                                             restoreTimeSlotAndPayment(state);
                                         } else {
                                             console.warn('Day not properly selected, cannot restore period');
-                                            restoreTimeSlotAndPayment(state, true); // Try to restore time slot anyway
+                                            restoreTimeSlotAndPayment(state, true);
                                         }
                                     } else {
                                         console.warn('Period button not found');
                                         restoreTimeSlotAndPayment(state, true);
                                     }
                                 } else {
-                                    // No period to restore, try to restore time slot directly
                                     restoreTimeSlotAndPayment(state, true);
                                 }
                             }
-                        }, waitTime);
+                        })();
                     } else {
                         console.warn('Day column not found for date:', state.selectedDate);
                         // Try to set values directly
@@ -1986,7 +2015,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.warn('No selected date in saved state');
                     restoreTimeSlotAndPayment(state, true);
                 }
-            }, 800); // Wait for agent selection to initialize
+            }, 100); // Reduced from 800ms - agent selection is sync, just need DOM to update
         } catch (error) {
             console.error('Error restoring pending booking state:', error);
             // Clear invalid state

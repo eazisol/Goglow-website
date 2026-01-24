@@ -81,6 +81,7 @@ return [
         'deposit_amount' => 'Acompte :',
         'total_remaining' => 'Total restant :',
         'slot_conflict_alert' => 'Ce service dure :duration minutes. Les créneaux suivants ne sont pas libres. Veuillez sélectionner une heure plus tôt ou un autre créneau.',
+        'please_accept_terms' => 'Veuillez cocher cette case pour continuer.',
     ],
 
     // Schedule
