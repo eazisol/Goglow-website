@@ -57,15 +57,27 @@
     }
 
     .menu a {
-      text-decoration: none;
+      text-decoration: none !important;
       font-size: 17px;
-    font-weight: 500;
-    color: #75213e;
+      font-weight: 500;
+      color: #75213e !important;
     }
 
-    .menu a.active {
+    .menu a:link,
+    .menu a:visited,
+    .menu a:hover,
+    .menu a:active {
+      color: #75213e !important;
+      text-decoration: none !important;
+    }
+
+    .menu a.active,
+    .menu a.active:link,
+    .menu a.active:visited,
+    .menu a.active:hover,
+    .menu a.active:active {
       font-weight: 600;
-      color: black;
+      color: #e50050 !important;
     }
 
     .plus {
@@ -289,4 +301,29 @@
         line-height: 16px;
       }
 
+    }
+
+    /* ---------- White Label Mode (Service Provider Pages) ---------- */
+    /* Only logo is visible, no navigation - keeps users focused on booking */
+    .navbar-white-label {
+      justify-content: flex-start;
+    }
+
+    .navbar-white-label .logo {
+      margin: 0;
+    }
+
+    .navbar-white-label .logo img {
+      width: 70px;
+    }
+
+    /* Hide menu toggle on mobile in white-label mode */
+    body.white-label-mode .menu-icon {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .navbar-white-label .logo img {
+        width: 55px;
+      }
     }

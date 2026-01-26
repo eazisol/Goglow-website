@@ -60,6 +60,7 @@ return [
         'sign_up_with_apple' => 'Sign up with Apple',
         'login_successful' => 'Login Successful!',
         'redirecting' => 'Redirecting...',
+        'already_logged_in' => 'You are already logged in',
         'login_to_glaura' => 'Login to Glaura',
         'login_options_desc' => 'Manage you account , book salon services , chat comment , follow and more.',
         'continue_with_google' => 'Continue with Google',
@@ -154,6 +155,26 @@ return [
         'log_out' => 'Log Out',
         'my_past_appointments' => 'My Past Appointments',
         'with' => 'with',
+        // Tabs
+        'upcoming' => 'Upcoming',
+        'past' => 'Past',
+        // Empty states
+        'no_upcoming_bookings' => 'No upcoming bookings',
+        'no_upcoming_bookings_desc' => "You don't have any upcoming appointments.",
+        'no_past_bookings' => 'No past bookings',
+        'no_past_bookings_desc' => "You don't have any past appointments yet.",
+        // Actions
+        'cancel' => 'Cancel',
+        'reschedule' => 'Reschedule',
+        'confirm_cancel' => 'Confirm Cancel',
+        'processing' => 'Processing...',
+        // Cancel modal
+        'cancel_booking_question' => 'Cancel booking?',
+        'full_refund_message' => 'A full refund of {amount} will be processed.',
+        'partial_refund_message' => 'A partial refund of {amount} will be processed. The deposit will be retained due to late cancellation.',
+        'no_refund_message' => 'The deposit will be retained due to late cancellation (less than 24 hours notice).',
+        'cancel_success' => 'Booking cancelled successfully',
+        'cancel_error' => 'Failed to cancel booking. Please try again.',
     ],
 
     // Common
@@ -464,6 +485,7 @@ return [
         'to_book' => 'To Book',
         'open' => 'Open',
         'until' => 'until',
+        'hours_of_operation' => 'Hours of operation',
         'back_to_search_page' => 'Back to Search Results',
         'reviews' => 'Reviews',
         'monday' => 'Monday',
