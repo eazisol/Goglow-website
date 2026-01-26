@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'firebase.auth' => \App\Http\Middleware\FirebaseAuthenticate::class,
         'firebase.auth.modal' => \App\Http\Middleware\FirebaseAuthenticateModal::class,
+        'firebase.api.auth' => \App\Http\Middleware\FirebaseApiAuthenticate::class,
         'set.locale' => \App\Http\Middleware\SetLocale::class,
     ];
 }
