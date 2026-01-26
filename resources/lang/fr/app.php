@@ -58,6 +58,7 @@ return [
         'sign_up_with_apple' => 'S\'inscrire avec Apple',
         'login_successful' => 'Connexion réussie!',
         'redirecting' => 'Redirection...',
+        'already_logged_in' => 'Vous êtes déjà connecté',
         'login_to_glaura' => 'Connexion à Glaura',
         'login_options_desc' => 'Gérez votre compte, réservez des services de salon, chattez avec des commentaires, suivez et plus encore.',
         'continue_with_google' => 'Continuer avec Google',
@@ -152,6 +153,26 @@ return [
         'log_out' => 'Se Déconnecter',
         'my_past_appointments' => 'Mes Rendez-vous Passés',
         'with' => 'avec',
+        // Tabs
+        'upcoming' => 'À venir',
+        'past' => 'Passés',
+        // Empty states
+        'no_upcoming_bookings' => 'Aucun rendez-vous à venir',
+        'no_upcoming_bookings_desc' => "Vous n'avez pas de rendez-vous à venir.",
+        'no_past_bookings' => 'Aucun rendez-vous passé',
+        'no_past_bookings_desc' => "Vous n'avez pas encore de rendez-vous passé.",
+        // Actions
+        'cancel' => 'Annuler',
+        'reschedule' => 'Reporter',
+        'confirm_cancel' => 'Confirmer l\'annulation',
+        'processing' => 'Traitement...',
+        // Cancel modal
+        'cancel_booking_question' => 'Annuler la réservation ?',
+        'full_refund_message' => 'Un remboursement complet de {amount} sera effectué.',
+        'partial_refund_message' => 'Un remboursement partiel de {amount} sera effectué. L\'acompte sera conservé en raison de l\'annulation tardive.',
+        'no_refund_message' => 'L\'acompte sera conservé en raison de l\'annulation tardive (moins de 24 heures de préavis).',
+        'cancel_success' => 'Réservation annulée avec succès',
+        'cancel_error' => 'Échec de l\'annulation de la réservation. Veuillez réessayer.',
     ],
 
     // Common
@@ -463,6 +484,7 @@ return [
         'to_book' => 'Pour réserver',
         'open' => 'Ouvert',
         'until' => 'jusquà',
+        'hours_of_operation' => "Horaires d'ouverture",
         'back_to_search_page' => 'Retour aux résultats de recherche',
         'reviews' => 'Avis',
         'monday' => 'Lundi',

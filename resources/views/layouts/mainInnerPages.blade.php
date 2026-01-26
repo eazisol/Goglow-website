@@ -100,15 +100,15 @@
     })();
 </script>
 </head>
-<body>
+<body class="{{ isset($whiteLabel) && $whiteLabel ? 'white-label-mode' : '' }}">
     <div class="container">
       <div class="nav-header-section">
-        @include('figmaDesign.header')
+        @include('figmaDesign.header', ['whiteLabel' => $whiteLabel ?? false])
       </div>
     </div>
               
                   @yield('content')
-                @if (!Route::is('terms_condition') && !Route::is('privacy_policy'))
+                @if (!Route::is('terms_condition') && !Route::is('privacy_policy') && !(isset($whiteLabel) && $whiteLabel))
                     @include('partials.footer-figma')
                 @endif
 

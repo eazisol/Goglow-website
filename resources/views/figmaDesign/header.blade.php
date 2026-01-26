@@ -1,11 +1,15 @@
     <!-- Navbar -->
-  <nav class="navbar">
+  @php
+    $isWhiteLabel = isset($whiteLabel) && $whiteLabel;
+  @endphp
+  <nav class="navbar {{ $isWhiteLabel ? 'navbar-white-label' : '' }}">
     <div class="logo">
               <!-- Logo Section -->
               <a href="{{ url('/') }}"><img src="{{ asset('images/images/LOGO-glaura-horizontal-couleur.png') }}" alt="GoGlow Logo" class="logo"></a>
-              
+
     </div>
 
+    @if(!$isWhiteLabel)
     <div class="menu">
       <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}" @if(request()->is('/')) aria-current="page" @endif>{{ __('app.nav.home') }}</a>
       <span class="plus">+</span>
@@ -43,6 +47,7 @@
               </form>
           @endif
     </div>
+    @endif
   </nav>
 
   <script>
@@ -98,7 +103,8 @@
   </script>
 
 
-  <!-- Sidebar for Mobile -->
+  <!-- Sidebar for Mobile (hidden in white-label mode) -->
+  @if(!$isWhiteLabel)
   <div class="sidebar" id="sidebar">
     <button class="close-btn" id="close-btn">
       <img src="{{ asset('images/images/Close.svg') }}" alt="close" style="width: 30px;">
@@ -112,6 +118,7 @@
     {{-- <button class="mobile-sidebar-button">BECOME A GLOWER <img src="{{ asset('images/images/Arrow_Right_white_color.svg') }}" alt="" width="16" height="16"></button> --}}
     <button class="cta-btn">BECOME A GLOWER →</button>
   </div>
+  @endif
 
 
   <script>

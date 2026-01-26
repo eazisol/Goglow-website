@@ -597,7 +597,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Check if user is already logged in
                 if (window.isAuthenticated) {
                     const successElement = document.getElementById('login-success');
-                    successElement.textContent = 'You are already logged in. Redirecting...';
+                    const t = window.authTranslations || {};
+                    successElement.textContent = (t.alreadyLoggedIn || 'You are already logged in') + '. ' + (t.redirecting || 'Redirecting...');
                     successElement.classList.remove('d-none');
 
                     // Get the stored book appointment URL from localStorage if available
@@ -659,7 +660,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
 
                             // Show success message with redirect indicator
-                            successElement.textContent = 'Login successful! Redirecting...';
+                            const trans = window.authTranslations || {};
+                            successElement.textContent = (trans.loginSuccessful || 'Login successful!') + ' ' + (trans.redirecting || 'Redirecting...');
                             successElement.classList.remove('d-none');
 
                             // Update window.isAuthenticated to prevent duplicate logins

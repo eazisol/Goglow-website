@@ -696,3 +696,13 @@
      }
  });
  </script>
+
+<!-- Auth Translations for JavaScript -->
+<script>
+    window.authTranslations = {
+        loginSuccessful: @json(__('app.auth.login_successful')),
+        redirecting: @json(__('app.auth.redirecting')),
+        alreadyLoggedIn: @json(__('app.auth.already_logged_in') ?: 'You are already logged in'),
+        loginFailed: @json(__('app.messages.login_error'))
+    };
+</script>

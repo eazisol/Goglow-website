@@ -239,6 +239,7 @@ class BookAppointmentController extends Controller
             'servicesSlug' => $servicesSlug,
             'userId' => $firebaseUid,
             'userData' => $userData,
+            'whiteLabel' => true, // Enable white-label mode for provider booking pages
         ]);
     }
 }
