@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 {{-- <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> --}}
-    {{-- <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" media="screen"> --}}
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
     {{-- <link href="{{ asset('css/slicknav.min.css') }}" rel="stylesheet"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css') }}"> --}}
     {{-- <link href="{{ asset('css/all.min.css') }}" rel="stylesheet" media="screen"> --}}
@@ -67,7 +67,7 @@
     // Keep only the current logged-in user's key
     (function() {
         try {
-            const currentUserId = {{ session()->has('firebase_uid') ? "'" . session('firebase_uid') . "'" : 'null' }};
+            const currentUserId = @json(session('firebase_uid'));
             if (currentUserId) {
                 const keysToRemove = [];
                 for (let i = 0; i < sessionStorage.length; i++) {
@@ -118,7 +118,7 @@
     <!-- General JS Scripts -->
     
   {{-- <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script> --}}
-  {{-- <script src="{{ asset('js/bootstrap.min.js') }}"></script> --}}
+  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
   {{-- <script src="{{ asset('js/validator.min.js') }}"></script> --}}
   {{-- <script src="{{ asset('js/jquery.slicknav.js') }}"></script> --}}
   {{-- <script src="{{ asset('js/swiper-bundle.min.js') }}"></script> --}}
@@ -194,7 +194,7 @@
 
   @yield('scripts')
   
-  {{-- @include('partials.auth-modals') --}}
+  @include('partials.auth-modals')
   
 </body>
 </html>

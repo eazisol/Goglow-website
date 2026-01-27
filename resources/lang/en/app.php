@@ -157,7 +157,7 @@ return [
         'with' => 'with',
         // Tabs
         'upcoming' => 'Upcoming',
-        'past' => 'Past',
+        'past' => 'Past/Cancelled',
         // Empty states
         'no_upcoming_bookings' => 'No upcoming bookings',
         'no_upcoming_bookings_desc' => "You don't have any upcoming appointments.",
@@ -175,6 +175,12 @@ return [
         'no_refund_message' => 'The deposit will be retained due to late cancellation (less than 24 hours notice).',
         'cancel_success' => 'Booking cancelled successfully',
         'cancel_error' => 'Failed to cancel booking. Please try again.',
+        // Reschedule
+        'confirm_reschedule' => 'Confirm Reschedule',
+        'reschedule_success' => 'Booking rescheduled successfully',
+        'reschedule_error' => 'Failed to reschedule booking. Please try again.',
+        'auth_required' => 'Authentication required',
+        'keep_booking' => 'Keep my booking',
     ],
 
     // Common

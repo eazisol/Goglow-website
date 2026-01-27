@@ -155,7 +155,7 @@ return [
         'with' => 'avec',
         // Tabs
         'upcoming' => 'À venir',
-        'past' => 'Passés',
+        'past' => 'Passés/Annulées',
         // Empty states
         'no_upcoming_bookings' => 'Aucun rendez-vous à venir',
         'no_upcoming_bookings_desc' => "Vous n'avez pas de rendez-vous à venir.",
@@ -163,7 +163,7 @@ return [
         'no_past_bookings_desc' => "Vous n'avez pas encore de rendez-vous passé.",
         // Actions
         'cancel' => 'Annuler',
-        'reschedule' => 'Reporter',
+        'reschedule' => 'Reprogrammer',
         'confirm_cancel' => 'Confirmer l\'annulation',
         'processing' => 'Traitement...',
         // Cancel modal
@@ -173,6 +173,12 @@ return [
         'no_refund_message' => 'L\'acompte sera conservé en raison de l\'annulation tardive (moins de 24 heures de préavis).',
         'cancel_success' => 'Réservation annulée avec succès',
         'cancel_error' => 'Échec de l\'annulation de la réservation. Veuillez réessayer.',
+        // Reschedule
+        'confirm_reschedule' => 'Confirmer la reprogrammation',
+        'reschedule_success' => 'Réservation reprogrammée avec succès',
+        'reschedule_error' => 'Échec de la reprogrammation. Veuillez réessayer.',
+        'auth_required' => 'Authentification requise',
+        'keep_booking' => 'Garder ma réservation',
     ],
 
     // Common

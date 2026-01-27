@@ -17,6 +17,11 @@ class AuthController extends Controller
 
     public function login(Request $request, FirebaseAuth $auth)
     {
+        // Clear any output buffer to ensure clean JSON response (prevents PHP warnings from corrupting JSON)
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $validated = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
@@ -101,6 +106,11 @@ class AuthController extends Controller
 
     public function register(Request $request, FirebaseAuth $auth)
     {
+        // Clear any output buffer to ensure clean JSON response (prevents PHP warnings from corrupting JSON)
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -173,6 +183,11 @@ class AuthController extends Controller
 
     public function oauthLogin(Request $request, FirebaseAuth $auth)
     {
+        // Clear any output buffer to ensure clean JSON response (prevents PHP warnings from corrupting JSON)
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $validated = $request->validate([
             'idToken' => ['required', 'string'],
             'isSignup' => ['boolean'],
