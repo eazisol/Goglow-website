@@ -345,6 +345,15 @@
 <script>
   // OAuth button handlers - embedded directly in template to ensure they work
   (function() {
+    // Clear stale redirect URLs when on home page (users are not in a booking flow)
+    const currentPath = window.location.pathname;
+    const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+    if (isHomePage) {
+      localStorage.removeItem('book_appointment_url');
+      localStorage.removeItem('login_redirect_url');
+      console.log('Cleared stale redirect URLs (on home page)');
+    }
+
     function setupOAuthHandlers() {
       
       // Google Sign-In button (Login)
@@ -405,9 +414,23 @@
                 localStorage.removeItem('book_appointment_url');
                 localStorage.removeItem('login_redirect_url');
 
+                // Determine redirect - stay on current page if on home page with no explicit redirect
+                const currentPath = window.location.pathname;
+                const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+                let redirectUrl;
+                if (bookAppointmentUrl) {
+                  redirectUrl = bookAppointmentUrl;
+                } else if (loginRedirectUrl) {
+                  redirectUrl = loginRedirectUrl;
+                } else if (isHomePage) {
+                  redirectUrl = window.location.href;
+                } else {
+                  redirectUrl = data.redirect || window.location.href;
+                }
+
                 // Redirect after a short delay to show the success message
                 setTimeout(function() {
-                  window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
+                  window.location.href = redirectUrl;
                 }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
@@ -483,9 +506,23 @@
                 localStorage.removeItem('book_appointment_url');
                 localStorage.removeItem('login_redirect_url');
 
+                // Determine redirect - stay on current page if on home page with no explicit redirect
+                const currentPath = window.location.pathname;
+                const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+                let redirectUrl;
+                if (bookAppointmentUrl) {
+                  redirectUrl = bookAppointmentUrl;
+                } else if (loginRedirectUrl) {
+                  redirectUrl = loginRedirectUrl;
+                } else if (isHomePage) {
+                  redirectUrl = window.location.href;
+                } else {
+                  redirectUrl = data.redirect || window.location.href;
+                }
+
                 // Redirect after a short delay to show the success message
                 setTimeout(function() {
-                  window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
+                  window.location.href = redirectUrl;
                 }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
@@ -561,9 +598,23 @@
                 localStorage.removeItem('book_appointment_url');
                 localStorage.removeItem('login_redirect_url');
 
+                // Determine redirect - stay on current page if on home page with no explicit redirect
+                const currentPath = window.location.pathname;
+                const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+                let redirectUrl;
+                if (bookAppointmentUrl) {
+                  redirectUrl = bookAppointmentUrl;
+                } else if (loginRedirectUrl) {
+                  redirectUrl = loginRedirectUrl;
+                } else if (isHomePage) {
+                  redirectUrl = window.location.href;
+                } else {
+                  redirectUrl = data.redirect || window.location.href;
+                }
+
                 // Redirect after a short delay to show the success message
                 setTimeout(function() {
-                  window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
+                  window.location.href = redirectUrl;
                 }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
@@ -639,9 +690,23 @@
                 localStorage.removeItem('book_appointment_url');
                 localStorage.removeItem('login_redirect_url');
 
+                // Determine redirect - stay on current page if on home page with no explicit redirect
+                const currentPath = window.location.pathname;
+                const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+                let redirectUrl;
+                if (bookAppointmentUrl) {
+                  redirectUrl = bookAppointmentUrl;
+                } else if (loginRedirectUrl) {
+                  redirectUrl = loginRedirectUrl;
+                } else if (isHomePage) {
+                  redirectUrl = window.location.href;
+                } else {
+                  redirectUrl = data.redirect || window.location.href;
+                }
+
                 // Redirect after a short delay to show the success message
                 setTimeout(function() {
-                  window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
+                  window.location.href = redirectUrl;
                 }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');

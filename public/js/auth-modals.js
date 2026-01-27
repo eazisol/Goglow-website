@@ -117,6 +117,16 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Auth modals script loaded');
         console.log('Authentication status:', window.isAuthenticated);
         console.log('Show auth modal:', window.showAuthModal);
+
+        // Clear stale booking redirect URLs when on home page
+        // Users on the home page are not in a booking flow
+        const currentPath = window.location.pathname;
+        const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+        if (isHomePage) {
+            localStorage.removeItem('book_appointment_url');
+            localStorage.removeItem('login_redirect_url');
+            console.log('Cleared stale redirect URLs (on home page)');
+        }
         // Modal toggle functions
         const loginModalElement = document.getElementById('loginModal');
         const signupModalElement = document.getElementById('signupModal');
@@ -616,9 +626,24 @@ document.addEventListener('DOMContentLoaded', function () {
                     const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
                     const loginRedirectUrl = localStorage.getItem('login_redirect_url');
 
-                    // Redirect immediately
+                    // Determine redirect URL - stay on home page if no explicit redirect
+                    const currentPath = window.location.pathname;
+                    const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+
+                    let redirectUrl;
+                    if (bookAppointmentUrl) {
+                        redirectUrl = bookAppointmentUrl;
+                    } else if (loginRedirectUrl) {
+                        redirectUrl = loginRedirectUrl;
+                    } else if (isHomePage) {
+                        redirectUrl = window.location.href;
+                    } else {
+                        redirectUrl = window.location.href;
+                    }
+
+                    // Redirect
                     setTimeout(() => {
-                        window.location.href = bookAppointmentUrl || loginRedirectUrl || '/';
+                        window.location.href = redirectUrl;
                         localStorage.removeItem('book_appointment_url');
                         localStorage.removeItem('login_redirect_url');
                     }, 500);
@@ -684,10 +709,29 @@ document.addEventListener('DOMContentLoaded', function () {
                             const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
                             const loginRedirectUrl = localStorage.getItem('login_redirect_url');
 
-                            // Redirect immediately
+                            // Determine redirect URL
+                            // If on home page and no explicit booking flow, stay on current page
+                            const currentPath = window.location.pathname;
+                            const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+
+                            let redirectUrl;
+                            if (bookAppointmentUrl) {
+                                // Explicit booking flow - redirect to booking
+                                redirectUrl = bookAppointmentUrl;
+                            } else if (loginRedirectUrl) {
+                                // Explicit redirect set - use it
+                                redirectUrl = loginRedirectUrl;
+                            } else if (isHomePage) {
+                                // On home page with no explicit redirect - stay on home page
+                                redirectUrl = window.location.href;
+                            } else {
+                                // Other pages - use server redirect or current page
+                                redirectUrl = data.redirect || window.location.href;
+                            }
+
+                            // Redirect
                             setTimeout(() => {
-                                // Priority: book_appointment_url > login_redirect_url > data.redirect > home
-                                window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
+                                window.location.href = redirectUrl;
                                 // Clear stored URLs after using them
                                 localStorage.removeItem('book_appointment_url');
                                 localStorage.removeItem('login_redirect_url');
@@ -1068,8 +1112,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (loginModal) loginModal.hide();
                     if (signupModal) signupModal.hide();
 
-                    // Redirect - priority: book_appointment_url > login_redirect_url > data.redirect > home
-                    const redirectUrl = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
+                    // Determine redirect URL
+                    // If on home page and no explicit booking flow, stay on current page
+                    const currentPath = window.location.pathname;
+                    const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+
+                    let redirectUrl;
+                    if (bookAppointmentUrl) {
+                        // Explicit booking flow - redirect to booking
+                        redirectUrl = bookAppointmentUrl;
+                    } else if (loginRedirectUrl) {
+                        // Explicit redirect set - use it
+                        redirectUrl = loginRedirectUrl;
+                    } else if (isHomePage) {
+                        // On home page with no explicit redirect - stay on home page
+                        redirectUrl = window.location.href;
+                    } else {
+                        // Other pages - use server redirect or current page
+                        redirectUrl = data.redirect || window.location.href;
+                    }
+
                     localStorage.removeItem('book_appointment_url');
                     localStorage.removeItem('login_redirect_url');
                     window.location.href = redirectUrl;
