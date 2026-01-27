@@ -175,6 +175,14 @@ return [
         'no_refund_message' => 'The deposit will be retained due to late cancellation (less than 24 hours notice).',
         'cancel_success' => 'Booking cancelled successfully',
         'cancel_error' => 'Failed to cancel booking. Please try again.',
+        'refund_error' => 'Failed to process refund',
+        // API errors
+        'fetch_error' => 'Failed to fetch bookings',
+        'not_found' => 'Booking not found',
+        'already_cancelled' => 'Booking is already cancelled',
+        'completed_cannot_cancel' => 'Completed bookings cannot be cancelled',
+        'only_active_reschedule' => 'Only active bookings can be rescheduled',
+        'reschedule_24h_advance' => 'Bookings can only be rescheduled at least 24 hours in advance',
         // Reschedule
         'confirm_reschedule' => 'Confirm Reschedule',
         'reschedule_success' => 'Booking rescheduled successfully',

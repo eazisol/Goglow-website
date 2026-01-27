@@ -121,7 +121,7 @@ class BookingApiController extends Controller
                 ]);
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to fetch bookings',
+                    'message' => __('app.booking.fetch_error'),
                 ], 500);
             }
 
@@ -200,7 +200,7 @@ class BookingApiController extends Controller
             if (!$booking) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Booking not found',
+                    'message' => __('app.booking.not_found'),
                 ], 404);
             }
 
@@ -215,7 +215,7 @@ class BookingApiController extends Controller
             Log::error('Error fetching booking', ['error' => $e->getMessage(), 'bookingId' => $id]);
             return response()->json([
                 'success' => false,
-                'message' => 'Error fetching booking',
+                'message' => __('app.booking.fetch_error'),
             ], 500);
         }
     }
@@ -240,7 +240,7 @@ class BookingApiController extends Controller
             if (!$booking) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Booking not found',
+                    'message' => __('app.booking.not_found'),
                 ], 404);
             }
 
@@ -249,14 +249,14 @@ class BookingApiController extends Controller
             if (in_array($status, [2, 3, 6])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Booking is already cancelled',
+                    'message' => __('app.booking.already_cancelled'),
                 ], 400);
             }
 
             if (in_array($status, [5, 7, 8]) || $status === 'Review') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Completed bookings cannot be cancelled',
+                    'message' => __('app.booking.completed_cannot_cancel'),
                 ], 400);
             }
 
@@ -270,7 +270,7 @@ class BookingApiController extends Controller
                 if (!$refundSuccess) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Failed to process refund',
+                        'message' => __('app.booking.refund_error'),
                     ], 500);
                 }
             }
@@ -295,7 +295,7 @@ class BookingApiController extends Controller
                 ]);
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to cancel booking',
+                    'message' => __('app.booking.cancel_error'),
                 ], 500);
             }
 
@@ -304,7 +304,7 @@ class BookingApiController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Booking cancelled successfully',
+                'message' => __('app.booking.cancel_success'),
                 'refundAmount' => $refundAmount,
                 'refundInfo' => $refundInfo,
             ]);
@@ -333,10 +333,14 @@ class BookingApiController extends Controller
         $request->validate([
             'booking_time' => 'required|date',
             'bookTime' => 'nullable|string', // e.g., "14:30"
+            'agentId' => 'nullable|string',
+            'agentName' => 'nullable|string',
         ]);
 
         $newBookingTime = $request->input('booking_time');
         $newBookTime = $request->input('bookTime');
+        $newAgentId = $request->input('agentId');
+        $newAgentName = $request->input('agentName');
 
         try {
             // Fetch booking using getBookingsByUserId and find the specific booking
@@ -345,7 +349,7 @@ class BookingApiController extends Controller
             if (!$booking) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Booking not found',
+                    'message' => __('app.booking.not_found'),
                 ], 404);
             }
 
@@ -354,7 +358,7 @@ class BookingApiController extends Controller
             if (!in_array($status, [0, 1, 4, 9])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Only active bookings can be rescheduled',
+                    'message' => __('app.booking.only_active_reschedule'),
                 ], 400);
             }
 
@@ -363,28 +367,46 @@ class BookingApiController extends Controller
             if ($bookingTime && $bookingTime->diffInHours(now()) < 24) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Bookings can only be rescheduled at least 24 hours in advance',
+                    'message' => __('app.booking.reschedule_24h_advance'),
                 ], 400);
             }
 
-            // Update services array with new startTime (matching mobile app logic)
+            // Update services array with new startTime and agent (matching mobile app logic)
             $updatedServices = $booking['services'] ?? [];
             foreach ($updatedServices as &$service) {
                 $service['startTime'] = $newBookingTime;
+                // Update agent if provided
+                if ($newAgentId !== null) {
+                    $service['agentId'] = $newAgentId;
+                }
+                if ($newAgentName !== null) {
+                    $service['agentName'] = $newAgentName;
+                }
             }
             unset($service); // Break reference
 
-            // Update booking time using updateDoc Cloud Function
+            // Build update data
+            $updateData = [
+                'booking_time' => $newBookingTime,
+                'bookTime' => $newBookTime,
+                'services' => $updatedServices,
+            ];
+
+            // Add agent fields if provided
+            if ($newAgentId !== null) {
+                $updateData['agentId'] = $newAgentId;
+            }
+            if ($newAgentName !== null) {
+                $updateData['agentName'] = $newAgentName;
+            }
+
+            // Update booking using updateDoc Cloud Function
             $rescheduleResponse = Http::timeout(30)
                 ->withHeaders(['Content-Type' => 'application/json'])
                 ->put($this->getCloudFunctionsUrl() . '/updateDoc', [
                     'collection' => 'bookings',
                     'doc' => $id,
-                    'data' => [
-                        'booking_time' => $newBookingTime,
-                        'bookTime' => $newBookTime,
-                        'services' => $updatedServices,
-                    ],
+                    'data' => $updateData,
                 ]);
 
             if (!$rescheduleResponse->ok()) {
@@ -394,7 +416,7 @@ class BookingApiController extends Controller
                 ]);
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to reschedule booking',
+                    'message' => __('app.booking.reschedule_error'),
                 ], 500);
             }
 
@@ -403,8 +425,10 @@ class BookingApiController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Booking rescheduled successfully',
+                'message' => __('app.booking.reschedule_success'),
                 'newBookingTime' => $newBookingTime,
+                'newAgentId' => $newAgentId,
+                'newAgentName' => $newAgentName,
             ]);
         } catch (\Throwable $e) {
             Log::error('Error rescheduling booking', ['error' => $e->getMessage(), 'bookingId' => $id]);

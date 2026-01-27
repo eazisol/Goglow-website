@@ -173,6 +173,14 @@ return [
         'no_refund_message' => 'L\'acompte sera conservé en raison de l\'annulation tardive (moins de 24 heures de préavis).',
         'cancel_success' => 'Réservation annulée avec succès',
         'cancel_error' => 'Échec de l\'annulation de la réservation. Veuillez réessayer.',
+        'refund_error' => 'Échec du traitement du remboursement',
+        // API errors
+        'fetch_error' => 'Échec de la récupération des réservations',
+        'not_found' => 'Réservation introuvable',
+        'already_cancelled' => 'La réservation est déjà annulée',
+        'completed_cannot_cancel' => 'Les réservations terminées ne peuvent pas être annulées',
+        'only_active_reschedule' => 'Seules les réservations actives peuvent être reprogrammées',
+        'reschedule_24h_advance' => 'Les réservations ne peuvent être reprogrammées qu\'au moins 24 heures à l\'avance',
         // Reschedule
         'confirm_reschedule' => 'Confirmer la reprogrammation',
         'reschedule_success' => 'Réservation reprogrammée avec succès',

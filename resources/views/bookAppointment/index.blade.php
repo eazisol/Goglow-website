@@ -2412,6 +2412,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     body: JSON.stringify({
                         booking_time: localDate.toISOString(),
                         bookTime: bookTime,
+                        agentId: chosenAgent?.id || null,
+                        agentName: chosenAgent?.name || null,
                     })
                 });
 
