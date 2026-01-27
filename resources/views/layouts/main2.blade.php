@@ -146,6 +146,39 @@
   <noscript><link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet"></noscript>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
+  {{-- Firebase JS SDK for OAuth --}}
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" onerror="console.error('Failed to load firebase-app-compat.js')"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" onerror="console.error('Failed to load firebase-auth-compat.js')"></script>
+  <script>
+    // Initialize Firebase
+    if (typeof firebase === 'undefined') {
+      console.error('Firebase SDK not loaded!');
+    } else {
+      const apiKey = '{{ config("services.firebase.web_api_key") }}';
+      const authDomain = '{{ config("services.firebase.auth_domain") }}';
+      const projectId = '{{ config("services.firebase.project_id") }}';
+
+      if (!apiKey || !authDomain || !projectId) {
+        console.error('Firebase config values are missing!');
+      } else {
+        const firebaseConfig = {
+          apiKey: apiKey,
+          authDomain: authDomain,
+          projectId: projectId,
+        };
+
+        try {
+          if (firebase.apps.length === 0) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          window.firebaseAuth = firebase.auth();
+        } catch (error) {
+          console.error('Firebase initialization error:', error);
+        }
+      }
+    }
+  </script>
+
   @yield('scripts')
   
   @include('partials.auth-modals')

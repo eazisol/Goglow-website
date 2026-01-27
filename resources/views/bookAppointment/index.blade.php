@@ -52,11 +52,11 @@
                                 @if(isset($selectedService['discounted_price']) && isset($selectedService['service_price']) && $selectedService['discounted_price'] < $selectedService['service_price'])
                                     <span class="old-price">{{ $selectedService['service_price'] }}€</span>
                                 @endif
-                                @if(isset($selectedService['duration_minutes']) && $selectedService['duration_minutes'] > 0)
+                                {{-- @if(isset($selectedService['duration_minutes']) && $selectedService['duration_minutes'] > 0)
                                      <span class="service-duration" style="font-size: 14px; font-weight: 400; color: #6c757d; margin-left: 8px;">
                                         <i class="fa fa-clock-o" aria-hidden="true" style="margin-right: 3px;"></i> {{ $selectedService['duration_minutes'] }} min
                                     </span>
-                                @endif
+                                @endif --}}
                             </p>
                             @if(!empty($selectedService['service_details']))
                                 @php
@@ -888,44 +888,44 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    // Check if enough consecutive slots are available for service duration
-    // Returns true if booking can proceed, false if there's a conflict
-    function hasEnoughConsecutiveSlots(selectedTime, availableSlots, durationMinutes) {
-        // If no duration specified or no slots, allow (fallback)
-        if (!durationMinutes || durationMinutes <= 0) return true;
-        if (!availableSlots || availableSlots.length === 0) return true;
+    // // Check if enough consecutive slots are available for service duration
+    // // Returns true if booking can proceed, false if there's a conflict
+    // function hasEnoughConsecutiveSlots(selectedTime, availableSlots, durationMinutes) {
+    //     // If no duration specified or no slots, allow (fallback)
+    //     if (!durationMinutes || durationMinutes <= 0) return true;
+    //     if (!availableSlots || availableSlots.length === 0) return true;
         
-        const slotIntervalMinutes = 15;
-        // Calculate how many consecutive slots are needed
-        // e.g., 45 min service needs slots at 0, 15, 30 mins = 3 slots
-        const requiredSlots = Math.ceil(durationMinutes / slotIntervalMinutes);
+    //     const slotIntervalMinutes = 15;
+    //     // Calculate how many consecutive slots are needed
+    //     // e.g., 45 min service needs slots at 0, 15, 30 mins = 3 slots
+    //     const requiredSlots = Math.ceil(durationMinutes / slotIntervalMinutes);
         
-        // If only 1 slot required, no consecutive check needed
-        if (requiredSlots <= 1) return true;
+    //     // If only 1 slot required, no consecutive check needed
+    //     if (requiredSlots <= 1) return true;
         
-        // Get list of available time strings
-        const availableTimes = availableSlots.map(s => s.time);
+    //     // Get list of available time strings
+    //     const availableTimes = availableSlots.map(s => s.time);
         
-        // Parse selected time
-        const [startHour, startMinute] = selectedTime.split(':').map(Number);
-        const startTotalMinutes = startHour * 60 + startMinute;
+    //     // Parse selected time
+    //     const [startHour, startMinute] = selectedTime.split(':').map(Number);
+    //     const startTotalMinutes = startHour * 60 + startMinute;
         
-        // Check each required consecutive slot (starting from the selected slot)
-        for (let i = 0; i < requiredSlots; i++) {
-            const checkTotalMinutes = startTotalMinutes + (i * slotIntervalMinutes);
-            const checkHour = Math.floor(checkTotalMinutes / 60);
-            const checkMin = checkTotalMinutes % 60;
-            const checkTime = `${checkHour}:${String(checkMin).padStart(2, '0')}`;
+    //     // Check each required consecutive slot (starting from the selected slot)
+    //     for (let i = 0; i < requiredSlots; i++) {
+    //         const checkTotalMinutes = startTotalMinutes + (i * slotIntervalMinutes);
+    //         const checkHour = Math.floor(checkTotalMinutes / 60);
+    //         const checkMin = checkTotalMinutes % 60;
+    //         const checkTime = `${checkHour}:${String(checkMin).padStart(2, '0')}`;
             
-            if (!availableTimes.includes(checkTime)) {
-                console.log(`Consecutive slot validation failed: ${checkTime} is not available`);
-                return false; // Missing consecutive slot
-            }
-        }
+    //         if (!availableTimes.includes(checkTime)) {
+    //             console.log(`Consecutive slot validation failed: ${checkTime} is not available`);
+    //             return false; // Missing consecutive slot
+    //         }
+    //     }
         
-        console.log(`Consecutive slot validation passed for ${selectedTime} (${requiredSlots} slots needed)`);
-        return true;
-    }
+    //     console.log(`Consecutive slot validation passed for ${selectedTime} (${requiredSlots} slots needed)`);
+    //     return true;
+    // }
     
     // Keep function unused (no filtering). Left in place for future use if needed.
     function filterTimeSlotsByDay(dayKey) {}
@@ -1027,29 +1027,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Add click handler for slot selection
             timeSlot.addEventListener('click', function() {
-                const clickedTime = this.dataset.time;
-                const serviceDuration = bookingBootstrap.service?.duration_minutes || 0;
+                // const clickedTime = this.dataset.time;
+                // const serviceDuration = bookingBootstrap.service?.duration_minutes || 0;
                 
-                // Validate consecutive slot availability
-                if (!hasEnoughConsecutiveSlots(clickedTime, cachedAvailableSlots, serviceDuration)) {
-                    const requiredSlots = Math.ceil(serviceDuration / 15);
-                    const alertMsg = `{{ __('app.booking.slot_conflict_alert') }}`.replace(':duration', serviceDuration);
+                // // Validate consecutive slot availability
+                // if (!hasEnoughConsecutiveSlots(clickedTime, cachedAvailableSlots, serviceDuration)) {
+                //     const requiredSlots = Math.ceil(serviceDuration / 15);
+                //     const alertMsg = `{{ __('app.booking.slot_conflict_alert') }}`.replace(':duration', serviceDuration);
                     
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({
-                            icon: 'warning',
-                            text: alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`,
-                            confirmButtonColor: '#000000',
-                            confirmButtonText: 'OK',
-                            customClass: {
-                                confirmButton: 'btn btn-dark'
-                            }
-                        });
-                    } else {
-                        alert(alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`);
-                    }
-                    return; // Don't proceed with selection
-                }
+                //     if (typeof Swal !== 'undefined') {
+                //         Swal.fire({
+                //             icon: 'warning',
+                //             text: alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`,
+                //             confirmButtonColor: '#000000',
+                //             confirmButtonText: 'OK',
+                //             customClass: {
+                //                 confirmButton: 'btn btn-dark'
+                //             }
+                //         });
+                //     } else {
+                //         alert(alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`);
+                //     }
+                //     return; // Don't proceed with selection
+                // }
                 
                 // Deselect any previously selected slot
                 document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
@@ -1204,28 +1204,28 @@ document.addEventListener('DOMContentLoaded', function () {
                         
                         // Add click handler for slot selection
                         timeSlot.addEventListener('click', function() {
-                            const clickedTime = this.dataset.time;
-                            const serviceDuration = bookingBootstrap.service?.duration_minutes || 0;
+                            // const clickedTime = this.dataset.time;
+                            // const serviceDuration = bookingBootstrap.service?.duration_minutes || 0;
                             
-                            // Validate consecutive slot availability
-                            if (!hasEnoughConsecutiveSlots(clickedTime, availableSlots, serviceDuration)) {
-                                const alertMsg = `{{ __('app.booking.slot_conflict_alert') }}`.replace(':duration', serviceDuration);
+                            // // Validate consecutive slot availability
+                            // if (!hasEnoughConsecutiveSlots(clickedTime, availableSlots, serviceDuration)) {
+                            //     const alertMsg = `{{ __('app.booking.slot_conflict_alert') }}`.replace(':duration', serviceDuration);
                                 
-                                if (typeof Swal !== 'undefined') {
-                                    Swal.fire({
-                                        icon: 'warning',
-                                        text: alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`,
-                                        confirmButtonColor: '#000000',
-                                        confirmButtonText: 'OK',
-                                        customClass: {
-                                            confirmButton: 'btn btn-dark'
-                                        }
-                                    });
-                                } else {
-                                    alert(alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`);
-                                }
-                                return; // Don't proceed with selection
-                            }
+                            //     if (typeof Swal !== 'undefined') {
+                            //         Swal.fire({
+                            //             icon: 'warning',
+                            //             text: alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`,
+                            //             confirmButtonColor: '#000000',
+                            //             confirmButtonText: 'OK',
+                            //             customClass: {
+                            //                 confirmButton: 'btn btn-dark'
+                            //             }
+                            //         });
+                            //     } else {
+                            //         alert(alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`);
+                            //     }
+                            //     return; // Don't proceed with selection
+                            // }
                             
                             // Deselect any previously selected slot
                             document.querySelectorAll('.mobile-time-slot, .time-slot').forEach(s => s.classList.remove('selected'));
@@ -1313,31 +1313,31 @@ document.addEventListener('DOMContentLoaded', function () {
                                 
                                 // Add click handler for slot selection
                                 timeSlot.addEventListener('click', function() {
-                                    const clickedTime = this.dataset.time;
-                                    const serviceDuration = bookingBootstrap.service?.duration_minutes || 0;
+                                    // const clickedTime = this.dataset.time;
+                                    // const serviceDuration = bookingBootstrap.service?.duration_minutes || 0;
                                     
-                                    // Use availableSlots from closure (contains ALL slots for the day) for correct boundary checking
-                                    // box container.dataset.allSlots only contains filtered slots for this period
+                                    // // Use availableSlots from closure (contains ALL slots for the day) for correct boundary checking
+                                    // // box container.dataset.allSlots only contains filtered slots for this period
                                     
-                                    // Validate consecutive slot availability
-                                    if (!hasEnoughConsecutiveSlots(clickedTime, availableSlots, serviceDuration)) {
-                                        const alertMsg = `{{ __('app.booking.slot_conflict_alert') }}`.replace(':duration', serviceDuration);
+                                    // // Validate consecutive slot availability
+                                    // if (!hasEnoughConsecutiveSlots(clickedTime, availableSlots, serviceDuration)) {
+                                    //     const alertMsg = `{{ __('app.booking.slot_conflict_alert') }}`.replace(':duration', serviceDuration);
                                         
-                                        if (typeof Swal !== 'undefined') {
-                                            Swal.fire({
-                                                icon: 'warning',
-                                                text: alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`,
-                                                confirmButtonColor: '#000000',
-                                                confirmButtonText: 'OK',
-                                                customClass: {
-                                                    confirmButton: 'btn btn-dark'
-                                                }
-                                            });
-                                        } else {
-                                            alert(alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`);
-                                        }
-                                        return; // Don't proceed with selection
-                                    }
+                                    //     if (typeof Swal !== 'undefined') {
+                                    //         Swal.fire({
+                                    //             icon: 'warning',
+                                    //             text: alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`,
+                                    //             confirmButtonColor: '#000000',
+                                    //             confirmButtonText: 'OK',
+                                    //             customClass: {
+                                    //                 confirmButton: 'btn btn-dark'
+                                    //             }
+                                    //         });
+                                    //     } else {
+                                    //         alert(alertMsg || `This service requires ${serviceDuration} minutes. The next available slots are not free. Please select an earlier time or a different slot.`);
+                                    //     }
+                                    //     return; // Don't proceed with selection
+                                    // }
                                     
                                     // Deselect any previously selected slot
                                     document.querySelectorAll('.mobile-time-slot, .time-slot').forEach(s => s.classList.remove('selected'));
