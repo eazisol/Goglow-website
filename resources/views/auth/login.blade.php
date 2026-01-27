@@ -6,6 +6,8 @@
 @section('styles')
 <style>
     .form-label { font-weight: 500; color: #333; margin-bottom: 8px; display: block; }
+    .input-group-text { background: #fff; }
+    .password-toggle { cursor: pointer; }
 </style>
 @endsection
 
@@ -69,7 +71,12 @@
                                 </div>
                                 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="password" name="password" class="form-control" id="password" placeholder="{{ __('app.auth.password') }}" required>
+                                    <div class="input-group">
+                                        <input type="password" name="password" class="form-control" id="password" placeholder="{{ __('app.auth.password') }}" required>
+                                        <span class="input-group-text password-toggle" onclick="togglePassword('password')">
+                                            <i class="fa fa-eye"></i>
+                                        </span>
+                                    </div>
                                     <div class="help-block with-errors"></div>
                                 </div>
 
@@ -87,6 +94,30 @@
         </div>
     </div>
     <!-- Login Section End -->
+@endsection
+
+@section('scripts')
+<script>
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const toggleSpan = input.parentElement.querySelector('.password-toggle');
+    const icon = toggleSpan ? toggleSpan.querySelector('i') : null;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) {
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
+    } else {
+        input.type = 'password';
+        if (icon) {
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+}
+</script>
 @endsection
 
 

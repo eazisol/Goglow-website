@@ -46,7 +46,12 @@
                             </div>
                             
                             <div class="form-group col-md-12 mb-4">
-                                <input type="password" name="password" class="form-control-login" id="login-password" placeholder="{{ __('app.auth.password') }}" required>
+                                <div class="input-group" >
+                                    <input type="password" name="password" class="form-control-login" id="login-password" placeholder="{{ __('app.auth.password') }}" required>
+                                    <span class="input-group-text password-toggle" onclick="togglePassword('login-password')">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                </div>
                                 <div class="help-block with-errors"></div>
                             </div>
 
@@ -219,10 +224,10 @@
                                         select.appendChild(option);
                                     });
                                     
-                                    // Set default to US
-                                    const usOption = select.querySelector('option[value="US"]');
-                                    if (usOption) {
-                                        usOption.selected = true;
+                                    // Set default to France
+                                    const frOption = select.querySelector('option[value="FR"]');
+                                    if (frOption) {
+                                        frOption.selected = true;
                                     }
                                     
                                     select.setAttribute('data-initialized', 'true');
@@ -262,7 +267,7 @@
                             </script>
 
                             <div class="form-group col-md-6 mb-4">
-                                <div class="input-group" style="flex-wrap: initial;">
+                                <div class="input-group" >
                                     <input type="password" name="password" id="signup-password" class="form-control-login" placeholder="{{ __('app.auth.password_min_chars') }}" required minlength="6">
                                     <span class="input-group-text password-toggle" onclick="togglePassword('signup-password')">
                                         <i class="fa fa-eye"></i>
@@ -272,7 +277,12 @@
                             </div>
 
                             <div class="form-group col-md-6 mb-4">
-                                <input type="password" name="password_confirmation" id="signup-password-confirmation" class="form-control-login" placeholder="{{ __('app.auth.confirm_password') }}" required minlength="6">
+                                <div class="input-group" >
+                                    <input type="password" name="password_confirmation" id="signup-password-confirmation" class="form-control-login" placeholder="{{ __('app.auth.confirm_password') }}" required minlength="6">
+                                    <span class="input-group-text password-toggle" onclick="togglePassword('signup-password-confirmation')">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                </div>
                                 <div class="help-block with-errors"></div>
                             </div>
 
@@ -390,12 +400,14 @@
                 }
                 
                 window.isAuthenticated = true;
-                const storedUrl = localStorage.getItem('book_appointment_url');
+                const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                const loginRedirectUrl = localStorage.getItem('login_redirect_url');
                 localStorage.removeItem('book_appointment_url');
-                
+                localStorage.removeItem('login_redirect_url');
+
                 // Redirect after a short delay to show the success message
                 setTimeout(function() {
-                  window.location.href = storedUrl || data.redirect || '/';
+                  window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
                 }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
@@ -466,12 +478,14 @@
                 }
                 
                 window.isAuthenticated = true;
-                const storedUrl = localStorage.getItem('book_appointment_url');
+                const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                const loginRedirectUrl = localStorage.getItem('login_redirect_url');
                 localStorage.removeItem('book_appointment_url');
-                
+                localStorage.removeItem('login_redirect_url');
+
                 // Redirect after a short delay to show the success message
                 setTimeout(function() {
-                  window.location.href = storedUrl || data.redirect || '/';
+                  window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
                 }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
@@ -542,12 +556,14 @@
                 }
                 
                 window.isAuthenticated = true;
-                const storedUrl = localStorage.getItem('book_appointment_url');
+                const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                const loginRedirectUrl = localStorage.getItem('login_redirect_url');
                 localStorage.removeItem('book_appointment_url');
-                
+                localStorage.removeItem('login_redirect_url');
+
                 // Redirect after a short delay to show the success message
                 setTimeout(function() {
-                  window.location.href = storedUrl || data.redirect || '/';
+                  window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
                 }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
@@ -618,12 +634,14 @@
                 }
                 
                 window.isAuthenticated = true;
-                const storedUrl = localStorage.getItem('book_appointment_url');
+                const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                const loginRedirectUrl = localStorage.getItem('login_redirect_url');
                 localStorage.removeItem('book_appointment_url');
-                
+                localStorage.removeItem('login_redirect_url');
+
                 // Redirect after a short delay to show the success message
                 setTimeout(function() {
-                  window.location.href = storedUrl || data.redirect || '/';
+                  window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
                 }, 1500);
               } else {
                 throw new Error(data.message || 'Authentication failed');
@@ -674,8 +692,8 @@
                      option.textContent = country.prefix + ' - ' + country.name;
                      signupSelect.appendChild(option);
                  });
-                 const usOption = signupSelect.querySelector('option[value="US"]');
-                 if (usOption) usOption.selected = true;
+                 const frOption = signupSelect.querySelector('option[value="FR"]');
+                 if (frOption) frOption.selected = true;
              }
          }
      }

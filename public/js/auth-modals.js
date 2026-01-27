@@ -304,10 +304,21 @@ document.addEventListener('DOMContentLoaded', function () {
         // Password toggle visibility
         window.togglePassword = function (inputId) {
             const input = document.getElementById(inputId);
+            const toggleSpan = input.parentElement.querySelector('.password-toggle');
+            const icon = toggleSpan ? toggleSpan.querySelector('i') : null;
+
             if (input.type === 'password') {
                 input.type = 'text';
+                if (icon) {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
             } else {
                 input.type = 'password';
+                if (icon) {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
             }
         };
 
@@ -601,13 +612,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     successElement.textContent = (t.alreadyLoggedIn || 'You are already logged in') + '. ' + (t.redirecting || 'Redirecting...');
                     successElement.classList.remove('d-none');
 
-                    // Get the stored book appointment URL from localStorage if available
-                    const storedUrl = localStorage.getItem('book_appointment_url');
+                    // Get the stored URLs from localStorage
+                    const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                    const loginRedirectUrl = localStorage.getItem('login_redirect_url');
 
                     // Redirect immediately
                     setTimeout(() => {
-                        window.location.href = storedUrl || '/';
+                        window.location.href = bookAppointmentUrl || loginRedirectUrl || '/';
                         localStorage.removeItem('book_appointment_url');
+                        localStorage.removeItem('login_redirect_url');
                     }, 500);
                     return;
                 }
@@ -667,15 +680,17 @@ document.addEventListener('DOMContentLoaded', function () {
                             // Update window.isAuthenticated to prevent duplicate logins
                             window.isAuthenticated = true;
 
-                            // Get the stored book appointment URL from localStorage if available
-                            const storedUrl = localStorage.getItem('book_appointment_url');
+                            // Get the stored URLs from localStorage
+                            const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                            const loginRedirectUrl = localStorage.getItem('login_redirect_url');
 
                             // Redirect immediately
                             setTimeout(() => {
-                                // Use stored URL, then data.redirect, then default to home
-                                window.location.href = storedUrl || data.redirect || '/';
-                                // Clear stored URL after using it
+                                // Priority: book_appointment_url > login_redirect_url > data.redirect > home
+                                window.location.href = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
+                                // Clear stored URLs after using them
                                 localStorage.removeItem('book_appointment_url');
+                                localStorage.removeItem('login_redirect_url');
                             }, 300);
                         } else {
                             // Hide loader and re-enable button on error
@@ -1027,7 +1042,8 @@ document.addEventListener('DOMContentLoaded', function () {
         async function handleOAuthCallback(idToken, isSignup = false) {
             try {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]');
-                const storedUrl = localStorage.getItem('book_appointment_url');
+                const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                const loginRedirectUrl = localStorage.getItem('login_redirect_url');
 
                 const response = await fetch('/ajax/oauth-login', {
                     method: 'POST',
@@ -1052,9 +1068,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (loginModal) loginModal.hide();
                     if (signupModal) signupModal.hide();
 
-                    // Redirect
-                    const redirectUrl = storedUrl || data.redirect || '/';
+                    // Redirect - priority: book_appointment_url > login_redirect_url > data.redirect > home
+                    const redirectUrl = bookAppointmentUrl || loginRedirectUrl || data.redirect || '/';
                     localStorage.removeItem('book_appointment_url');
+                    localStorage.removeItem('login_redirect_url');
                     window.location.href = redirectUrl;
                 } else {
                     throw new Error(data.message || 'Authentication failed');
