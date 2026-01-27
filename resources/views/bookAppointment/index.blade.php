@@ -4,10 +4,7 @@
 
 {{-- Style Files --}}
 @section('styles')
-@once
-    <!-- Bootstrap CSS for modals -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-@endonce
+{{-- Bootstrap removed - using vanilla CSS from auth-modals.css --}}
 <link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/bookAppointment-index.css') }}">
 <style>
     /* Hide payment options in reschedule mode */
@@ -312,10 +309,7 @@
 
 {{-- Scripts --}}
 @section('scripts')
-@once
-    <!-- Bootstrap JS for modals -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-@endonce
+{{-- Bootstrap JS removed - using vanilla modal functions --}}
 <script>
     // Global translation strings from Blade
     window.serviceTranslations = {
@@ -2346,35 +2340,12 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('pendingBookingState', JSON.stringify(pendingBookingState));
             console.log('Saved pending booking state:', pendingBookingState);
             
-            // Show the login modal
-            const showLoginModal = () => {
-                const loginModalElement = document.getElementById('loginModal');
-                if (loginModalElement) {
-                    // Try Bootstrap 5 first
-                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                        try {
-                            const modal = new bootstrap.Modal(loginModalElement);
-                            modal.show();
-                            return;
-                        } catch (e) {
-                            console.error('Error creating Bootstrap modal:', e);
-                        }
-                    }
-                    
-                    // Fallback to jQuery if available
-                    if (typeof $ !== 'undefined' && $.fn.modal) {
-                        $('#loginModal').modal('show');
-                        return;
-                    }
-                }
-                
-                // Fallback: try again after a short delay
-                console.warn('Bootstrap not loaded yet, retrying...');
-                setTimeout(showLoginModal, 100);
-            };
-            
-            // Wait a bit for Bootstrap to be ready
-            setTimeout(showLoginModal, 50);
+            // Show the login modal (vanilla JS)
+            const loginModalElement = document.getElementById('loginModal');
+            if (loginModalElement) {
+                loginModalElement.classList.add('show');
+                document.body.classList.add('modal-open');
+            }
             return;
         }
 
@@ -2746,8 +2717,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // If 401, show login modal instead of error
                 if (response.status === 401) {
                     const loginModalEl = document.getElementById('loginModal');
-                    if (loginModalEl && typeof bootstrap !== 'undefined') {
-                        bootstrap.Modal.getOrCreateInstance(loginModalEl).show();
+                    if (loginModalEl) {
+                        loginModalEl.classList.add('show');
+                        document.body.classList.add('modal-open');
                         return;
                     }
                 }

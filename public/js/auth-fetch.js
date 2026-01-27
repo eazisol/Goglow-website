@@ -167,15 +167,11 @@
         // Store current URL for redirect after login
         localStorage.setItem('book_appointment_url', window.location.href);
 
-        // Try to show login modal
+        // Try to show login modal (vanilla JS)
         const loginModalEl = document.getElementById('loginModal');
         if (loginModalEl) {
-            if (typeof bootstrap !== 'undefined') {
-                const modal = bootstrap.Modal.getOrCreateInstance(loginModalEl);
-                modal.show();
-            } else if (typeof $ !== 'undefined') {
-                $('#loginModal').modal('show');
-            }
+            loginModalEl.classList.add('show');
+            document.body.classList.add('modal-open');
         } else {
             // Redirect to login page if no modal
             window.location.href = '/login?redirect=' + encodeURIComponent(window.location.href);

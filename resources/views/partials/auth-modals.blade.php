@@ -403,9 +403,9 @@
                 
                 // Close modals
                 const loginModalEl = document.getElementById('loginModal');
-                if (loginModalEl && typeof bootstrap !== 'undefined') {
-                  const bsModal = bootstrap.Modal.getInstance(loginModalEl);
-                  if (bsModal) bsModal.hide();
+                if (loginModalEl) {
+                  loginModalEl.classList.remove('show');
+                  document.body.classList.remove('modal-open');
                 }
                 
                 window.isAuthenticated = true;
@@ -495,9 +495,9 @@
                 
                 // Close modals
                 const loginModalEl = document.getElementById('loginModal');
-                if (loginModalEl && typeof bootstrap !== 'undefined') {
-                  const bsModal = bootstrap.Modal.getInstance(loginModalEl);
-                  if (bsModal) bsModal.hide();
+                if (loginModalEl) {
+                  loginModalEl.classList.remove('show');
+                  document.body.classList.remove('modal-open');
                 }
                 
                 window.isAuthenticated = true;
@@ -587,9 +587,9 @@
                 
                 // Close modals
                 const loginModalEl = document.getElementById('loginModal');
-                if (loginModalEl && typeof bootstrap !== 'undefined') {
-                  const bsModal = bootstrap.Modal.getInstance(loginModalEl);
-                  if (bsModal) bsModal.hide();
+                if (loginModalEl) {
+                  loginModalEl.classList.remove('show');
+                  document.body.classList.remove('modal-open');
                 }
                 
                 window.isAuthenticated = true;
@@ -679,9 +679,9 @@
                 
                 // Close modals
                 const loginModalEl = document.getElementById('loginModal');
-                if (loginModalEl && typeof bootstrap !== 'undefined') {
-                  const bsModal = bootstrap.Modal.getInstance(loginModalEl);
-                  if (bsModal) bsModal.hide();
+                if (loginModalEl) {
+                  loginModalEl.classList.remove('show');
+                  document.body.classList.remove('modal-open');
                 }
                 
                 window.isAuthenticated = true;

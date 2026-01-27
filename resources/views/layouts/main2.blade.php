@@ -36,7 +36,7 @@
 {{-- <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> --}}
     
     {{-- CSS Files - Load in correct order --}}
-    <link href="{{ \App\Helpers\AssetHelper::versioned('css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+    {{-- <link href="{{ \App\Helpers\AssetHelper::versioned('css/bootstrap.min.css') }}" rel="stylesheet" media="screen"> --}}
     <link href="{{ \App\Helpers\AssetHelper::versioned('css/fonts.css') }}" rel="stylesheet" media="screen">
     <link href="{{ \App\Helpers\AssetHelper::versioned('css/newdesign.css') }}" rel="stylesheet" media="screen">
     <link href="{{ \App\Helpers\AssetHelper::versioned('css/header.css') }}" rel="stylesheet" media="screen">
@@ -106,7 +106,7 @@
     <!-- General JS Scripts -->
     
   {{-- <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script> --}}
-  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+  {{-- <script src="{{ asset('js/bootstrap.min.js') }}"></script> --}}
   {{-- <script src="{{ asset('js/validator.min.js') }}"></script> --}}
   {{-- <script src="{{ asset('js/jquery.slicknav.js') }}"></script> --}}
   {{-- <script src="{{ asset('js/swiper-bundle.min.js') }}"></script> --}}

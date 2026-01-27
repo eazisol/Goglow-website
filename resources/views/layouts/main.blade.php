@@ -15,7 +15,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet">
-<link href="{{ \App\Helpers\AssetHelper::versioned('css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+{{-- <link href="{{ \App\Helpers\AssetHelper::versioned('css/bootstrap.min.css') }}" rel="stylesheet" media="screen"> --}}
 <link href="{{ \App\Helpers\AssetHelper::versioned('css/slicknav.min.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/swiper-bundle.min.css') }}">
 <link href="{{ \App\Helpers\AssetHelper::versioned('css/all.min.css') }}" rel="stylesheet" media="screen">
@@ -189,7 +189,7 @@
     <!-- General JS Scripts -->
     
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery-3.7.1.min.js') }}"></script>
-  <script src="{{ \App\Helpers\AssetHelper::versioned('js/bootstrap.min.js') }}"></script>
+  {{-- <script src="{{ \App\Helpers\AssetHelper::versioned('js/bootstrap.min.js') }}"></script> --}}
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/validator.min.js') }}"></script>
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/jquery.slicknav.js') }}"></script>
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/swiper-bundle.min.js') }}"></script>

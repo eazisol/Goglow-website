@@ -27,9 +27,9 @@
                 localStorage.setItem('login_redirect_url', window.location.href);
 
                 const loginModal = document.getElementById('loginModal');
-                if (loginModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                    const modal = bootstrap.Modal.getOrCreateInstance(loginModal);
-                    modal.show();
+                if (loginModal) {
+                    loginModal.classList.add('show');
+                    document.body.classList.add('modal-open');
                 }
             });
         }
