@@ -105,6 +105,9 @@
                 <button id="confirmCancelBtn" class="btn-confirm-cancel" onclick="confirmCancel()">
                     {{ __('app.bookings.confirm_cancel') ?? 'Confirm Cancel' }}
                 </button>
+                <button class="btn-keep-booking" onclick="closeCancelModal()">
+                    {{ __('app.bookings.keep_booking') ?? 'Keep my booking' }}
+                </button>
             </div>
             <div id="cancelLoading" class="modal-loading" style="display: none;">
                 <div class="spinner"></div>
@@ -510,8 +513,14 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Sort by booking_time descending
-        filtered.sort((a, b) => new Date(b.booking_time) - new Date(a.booking_time));
+        // Sort by booking_time
+        // Upcoming (toggleIndex 0): ascending (soonest first)
+        // Past/Cancelled (toggleIndex 1): descending (closest to today first)
+        if (currentToggleIndex === 0) {
+            filtered.sort((a, b) => new Date(a.booking_time) - new Date(b.booking_time));
+        } else {
+            filtered.sort((a, b) => new Date(b.booking_time) - new Date(a.booking_time));
+        }
 
         const html = filtered.map(booking => createBookingCard(booking)).join('');
         gridEl.innerHTML = html;
@@ -572,22 +581,57 @@ document.addEventListener('DOMContentLoaded', function () {
     // Cancel Modal Functions
     window.openCancelModal = function(bookingId) {
         selectedBooking = allBookings.find(b => (b.id || b.bookingId) === bookingId);
-        if (!selectedBooking) return;
+        if (!selectedBooking) {
+            console.error('Booking not found:', bookingId);
+            return;
+        }
 
         const refundInfo = calculateRefundInfo(selectedBooking);
+        console.log('Refund info:', refundInfo, 'isBefore24h:', refundInfo.isBefore24h);
+
         document.getElementById('cancelModalMessage').textContent = refundInfo.message;
 
         // Show reschedule button only if >= 24h away
         const rescheduleBtn = document.getElementById('rescheduleBtn');
-        rescheduleBtn.style.display = refundInfo.isBefore24h ? '' : 'none';
+        if (refundInfo.isBefore24h) {
+            rescheduleBtn.style.display = 'block';
+            console.log('Showing reschedule button');
+        } else {
+            rescheduleBtn.style.display = 'none';
+            console.log('Hiding reschedule button (< 24h away)');
+        }
+
+        // Reset modal state (in case it was left in loading state)
+        document.getElementById('cancelLoading').style.display = 'none';
+        document.querySelector('#cancelModal .modal-actions').style.display = 'flex';
 
         document.getElementById('cancelModal').style.display = 'flex';
     };
 
     window.closeCancelModal = function() {
-        document.getElementById('cancelModal').style.display = 'none';
+        const modal = document.getElementById('cancelModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
         selectedBooking = null;
     };
+
+    // Close modal when clicking outside (on the overlay)
+    document.getElementById('cancelModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeCancelModal();
+        }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('cancelModal');
+            if (modal && modal.style.display !== 'none') {
+                closeCancelModal();
+            }
+        }
+    });
 
     window.handleReschedule = function() {
         if (!selectedBooking) return;
@@ -609,25 +653,31 @@ document.addEventListener('DOMContentLoaded', function () {
         cancelLoading.style.display = '';
 
         try {
-            // Get Firebase ID token
+            // Try to get Firebase ID token (optional - falls back to session auth)
             let idToken = null;
-            if (window.firebase && window.firebase.auth) {
-                const user = firebase.auth().currentUser;
-                if (user) {
-                    idToken = await user.getIdToken(true);
+            try {
+                const auth = window.firebaseAuth || (window.firebase && firebase.auth());
+                if (auth && auth.currentUser) {
+                    idToken = await auth.currentUser.getIdToken(true);
+                    console.log('Got Firebase ID token for cancel');
                 }
+            } catch (tokenError) {
+                console.log('Could not get Firebase token, will use session auth:', tokenError.message);
             }
 
-            if (!idToken) {
-                throw new Error('Authentication required');
+            // Build request headers - include token if available, otherwise rely on session cookie
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            };
+            if (idToken) {
+                headers['Authorization'] = `Bearer ${idToken}`;
             }
 
             const response = await fetch(`/api/bookings/${bookingId}/cancel`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${idToken}`,
-                },
+                headers: headers,
+                credentials: 'same-origin', // Send session cookies
             });
 
             const data = await response.json();
@@ -660,29 +710,40 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize
     fetchBookings();
 
-    // Handle logout form submission - clear sessionStorage
-    const logoutForm = document.querySelector('.logout-form');
-    if (logoutForm) {
-        logoutForm.addEventListener('submit', function(e) {
+    // Handle logout button click
+    const logoutBtn = document.querySelector('.logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            console.log('Logout button clicked');
+
+            // Clear sessionStorage
             try {
-                const keysToRemove = [];
-                for (let i = 0; i < sessionStorage.length; i++) {
+                for (let i = sessionStorage.length - 1; i >= 0; i--) {
                     const key = sessionStorage.key(i);
                     if (key && key.startsWith('user_profile_synced_')) {
-                        keysToRemove.push(key);
+                        sessionStorage.removeItem(key);
                     }
                 }
-                keysToRemove.forEach(key => sessionStorage.removeItem(key));
             } catch (error) {
                 console.error('Error clearing sessionStorage:', error);
             }
 
-            if (window.firebase && window.firebase.auth) {
-                e.preventDefault();
-                firebase.auth().signOut()
-                    .then(() => logoutForm.submit())
-                    .catch(() => logoutForm.submit());
+            // Sign out from Firebase with a short timeout to avoid slow logout
+            if (window.firebaseAuth) {
+                try {
+                    await Promise.race([
+                        window.firebaseAuth.signOut(),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1000))
+                    ]);
+                    console.log('Firebase signOut successful');
+                } catch (err) {
+                    console.warn('Firebase signOut issue:', err.message);
+                }
             }
+
+            // Submit form to logout from Laravel
+            document.querySelector('.logout-form').submit();
         });
     }
 
