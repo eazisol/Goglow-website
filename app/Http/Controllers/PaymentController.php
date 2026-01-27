@@ -104,6 +104,11 @@ class PaymentController extends Controller
      */
     public function getStripeConfig()
     {
+        // Clear any output buffer to ensure clean JSON response
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $settings = $this->getPaymentSettings();
         $publishableKey = $this->getStripePublishableKey();
 
@@ -215,6 +220,11 @@ class PaymentController extends Controller
 
     public function createCheckoutSession(Request $request)
     {
+        // Clear any output buffer to ensure clean JSON response (prevents PHP warnings from corrupting JSON)
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         // Log the request for debugging (sanitized - no PII)
         Log::info('Stripe checkout request', [
             'serviceId' => $request->input('serviceId'),
@@ -481,6 +491,11 @@ class PaymentController extends Controller
 
     public function handlePaymentSuccess(Request $request)
     {
+        // Clear any output buffer to ensure clean JSON response
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         // Log request data
         Log::info('Payment success callback received', $request->all());
 
@@ -533,27 +548,31 @@ class PaymentController extends Controller
                 // For free bookings, skip Stripe retrieval
                 Log::info('Free booking detected, skipping Stripe retrieval', ['identifier' => $identifier]);
                 $paymentIntentId = $identifier;
-            } elseif ($isStripeConnect) {
-                // Stripe Connect flow - we already have the payment intent ID
-                Log::info('Stripe Connect payment success', ['paymentIntentId' => $paymentIntentIdParam]);
-                $paymentIntentId = $paymentIntentIdParam;
             } else {
-                // Standard Stripe Checkout flow - retrieve session
-                Log::info('Retrieving Stripe session', ['sessionId' => $sessionId]);
-                $session = Session::retrieve($sessionId);
+                // For both Stripe Connect and standard Checkout, retrieve session to get payment_intent
+                $checkoutSessionId = $sessionId;
 
-                if (!is_object($session)) {
-                    throw new \Exception('Failed to retrieve a valid session object');
-                }
+                // If we have a session_id (Checkout flow), retrieve the session
+                if ($checkoutSessionId && str_starts_with($checkoutSessionId, 'cs_')) {
+                    Log::info('Retrieving Stripe Checkout session', ['sessionId' => $checkoutSessionId]);
+                    $session = Session::retrieve($checkoutSessionId);
 
-                Log::info('Session retrieved', ['sessionId' => $session->id]);
+                    if (!is_object($session)) {
+                        throw new \Exception('Failed to retrieve a valid session object');
+                    }
 
-                // Use safe property access for Stripe v7.0 compatibility
-                $paymentIntentId = $sessionId; // Default to session ID
+                    Log::info('Session retrieved', [
+                        'sessionId' => $session->id,
+                        'payment_intent' => $session->payment_intent ?? null,
+                    ]);
 
-                // Try to get payment_intent if it exists
-                if (isset($session->payment_intent)) {
-                    $paymentIntentId = $session->payment_intent;
+                    // Get payment_intent from session
+                    $paymentIntentId = $session->payment_intent ?? null;
+                } elseif ($paymentIntentIdParam && str_starts_with($paymentIntentIdParam, 'pi_')) {
+                    // Direct payment intent ID passed (legacy flow)
+                    $paymentIntentId = $paymentIntentIdParam;
+                } else {
+                    $paymentIntentId = null;
                 }
             }
 
@@ -574,6 +593,7 @@ class PaymentController extends Controller
                 
                 // Update payload with payment info
                 $bookingPayload['payment_id'] = $paymentIntentId;
+                $bookingPayload['paymentIntentId'] = $paymentIntentId; // For refund lookup
                 $bookingPayload['payment_type'] = $pendingBooking['paymentType'] ?? 'full';
                 $bookingPayload['payment_status'] = 'completed';
                 $bookingPayload['payed'] = ($bookingPayload['payment_type'] === 'full');

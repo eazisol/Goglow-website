@@ -180,6 +180,36 @@
       cursor: pointer;
     }
 
+    /* ---------- Header Login Button ---------- */
+    .login-header-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 2px solid #e50050;
+      border-radius: 30px;
+      padding: 10px 20px;
+      color: #e50050;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-left: 10px;
+    }
+
+    .login-header-btn:hover {
+      background: #e50050;
+      color: white;
+    }
+
+    .login-header-btn:hover img {
+      filter: brightness(0) invert(1);
+    }
+
+    .login-header-btn img {
+      transition: filter 0.3s ease;
+    }
+
     /* ---------- Profile Dropdown ---------- */
     .profile-dropdown-container {
       position: relative;
@@ -304,9 +334,9 @@
     }
 
     /* ---------- White Label Mode (Service Provider Pages) ---------- */
-    /* Only logo is visible, no navigation - keeps users focused on booking */
+    /* Logo + login button only, no navigation - keeps users focused on booking */
     .navbar-white-label {
-      justify-content: flex-start;
+      justify-content: space-between;
     }
 
     .navbar-white-label .logo {
@@ -317,6 +347,15 @@
       width: 70px;
     }
 
+    .white-label-auth {
+      display: flex;
+      align-items: center;
+    }
+
+    .white-label-auth .login-header-btn {
+      margin-left: 0;
+    }
+
     /* Hide menu toggle on mobile in white-label mode */
     body.white-label-mode .menu-icon {
       display: none !important;
@@ -325,5 +364,18 @@
     @media (max-width: 768px) {
       .navbar-white-label .logo img {
         width: 55px;
+      }
+
+      .login-header-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      .login-header-btn span {
+        display: none;
+      }
+
+      .login-header-btn img {
+        width: 20px !important;
       }
     }

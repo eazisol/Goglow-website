@@ -10,7 +10,7 @@
     </div>
 
     @if(!$isWhiteLabel)
-    <div class="menu">
+    <div class="menu" id="desktop-menu">
       <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}" @if(request()->is('/')) aria-current="page" @endif>{{ __('app.nav.home') }}</a>
       <span class="plus">+</span>
       {{-- <a href="#">{{ __('app.nav.about_us') }}</a>
@@ -29,78 +29,39 @@
             <img src="{{ asset('images/images/Frame 1618873824.svg') }}" alt="Menu" class="menu-icon">
           </button>
           @if(session('firebase_uid'))
-              <div class="profile-dropdown-container">
-                  <button class="profile-icon-btn" id="profile-dropdown-toggle" aria-label="Profile menu" aria-expanded="false">
-                      <img src="{{ asset('images/images/flowbite_user-solid.svg') }}" alt="Profile" style="width:33px; margin-left: 5px; cursor: pointer;">
-                  </button>
-                  <div class="profile-dropdown-menu" id="profile-dropdown-menu">
-                      <a href="{{ route('my-bookings') }}" class="dropdown-item">
-                          <span>{{ __('app.nav.my_bookings') }}</span>
-                      </a>
-                      <a href="#" class="dropdown-item logout-item" id="logout-link">
-                          <span>{{ __('app.nav.logout') }}</span>
-                      </a>
-                  </div>
-              </div>
-              <form id="logout-form-figma" action="{{ route('logout') }}" method="POST" style="display:none;">
-                  @csrf
-              </form>
+              {{-- Logged in: direct link to bookings --}}
+              <a href="{{ route('my-bookings') }}" class="login-header-btn" style="text-decoration: none;">
+                  <img src="{{ asset('images/images/flowbite_user-solid.svg') }}" alt="Profile" style="width:24px;">
+                  <span>{{ __('app.nav.my_bookings') }}</span>
+              </a>
+          @elseif(!request()->is('pro') && !request()->is('pro/*'))
+              {{-- Show login button for non-authenticated users (except on pro pages) --}}
+              <button class="login-header-btn" id="header-login-btn" data-bs-toggle="modal" data-bs-target="#loginModal">
+                  <img src="{{ asset('images/images/flowbite_user-solid.svg') }}" alt="Login" style="width:24px;">
+                  <span>{{ __('app.auth.login') }}</span>
+              </button>
           @endif
+    </div>
+    @else
+    {{-- White-label mode: direct link to bookings if logged in, login modal if not --}}
+    <div class="white-label-auth">
+        @if(session('firebase_uid'))
+            {{-- Logged in: direct link to bookings --}}
+            <a href="{{ route('my-bookings') }}" class="login-header-btn" style="text-decoration: none;">
+                <img src="{{ asset('images/images/flowbite_user-solid.svg') }}" alt="Profile" style="width:24px;">
+                <span>{{ __('app.nav.my_bookings') }}</span>
+            </a>
+        @else
+            {{-- Not logged in: open login modal --}}
+            <button class="login-header-btn" id="header-login-btn-wl" data-bs-toggle="modal" data-bs-target="#loginModal">
+                <img src="{{ asset('images/images/flowbite_user-solid.svg') }}" alt="Login" style="width:24px;">
+                <span>{{ __('app.auth.login') }}</span>
+            </button>
+        @endif
     </div>
     @endif
   </nav>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const logoutLink = document.getElementById('logout-link');
-        const logoutForm = document.getElementById('logout-form-figma');
-        
-        if (logoutLink && logoutForm) {
-            logoutLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Function to clear sessionStorage and submit form
-                const submitLogout = () => {
-                    // Clear all user_profile_synced keys from sessionStorage
-                    try {
-                        const keysToRemove = [];
-                        for (let i = 0; i < sessionStorage.length; i++) {
-                            const key = sessionStorage.key(i);
-                            if (key && key.startsWith('user_profile_synced_')) {
-                                keysToRemove.push(key);
-                            }
-                        }
-                        keysToRemove.forEach(key => {
-                            sessionStorage.removeItem(key);
-                            console.log('Cleared sessionStorage key:', key);
-                        });
-                    } catch (error) {
-                        console.error('Error clearing sessionStorage:', error);
-                    }
-                    
-                    logoutForm.submit();
-                };
-                
-                // Try to sign out from Firebase first
-                if (window.firebase && window.firebase.auth) {
-                    firebase.auth().signOut()
-                        .then(() => {
-                            console.log('Firebase signed out successfully');
-                            submitLogout();
-                        })
-                        .catch((error) => {
-                            console.error('Firebase sign out error:', error);
-                            // Still submit form even if firebase logout fails
-                            submitLogout();
-                        });
-                } else {
-                    // Firebase not available, just submit
-                    submitLogout();
-                }
-            });
-        }
-    });
-  </script>
 
 
   <!-- Sidebar for Mobile (hidden in white-label mode) -->
@@ -121,59 +82,5 @@
   @endif
 
 
-  <script>
-    // Toggle Sidebar
-    const menuToggle = document.getElementById('menu-toggle');
-    const sidebar = document.getElementById('sidebar');
-    const closeBtn = document.getElementById('close-btn');
-
-    menuToggle.addEventListener('click', () => {
-      sidebar.classList.add('active');
-    });
-
-    closeBtn.addEventListener('click', () => {
-      sidebar.classList.remove('active');
-    });
-
-    // Profile Dropdown Toggle
-    const profileDropdownContainer = document.querySelector('.profile-dropdown-container');
-    const profileDropdownToggle = document.getElementById('profile-dropdown-toggle');
-    const profileDropdownMenu = document.getElementById('profile-dropdown-menu');
-
-    if (profileDropdownToggle && profileDropdownMenu && profileDropdownContainer) {
-      profileDropdownToggle.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const isOpen = profileDropdownMenu.classList.contains('show');
-        
-        // Close all dropdowns first
-        document.querySelectorAll('.profile-dropdown-menu').forEach(menu => {
-          menu.classList.remove('show');
-        });
-        
-        // Toggle this dropdown
-        if (!isOpen) {
-          profileDropdownMenu.classList.add('show');
-          profileDropdownToggle.setAttribute('aria-expanded', 'true');
-        } else {
-          profileDropdownToggle.setAttribute('aria-expanded', 'false');
-        }
-      });
-
-      // Close dropdown when clicking outside
-      document.addEventListener('click', function(e) {
-        if (!profileDropdownContainer.contains(e.target)) {
-          profileDropdownMenu.classList.remove('show');
-          profileDropdownToggle.setAttribute('aria-expanded', 'false');
-        }
-      });
-
-      // Close dropdown on Escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && profileDropdownMenu.classList.contains('show')) {
-          profileDropdownMenu.classList.remove('show');
-          profileDropdownToggle.setAttribute('aria-expanded', 'false');
-        }
-      });
-    }
-  </script>
+  <!-- Header JS is loaded from header.js -->
 

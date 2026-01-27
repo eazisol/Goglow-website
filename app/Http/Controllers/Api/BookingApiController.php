@@ -47,12 +47,61 @@ class BookingApiController extends Controller
     }
 
     /**
+     * Fetch a specific booking for a user
+     * Uses getBookingsByUserId Cloud Function and filters by booking ID
+     * Also verifies the booking belongs to the user
+     */
+    private function fetchBookingForUser(string $bookingId, string $userId): ?array
+    {
+        try {
+            // Fetch all bookings for the user
+            $response = Http::timeout(30)
+                ->get($this->getCloudFunctionsUrl() . '/getBookingsByUserId', [
+                    'userId' => $userId,
+                ]);
+
+            if (!$response->ok()) {
+                Log::warning('Failed to fetch user bookings', [
+                    'userId' => $userId,
+                    'status' => $response->status(),
+                ]);
+                return null;
+            }
+
+            $data = $response->json();
+            $bookings = $data['bookings'] ?? [];
+
+            // Find the specific booking by ID
+            foreach ($bookings as $booking) {
+                if (($booking['id'] ?? '') === $bookingId) {
+                    return $booking;
+                }
+            }
+
+            // Booking not found for this user
+            return null;
+        } catch (\Throwable $e) {
+            Log::error('Error fetching booking for user', [
+                'bookingId' => $bookingId,
+                'userId' => $userId,
+                'error' => $e->getMessage(),
+            ]);
+            return null;
+        }
+    }
+
+    /**
      * List user's bookings
      * GET /api/bookings?toggleIndex=0
      * toggleIndex: 0=Upcoming, 1=Past (Cancelled/Completed)
      */
     public function index(Request $request)
     {
+        // Clear any output buffer to ensure clean JSON response
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $userId = $request->input('firebase_uid');
         $toggleIndex = (int) $request->input('toggleIndex', 0);
 
@@ -137,38 +186,22 @@ class BookingApiController extends Controller
      */
     public function show(Request $request, string $id)
     {
+        // Clear any output buffer to ensure clean JSON response
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $userId = $request->input('firebase_uid');
 
         try {
-            $response = Http::timeout(30)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->post($this->getCloudFunctionsUrl() . '/getBookingById', [
-                    'bookingId' => $id,
-                ]);
-
-            if (!$response->ok()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Booking not found',
-                ], 404);
-            }
-
-            $data = $response->json();
-            $booking = $data['booking'] ?? null;
+            // Fetch booking using getBookingsByUserId and find the specific booking
+            $booking = $this->fetchBookingForUser($id, $userId);
 
             if (!$booking) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Booking not found',
                 ], 404);
-            }
-
-            // Verify booking belongs to authenticated user
-            if (($booking['userId'] ?? '') !== $userId) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Access denied',
-                ], 403);
             }
 
             // Add refund eligibility info
@@ -193,39 +226,22 @@ class BookingApiController extends Controller
      */
     public function cancel(Request $request, string $id)
     {
+        // Clear any output buffer to ensure clean JSON response
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $userId = $request->input('firebase_uid');
 
         try {
-            // Get booking details first
-            $bookingResponse = Http::timeout(30)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->post($this->getCloudFunctionsUrl() . '/getBookingById', [
-                    'bookingId' => $id,
-                ]);
-
-            if (!$bookingResponse->ok()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Booking not found',
-                ], 404);
-            }
-
-            $bookingData = $bookingResponse->json();
-            $booking = $bookingData['booking'] ?? null;
+            // Fetch booking using getBookingsByUserId and find the specific booking
+            $booking = $this->fetchBookingForUser($id, $userId);
 
             if (!$booking) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Booking not found',
                 ], 404);
-            }
-
-            // Verify booking belongs to authenticated user
-            if (($booking['userId'] ?? '') !== $userId) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Access denied',
-                ], 403);
             }
 
             // Check if booking can be cancelled
@@ -259,13 +275,17 @@ class BookingApiController extends Controller
                 }
             }
 
-            // Update booking status to cancelled (status: 2)
+            // Update booking status to cancelled (status: 2) and set cancel_date
+            // Using updateDoc to match mobile app which sets both fields
             $cancelResponse = Http::timeout(30)
                 ->withHeaders(['Content-Type' => 'application/json'])
-                ->post($this->getCloudFunctionsUrl() . '/cancelBooking', [
-                    'bookingId' => $id,
-                    'status' => 2,
-                    'cancelDate' => now()->toIso8601String(),
+                ->put($this->getCloudFunctionsUrl() . '/updateDoc', [
+                    'collection' => 'bookings',
+                    'doc' => $id,
+                    'data' => [
+                        'status' => 2,
+                        'cancel_date' => now()->toIso8601String(),
+                    ],
                 ]);
 
             if (!$cancelResponse->ok()) {
@@ -303,6 +323,11 @@ class BookingApiController extends Controller
      */
     public function reschedule(Request $request, string $id)
     {
+        // Clear any output buffer to ensure clean JSON response
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $userId = $request->input('firebase_uid');
 
         $request->validate([
@@ -314,36 +339,14 @@ class BookingApiController extends Controller
         $newBookTime = $request->input('bookTime');
 
         try {
-            // Get booking details first
-            $bookingResponse = Http::timeout(30)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->post($this->getCloudFunctionsUrl() . '/getBookingById', [
-                    'bookingId' => $id,
-                ]);
-
-            if (!$bookingResponse->ok()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Booking not found',
-                ], 404);
-            }
-
-            $bookingData = $bookingResponse->json();
-            $booking = $bookingData['booking'] ?? null;
+            // Fetch booking using getBookingsByUserId and find the specific booking
+            $booking = $this->fetchBookingForUser($id, $userId);
 
             if (!$booking) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Booking not found',
                 ], 404);
-            }
-
-            // Verify booking belongs to authenticated user
-            if (($booking['userId'] ?? '') !== $userId) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Access denied',
-                ], 403);
             }
 
             // Check if booking can be rescheduled
@@ -364,13 +367,24 @@ class BookingApiController extends Controller
                 ], 400);
             }
 
-            // Update booking time
+            // Update services array with new startTime (matching mobile app logic)
+            $updatedServices = $booking['services'] ?? [];
+            foreach ($updatedServices as &$service) {
+                $service['startTime'] = $newBookingTime;
+            }
+            unset($service); // Break reference
+
+            // Update booking time using updateDoc Cloud Function
             $rescheduleResponse = Http::timeout(30)
                 ->withHeaders(['Content-Type' => 'application/json'])
-                ->post($this->getCloudFunctionsUrl() . '/rescheduleBooking', [
-                    'bookingId' => $id,
-                    'booking_time' => $newBookingTime,
-                    'bookTime' => $newBookTime,
+                ->put($this->getCloudFunctionsUrl() . '/updateDoc', [
+                    'collection' => 'bookings',
+                    'doc' => $id,
+                    'data' => [
+                        'booking_time' => $newBookingTime,
+                        'bookTime' => $newBookTime,
+                        'services' => $updatedServices,
+                    ],
                 ]);
 
             if (!$rescheduleResponse->ok()) {
@@ -476,31 +490,11 @@ class BookingApiController extends Controller
     private function processStripeRefund(array $booking, float $refundAmount): bool
     {
         try {
-            // Get payment intent ID from booking transactions
-            $transactionsResponse = Http::timeout(30)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->post($this->getCloudFunctionsUrl() . '/getBookingTransactions', [
-                    'bookingId' => $booking['id'] ?? $booking['bookingId'],
-                ]);
+            // Get payment intent ID from paymentIntentId field (set during booking creation)
+            $paymentIntentId = $booking['paymentIntentId'] ?? null;
 
-            $paymentIntentId = null;
-            if ($transactionsResponse->ok()) {
-                $txData = $transactionsResponse->json();
-                $transactions = $txData['transactions'] ?? [];
-
-                foreach ($transactions as $tx) {
-                    if (($tx['isRefund'] ?? false) === false) {
-                        $txId = $tx['transactionId'] ?? '';
-                        if (str_starts_with($txId, 'pi_')) {
-                            $paymentIntentId = $txId;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (!$paymentIntentId) {
-                Log::info('No Stripe payment intent found for booking, skipping Stripe refund', [
+            if (!$paymentIntentId || !str_starts_with($paymentIntentId, 'pi_')) {
+                Log::info('No Stripe payment intent found for booking, skipping refund', [
                     'bookingId' => $booking['id'] ?? $booking['bookingId'],
                 ]);
                 return true; // Not a Stripe payment, proceed with cancellation
@@ -512,18 +506,34 @@ class BookingApiController extends Controller
                 ? $settings['isStripeConnectLive']
                 : $settings['isStripeLive'];
 
+            // Build refund payload
+            $refundPayload = [
+                'paymentIntentId' => $paymentIntentId,
+                'amount' => (int) ($refundAmount * 100), // Convert to cents
+                'isStripeLive' => $isLive,
+            ];
+
+            Log::info('Calling createStripeRefund Cloud Function', [
+                'bookingId' => $booking['id'] ?? $booking['bookingId'],
+                'payload' => $refundPayload,
+                'cloudFunctionUrl' => $this->getCloudFunctionsUrl() . '/createStripeRefund',
+            ]);
+
             // Call refund Cloud Function
             $refundResponse = Http::timeout(30)
                 ->withHeaders(['Content-Type' => 'application/json'])
-                ->post($this->getCloudFunctionsUrl() . '/createStripeRefund', [
-                    'paymentIntentId' => $paymentIntentId,
-                    'amount' => (int) ($refundAmount * 100), // Convert to cents
-                    'isStripeLive' => $isLive,
-                ]);
+                ->post($this->getCloudFunctionsUrl() . '/createStripeRefund', $refundPayload);
+
+            Log::info('createStripeRefund response', [
+                'bookingId' => $booking['id'] ?? $booking['bookingId'],
+                'status' => $refundResponse->status(),
+                'body' => $refundResponse->body(),
+            ]);
 
             if (!$refundResponse->ok()) {
-                Log::error('Stripe refund failed', [
+                Log::error('Stripe refund HTTP error', [
                     'bookingId' => $booking['id'] ?? $booking['bookingId'],
+                    'httpStatus' => $refundResponse->status(),
                     'response' => $refundResponse->body(),
                 ]);
                 return false;

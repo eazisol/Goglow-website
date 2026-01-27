@@ -9,6 +9,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 @endonce
 <link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/bookAppointment-index.css') }}">
+<style>
+    /* Hide payment options in reschedule mode */
+    .reschedule-hidden {
+        display: none !important;
+    }
+</style>
 @endsection
 
 
@@ -167,7 +173,8 @@
                                 
                                 <!-- Payment Options (hidden initially, shown after time slot selection) -->
                                 <div id="paymentOptionsSection" class="col-12" style="display: none;">
-                                    <div class="form-group col-md-12 mb-4">
+                                    <!-- Payment choices - hidden in reschedule mode -->
+                                    <div id="paymentChoicesSection" class="form-group col-md-12 mb-4">
                                         @php
                                             // Calculate deposit percentage based on priority: spDeposit > minimum_booking_percentage > commission
                                             $depositPercentage = null;
@@ -373,7 +380,12 @@ document.addEventListener('DOMContentLoaded', function () {
         userId: @json($userId ?? null),
         userData: @json($userData ?? null),
         stripeConfig: null, // Will be fetched from API
+        rescheduleBookingId: @json($rescheduleBookingId ?? null), // Booking ID for reschedule mode
     };
+
+    // Check if we're in reschedule mode
+    const isRescheduleMode = !!bookingBootstrap.rescheduleBookingId;
+    console.log('Reschedule mode:', isRescheduleMode, 'Booking ID:', bookingBootstrap.rescheduleBookingId);
     
     // Fetch Stripe configuration (test/live mode and publishable key) from API
     fetch('/api/stripe-config')
@@ -522,7 +534,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const nextTimeSlotBtn = document.getElementById('nextTimeSlot');
     const paymentOptionsSection = document.getElementById('paymentOptionsSection');
     const mobileTimeSlotsContainer = document.getElementById('mobileTimeSlotsContainer');
-    
+    const bookAppointmentBtnText = document.getElementById('bookAppointmentBtnText');
+
+    // Reschedule mode: hide payment choices (but keep terms and button visible)
+    const paymentChoicesSection = document.getElementById('paymentChoicesSection');
+    if (isRescheduleMode) {
+        // Hide only the payment choices, not the entire section (which has terms and button)
+        if (paymentChoicesSection) {
+            paymentChoicesSection.classList.add('reschedule-hidden');
+        }
+        // Change button text to indicate reschedule action
+        if (bookAppointmentBtnText) {
+            bookAppointmentBtnText.textContent = '{{ __('app.bookings.confirm_reschedule') ?? "Confirm Reschedule" }}';
+        }
+        console.log('Reschedule mode activated - payment choices hidden, button text changed');
+    }
+
     let chosenAgent = null;
     let chosenAgentSlots = null;
     let selectedPeriod = null;
@@ -2351,6 +2378,63 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // RESCHEDULE MODE: Call reschedule API instead of creating a new booking
+        if (isRescheduleMode) {
+            try {
+                console.log('Reschedule mode - calling reschedule API');
+
+                // Try to get Firebase ID token (optional - falls back to session auth)
+                let idToken = null;
+                try {
+                    const auth = window.firebaseAuth || (window.firebase && firebase.auth());
+                    if (auth && auth.currentUser) {
+                        idToken = await auth.currentUser.getIdToken(true);
+                        console.log('Got Firebase ID token for reschedule');
+                    }
+                } catch (tokenError) {
+                    console.log('Could not get Firebase token, will use session auth:', tokenError.message);
+                }
+
+                // Build request headers - include token if available, otherwise rely on session cookie
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                };
+                if (idToken) {
+                    headers['Authorization'] = `Bearer ${idToken}`;
+                }
+
+                // Call the reschedule API (includes credentials for session-based auth)
+                const rescheduleResponse = await fetch(`/api/bookings/${bookingBootstrap.rescheduleBookingId}/reschedule`, {
+                    method: 'PUT',
+                    headers: headers,
+                    credentials: 'same-origin', // Send session cookies
+                    body: JSON.stringify({
+                        booking_time: localDate.toISOString(),
+                        bookTime: bookTime,
+                    })
+                });
+
+                const rescheduleData = await rescheduleResponse.json();
+                console.log('Reschedule API response:', rescheduleData);
+
+                if (!rescheduleResponse.ok || !rescheduleData.success) {
+                    throw new Error(rescheduleData.message || '{{ __("app.bookings.reschedule_error") ?? "Failed to reschedule booking" }}');
+                }
+
+                // Success - redirect to bookings page
+                setButtonLoading(false);
+                alert('{{ __("app.bookings.reschedule_success") ?? "Booking rescheduled successfully" }}');
+                window.location.href = '{{ route("my-bookings") }}';
+                return;
+            } catch (rescheduleError) {
+                console.error('Error rescheduling booking:', rescheduleError);
+                setButtonLoading(false);
+                alert(rescheduleError.message || '{{ __("app.bookings.reschedule_error") ?? "An error occurred while rescheduling" }}');
+                return;
+            }
+        }
+
         if (!serviceId || !serviceProviderId) {
             setButtonLoading(false);
             alert("Missing 'serviceId' or 'service_provider_id' in URL.");
@@ -2631,9 +2715,8 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // For paid bookings, proceed with Stripe checkout
             const checkoutUrl = '{{ route("checkout.session") }}';
-            console.log('Checkout URL:', checkoutUrl);
 
-            // Use authFetch to handle token refresh on 401 errors
+            // authFetch handles 401 errors with automatic token refresh
             const response = await (window.authFetch || fetch)(checkoutUrl, {
                 method: 'POST',
                 headers: {
@@ -2657,6 +2740,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 setButtonLoading(false);
                 const errorText = await response.text();
                 console.error('Error response:', response.status, errorText);
+
+                // If 401, show login modal instead of error
+                if (response.status === 401) {
+                    const loginModalEl = document.getElementById('loginModal');
+                    if (loginModalEl && typeof bootstrap !== 'undefined') {
+                        bootstrap.Modal.getOrCreateInstance(loginModalEl).show();
+                        return;
+                    }
+                }
                 throw new Error(`Server responded with ${response.status}: ${errorText}`);
             }
 
