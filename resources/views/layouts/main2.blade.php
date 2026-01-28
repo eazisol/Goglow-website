@@ -18,8 +18,8 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Glaura - Book Beauty Services | Discover Local Salons">
-    <meta property="og:description" content="Discover and book trusted salon services with Glaura. Connect with local beauty professionals for hair, nails, skincare, and wellness treatments.">
+    <meta property="og:title" content="{{ __('app.meta.og_title') }}">
+    <meta property="og:description" content="{{ __('app.meta.og_description') }}">
 
 
 

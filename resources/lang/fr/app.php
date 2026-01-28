@@ -1,6 +1,12 @@
 <?php
 
 return [
+    // Meta Tags
+    'meta' => [
+        'og_title' => 'Glaura – Réservez des services de beauté | Découvrez des salons locaux',
+        'og_description' => 'Découvrez et réservez des services de salon de confiance avec Glaura. Réservez avec des professionnels de la beauté près de chez vous pour les cheveux, les ongles, les soins de la peau et les traitements bien-être.',
+    ],
+
     // Navigation
     'nav' => [
         'home' => 'Accueil',

@@ -1,6 +1,12 @@
 <?php
 
 return [
+    // Meta Tags
+    'meta' => [
+        'og_title' => 'Glaura - Book Beauty Services | Discover Local Salons',
+        'og_description' => 'Discover and book trusted salon services with Glaura. Connect with local beauty professionals for hair, nails, skincare, and wellness treatments.',
+    ],
+
     // Navigation
     'nav' => [
         'home' => 'Home',
