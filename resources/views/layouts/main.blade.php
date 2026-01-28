@@ -25,6 +25,7 @@
 <link href="{{ \App\Helpers\AssetHelper::versioned('css/custom.css') }}" rel="stylesheet" media="screen">
 <link href="{{ \App\Helpers\AssetHelper::versioned('css/auth-modals.css') }}" rel="stylesheet" media="screen">
 <link href="{{ \App\Helpers\AssetHelper::versioned('css/form.css') }}" rel="stylesheet" media="screen">
+<link href="{{ \App\Helpers\AssetHelper::versioned('css/header.css') }}" rel="stylesheet" media="screen">
 <link href="{{ \App\Helpers\AssetHelper::versioned('css/style.css') }}" rel="stylesheet" media="screen">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">
 
@@ -177,7 +178,7 @@
     
     
                 @if (!Route::is('terms_condition') && !Route::is('privacy_policy'))
-                    @include('partials.header')
+                    @include('figmaDesign.header')
                 @endif             
                   @yield('content')
                 @if (!Route::is('terms_condition') && !Route::is('privacy_policy'))
