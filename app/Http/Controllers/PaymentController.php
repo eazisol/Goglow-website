@@ -31,9 +31,9 @@ class PaymentController extends Controller
                     $settings = $data['data'] ?? [];
 
                     $result = [
-                        'isStripeLive' => $settings['isStripeLive'] ?? false,
-                        'useStripeConnect' => $settings['useStripeConnect'] ?? false,
-                        'isStripeConnectLive' => $settings['isStripeConnectLive'] ?? false,
+                        'isStripeLive' => $settings['isStripeLive'] ?? true,
+                        'useStripeConnect' => $settings['useStripeConnect'] ?? true,
+                        'isStripeConnectLive' => $settings['isStripeConnectLive'] ?? true,
                     ];
 
                     Log::info('Payment settings fetched from API', $result);
@@ -47,20 +47,11 @@ class PaymentController extends Controller
 
             // Default values on error (not cached - will retry next request)
             return [
-                'isStripeLive' => false,
-                'useStripeConnect' => false,
-                'isStripeConnectLive' => false,
+                'isStripeLive' => true,
+                'useStripeConnect' => true,
+                'isStripeConnectLive' => true,
             ];
         });
-    }
-
-    /**
-     * Get the Stripe live/test status from API
-     * Fetches fresh data on every call
-     */
-    private function getStripeMode(): bool
-    {
-        return $this->getPaymentSettings()['isStripeLive'];
     }
 
     /**
