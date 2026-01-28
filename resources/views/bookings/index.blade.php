@@ -303,7 +303,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const isBefore24h = hoursUntilBooking >= 24;
 
         const totalAmount = booking.amount || 0;
-        const depositPercentage = booking.depositPercentage || 25;
+        // Use nullish check - depositPercentage of 0 is valid (free booking)
+        const depositPercentage = (booking.depositPercentage !== undefined && booking.depositPercentage !== null) ? booking.depositPercentage : 25;
         const depositAmount = totalAmount * (depositPercentage / 100);
         const paymentType = booking.paymentType || booking.payment_type || 'deposit';
 
@@ -361,7 +362,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (isDeposit) {
             const totalVal = booking.amount || 0;
-            const percentage = booking.depositPercentage ? (booking.depositPercentage / 100) : 0.25;
+            // Use nullish check - depositPercentage of 0 is valid (free booking)
+            const percentage = (booking.depositPercentage !== undefined && booking.depositPercentage !== null) ? (booking.depositPercentage / 100) : 0.25;
             const paidVal = (totalVal * percentage).toFixed(2);
             const remainingVal = (totalVal - paidVal).toFixed(2);
 
