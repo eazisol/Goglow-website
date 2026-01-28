@@ -102,9 +102,7 @@
 </head>
 <body class="{{ isset($whiteLabel) && $whiteLabel ? 'white-label-mode' : '' }}">
     <div class="container">
-      <div class="nav-header-section">
         @include('figmaDesign.header', ['whiteLabel' => $whiteLabel ?? false])
-      </div>
     </div>
               
                   @yield('content')

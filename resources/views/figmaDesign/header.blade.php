@@ -2,6 +2,7 @@
   @php
     $isWhiteLabel = isset($whiteLabel) && $whiteLabel;
   @endphp
+  <div class="nav-header-section">
   <nav class="navbar {{ $isWhiteLabel ? 'navbar-white-label' : '' }}">
     <div class="logo">
               <!-- Logo Section -->
@@ -80,7 +81,7 @@
     <button class="cta-btn">BECOME A GLOWER →</button>
   </div>
   @endif
-
+  </div>
 
   <!-- Header JS is loaded from header.js -->
 

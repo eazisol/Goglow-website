@@ -1,3 +1,39 @@
+// Smart Sticky Header - shrinks on scroll
+(function() {
+    const navSection = document.querySelector('.nav-header-section');
+    if (!navSection) return;
+
+    const scrollThreshold = 100;
+    let isScrolled = false;
+
+    function handleScroll() {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (currentScroll > scrollThreshold && !isScrolled) {
+            navSection.classList.add('scrolled');
+            isScrolled = true;
+        } else if (currentScroll <= scrollThreshold && isScrolled) {
+            navSection.classList.remove('scrolled');
+            isScrolled = false;
+        }
+    }
+
+    // Throttle scroll event for performance
+    let ticking = false;
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                handleScroll();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+
+    // Check initial scroll position
+    handleScroll();
+})();
+
 // Toggle Sidebar (only in non-white-label mode)
 (function() {
     const menuToggle = document.getElementById('menu-toggle');
