@@ -1,9 +1,9 @@
-// Smart Sticky Header - shrinks on scroll
+// Smart Sticky Header - adds visual feedback when scrolled
 (function() {
     const navSection = document.querySelector('.nav-header-section');
     if (!navSection) return;
 
-    const scrollThreshold = 100;
+    const scrollThreshold = 50;
     let isScrolled = false;
 
     function handleScroll() {

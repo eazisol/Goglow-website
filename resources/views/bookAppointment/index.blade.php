@@ -2635,13 +2635,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (isFreeBooking) {
                 // For free bookings, skip Stripe and directly submit the booking
                 console.log('Free booking detected, skipping Stripe payment');
-                
-                // Add payment information to booking payload
-                const freeBookingTransactionId = 'free-booking-' + Date.now();
+
+                // Add payment information to booking payload (matching mobile app format)
+                const freeBookingTransactionId = 'FREE_' + Date.now();
                 bookingPayload.payment_id = freeBookingTransactionId;
                 bookingPayload.payment_type = 'deposit';
-                bookingPayload.payment_status = 'completed';
-                bookingPayload.payed = false; // Free booking, so not fully paid
+                bookingPayload.payed = false; // Free booking, no payment made
+                bookingPayload.depositPercentage = 0; // No deposit percentage
+                bookingPayload.depositAmount = 0; // No deposit amount was paid
                 bookingPayload.alreadySubmitted = true; // Flag to prevent double submission
                 
                 // Store booking data in localStorage for success page (same as paid bookings)

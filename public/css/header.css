@@ -14,19 +14,17 @@
 
     /* ---------- Navbar Container ---------- */
     .nav-header-section{
-      margin-top: 40px;
-      position: relative;
+      padding-top: 40px;
+      position: sticky;
+      top: 0;
       z-index: 1000;
       transition: all 0.3s ease;
+      background: transparent;
     }
 
     .nav-header-section.scrolled {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      margin-top: 0;
-      padding: 10px 20px;
+      padding-top: 10px;
+      padding-bottom: 10px;
       background: rgba(250, 250, 250, 0.97);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -420,11 +418,12 @@
     /* ---------- Responsive ---------- */
     @media (max-width: 768px) {
       .nav-header-section {
-        margin-top: 15px;
+        padding-top: 15px;
       }
 
       .nav-header-section.scrolled {
-        padding: 8px 15px;
+        padding-top: 8px;
+        padding-bottom: 8px;
       }
 
       .nav-header-section.scrolled .navbar {

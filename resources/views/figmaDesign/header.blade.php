@@ -3,7 +3,8 @@
     $isWhiteLabel = isset($whiteLabel) && $whiteLabel;
   @endphp
   <div class="nav-header-section">
-  <nav class="navbar {{ $isWhiteLabel ? 'navbar-white-label' : '' }}">
+    <div class="container">
+      <nav class="navbar {{ $isWhiteLabel ? 'navbar-white-label' : '' }}">
     <div class="logo">
               <!-- Logo Section -->
               <a href="{{ url('/') }}"><img src="{{ asset('images/images/LOGO-glaura-horizontal-couleur.png') }}" alt="GoGlow Logo" class="logo"></a>
@@ -61,9 +62,8 @@
         @endif
     </div>
     @endif
-  </nav>
-
-
+      </nav>
+    </div>
 
   <!-- Sidebar for Mobile (hidden in white-label mode) -->
   @if(!$isWhiteLabel)

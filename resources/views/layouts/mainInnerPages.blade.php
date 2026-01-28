@@ -101,9 +101,7 @@
 </script>
 </head>
 <body class="{{ isset($whiteLabel) && $whiteLabel ? 'white-label-mode' : '' }}">
-    <div class="container">
-        @include('figmaDesign.header', ['whiteLabel' => $whiteLabel ?? false])
-    </div>
+    @include('figmaDesign.header', ['whiteLabel' => $whiteLabel ?? false])
               
                   @yield('content')
                 @if (!Route::is('terms_condition') && !Route::is('privacy_policy') && !(isset($whiteLabel) && $whiteLabel))
