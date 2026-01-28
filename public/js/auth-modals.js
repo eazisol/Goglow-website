@@ -143,10 +143,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        function hideModal(modalEl) {
+        function hideModal(modalEl, keepBodyClass) {
             if (modalEl) {
                 modalEl.classList.remove('show');
-                document.body.classList.remove('modal-open');
+                // Only remove modal-open if not switching between modals
+                if (!keepBodyClass) {
+                    document.body.classList.remove('modal-open');
+                }
                 // Dispatch Bootstrap-compatible event for compatibility
                 modalEl.dispatchEvent(new CustomEvent('hidden.bs.modal'));
             }
@@ -193,15 +196,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         console.log('✅ Vanilla JS modals initialized');
 
-        // Toggle between login and signup modals
+        // Toggle between login and signup modals - instant crossfade
         const showSignupBtn = document.getElementById('show-signup-modal');
         if (showSignupBtn) {
             showSignupBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                hideModal(loginModalElement);
-                setTimeout(function() {
-                    showModal(signupModalElement);
-                }, 300);
+                e.stopPropagation();
+                // Instant switch - show signup immediately, then hide login
+                showModal(signupModalElement);
+                hideModal(loginModalElement, true);
             });
         }
 
@@ -209,10 +212,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (showLoginBtn) {
             showLoginBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                hideModal(signupModalElement);
-                setTimeout(function() {
-                    showModal(loginModalElement);
-                }, 300);
+                e.stopPropagation();
+                // Instant switch - show login immediately, then hide signup
+                showModal(loginModalElement);
+                hideModal(signupModalElement, true);
             });
         }
 

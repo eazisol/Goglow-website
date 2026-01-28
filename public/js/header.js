@@ -16,6 +16,17 @@
         });
     }
 
+    // Remove focus highlight from menu links after click
+    const menuLinks = document.querySelectorAll('.menu a');
+    menuLinks.forEach(function(link) {
+        link.addEventListener('mouseup', function() {
+            this.blur();
+        });
+        link.addEventListener('click', function() {
+            this.blur();
+        });
+    });
+
     // Header Login Button - open modal using Bootstrap
     const headerLoginBtns = document.querySelectorAll('#header-login-btn, #header-login-btn-wl');
     headerLoginBtns.forEach(function(btn) {

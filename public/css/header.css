@@ -61,23 +61,62 @@
       font-size: 17px;
       font-weight: 500;
       color: #75213e !important;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .menu a:link,
     .menu a:visited,
     .menu a:hover,
-    .menu a:active {
+    .menu a:active,
+    .menu a:focus {
       color: #75213e !important;
       text-decoration: none !important;
+      background: transparent !important;
     }
 
+    /* Only highlight the active PAGE (current route), not clicked state */
     .menu a.active,
     .menu a.active:link,
     .menu a.active:visited,
     .menu a.active:hover,
-    .menu a.active:active {
+    .menu a.active:active,
+    .menu a.active:focus {
       font-weight: 600;
       color: #e50050 !important;
+      background: transparent !important;
+    }
+
+    /* Remove focus outline/highlight on click */
+    .navbar .menu a:focus,
+    .navbar .menu a:active,
+    .navbar .menu a:focus:active,
+    .menu a:focus,
+    .menu a:active,
+    .menu a:focus:active {
+      outline: none !important;
+      outline-width: 0 !important;
+      box-shadow: none !important;
+      border: none !important;
+      border-color: transparent !important;
+      background: transparent !important;
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-appearance: none !important;
+    }
+
+    /* Prevent any highlight on the menu container */
+    .menu:focus,
+    .menu:active,
+    .menu:focus-within {
+      outline: none !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+
+    /* Only show focus ring for keyboard navigation */
+    .menu a:focus-visible {
+      outline: 2px solid #e50050 !important;
+      outline-offset: 2px;
+      border-radius: 4px;
     }
 
     .plus {
@@ -106,6 +145,15 @@
 
     .cta-btn:hover {
       background: #d8144f;
+    }
+
+    .cta-btn:focus {
+      outline: none;
+    }
+
+    .cta-btn:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
     }
 
     /* ---------- Mobile Menu Icon ---------- */
@@ -197,9 +245,50 @@
       margin-left: 10px;
     }
 
-    .login-header-btn:hover {
+    /* Ensure consistent styling for link and visited states */
+    a.login-header-btn,
+    a.login-header-btn:link,
+    a.login-header-btn:visited {
+      background: transparent;
+      color: #e50050;
+      text-decoration: none;
+    }
+
+    .login-header-btn:hover,
+    a.login-header-btn:hover {
       background: #e50050;
       color: white;
+    }
+
+    .login-header-btn:focus,
+    a.login-header-btn:focus {
+      outline: none !important;
+      box-shadow: none !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Active state: maintain hover appearance to prevent flicker */
+    .login-header-btn:active,
+    a.login-header-btn:active,
+    .login-header-btn:active:hover,
+    a.login-header-btn:active:hover {
+      outline: none !important;
+      box-shadow: none !important;
+      -webkit-tap-highlight-color: transparent;
+      background: #e50050 !important;
+      color: white !important;
+      transition: none !important;
+    }
+
+    .login-header-btn:active img,
+    a.login-header-btn:active img {
+      filter: brightness(0) invert(1);
+    }
+
+    .login-header-btn:focus-visible,
+    a.login-header-btn:focus-visible {
+      outline: 2px solid #e50050 !important;
+      outline-offset: 2px;
     }
 
     .login-header-btn:hover img {
