@@ -36,6 +36,7 @@
 {{-- <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> --}}
     
     {{-- CSS Files - Load in correct order --}}
+    {{-- <link href="{{ \App\Helpers\AssetHelper::versioned('css/bootstrap.min.css') }}" rel="stylesheet" media="screen"> --}}
     <link href="{{ \App\Helpers\AssetHelper::versioned('css/fonts.css') }}" rel="stylesheet" media="screen">
     <link href="{{ \App\Helpers\AssetHelper::versioned('css/newdesign.css') }}" rel="stylesheet" media="screen">
     <link href="{{ \App\Helpers\AssetHelper::versioned('css/header.css') }}" rel="stylesheet" media="screen">
@@ -43,6 +44,7 @@
     <link href="{{ \App\Helpers\AssetHelper::versioned('css/auth-modals.css') }}" rel="stylesheet" media="screen">
     
     {{-- External CSS (non-critical) --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">
 
 <script>
@@ -127,6 +129,8 @@
     {{-- JavaScript Files - Load in correct order --}}
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/new-design.js') }}" defer></script>
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/professional-form.js') }}" defer></script>
+    <script src="{{ \App\Helpers\AssetHelper::versioned('js/header.js') }}" defer></script>
+    <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-fetch.js') }}" defer></script>
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-modals.js') }}" defer></script>
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/book-appointment-auth.js') }}" defer></script>
 
@@ -143,9 +147,42 @@
   <noscript><link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet"></noscript>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
+  {{-- Firebase JS SDK for OAuth --}}
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" onerror="console.error('Failed to load firebase-app-compat.js')"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" onerror="console.error('Failed to load firebase-auth-compat.js')"></script>
+  <script>
+    // Initialize Firebase
+    if (typeof firebase === 'undefined') {
+      console.error('Firebase SDK not loaded!');
+    } else {
+      const apiKey = '{{ config("services.firebase.web_api_key") }}';
+      const authDomain = '{{ config("services.firebase.auth_domain") }}';
+      const projectId = '{{ config("services.firebase.project_id") }}';
+
+      if (!apiKey || !authDomain || !projectId) {
+        console.error('Firebase config values are missing!');
+      } else {
+        const firebaseConfig = {
+          apiKey: apiKey,
+          authDomain: authDomain,
+          projectId: projectId,
+        };
+
+        try {
+          if (firebase.apps.length === 0) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          window.firebaseAuth = firebase.auth();
+        } catch (error) {
+          console.error('Firebase initialization error:', error);
+        }
+      }
+    }
+  </script>
+
   @yield('scripts')
   
-  {{-- @include('partials.auth-modals') --}}
+  @include('partials.auth-modals')
   
 </body>
 </html>

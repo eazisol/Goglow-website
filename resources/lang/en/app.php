@@ -66,6 +66,7 @@ return [
         'sign_up_with_apple' => 'Sign up with Apple',
         'login_successful' => 'Login Successful!',
         'redirecting' => 'Redirecting...',
+        'already_logged_in' => 'You are already logged in',
         'login_to_glaura' => 'Login to Glaura',
         'login_options_desc' => 'Manage you account , book salon services , chat comment , follow and more.',
         'continue_with_google' => 'Continue with Google',
@@ -88,7 +89,8 @@ return [
         'service_amount' => 'Service Amount :',
         'deposit_amount' => 'Deposit :',
         'total_remaining' => 'Total Remaining :',
-        // 'slot_conflict_alert' => 'This service requires :duration minutes. The next available slots are not free. Please select an earlier time or a different slot.',
+        'slot_conflict_alert' => 'This service requires :duration minutes. The next available slots are not free. Please select an earlier time or a different slot.',
+        'please_accept_terms' => 'Please check this box to proceed.',
     ],
 
     // Schedule
@@ -159,6 +161,40 @@ return [
         'log_out' => 'Log Out',
         'my_past_appointments' => 'My Past Appointments',
         'with' => 'with',
+        // Tabs
+        'upcoming' => 'Upcoming',
+        'past' => 'Past/Cancelled',
+        // Empty states
+        'no_upcoming_bookings' => 'No upcoming bookings',
+        'no_upcoming_bookings_desc' => "You don't have any upcoming appointments.",
+        'no_past_bookings' => 'No past bookings',
+        'no_past_bookings_desc' => "You don't have any past appointments yet.",
+        // Actions
+        'cancel' => 'Cancel',
+        'reschedule' => 'Reschedule',
+        'confirm_cancel' => 'Confirm Cancel',
+        'processing' => 'Processing...',
+        // Cancel modal
+        'cancel_booking_question' => 'Cancel booking?',
+        'full_refund_message' => 'A full refund of {amount} will be processed.',
+        'partial_refund_message' => 'A partial refund of {amount} will be processed. The deposit will be retained due to late cancellation.',
+        'no_refund_message' => 'The deposit will be retained due to late cancellation (less than 24 hours notice).',
+        'cancel_success' => 'Booking cancelled successfully',
+        'cancel_error' => 'Failed to cancel booking. Please try again.',
+        'refund_error' => 'Failed to process refund',
+        // API errors
+        'fetch_error' => 'Failed to fetch bookings',
+        'not_found' => 'Booking not found',
+        'already_cancelled' => 'Booking is already cancelled',
+        'completed_cannot_cancel' => 'Completed bookings cannot be cancelled',
+        'only_active_reschedule' => 'Only active bookings can be rescheduled',
+        'reschedule_24h_advance' => 'Bookings can only be rescheduled at least 24 hours in advance',
+        // Reschedule
+        'confirm_reschedule' => 'Confirm Reschedule',
+        'reschedule_success' => 'Booking rescheduled successfully',
+        'reschedule_error' => 'Failed to reschedule booking. Please try again.',
+        'auth_required' => 'Authentication required',
+        'keep_booking' => 'Keep my booking',
     ],
 
     // Common
@@ -469,6 +505,7 @@ return [
         'to_book' => 'To Book',
         'open' => 'Open',
         'until' => 'until',
+        'hours_of_operation' => 'Hours of operation',
         'back_to_search_page' => 'Back to Search Results',
         'reviews' => 'Reviews',
         'monday' => 'Monday',
@@ -631,6 +668,10 @@ return [
         'previous' => 'Previous',
         'next' => 'Next',
         'page_info' => 'Page :current of :total',
+        'back_to_blog' => 'Back to Blog',
+        'back_to_all_articles' => 'Back to All Articles',
+        'article_not_found' => 'Article Not Found',
+        'article_not_found_message' => 'The article you\'re looking for doesn\'t exist or has been removed.',
     ],
     'error_404' => [
         'title' => 'Oops! Page Not Found',
@@ -638,5 +679,14 @@ return [
         'description' => 'The page you\'re looking for doesn\'t exist or has been moved. Don\'t worry, let\'s get you back on track!',
         'go_home' => 'Go to Homepage',
         'go_back' => 'Go Back',
+    ],
+    'payment' => [
+        'complete_payment' => 'Payment',
+        'pay_now' => 'Pay Now',
+        'processing' => 'Processing...',
+        'deposit_percent' => ':percent% Deposit',
+        'free_booking' => 'Free Booking',
+        'full_payment' => 'Full Payment',
+        'beauty_service' => 'Beauty Service',
     ],
 ];

@@ -11,15 +11,15 @@
 
 {{-- Content --}}
 @section('content')
+  <!-- Header outside hero for sticky positioning -->
+  @include('figmaDesign.header')
+
   <main>
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="hero-bg"></div>
       <div class="hero-content">
         <div class="container">
-          <!-- Header -->
-          @include('figmaDesign.header')
-
           <!-- Hero Content -->
           <div class="flex-col hero-content-top" style="align-items: center; text-align: center;">
             <div class="badge">

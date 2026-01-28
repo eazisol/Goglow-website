@@ -64,6 +64,7 @@ return [
         'sign_up_with_apple' => 'S\'inscrire avec Apple',
         'login_successful' => 'Connexion réussie!',
         'redirecting' => 'Redirection...',
+        'already_logged_in' => 'Vous êtes déjà connecté',
         'login_to_glaura' => 'Connexion à Glaura',
         'login_options_desc' => 'Gérez votre compte, réservez des services de salon, chattez avec des commentaires, suivez et plus encore.',
         'continue_with_google' => 'Continuer avec Google',
@@ -86,7 +87,8 @@ return [
         'service_amount' => 'Montant du service :',
         'deposit_amount' => 'Acompte :',
         'total_remaining' => 'Total restant :',
-        // 'slot_conflict_alert' => 'Ce service dure :duration minutes. Les créneaux suivants ne sont pas libres. Veuillez sélectionner une heure plus tôt ou un autre créneau.',
+        'slot_conflict_alert' => 'Ce service dure :duration minutes. Les créneaux suivants ne sont pas libres. Veuillez sélectionner une heure plus tôt ou un autre créneau.',
+        'please_accept_terms' => 'Veuillez cocher cette case pour continuer.',
     ],
 
     // Schedule
@@ -157,6 +159,40 @@ return [
         'log_out' => 'Se Déconnecter',
         'my_past_appointments' => 'Mes Rendez-vous Passés',
         'with' => 'avec',
+        // Tabs
+        'upcoming' => 'À venir',
+        'past' => 'Passés/Annulées',
+        // Empty states
+        'no_upcoming_bookings' => 'Aucun rendez-vous à venir',
+        'no_upcoming_bookings_desc' => "Vous n'avez pas de rendez-vous à venir.",
+        'no_past_bookings' => 'Aucun rendez-vous passé',
+        'no_past_bookings_desc' => "Vous n'avez pas encore de rendez-vous passé.",
+        // Actions
+        'cancel' => 'Annuler',
+        'reschedule' => 'Reprogrammer',
+        'confirm_cancel' => 'Confirmer l\'annulation',
+        'processing' => 'Traitement...',
+        // Cancel modal
+        'cancel_booking_question' => 'Annuler la réservation ?',
+        'full_refund_message' => 'Un remboursement complet de {amount} sera effectué.',
+        'partial_refund_message' => 'Un remboursement partiel de {amount} sera effectué. L\'acompte sera conservé en raison de l\'annulation tardive.',
+        'no_refund_message' => 'L\'acompte sera conservé en raison de l\'annulation tardive (moins de 24 heures de préavis).',
+        'cancel_success' => 'Réservation annulée avec succès',
+        'cancel_error' => 'Échec de l\'annulation de la réservation. Veuillez réessayer.',
+        'refund_error' => 'Échec du traitement du remboursement',
+        // API errors
+        'fetch_error' => 'Échec de la récupération des réservations',
+        'not_found' => 'Réservation introuvable',
+        'already_cancelled' => 'La réservation est déjà annulée',
+        'completed_cannot_cancel' => 'Les réservations terminées ne peuvent pas être annulées',
+        'only_active_reschedule' => 'Seules les réservations actives peuvent être reprogrammées',
+        'reschedule_24h_advance' => 'Les réservations ne peuvent être reprogrammées qu\'au moins 24 heures à l\'avance',
+        // Reschedule
+        'confirm_reschedule' => 'Confirmer la reprogrammation',
+        'reschedule_success' => 'Réservation reprogrammée avec succès',
+        'reschedule_error' => 'Échec de la reprogrammation. Veuillez réessayer.',
+        'auth_required' => 'Authentification requise',
+        'keep_booking' => 'Garder ma réservation',
     ],
 
     // Common
@@ -468,6 +504,7 @@ return [
         'to_book' => 'Pour réserver',
         'open' => 'Ouvert',
         'until' => 'jusquà',
+        'hours_of_operation' => "Horaires d'ouverture",
         'back_to_search_page' => 'Retour aux résultats de recherche',
         'reviews' => 'Avis',
         'monday' => 'Lundi',
@@ -632,6 +669,10 @@ return [
         'previous' => 'Précédent',
         'next' => 'Suivant',
         'page_info' => 'Page :current sur :total',
+        'back_to_blog' => 'Retour au Blog',
+        'back_to_all_articles' => 'Retour aux Articles',
+        'article_not_found' => 'Article introuvable',
+        'article_not_found_message' => 'L\'article que vous recherchez n\'existe pas ou a été supprimé.',
     ],
     'error_404' => [
         'title' => 'Oups ! Page introuvable',
@@ -639,5 +680,14 @@ return [
         'description' => 'La page que vous recherchez n\'existe pas ou a été déplacée. Ne vous inquiétez pas, remettons-vous sur la bonne voie !',
         'go_home' => 'Aller à l\'accueil',
         'go_back' => 'Retour',
+    ],
+    'payment' => [
+        'complete_payment' => 'Paiement',
+        'pay_now' => 'Payer',
+        'processing' => 'Traitement...',
+        'deposit_percent' => 'Acompte :percent%',
+        'free_booking' => 'Réservation gratuite',
+        'full_payment' => 'Paiement intégral',
+        'beauty_service' => 'Service beauté',
     ],
 ];

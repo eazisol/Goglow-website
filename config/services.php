@@ -34,15 +34,20 @@ return [
         'web_api_key' => env('FIREBASE_WEB_API_KEY'),
         'project_id' => env('FIREBASE_PROJECT_ID'),
         'auth_domain' => env('FIREBASE_AUTH_DOMAIN'),
+        'cloud_functions_url' => env('FIREBASE_CLOUD_FUNCTIONS_URL', 'https://us-central1-beauty-984c8.cloudfunctions.net'),
     ],
     
     'stripe' => [
-        // Test keys (used when isStripeLive = false)
+        // Regular Stripe keys
         'test_key' => env('TEST_STRIPE_PUBLISHABLE_KEY'),
         'test_secret' => env('TEST_STRIPE_SECRET_KEY'),
-        // Live keys (used when isStripeLive = true)
         'live_key' => env('LIVE_STRIPE_PUBLISHABLE_KEY'),
         'live_secret' => env('LIVE_STRIPE_SECRET_KEY'),
+        // Stripe Connect keys
+        'test_connect_key' => env('TEST_STRIPE_CONNECT_PUBLISHABLE_KEY'),
+        'test_connect_secret' => env('TEST_STRIPE_CONNECT_SECRET_KEY'),
+        'live_connect_key' => env('LIVE_STRIPE_CONNECT_PUBLISHABLE_KEY'),
+        'live_connect_secret' => env('LIVE_STRIPE_CONNECT_SECRET_KEY'),
     ],
 
 ];

@@ -17,6 +17,11 @@ class AuthController extends Controller
 
     public function login(Request $request, FirebaseAuth $auth)
     {
+        // Clear any output buffer to ensure clean JSON response (prevents PHP warnings from corrupting JSON)
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $validated = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
@@ -101,6 +106,11 @@ class AuthController extends Controller
 
     public function register(Request $request, FirebaseAuth $auth)
     {
+        // Clear any output buffer to ensure clean JSON response (prevents PHP warnings from corrupting JSON)
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -173,6 +183,11 @@ class AuthController extends Controller
 
     public function oauthLogin(Request $request, FirebaseAuth $auth)
     {
+        // Clear any output buffer to ensure clean JSON response (prevents PHP warnings from corrupting JSON)
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
         $validated = $request->validate([
             'idToken' => ['required', 'string'],
             'isSignup' => ['boolean'],
@@ -182,10 +197,10 @@ class AuthController extends Controller
             // Verify the ID token
             $verifiedToken = $auth->verifyIdToken($validated['idToken']);
             $uid = $verifiedToken->claims()->get('sub');
-            
+
             // Get user info from Firebase
             $user = $auth->getUser($uid);
-            
+
             // Store in session
             session([
                 'firebase_uid' => $uid,
@@ -195,7 +210,7 @@ class AuthController extends Controller
 
             // Check for stored book appointment URL first, then request redirect, then default to search
             $redirect = session('last_book_appointment_url') ?: $request->input('redirect') ?: route('search');
-            
+
             // Clear the stored URL after using it
             session()->forget('last_book_appointment_url');
 
@@ -206,11 +221,63 @@ class AuthController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('OAuth login failed', ['error' => $e->getMessage()]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Authentication failed: ' . $e->getMessage()
             ], 422);
+        }
+    }
+
+    /**
+     * Refresh the Firebase ID token stored in the session.
+     * Called when a 401 error is detected on the frontend.
+     */
+    public function refreshToken(Request $request, FirebaseAuth $auth)
+    {
+        $validated = $request->validate([
+            'idToken' => ['required', 'string'],
+        ]);
+
+        try {
+            // Verify the new ID token
+            $verifiedToken = $auth->verifyIdToken($validated['idToken']);
+            $uid = $verifiedToken->claims()->get('sub');
+
+            // Check if this matches the current session user
+            $sessionUid = session('firebase_uid');
+            if ($sessionUid && $sessionUid !== $uid) {
+                Log::warning('Token refresh attempted with different UID', [
+                    'session_uid' => $sessionUid,
+                    'token_uid' => $uid
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Token does not match current session'
+                ], 403);
+            }
+
+            // Get user info from Firebase
+            $user = $auth->getUser($uid);
+
+            // Update session with new token
+            session([
+                'firebase_uid' => $uid,
+                'firebase_email' => $user->email ?? session('firebase_email'),
+                'firebase_id_token' => $validated['idToken'],
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Token refreshed successfully'
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Token refresh failed', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Token refresh failed: ' . $e->getMessage()
+            ], 401);
         }
     }
     

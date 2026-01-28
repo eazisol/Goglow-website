@@ -326,7 +326,7 @@
                                 <div class="form-group col-md-12 mb-4">
                                     <div class="input-group">
                                         <input type="password" name="password" id="password" class="form-control" placeholder="{{ __('app.auth.password_min_chars') }}" required minlength="6">
-                                        <span class="input-group-text password-toggle" onclick="const p=document.getElementById('password'); p.type=p.type==='password'?'text':'password'">
+                                        <span class="input-group-text password-toggle" onclick="togglePassword('password')">
                                             <i class="fa fa-eye"></i>
                                         </span>
                                     </div>
@@ -334,7 +334,12 @@
                                 </div>
 
                                 <div class="form-group col-md-12 mb-4">
-                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="{{ __('app.auth.confirm_password') }}" required minlength="6">
+                                    <div class="input-group">
+                                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="{{ __('app.auth.confirm_password') }}" required minlength="6">
+                                        <span class="input-group-text password-toggle" onclick="togglePassword('password_confirmation')">
+                                            <i class="fa fa-eye"></i>
+                                        </span>
+                                    </div>
                                     <div class="help-block with-errors"></div>
                                 </div>
 
@@ -366,6 +371,27 @@
 
 @section('scripts')
 <script src="{{ asset('js/country-codes.js') }}"></script>
+<script>
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const toggleSpan = input.parentElement.querySelector('.password-toggle');
+    const icon = toggleSpan ? toggleSpan.querySelector('i') : null;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) {
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
+    } else {
+        input.type = 'password';
+        if (icon) {
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+}
+</script>
 <script>
 // client-side light validation feedback
 document.addEventListener('DOMContentLoaded', function () {

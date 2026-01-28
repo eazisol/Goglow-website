@@ -117,143 +117,94 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Auth modals script loaded');
         console.log('Authentication status:', window.isAuthenticated);
         console.log('Show auth modal:', window.showAuthModal);
+
+        // Clear stale booking redirect URLs when on home page
+        // Users on the home page are not in a booking flow
+        const currentPath = window.location.pathname;
+        const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+        if (isHomePage) {
+            localStorage.removeItem('book_appointment_url');
+            localStorage.removeItem('login_redirect_url');
+            console.log('Cleared stale redirect URLs (on home page)');
+        }
         // Modal toggle functions
         const loginModalElement = document.getElementById('loginModal');
         const signupModalElement = document.getElementById('signupModal');
 
-        // Initialize Bootstrap modals
-        let loginModal = null;
-        let signupModal = null;
-
-        try {
-            console.log('🔍 Checking for jQuery/Bootstrap...');
-            console.log('jQuery available:', typeof $ !== 'undefined');
-            console.log('Bootstrap available:', typeof bootstrap !== 'undefined');
-
-            // Check if jQuery is available
-            if (typeof $ !== 'undefined') {
-                console.log('Using jQuery for modal handling');
-
-                // Use jQuery modal methods
-                loginModal = {
-                    show: function () { $('#loginModal').modal('show'); },
-                    hide: function () { $('#loginModal').modal('hide'); }
-                };
-
-                signupModal = {
-                    show: function () { $('#signupModal').modal('show'); },
-                    hide: function () { $('#signupModal').modal('hide'); }
-                };
-                console.log('✅ jQuery modals initialized');
-            } else if (typeof bootstrap !== 'undefined') {
-                console.log('Using Bootstrap JS for modal handling');
-                console.log('Bootstrap version/type:', typeof bootstrap.Modal);
-
-                if (loginModalElement) {
-                    console.log('Login modal element found:', loginModalElement);
-                    try {
-                        console.log('🔨 Attempting to create Login Bootstrap Modal instance...');
-                        loginModal = new bootstrap.Modal(loginModalElement);
-                        console.log('✅ Login modal Bootstrap instance created:', loginModal);
-                        console.log('✅✅✅ SUCCESS - Login modal created, execution continuing');
-                    } catch (modalError) {
-                        console.error('❌ ERROR creating login modal:', modalError);
-                        console.error('Modal error details:', modalError.message, modalError.stack);
-                        // Don't throw - set to null and continue
-                        loginModal = null;
-                    }
-                } else {
-                    console.warn('Login modal element not found');
-                }
-
-                if (signupModalElement) {
-                    console.log('Signup modal element found:', signupModalElement);
-                    console.log('🔨 About to create signup modal...');
-
-                    // Use setTimeout to ensure this executes
-                    setTimeout(function () {
-                        try {
-                            console.log('🔨 Attempting to create Bootstrap Modal instance...');
-                            signupModal = new bootstrap.Modal(signupModalElement);
-                            console.log('✅ Signup modal Bootstrap instance created:', signupModal);
-                            console.log('✅✅✅ SUCCESS - Signup modal created');
-                        } catch (modalError) {
-                            console.error('❌ ERROR creating signup modal:', modalError);
-                            console.error('Modal error details:', modalError.message, modalError.stack);
-                            signupModal = null;
-                        }
-                    }, 0);
-
-                    console.log('✅✅✅ Signup modal creation initiated (async)');
-                } else {
-                    console.warn('Signup modal element not found');
-                }
-                console.log('✅✅✅ About to log "Bootstrap modals initialization complete"');
-                console.log('✅ Bootstrap modals initialization complete');
-                console.log('✅✅✅ Past Bootstrap modals initialization complete');
-            } else {
-                console.error('Neither jQuery nor Bootstrap JS is available');
+        // Vanilla JS modal helper functions
+        function showModal(modalEl) {
+            if (modalEl) {
+                modalEl.classList.add('show');
+                document.body.classList.add('modal-open');
+                // Dispatch Bootstrap-compatible event for compatibility
+                setTimeout(function() {
+                    modalEl.dispatchEvent(new CustomEvent('shown.bs.modal'));
+                }, 150);
             }
-        } catch (error) {
-            console.error('❌ CRITICAL ERROR initializing modals:', error);
-            console.error('Error name:', error.name);
-            console.error('Error message:', error.message);
-            console.error('Error stack:', error.stack);
-            // Don't throw - continue execution
         }
 
-        // Force log with multiple methods to ensure it shows
-        console.log('✅✅✅ Modal initialization complete, continuing with form handlers...');
-        console.error('🔴 FORCE LOG - Modal init complete (using console.error to ensure visibility)');
-        console.log('Login modal object:', loginModal);
-        console.log('Signup modal object:', signupModal);
-        console.log('📍 About to set up toggle buttons...');
-        console.log('Login modal object:', loginModal);
-        console.log('Signup modal object:', signupModal);
-        console.log('📍 About to set up toggle buttons...');
+        function hideModal(modalEl, keepBodyClass) {
+            if (modalEl) {
+                modalEl.classList.remove('show');
+                // Only remove modal-open if not switching between modals
+                if (!keepBodyClass) {
+                    document.body.classList.remove('modal-open');
+                }
+                // Dispatch Bootstrap-compatible event for compatibility
+                modalEl.dispatchEvent(new CustomEvent('hidden.bs.modal'));
+            }
+        }
 
-        // Toggle between login and signup modals
+        // Initialize vanilla modals with show/hide methods
+        let loginModal = loginModalElement ? {
+            show: function() { showModal(loginModalElement); },
+            hide: function() { hideModal(loginModalElement); }
+        } : null;
+
+        let signupModal = signupModalElement ? {
+            show: function() { showModal(signupModalElement); },
+            hide: function() { hideModal(signupModalElement); }
+        } : null;
+
+        // Setup close button handlers
+        document.querySelectorAll('[data-bs-dismiss="modal"], .btn-close').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                const modal = e.target.closest('.modal');
+                if (modal) {
+                    hideModal(modal);
+                }
+            });
+        });
+
+        // Close modal when clicking on backdrop
+        document.querySelectorAll('.modal').forEach(function(modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    hideModal(modal);
+                }
+            });
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.show').forEach(function(modal) {
+                    hideModal(modal);
+                });
+            }
+        });
+
+        console.log('✅ Vanilla JS modals initialized');
+
+        // Toggle between login and signup modals - instant crossfade
         const showSignupBtn = document.getElementById('show-signup-modal');
         if (showSignupBtn) {
             showSignupBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-
-                // Get modal instances - create if they don't exist
-                let loginModalInstance = loginModal;
-                let signupModalInstance = signupModal;
-
-                const loginModalEl = document.getElementById('loginModal');
-                const signupModalEl = document.getElementById('signupModal');
-
-                if (!loginModalInstance && loginModalEl) {
-                    if (typeof bootstrap !== 'undefined') {
-                        loginModalInstance = new bootstrap.Modal(loginModalEl);
-                    }
-                }
-
-                if (!signupModalInstance && signupModalEl) {
-                    if (typeof bootstrap !== 'undefined') {
-                        signupModalInstance = new bootstrap.Modal(signupModalEl);
-                    }
-                }
-
-                // Hide login modal
-                if (loginModalInstance) {
-                    loginModalInstance.hide();
-                } else if (loginModalEl && typeof bootstrap !== 'undefined') {
-                    const tempModal = new bootstrap.Modal(loginModalEl);
-                    tempModal.hide();
-                }
-
-                // Show signup modal after delay
-                setTimeout(() => {
-                    if (signupModalInstance) {
-                        signupModalInstance.show();
-                    } else if (signupModalEl && typeof bootstrap !== 'undefined') {
-                        const tempModal = new bootstrap.Modal(signupModalEl);
-                        tempModal.show();
-                    }
-                }, 300);
+                e.stopPropagation();
+                // Instant switch - show signup immediately, then hide login
+                showModal(signupModalElement);
+                hideModal(loginModalElement, true);
             });
         }
 
@@ -261,53 +212,31 @@ document.addEventListener('DOMContentLoaded', function () {
         if (showLoginBtn) {
             showLoginBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-
-                // Get modal instances - create if they don't exist
-                let loginModalInstance = loginModal;
-                let signupModalInstance = signupModal;
-
-                const loginModalEl = document.getElementById('loginModal');
-                const signupModalEl = document.getElementById('signupModal');
-
-                if (!loginModalInstance && loginModalEl) {
-                    if (typeof bootstrap !== 'undefined') {
-                        loginModalInstance = new bootstrap.Modal(loginModalEl);
-                    }
-                }
-
-                if (!signupModalInstance && signupModalEl) {
-                    if (typeof bootstrap !== 'undefined') {
-                        signupModalInstance = new bootstrap.Modal(signupModalEl);
-                    }
-                }
-
-                // Hide signup modal
-                if (signupModalInstance) {
-                    signupModalInstance.hide();
-                } else if (signupModalEl && typeof bootstrap !== 'undefined') {
-                    const tempModal = new bootstrap.Modal(signupModalEl);
-                    tempModal.hide();
-                }
-
-                // Show login modal after delay
-                setTimeout(() => {
-                    if (loginModalInstance) {
-                        loginModalInstance.show();
-                    } else if (loginModalEl && typeof bootstrap !== 'undefined') {
-                        const tempModal = new bootstrap.Modal(loginModalEl);
-                        tempModal.show();
-                    }
-                }, 300);
+                e.stopPropagation();
+                // Instant switch - show login immediately, then hide signup
+                showModal(loginModalElement);
+                hideModal(signupModalElement, true);
             });
         }
 
         // Password toggle visibility
         window.togglePassword = function (inputId) {
             const input = document.getElementById(inputId);
+            const toggleSpan = input.parentElement.querySelector('.password-toggle');
+            const icon = toggleSpan ? toggleSpan.querySelector('i') : null;
+
             if (input.type === 'password') {
                 input.type = 'text';
+                if (icon) {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
             } else {
                 input.type = 'password';
+                if (icon) {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
             }
         };
 
@@ -597,16 +526,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Check if user is already logged in
                 if (window.isAuthenticated) {
                     const successElement = document.getElementById('login-success');
-                    successElement.textContent = 'You are already logged in. Redirecting...';
+                    const t = window.authTranslations || {};
+                    successElement.textContent = (t.alreadyLoggedIn || 'You are already logged in') + '. ' + (t.redirecting || 'Redirecting...');
                     successElement.classList.remove('d-none');
 
-                    // Get the stored book appointment URL from localStorage if available
-                    const storedUrl = localStorage.getItem('book_appointment_url');
+                    // Get the stored URLs from localStorage
+                    const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                    const loginRedirectUrl = localStorage.getItem('login_redirect_url');
 
-                    // Redirect immediately
+                    // Determine redirect URL - stay on home page if no explicit redirect
+                    const currentPath = window.location.pathname;
+                    const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+
+                    let redirectUrl;
+                    if (bookAppointmentUrl) {
+                        redirectUrl = bookAppointmentUrl;
+                    } else if (loginRedirectUrl) {
+                        redirectUrl = loginRedirectUrl;
+                    } else if (isHomePage) {
+                        redirectUrl = window.location.href;
+                    } else {
+                        redirectUrl = window.location.href;
+                    }
+
+                    // Redirect
                     setTimeout(() => {
-                        window.location.href = storedUrl || '/';
+                        window.location.href = redirectUrl;
                         localStorage.removeItem('book_appointment_url');
+                        localStorage.removeItem('login_redirect_url');
                     }, 500);
                     return;
                 }
@@ -659,21 +606,43 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
 
                             // Show success message with redirect indicator
-                            successElement.textContent = 'Login successful! Redirecting...';
+                            const trans = window.authTranslations || {};
+                            successElement.textContent = (trans.loginSuccessful || 'Login successful!') + ' ' + (trans.redirecting || 'Redirecting...');
                             successElement.classList.remove('d-none');
 
                             // Update window.isAuthenticated to prevent duplicate logins
                             window.isAuthenticated = true;
 
-                            // Get the stored book appointment URL from localStorage if available
-                            const storedUrl = localStorage.getItem('book_appointment_url');
+                            // Get the stored URLs from localStorage
+                            const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                            const loginRedirectUrl = localStorage.getItem('login_redirect_url');
 
-                            // Redirect immediately
+                            // Determine redirect URL
+                            // If on home page and no explicit booking flow, stay on current page
+                            const currentPath = window.location.pathname;
+                            const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+
+                            let redirectUrl;
+                            if (bookAppointmentUrl) {
+                                // Explicit booking flow - redirect to booking
+                                redirectUrl = bookAppointmentUrl;
+                            } else if (loginRedirectUrl) {
+                                // Explicit redirect set - use it
+                                redirectUrl = loginRedirectUrl;
+                            } else if (isHomePage) {
+                                // On home page with no explicit redirect - stay on home page
+                                redirectUrl = window.location.href;
+                            } else {
+                                // Other pages - use server redirect or current page
+                                redirectUrl = data.redirect || window.location.href;
+                            }
+
+                            // Redirect
                             setTimeout(() => {
-                                // Use stored URL, then data.redirect, then default to home
-                                window.location.href = storedUrl || data.redirect || '/';
-                                // Clear stored URL after using it
+                                window.location.href = redirectUrl;
+                                // Clear stored URLs after using them
                                 localStorage.removeItem('book_appointment_url');
+                                localStorage.removeItem('login_redirect_url');
                             }, 300);
                         } else {
                             // Hide loader and re-enable button on error
@@ -1025,7 +994,8 @@ document.addEventListener('DOMContentLoaded', function () {
         async function handleOAuthCallback(idToken, isSignup = false) {
             try {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]');
-                const storedUrl = localStorage.getItem('book_appointment_url');
+                const bookAppointmentUrl = localStorage.getItem('book_appointment_url');
+                const loginRedirectUrl = localStorage.getItem('login_redirect_url');
 
                 const response = await fetch('/ajax/oauth-login', {
                     method: 'POST',
@@ -1050,9 +1020,28 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (loginModal) loginModal.hide();
                     if (signupModal) signupModal.hide();
 
-                    // Redirect
-                    const redirectUrl = storedUrl || data.redirect || '/';
+                    // Determine redirect URL
+                    // If on home page and no explicit booking flow, stay on current page
+                    const currentPath = window.location.pathname;
+                    const isHomePage = currentPath === '/' || currentPath === '/home' || currentPath === '';
+
+                    let redirectUrl;
+                    if (bookAppointmentUrl) {
+                        // Explicit booking flow - redirect to booking
+                        redirectUrl = bookAppointmentUrl;
+                    } else if (loginRedirectUrl) {
+                        // Explicit redirect set - use it
+                        redirectUrl = loginRedirectUrl;
+                    } else if (isHomePage) {
+                        // On home page with no explicit redirect - stay on home page
+                        redirectUrl = window.location.href;
+                    } else {
+                        // Other pages - use server redirect or current page
+                        redirectUrl = data.redirect || window.location.href;
+                    }
+
                     localStorage.removeItem('book_appointment_url');
+                    localStorage.removeItem('login_redirect_url');
                     window.location.href = redirectUrl;
                 } else {
                     throw new Error(data.message || 'Authentication failed');
@@ -1248,20 +1237,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         loginRedirectInput.value = redirectUrl;
                     }
 
-                    // Show login modal using multiple methods
-                    if (loginModal) {
-                        console.log('Showing modal using loginModal object');
-                        loginModal.show();
-                    } else if (typeof $ !== 'undefined') {
-                        console.log('Showing modal using jQuery');
-                        $('#loginModal').modal('show');
-                    } else if (typeof bootstrap !== 'undefined' && document.getElementById('loginModal')) {
-                        console.log('Showing modal using bootstrap directly');
-                        const modalElement = document.getElementById('loginModal');
-                        const modal = new bootstrap.Modal(modalElement);
-                        modal.show();
+                    // Show login modal using vanilla JS
+                    const modalElement = document.getElementById('loginModal');
+                    if (modalElement) {
+                        console.log('Showing modal using vanilla JS');
+                        modalElement.classList.add('show');
+                        document.body.classList.add('modal-open');
                     } else {
-                        console.error('Could not show login modal - no method available');
+                        console.error('Could not show login modal - element not found');
                         // Fallback to regular navigation
                         return true;
                     }

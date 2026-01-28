@@ -244,7 +244,7 @@
             <div class="hours-toggle-header" id="hoursToggle">
                 <div class="hours-toggle-left">
                     <img src="{{ asset('images/images/iconoir_clock.svg') }}" alt="Location" width="24" height="24">
-                    <span class="open-until-text" id="openUntilText">Hours of operation</span>
+                    <span class="open-until-text" id="openUntilText">{!! __('app.service.hours_of_operation') !!}</span>
                 </div>
                 <i class="fas fa-chevron-up hours-chevron" id="hoursChevron"></i>
             </div>
@@ -1016,7 +1016,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (openUntil) {
                 openUntilTextEl.innerHTML = `{{ __('app.service.open') }} <span class="until-text-time">{{ __('app.service.until') }} ${openUntil}</span>`;
             } else {
-                openUntilTextEl.textContent = 'Hours of operation';
+                openUntilTextEl.textContent = @json(__('app.service.hours_of_operation'));
             }
         }
         

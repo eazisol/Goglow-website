@@ -20,8 +20,9 @@ class BookAppointmentController extends Controller
     {
         $serviceId = $request->query('serviceId');
         $serviceProviderId = $request->query('service_provider_id');
+        $rescheduleBookingId = $request->query('reschedule'); // Booking ID to reschedule
         $firebaseUid = session('firebase_uid');
-        
+
         // Store the current URL with query parameters in the session
         // This will be used if authentication is needed
         session(['last_book_appointment_url' => $request->fullUrl()]);
@@ -110,6 +111,7 @@ class BookAppointmentController extends Controller
             'serviceId' => $serviceId,
             'userId' => $firebaseUid,
             'userData' => $userData,
+            'rescheduleBookingId' => $rescheduleBookingId,
         ]);
     }
 
@@ -239,6 +241,7 @@ class BookAppointmentController extends Controller
             'servicesSlug' => $servicesSlug,
             'userId' => $firebaseUid,
             'userData' => $userData,
+            'whiteLabel' => true, // Enable white-label mode for provider booking pages
         ]);
     }
 }

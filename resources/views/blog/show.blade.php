@@ -18,7 +18,7 @@
         <div class="blog-detail-back">
             <a href="/blogs" class="blog-back-link">
                 <i class="fas fa-arrow-left"></i>
-                <span>Back to Blog</span>
+                <span>{{ __('app.blog.back_to_blog') }}</span>
             </a>
         </div>
 
@@ -33,9 +33,9 @@
             <div class="blog-error-icon">
                 <i class="fas fa-exclamation-circle"></i>
             </div>
-            <h3>Article Not Found</h3>
-            <p id="blog-detail-error-message">The article you're looking for doesn't exist or has been removed.</p>
-            <a href="/blogs" class="blog-retry-btn">Back to Blog</a>
+            <h3>{{ __('app.blog.article_not_found') }}</h3>
+            <p id="blog-detail-error-message">{{ __('app.blog.article_not_found_message') }}</p>
+            <a href="/blogs" class="blog-retry-btn">{{ __('app.blog.back_to_blog') }}</a>
         </div>
 
         <!-- Article Content -->
@@ -64,7 +64,7 @@
                 <div class="blog-detail-share">
                     <a href="/blogs" class="blog-back-to-list">
                         <i class="fas fa-arrow-left"></i>
-                        <span>Back to All Articles</span>
+                        <span>{{ __('app.blog.back_to_all_articles') }}</span>
                     </a>
                 </div>
             </footer>

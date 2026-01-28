@@ -4,11 +4,14 @@
 
 {{-- Style Files --}}
 @section('styles')
-@once
-    <!-- Bootstrap CSS for modals -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-@endonce
+{{-- Bootstrap removed - using vanilla CSS from auth-modals.css --}}
 <link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/bookAppointment-index.css') }}">
+<style>
+    /* Hide payment options in reschedule mode */
+    .reschedule-hidden {
+        display: none !important;
+    }
+</style>
 @endsection
 
 
@@ -167,7 +170,8 @@
                                 
                                 <!-- Payment Options (hidden initially, shown after time slot selection) -->
                                 <div id="paymentOptionsSection" class="col-12" style="display: none;">
-                                    <div class="form-group col-md-12 mb-4">
+                                    <!-- Payment choices - hidden in reschedule mode -->
+                                    <div id="paymentChoicesSection" class="form-group col-md-12 mb-4">
                                         @php
                                             // Calculate deposit percentage based on priority: spDeposit > minimum_booking_percentage > commission
                                             $depositPercentage = null;
@@ -261,7 +265,9 @@
                                     <div class="form-group col-md-12 mb-4">
                                         <div class="terms-checkbox-wrapper" style="padding: 15px; background: rgba(255, 244, 248, 0.5); border: 1px solid rgba(213, 190, 198, 0.5); border-radius: 12px;">
                                             <div class="terms-checkbox-container" style="display: flex; align-items: flex-start; gap: 12px;">
-                                                <input type="checkbox" name="terms_conditions" id="termsConditions" class="terms-checkbox-input" required style="width: 20px; height: 20px; margin: 0; cursor: pointer; flex-shrink: 0; margin-top: 2px;">
+                                                <input type="checkbox" name="terms_conditions" id="termsConditions" class="terms-checkbox-input" required style="width: 20px; height: 20px; margin: 0; cursor: pointer; flex-shrink: 0; margin-top: 2px;"
+                                                    oninvalid="this.setCustomValidity('{{ __('app.booking.please_accept_terms') }}')"
+                                                    oninput="this.setCustomValidity('')">
                                                 <label class="terms-checkbox-label" for="termsConditions" style="font-size: 14px; line-height: 1.5; color: #2c0d18; cursor: pointer; margin: 0; flex: 1;">
                                                     {{ __('app.auth.i_agree_to') }} <a href="{{ url('/terms_condition') }}" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.terms') }}</a> {{ __('app.auth.and') }} <a href="{{ url('/privacy_policy') }}" target="_blank" style="color: rgba(229, 0, 80, 1); text-decoration: underline; font-weight: 500;">{{ __('app.auth.privacy_policy') }}</a>
                                                 </label>
@@ -303,10 +309,7 @@
 
 {{-- Scripts --}}
 @section('scripts')
-@once
-    <!-- Bootstrap JS for modals -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-@endonce
+{{-- Bootstrap JS removed - using vanilla modal functions --}}
 <script>
     // Global translation strings from Blade
     window.serviceTranslations = {
@@ -371,7 +374,12 @@ document.addEventListener('DOMContentLoaded', function () {
         userId: @json($userId ?? null),
         userData: @json($userData ?? null),
         stripeConfig: null, // Will be fetched from API
+        rescheduleBookingId: @json($rescheduleBookingId ?? null), // Booking ID for reschedule mode
     };
+
+    // Check if we're in reschedule mode
+    const isRescheduleMode = !!bookingBootstrap.rescheduleBookingId;
+    console.log('Reschedule mode:', isRescheduleMode, 'Booking ID:', bookingBootstrap.rescheduleBookingId);
     
     // Fetch Stripe configuration (test/live mode and publishable key) from API
     fetch('/api/stripe-config')
@@ -520,7 +528,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const nextTimeSlotBtn = document.getElementById('nextTimeSlot');
     const paymentOptionsSection = document.getElementById('paymentOptionsSection');
     const mobileTimeSlotsContainer = document.getElementById('mobileTimeSlotsContainer');
-    
+    const bookAppointmentBtnText = document.getElementById('bookAppointmentBtnText');
+
+    // Reschedule mode: hide payment choices (but keep terms and button visible)
+    const paymentChoicesSection = document.getElementById('paymentChoicesSection');
+    if (isRescheduleMode) {
+        // Hide only the payment choices, not the entire section (which has terms and button)
+        if (paymentChoicesSection) {
+            paymentChoicesSection.classList.add('reschedule-hidden');
+        }
+        // Change button text to indicate reschedule action
+        if (bookAppointmentBtnText) {
+            bookAppointmentBtnText.textContent = '{{ __('app.bookings.confirm_reschedule') ?? "Confirm Reschedule" }}';
+        }
+        console.log('Reschedule mode activated - payment choices hidden, button text changed');
+    }
+
     let chosenAgent = null;
     let chosenAgentSlots = null;
     let selectedPeriod = null;
@@ -681,7 +704,30 @@ document.addEventListener('DOMContentLoaded', function () {
             weekDisplay.textContent = `${startMonth} ${currentWeekStart.getDate()} - ${endMonth} ${endDate.getDate()}`;
         }
     }
-    
+
+    // Check if a specific day is open based on agent's timing
+    // timing object format: { 'Mon': [openTimestamp, closeTimestamp], 'Tue': [...], ... }
+    function isDayOpen(date) {
+        if (!chosenAgent || !chosenAgent.timing) {
+            // If no agent selected or no timing data, show all days
+            return true;
+        }
+
+        const dayKey = dayKeys[date.getDay()]; // 'Sun', 'Mon', 'Tue', etc.
+        const timing = chosenAgent.timing;
+
+        // Check if this day exists in timing and has valid open/close times
+        if (timing[dayKey] && Array.isArray(timing[dayKey]) && timing[dayKey].length === 2) {
+            const openTime = timing[dayKey][0];
+            const closeTime = timing[dayKey][1];
+            // Valid if both times are positive and close is after open
+            return openTime > 0 && closeTime > 0 && closeTime > openTime;
+        }
+
+        // Day not in timing or invalid - salon is closed
+        return false;
+    }
+
     // Render the days header
     function renderDaysHeader() {
         daysHeader.innerHTML = '';
@@ -697,7 +743,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (date < today) {
                 continue;
             }
-            
+
+            // Skip rendering if the salon/agent is closed on this day
+            if (!isDayOpen(date)) {
+                continue;
+            }
+
             const dayCol = document.createElement('div');
             dayCol.className = 'day-column';
             dayCol.dataset.date = formatDateValue(date);
@@ -1680,10 +1731,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Helper function to wait for an element to appear (with timeout)
+    function waitForElement(selector, maxWait = 500, interval = 20) {
+        return new Promise((resolve) => {
+            const element = document.querySelector(selector);
+            if (element) {
+                resolve(element);
+                return;
+            }
+
+            const startTime = Date.now();
+            const checkInterval = setInterval(() => {
+                const el = document.querySelector(selector);
+                if (el) {
+                    clearInterval(checkInterval);
+                    resolve(el);
+                } else if (Date.now() - startTime >= maxWait) {
+                    clearInterval(checkInterval);
+                    resolve(null);
+                }
+            }, interval);
+        });
+    }
+
     // Helper function to restore time slot and payment options
     function restoreTimeSlotAndPayment(state, skipSlotClick = false) {
-        // Wait for period selection to render slots, then restore time slot
-        setTimeout(() => {
+        // Use requestAnimationFrame for faster DOM sync
+        requestAnimationFrame(() => {
             if (state.selectedDate && state.selectedTime && selectedDateInput && selectedTimeInput) {
                 // Check if mobile or desktop view
                 const isMobile = isMobileView();
@@ -1712,14 +1786,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const seeMoreBtn = document.querySelector('.mobile-see-more-btn');
                                 if (seeMoreBtn) {
                                     seeMoreBtn.click();
-                                    // Wait a bit for slots to render, then try again
-                                    setTimeout(() => {
-                                        timeSlot = document.querySelector(slotSelector);
-                                        if (timeSlot) {
-                                            timeSlot.click();
+                                    // Poll for slot to appear (faster than fixed timeout)
+                                    (async () => {
+                                        const expandedSlot = await waitForElement(slotSelector, 300, 20);
+                                        if (expandedSlot) {
+                                            expandedSlot.click();
                                             console.log('Restored mobile time slot selection (after expand):', state.selectedDate, state.selectedTime);
                                         }
-                                    }, 300);
+                                    })();
                                 }
                             }
                         } catch (e) {
@@ -1778,7 +1852,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Clear the saved state after successful restoration
             localStorage.removeItem('pendingBookingState');
             console.log('Booking state restored successfully');
-        }, skipSlotClick ? 100 : 500); // Shorter timeout if skipping slot click
+        });
     }
 
     // Function to restore pending booking state after login
@@ -1924,15 +1998,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Click the day column to trigger day selection
                         dayColumn.click();
                         console.log('Restored day selection:', state.selectedDate);
-                        
-                        // Wait for day selection to complete, then restore period
-                        // Check if mobile view - on mobile, slots are rendered immediately after day selection
+
+                        // Use async/await with polling instead of fixed timeouts
                         const isMobile = isMobileView();
-                        const waitTime = isMobile ? 500 : 300; // Longer timeout on mobile to ensure slots are rendered
-                        
-                        setTimeout(() => {
+
+                        (async () => {
                             if (isMobile) {
-                                // On mobile: slots are already rendered, just restore time slot and period highlight
+                                // On mobile: slots render sync, just need a frame for DOM update
+                                await new Promise(r => requestAnimationFrame(r));
+
+                                // Restore period highlight
                                 if (state.selectedPeriod && periodSelector) {
                                     selectedPeriod = state.selectedPeriod;
                                     const periodBtn = periodSelector.querySelector(`[data-period="${state.selectedPeriod}"]`);
@@ -1941,36 +2016,39 @@ document.addEventListener('DOMContentLoaded', function () {
                                         console.log('Restored period selection (mobile):', state.selectedPeriod);
                                     }
                                 }
-                                // Restore time slot directly (slots are already rendered on mobile)
+                                // Restore time slot directly
                                 restoreTimeSlotAndPayment(state, false);
                             } else {
-                                // On desktop: need to click period button to render slots
+                                // On desktop: wait for period selector to appear (means day selection complete)
+                                await waitForElement('.period-btn', 300, 20);
+
                                 if (state.selectedPeriod && periodSelector) {
                                     selectedPeriod = state.selectedPeriod;
                                     const periodBtn = periodSelector.querySelector(`[data-period="${state.selectedPeriod}"]`);
                                     if (periodBtn) {
-                                        // Check if day is selected before clicking period button
                                         const activeDay = document.querySelector('.day-column.active');
                                         if (activeDay && selectedDayInput.value) {
                                             periodBtn.click();
                                             console.log('Restored period selection (desktop):', state.selectedPeriod);
-                                            
-                                            // Wait for period selection to render slots, then restore time slot
+
+                                            // Wait for time slots to render (API call + DOM)
+                                            const slotSelector = `.time-slot[data-date="${state.selectedDate}"][data-time="${state.selectedTime}"]`;
+                                            await waitForElement(slotSelector, 800, 30);
+
                                             restoreTimeSlotAndPayment(state);
                                         } else {
                                             console.warn('Day not properly selected, cannot restore period');
-                                            restoreTimeSlotAndPayment(state, true); // Try to restore time slot anyway
+                                            restoreTimeSlotAndPayment(state, true);
                                         }
                                     } else {
                                         console.warn('Period button not found');
                                         restoreTimeSlotAndPayment(state, true);
                                     }
                                 } else {
-                                    // No period to restore, try to restore time slot directly
                                     restoreTimeSlotAndPayment(state, true);
                                 }
                             }
-                        }, waitTime);
+                        })();
                     } else {
                         console.warn('Day column not found for date:', state.selectedDate);
                         // Try to set values directly
@@ -1986,7 +2064,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.warn('No selected date in saved state');
                     restoreTimeSlotAndPayment(state, true);
                 }
-            }, 800); // Wait for agent selection to initialize
+            }, 100); // Reduced from 800ms - agent selection is sync, just need DOM to update
         } catch (error) {
             console.error('Error restoring pending booking state:', error);
             // Clear invalid state
@@ -2290,36 +2368,72 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('pendingBookingState', JSON.stringify(pendingBookingState));
             console.log('Saved pending booking state:', pendingBookingState);
             
-            // Show the login modal
-            const showLoginModal = () => {
-                const loginModalElement = document.getElementById('loginModal');
-                if (loginModalElement) {
-                    // Try Bootstrap 5 first
-                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                        try {
-                            const modal = new bootstrap.Modal(loginModalElement);
-                            modal.show();
-                            return;
-                        } catch (e) {
-                            console.error('Error creating Bootstrap modal:', e);
-                        }
-                    }
-                    
-                    // Fallback to jQuery if available
-                    if (typeof $ !== 'undefined' && $.fn.modal) {
-                        $('#loginModal').modal('show');
-                        return;
-                    }
-                }
-                
-                // Fallback: try again after a short delay
-                console.warn('Bootstrap not loaded yet, retrying...');
-                setTimeout(showLoginModal, 100);
-            };
-            
-            // Wait a bit for Bootstrap to be ready
-            setTimeout(showLoginModal, 50);
+            // Show the login modal (vanilla JS)
+            const loginModalElement = document.getElementById('loginModal');
+            if (loginModalElement) {
+                loginModalElement.classList.add('show');
+                document.body.classList.add('modal-open');
+            }
             return;
+        }
+
+        // RESCHEDULE MODE: Call reschedule API instead of creating a new booking
+        if (isRescheduleMode) {
+            try {
+                console.log('Reschedule mode - calling reschedule API');
+
+                // Try to get Firebase ID token (optional - falls back to session auth)
+                let idToken = null;
+                try {
+                    const auth = window.firebaseAuth || (window.firebase && firebase.auth());
+                    if (auth && auth.currentUser) {
+                        idToken = await auth.currentUser.getIdToken(true);
+                        console.log('Got Firebase ID token for reschedule');
+                    }
+                } catch (tokenError) {
+                    console.log('Could not get Firebase token, will use session auth:', tokenError.message);
+                }
+
+                // Build request headers - include token if available, otherwise rely on session cookie
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                };
+                if (idToken) {
+                    headers['Authorization'] = `Bearer ${idToken}`;
+                }
+
+                // Call the reschedule API (includes credentials for session-based auth)
+                const rescheduleResponse = await fetch(`/api/bookings/${bookingBootstrap.rescheduleBookingId}/reschedule`, {
+                    method: 'PUT',
+                    headers: headers,
+                    credentials: 'same-origin', // Send session cookies
+                    body: JSON.stringify({
+                        booking_time: localDate.toISOString(),
+                        bookTime: bookTime,
+                        agentId: chosenAgent?.id || null,
+                        agentName: chosenAgent?.name || null,
+                    })
+                });
+
+                const rescheduleData = await rescheduleResponse.json();
+                console.log('Reschedule API response:', rescheduleData);
+
+                if (!rescheduleResponse.ok || !rescheduleData.success) {
+                    throw new Error(rescheduleData.message || '{{ __("app.bookings.reschedule_error") ?? "Failed to reschedule booking" }}');
+                }
+
+                // Success - redirect to bookings page
+                setButtonLoading(false);
+                alert('{{ __("app.bookings.reschedule_success") ?? "Booking rescheduled successfully" }}');
+                window.location.href = '{{ route("my-bookings") }}';
+                return;
+            } catch (rescheduleError) {
+                console.error('Error rescheduling booking:', rescheduleError);
+                setButtonLoading(false);
+                alert(rescheduleError.message || '{{ __("app.bookings.reschedule_error") ?? "An error occurred while rescheduling" }}');
+                return;
+            }
         }
 
         if (!serviceId || !serviceProviderId) {
@@ -2549,13 +2663,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (isFreeBooking) {
                 // For free bookings, skip Stripe and directly submit the booking
                 console.log('Free booking detected, skipping Stripe payment');
-                
-                // Add payment information to booking payload
-                const freeBookingTransactionId = 'free-booking-' + Date.now();
+
+                // Add payment information to booking payload (matching mobile app format)
+                const freeBookingTransactionId = 'FREE_' + Date.now();
                 bookingPayload.payment_id = freeBookingTransactionId;
                 bookingPayload.payment_type = 'deposit';
-                bookingPayload.payment_status = 'completed';
-                bookingPayload.payed = false; // Free booking, so not fully paid
+                bookingPayload.payed = false; // Free booking, no payment made
+                bookingPayload.depositPercentage = 0; // No deposit percentage
+                bookingPayload.depositAmount = 0; // No deposit amount was paid
                 bookingPayload.alreadySubmitted = true; // Flag to prevent double submission
                 
                 // Store booking data in localStorage for success page (same as paid bookings)
@@ -2602,9 +2717,9 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // For paid bookings, proceed with Stripe checkout
             const checkoutUrl = '{{ route("checkout.session") }}';
-            console.log('Checkout URL:', checkoutUrl);
-            
-            const response = await fetch(checkoutUrl, {
+
+            // authFetch handles 401 errors with automatic token refresh
+            const response = await (window.authFetch || fetch)(checkoutUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2613,7 +2728,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({
                     serviceId,
                     serviceProviderId,
-                    serviceName, 
+                    serviceName,
                     servicePrice,
                     paymentType,
                     depositPercentage,
@@ -2622,11 +2737,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     bookingData: bookingPayload
                 })
             });
-            
+
             if (!response.ok) {
                 setButtonLoading(false);
                 const errorText = await response.text();
                 console.error('Error response:', response.status, errorText);
+
+                // If 401, show login modal instead of error
+                if (response.status === 401) {
+                    const loginModalEl = document.getElementById('loginModal');
+                    if (loginModalEl) {
+                        loginModalEl.classList.add('show');
+                        document.body.classList.add('modal-open');
+                        return;
+                    }
+                }
                 throw new Error(`Server responded with ${response.status}: ${errorText}`);
             }
 
@@ -2641,7 +2766,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Clear pending booking state before redirecting to Stripe
             localStorage.removeItem('pendingBookingState');
-            
+
             // Initialize Stripe object with dynamically fetched publishable key
             const stripePublishableKey = bookingBootstrap.stripeConfig?.publishableKey;
             if (!stripePublishableKey) {
@@ -2651,10 +2776,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             const stripe = Stripe(stripePublishableKey);
-            console.log('Redirecting to Stripe checkout with session ID:', session.id, '| Mode:', bookingBootstrap.stripeConfig?.isLive ? 'LIVE' : 'TEST');
-            
-            // For Stripe v7.0 compatibility
-            // Redirect to Stripe Checkout
+
+            // Both Stripe Connect and regular Stripe now use Checkout Sessions
+            // Always redirect to Stripe's hosted checkout page
+            const isStripeConnect = session.useStripeConnect || false;
+            console.log('Redirecting to Stripe checkout with session ID:', session.id, '| Mode:', bookingBootstrap.stripeConfig?.isLive ? 'LIVE' : 'TEST', '| Connect:', isStripeConnect);
+
             const result = await stripe.redirectToCheckout({
                 sessionId: session.id
             });
@@ -2686,8 +2813,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const stripe = Stripe(stripePublishableKey);
             console.log('Test button clicked, Stripe initialized | Mode:', bookingBootstrap.stripeConfig?.isLive ? 'LIVE' : 'TEST');
             
-            // Create a minimal test session directly
-            const response = await fetch('{{ route("checkout.session") }}', {
+            // Create a minimal test session directly (use authFetch for token refresh)
+            const response = await (window.authFetch || fetch)('{{ route("checkout.session") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

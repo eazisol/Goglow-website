@@ -74,6 +74,12 @@
     $jsPath = public_path('js/blog.js');
     $jsVersion = file_exists($jsPath) ? filemtime($jsPath) : time();
 @endphp
+<script>
+    // Blog translations for JavaScript
+    window.blogTranslations = {
+        readMore: @json(__('app.blog.read_more'))
+    };
+</script>
 <script src="{{ asset('js/blog.js') }}?v={{ $jsVersion }}"></script>
 <script>
     // Initialize blog page when DOM is ready
