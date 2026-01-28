@@ -662,6 +662,10 @@ return [
         'previous' => 'Previous',
         'next' => 'Next',
         'page_info' => 'Page :current of :total',
+        'back_to_blog' => 'Back to Blog',
+        'back_to_all_articles' => 'Back to All Articles',
+        'article_not_found' => 'Article Not Found',
+        'article_not_found_message' => 'The article you\'re looking for doesn\'t exist or has been removed.',
     ],
     'error_404' => [
         'title' => 'Oops! Page Not Found',

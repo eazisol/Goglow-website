@@ -663,6 +663,10 @@ return [
         'previous' => 'Précédent',
         'next' => 'Suivant',
         'page_info' => 'Page :current sur :total',
+        'back_to_blog' => 'Retour au Blog',
+        'back_to_all_articles' => 'Retour aux Articles',
+        'article_not_found' => 'Article introuvable',
+        'article_not_found_message' => 'L\'article que vous recherchez n\'existe pas ou a été supprimé.',
     ],
     'error_404' => [
         'title' => 'Oups ! Page introuvable',

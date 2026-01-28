@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="{{ \App\Helpers\AssetHelper::versioned('css/mousecursor.css') }}">
 <link href="{{ \App\Helpers\AssetHelper::versioned('css/custom.css') }}" rel="stylesheet" media="screen">
 <link href="{{ \App\Helpers\AssetHelper::versioned('css/auth-modals.css') }}" rel="stylesheet" media="screen">
+<link href="{{ \App\Helpers\AssetHelper::versioned('css/form.css') }}" rel="stylesheet" media="screen">
 <link href="{{ \App\Helpers\AssetHelper::versioned('css/style.css') }}" rel="stylesheet" media="screen">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css">
 
@@ -218,6 +219,9 @@
   
   <!-- Country codes script must be loaded before auth-modals.js -->
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/country-codes.js') }}" onload="console.log('country-codes.js loaded successfully')" onerror="console.error('Failed to load country-codes.js')"></script>
+
+  <!-- Header script for login button and sidebar -->
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/header.js') }}"></script>
 
   <!-- Auth fetch utility with automatic token refresh -->
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-fetch.js') }}"></script>
