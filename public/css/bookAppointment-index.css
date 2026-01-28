@@ -669,6 +669,7 @@
         text-align: center;
         transition: all 0.25s ease;
         color: rgba(77, 38, 64, 0.75);
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-weight: 600;
         border: 2px solid rgba(213, 190, 198, 0.6);
         position: relative;
@@ -677,15 +678,15 @@
     }
 
     .day-column .day-name {
-        font-size: 11px;
-        letter-spacing: 0.1em;
+        font-size: 14px;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
         margin-bottom: 2px;
         font-weight: 500;
     }
 
     .day-column .day-date {
-        font-size: 22px;
+        font-size: 14px;
         font-weight: 700;
         color: rgba(77, 38, 64, 0.85);
     }
@@ -749,6 +750,7 @@
         text-align: center;
         transition: all 0.25s ease;
         color: rgba(77, 38, 64, 0.75);
+        font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-weight: 500;
         font-size: 14px;
         border: none;
@@ -826,11 +828,11 @@
         }
 
         .day-column .day-name {
-            font-size: 10px;
+            font-size: 12px;
         }
 
         .day-column .day-date {
-            font-size: 18px;
+            font-size: 12px;
         }
 
         .day-column::after {

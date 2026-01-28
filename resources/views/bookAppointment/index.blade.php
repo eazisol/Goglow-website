@@ -704,7 +704,30 @@ document.addEventListener('DOMContentLoaded', function () {
             weekDisplay.textContent = `${startMonth} ${currentWeekStart.getDate()} - ${endMonth} ${endDate.getDate()}`;
         }
     }
-    
+
+    // Check if a specific day is open based on agent's timing
+    // timing object format: { 'Mon': [openTimestamp, closeTimestamp], 'Tue': [...], ... }
+    function isDayOpen(date) {
+        if (!chosenAgent || !chosenAgent.timing) {
+            // If no agent selected or no timing data, show all days
+            return true;
+        }
+
+        const dayKey = dayKeys[date.getDay()]; // 'Sun', 'Mon', 'Tue', etc.
+        const timing = chosenAgent.timing;
+
+        // Check if this day exists in timing and has valid open/close times
+        if (timing[dayKey] && Array.isArray(timing[dayKey]) && timing[dayKey].length === 2) {
+            const openTime = timing[dayKey][0];
+            const closeTime = timing[dayKey][1];
+            // Valid if both times are positive and close is after open
+            return openTime > 0 && closeTime > 0 && closeTime > openTime;
+        }
+
+        // Day not in timing or invalid - salon is closed
+        return false;
+    }
+
     // Render the days header
     function renderDaysHeader() {
         daysHeader.innerHTML = '';
@@ -720,7 +743,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (date < today) {
                 continue;
             }
-            
+
+            // Skip rendering if the salon/agent is closed on this day
+            if (!isDayOpen(date)) {
+                continue;
+            }
+
             const dayCol = document.createElement('div');
             dayCol.className = 'day-column';
             dayCol.dataset.date = formatDateValue(date);
