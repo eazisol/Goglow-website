@@ -115,12 +115,65 @@
             </div>
         </div>
     </div>
+
+    <!-- Toast Notification -->
+    <div id="toastContainer" class="toast-container"></div>
 @endsection
 
 
 {{-- Scripts --}}
 @section('scripts')
+<style>
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+    }
+    .toast {
+        background: #333;
+        color: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease;
+        max-width: 350px;
+    }
+    .toast.success {
+        background: #10b981;
+    }
+    .toast.error {
+        background: #ef4444;
+    }
+    .toast.fade-out {
+        animation: slideOut 0.3s ease forwards;
+    }
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+</style>
 <script>
+// Toast notification function
+function showToast(message, type = 'success', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+
+    // Auto-remove after duration
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const firebaseUid = @json($firebaseUid ?? null);
     let currentToggleIndex = 0;
@@ -691,8 +744,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Success - close modal and refresh
             closeCancelModal();
 
-            // Show success message
-            alert(translations.cancelSuccess);
+            // Show success message (auto-dismisses)
+            showToast(translations.cancelSuccess, 'success');
 
             // Refresh bookings
             loadingEl.style.display = '';
@@ -701,7 +754,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         } catch (error) {
             console.error('Error cancelling booking:', error);
-            alert(translations.cancelError + '\n' + error.message);
+            showToast(translations.cancelError + ': ' + error.message, 'error', 5000);
 
             // Reset modal
             cancelLoading.style.display = 'none';
