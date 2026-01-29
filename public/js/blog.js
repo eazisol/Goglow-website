@@ -104,7 +104,7 @@ function displayArticles(articlesArray) {
                     ${tagsHtml}
                     <div class="blog-article-footer">
                         <a href="/blogs/${article.id}" class="blog-read-more">
-                            Read More
+                            ${window.blogTranslations?.readMore || 'Read More'}
                             <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>

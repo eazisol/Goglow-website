@@ -42,6 +42,9 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
@@ -66,6 +69,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'firebase.auth' => \App\Http\Middleware\FirebaseAuthenticate::class,
         'firebase.auth.modal' => \App\Http\Middleware\FirebaseAuthenticateModal::class,
+        'firebase.api.auth' => \App\Http\Middleware\FirebaseApiAuthenticate::class,
         'set.locale' => \App\Http\Middleware\SetLocale::class,
     ];
 }

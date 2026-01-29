@@ -67,7 +67,7 @@
     // Keep only the current logged-in user's key
     (function() {
         try {
-            const currentUserId = {{ session()->has('firebase_uid') ? "'" . session('firebase_uid') . "'" : 'null' }};
+            const currentUserId = @json(session('firebase_uid'));
             if (currentUserId) {
                 const keysToRemove = [];
                 for (let i = 0; i < sessionStorage.length; i++) {
@@ -100,15 +100,11 @@
     })();
 </script>
 </head>
-<body>
-    <div class="container">
-      <div class="nav-header-section">
-        @include('figmaDesign.header')
-      </div>
-    </div>
+<body class="{{ isset($whiteLabel) && $whiteLabel ? 'white-label-mode' : '' }}">
+    @include('figmaDesign.header', ['whiteLabel' => $whiteLabel ?? false])
               
                   @yield('content')
-                @if (!Route::is('terms_condition') && !Route::is('privacy_policy'))
+                @if (!Route::is('terms_condition') && !Route::is('privacy_policy') && !(isset($whiteLabel) && $whiteLabel))
                     @include('partials.footer-figma')
                 @endif
 
@@ -142,6 +138,7 @@
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/new-design.js') }}" defer></script>
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/header.js') }}" defer></script>
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/professional-form.js') }}" defer></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-fetch.js') }}" defer></script>
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-modals.js') }}" defer></script>
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/book-appointment-auth.js') }}" defer></script>
 
@@ -193,7 +190,7 @@
 
   @yield('scripts')
   
-  {{-- @include('partials.auth-modals') --}}
+  @include('partials.auth-modals')
   
 </body>
 </html>

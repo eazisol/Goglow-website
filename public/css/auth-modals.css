@@ -2,34 +2,215 @@
  * Auth Modals CSS
  */
 
+/* Base Modal Styles (vanilla CSS replacement for Bootstrap) */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1055;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 0.5rem;
+    pointer-events: none;
+    max-width: 500px;
+}
+
+.modal.show .modal-dialog {
+    pointer-events: auto;
+}
+
+.modal-dialog-centered {
+    min-height: calc(100% - 1rem);
+    display: flex;
+    align-items: center;
+}
+
+.modal-lg {
+    max-width: 800px;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Bootstrap utility classes (vanilla CSS replacements) */
+.d-none {
+    display: none !important;
+}
+
+.d-block {
+    display: block !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.border-0 {
+    border: 0 !important;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-md-6, .col-md-12 {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+@media (min-width: 768px) {
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+/* Input group for password toggle */
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group > .form-control-login {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+}
+
+.input-group-text:hover {
+    background-color: #e9ecef;
+}
+
+/* Close button base style */
+.btn-close {
+    box-sizing: content-box;
+    width: 1em;
+    height: 1em;
+    padding: 0.25em 0.25em;
+    color: #000;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    border: 0;
+    border-radius: 0.375rem;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
 /* Modal styling */
 .modal-content {
     border: none;
     border-radius: 20px;
     overflow: hidden;
     background-color: transparent;
+    position: relative;
 }
 
 .modal-header {
-    padding: 15px 20px 0;
+    padding: 0;
     border-bottom: none;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 16px;
+    top: 16px;
     z-index: 10;
+    background: transparent;
+}
+
+.modal-header.border-0 {
+    border: 0 !important;
 }
 
 .modal-header .btn-close {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: #f5f5f5;
     border-radius: 50%;
     padding: 0.5rem;
     margin: 0;
-    opacity: 0.8;
+    opacity: 1;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
 }
 
 .modal-header .btn-close:hover {
-    opacity: 1;
-    background-color: white;
+    background-color: #e8e8e8;
 }
 
 .modal-body {
@@ -62,6 +243,9 @@
     font-size: 14px;
     color: #666;
     margin-bottom: 20px;
+    text-transform: none !important;
+    font-weight: 400;
+    line-height: 1.5;
 }
 
 .modal .policy-link {
@@ -90,6 +274,10 @@
     border: none;
 }
 
+.modal .input-group {
+    flex-wrap: initial;
+}
+
 .modal .input-group .form-control {
     border-right: none;
 }
@@ -101,15 +289,42 @@
     border-radius: 10px;
 }
 
+.modal .alert.d-none {
+    display: none !important;
+}
+
+.alert-danger {
+    color: #842029;
+    background-color: #f8d7da;
+    border: 1px solid #f5c2c7;
+}
+
+.alert-success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border: 1px solid #badbcc;
+}
+
 /* Responsive adjustments */
-/* Modal animations */
-.modal.fade .modal-dialog {
-    transform: translateY(-20px);
-    transition: transform 0.3s ease-out;
+/* Modal animations - smooth crossfade */
+.modal {
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+    pointer-events: none;
+}
+
+.modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal .modal-dialog {
+    transform: scale(0.95);
+    transition: transform 0.2s ease-out;
 }
 
 .modal.show .modal-dialog {
-    transform: translateY(0);
+    transform: scale(1);
 }
 
 /* Button animation */
@@ -488,6 +703,52 @@
     .btn-social{
         width: 150px;
     }
+}
+
+/* Spinner for loading states */
+.spinner-border {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    vertical-align: -0.125em;
+    border: 0.25em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.text-primary {
+    color: #e50050 !important;
+}
+
+/* Visually hidden - for screen readers only */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Additional spacing utilities */
+.my-3 {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.my-4 {
+    margin-top: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
 }
 
 /* Phone Input Group Styling */
