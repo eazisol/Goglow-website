@@ -89,6 +89,8 @@ return [
         'service_amount' => 'Service Amount :',
         'deposit_amount' => 'Deposit :',
         'total_remaining' => 'Total Remaining :',
+        'deposit_now' => ':percentage% deposit now',
+        'free_booking' => 'Free booking',
         'slot_conflict_alert' => 'This service requires :duration minutes. The next available slots are not free. Please select an earlier time or a different slot.',
         'please_accept_terms' => 'Please check this box to proceed.',
     ],

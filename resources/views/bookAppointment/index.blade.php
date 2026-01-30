@@ -186,22 +186,22 @@
                                                 
                                                 if ($spDeposit > 0) {
                                                     $depositPercentage = $spDeposit;
-                                                    $depositLabel = $spDeposit . '% deposit now';
+                                                    $depositLabel = __('app.booking.deposit_now', ['percentage' => $spDeposit]);
                                                 } elseif ($minimumBookingPercentage > 0) {
                                                     $depositPercentage = $minimumBookingPercentage;
-                                                    $depositLabel = $minimumBookingPercentage . '% deposit now';
+                                                    $depositLabel = __('app.booking.deposit_now', ['percentage' => $minimumBookingPercentage]);
                                                 } elseif ($commissionValue > 0) {
                                                     $depositPercentage = $commissionValue;
-                                                    $depositLabel = $commissionValue . '% deposit now';
+                                                    $depositLabel = __('app.booking.deposit_now', ['percentage' => $commissionValue]);
                                                 } else {
                                                     $depositPercentage = 0;
-                                                    $depositLabel = 'Free booking';
+                                                    $depositLabel = __('app.booking.free_booking');
                                                 }
                                                 
                                                 $depositAmount = ($depositPercentage > 0) ? ($servicePrice * ($depositPercentage / 100)) : 0;
                                             } else {
                                                 $depositPercentage = 0;
-                                                $depositLabel = 'Free booking';
+                                                $depositLabel = __('app.booking.free_booking');
                                                 $depositAmount = 0;
                                             }
                                         @endphp
