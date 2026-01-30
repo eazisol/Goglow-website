@@ -262,7 +262,7 @@ return [
         'contact_us' => 'Nous contacter',
         'terms_conditions' => 'Termes et conditions',
         'privacy_policy' => 'Politique de confidentialité',
-        'copyright' => 'Copyright © 2025 Tous droits réservés.',
+        'copyright' => 'droit d\'auteur © 2025 Tous droits réservés.',
         'follow_us' => 'Suivez-nous',
     ],
 
