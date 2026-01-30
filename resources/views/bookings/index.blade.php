@@ -394,6 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function createBookingCard(booking) {
         const providerPhoto = booking.serviceProviderInfo?.photo || '{{ asset("images/istockphoto-1300845620-612x612.jpg") }}';
         const providerName = booking.serviceProviderInfo?.name || 'Service Provider';
+        const agentName = booking.services?.[0]?.agentName || providerName;
         const serviceName = booking.services?.[0]?.serviceName || 'Service';
         const serviceId = booking.services?.[0]?.serviceId || booking.serviceId || '';
         const address = booking.address || booking.serviceProviderInfo?.address || 'Location details unavailable';
@@ -488,7 +489,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
 
                             <span class="separator">•</span>
-                            <span class="with-provider">${translations.with} ${providerName}</span>
+                            <span class="with-provider">${translations.with} ${agentName}</span>
                         </div>
                         ${paymentHtml}
                         ${actionsHtml}

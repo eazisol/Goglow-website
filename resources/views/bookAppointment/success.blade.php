@@ -107,7 +107,8 @@ document.addEventListener('DOMContentLoaded', function() {
                   bookingPayload.serviceData?.ownerEmail || 
                   null,
             id: bookingPayload.service_provider_id || null,
-            name: bookingPayload.serviceData?.ownerName || null,
+            // Prefer companyName; fallback to ownerName for backward compatibility
+            name: bookingPayload.serviceData?.companyName || bookingPayload.serviceData?.ownerName || null,
             photo: bookingPayload.serviceData?.ownerProfile || 
                   bookingPayload.serviceData?.owner_profile || 
                   bookingPayload.serviceData?.ownerPhoto || 

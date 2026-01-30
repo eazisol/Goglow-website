@@ -2549,7 +2549,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const serviceProviderInfo = {
             email: ownerMail,
             id: serviceProviderId || null,
-            name: bookingBootstrap.service?.ownerName || null,
+            // Prefer companyName; fallback to ownerName for backward compatibility
+            name: bookingBootstrap.service?.companyName || bookingBootstrap.service?.ownerName || null,
             photo: ownerProfile
         };
         
