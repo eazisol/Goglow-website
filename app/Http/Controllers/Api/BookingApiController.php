@@ -19,6 +19,7 @@ class BookingApiController extends Controller
 
     /**
      * Get payment settings (reusing pattern from PaymentController)
+     * Returns: isStripeConnectLive
      */
     private function getPaymentSettings(): array
     {
@@ -30,8 +31,6 @@ class BookingApiController extends Controller
                 $settings = $data['data'] ?? [];
 
                 return [
-                    'isStripeLive' => $settings['isStripeLive'] ?? false,
-                    'useStripeConnect' => $settings['useStripeConnect'] ?? false,
                     'isStripeConnectLive' => $settings['isStripeConnectLive'] ?? false,
                 ];
             }
@@ -40,8 +39,6 @@ class BookingApiController extends Controller
         }
 
         return [
-            'isStripeLive' => false,
-            'useStripeConnect' => false,
             'isStripeConnectLive' => false,
         ];
     }
@@ -273,6 +270,9 @@ class BookingApiController extends Controller
                         'message' => __('app.booking.refund_error'),
                     ], 500);
                 }
+
+                // Update commission record (like mobile app does)
+                $this->updateCommissionRecord($id, $refundAmount, $refundInfo['totalPaid']);
             }
 
             // Update booking status to cancelled (status: 2) and set cancel_date
@@ -331,7 +331,7 @@ class BookingApiController extends Controller
         $userId = $request->input('firebase_uid');
 
         $request->validate([
-            'booking_time' => 'required|date',
+            'booking_time' => 'required|string', // Formatted like "February 10, 2026 at 14:15:00 UTC+1"
             'bookTime' => 'nullable|string', // e.g., "14:30"
             'agentId' => 'nullable|string',
             'agentName' => 'nullable|string',
@@ -524,11 +524,9 @@ class BookingApiController extends Controller
                 return true; // Not a Stripe payment, proceed with cancellation
             }
 
-            // Get Stripe mode
+            // Get Stripe mode (always using Stripe Connect)
             $settings = $this->getPaymentSettings();
-            $isLive = $settings['useStripeConnect']
-                ? $settings['isStripeConnectLive']
-                : $settings['isStripeLive'];
+            $isLive = $settings['isStripeConnectLive'];
 
             // Build refund payload
             $refundPayload = [
@@ -662,6 +660,56 @@ class BookingApiController extends Controller
             return null;
         } catch (\Throwable $e) {
             return null;
+        }
+    }
+
+    /**
+     * Update commissions_records collection when a refund occurs
+     * Uses updateDoc with where condition - no separate query needed
+     */
+    private function updateCommissionRecord(string $bookingId, float $refundAmount, float $totalPaid): void
+    {
+        try {
+            $isFullRefund = $refundAmount >= ($totalPaid - 0.01);
+            $refundAmountCents = (int) round($refundAmount * 100);
+            $status = $isFullRefund ? 'refunded' : 'partially_refunded';
+
+            // Update commission record by bookingId using where condition
+            // updateDoc handles finding and updating the matching document
+            $updateResponse = Http::timeout(10)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->put($this->getCloudFunctionsUrl() . '/updateDoc', [
+                    'collection' => 'commissions_records',
+                    'where' => ['field' => 'bookingId', 'operator' => '==', 'value' => $bookingId],
+                    'data' => [
+                        'refundedAt' => now()->toIso8601String(),
+                        'refundAmountCents' => $refundAmountCents,
+                        'status' => $status,
+                        'updatedAt' => now()->toIso8601String(),
+                    ],
+                ]);
+
+            if ($updateResponse->ok()) {
+                $result = $updateResponse->json();
+                $updatedCount = $result['updatedCount'] ?? 0;
+                if ($updatedCount > 0) {
+                    Log::info('Updated commission record for booking', [
+                        'bookingId' => $bookingId,
+                        'refundAmountCents' => $refundAmountCents,
+                        'status' => $status,
+                    ]);
+                } else {
+                    Log::info('No commission record found for booking', ['bookingId' => $bookingId]);
+                }
+            } else {
+                Log::info('No commission record to update for booking', ['bookingId' => $bookingId]);
+            }
+        } catch (\Throwable $e) {
+            // Log error but don't fail the refund - commission record update is secondary
+            Log::warning('Failed to update commission record', [
+                'bookingId' => $bookingId,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }

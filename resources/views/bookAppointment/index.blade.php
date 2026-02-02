@@ -377,9 +377,10 @@ document.addEventListener('DOMContentLoaded', function () {
         rescheduleBookingId: @json($rescheduleBookingId ?? null), // Booking ID for reschedule mode
     };
 
-    // Check if we're in reschedule mode
-    const isRescheduleMode = !!bookingBootstrap.rescheduleBookingId;
-    console.log('Reschedule mode:', isRescheduleMode, 'Booking ID:', bookingBootstrap.rescheduleBookingId);
+    // Check if we're in reschedule mode (validate ID is real, not empty/"undefined"/"null")
+    const rescheduleId = bookingBootstrap.rescheduleBookingId;
+    const isRescheduleMode = !!(rescheduleId && rescheduleId !== 'undefined' && rescheduleId !== 'null');
+    console.log('Reschedule mode:', isRescheduleMode, 'Booking ID:', rescheduleId);
     
     // Fetch Stripe configuration (test/live mode and publishable key) from API
     fetch('/api/stripe-config')
@@ -2404,12 +2405,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // Call the reschedule API (includes credentials for session-based auth)
-                const rescheduleResponse = await fetch(`/api/bookings/${bookingBootstrap.rescheduleBookingId}/reschedule`, {
+                // Use bookingTime (formatted like "February 10, 2026 at 12:15:00 UTC+1") to match bookService format
+                const rescheduleResponse = await fetch(`/api/bookings/${rescheduleId}/reschedule`, {
                     method: 'PUT',
                     headers: headers,
-                    credentials: 'same-origin', // Send session cookies
+                    credentials: 'same-origin', // Send session cookies  
                     body: JSON.stringify({
-                        booking_time: localDate.toISOString(),
+                        booking_time: bookingTime,
                         bookTime: bookTime,
                         agentId: chosenAgent?.id || null,
                         agentName: chosenAgent?.name || null,

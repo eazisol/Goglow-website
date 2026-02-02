@@ -18,7 +18,7 @@ class PaymentController extends Controller
 
     /**
      * Get all payment settings from API (cached for 60 seconds)
-     * Returns: isStripeLive, useStripeConnect, isStripeConnectLive
+     * Returns: isStripeConnectLive
      */
     private function getPaymentSettings(): array
     {
@@ -31,8 +31,6 @@ class PaymentController extends Controller
                     $settings = $data['data'] ?? [];
 
                     $result = [
-                        'isStripeLive' => $settings['isStripeLive'] ?? true,
-                        'useStripeConnect' => $settings['useStripeConnect'] ?? true,
                         'isStripeConnectLive' => $settings['isStripeConnectLive'] ?? true,
                     ];
 
@@ -47,8 +45,6 @@ class PaymentController extends Controller
 
             // Default values on error (not cached - will retry next request)
             return [
-                'isStripeLive' => true,
-                'useStripeConnect' => true,
                 'isStripeConnectLive' => true,
             ];
         });
@@ -61,15 +57,10 @@ class PaymentController extends Controller
     {
         $settings = $this->getPaymentSettings();
 
-        if ($settings['useStripeConnect']) {
-            return $settings['isStripeConnectLive']
-                ? config('services.stripe.live_connect_secret')
-                : config('services.stripe.test_connect_secret');
-        }
+        return $settings['isStripeConnectLive']
+            ? config('services.stripe.live_connect_secret')
+            : config('services.stripe.test_connect_secret');
 
-        return $settings['isStripeLive']
-            ? config('services.stripe.live_secret')
-            : config('services.stripe.test_secret');
     }
 
     /**
@@ -79,15 +70,9 @@ class PaymentController extends Controller
     {
         $settings = $this->getPaymentSettings();
 
-        if ($settings['useStripeConnect']) {
-            return $settings['isStripeConnectLive']
-                ? config('services.stripe.live_connect_key')
-                : config('services.stripe.test_connect_key');
-        }
-
-        return $settings['isStripeLive']
-            ? config('services.stripe.live_key')
-            : config('services.stripe.test_key');
+        return $settings['isStripeConnectLive']
+        ? config('services.stripe.live_connect_key')
+            : config('services.stripe.test_connect_key');
     }
 
     /**
@@ -105,9 +90,7 @@ class PaymentController extends Controller
 
         return response()->json([
             'success' => true,
-            'isLive' => $settings['isStripeLive'],
-            'useStripeConnect' => $settings['useStripeConnect'],
-            'isStripeConnectLive' => $settings['isStripeConnectLive'],
+            'isLive' => $settings['isStripeConnectLive'],
             'publishableKey' => $publishableKey,
         ]);
     }
@@ -307,10 +290,6 @@ class PaymentController extends Controller
         $amountInCents = (int) ($amount * 100); // Stripe requires amounts in cents
         $totalAmountInCents = (int) ($servicePrice * 100); // Total booking amount for commission calculation
 
-        // Check if Stripe Connect is enabled
-        $settings = $this->getPaymentSettings();
-        $useStripeConnect = $settings['useStripeConnect'] ?? false;
-
         // Log the amount being charged
         Log::info('Creating payment', [
             'amount' => $amount,
@@ -318,15 +297,10 @@ class PaymentController extends Controller
             'totalAmountInCents' => $totalAmountInCents,
             'paymentType' => $paymentType,
             'serviceName' => $serviceName,
-            'useStripeConnect' => $useStripeConnect,
         ]);
 
         try {
-            // ========================================
-            // STRIPE CONNECT FLOW
-            // ========================================
-            if ($useStripeConnect) {
-                // Extract customer info from bookingData or formData
+            // Extract customer info from bookingData or formData
                 $bookingDataArray = is_string($bookingData) ? json_decode($bookingData, true) : $bookingData;
                 $formDataArray = is_string($formData) ? json_decode($formData, true) : $formData;
 
@@ -404,75 +378,11 @@ class PaymentController extends Controller
                     'paymentMode' => $connectData['paymentMode'] ?? 'stripe_connect',
                 ]);
 
-                // Return session ID for redirect (same format as standard Stripe checkout)
-                return response()->json([
-                    'id' => $sessionId,
-                    'useStripeConnect' => true,
-                    'paymentMode' => $connectData['paymentMode'] ?? 'stripe_connect',
-                ]);
-            }
-
-            // ========================================
-            // STANDARD STRIPE CHECKOUT FLOW
-            // ========================================
-            $stripeSecretKey = $this->getStripeSecretKey();
-            Stripe::setApiKey($stripeSecretKey);
-
-            // Generate success URL
-            $successUrl = route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}';
-            $successParams = [
-                'serviceId' => $serviceId,
-                'serviceProviderId' => $serviceProviderId,
-                'paymentType' => $paymentType,
-            ];
-            $fullSuccessUrl = $successUrl . '&' . http_build_query($successParams);
-            $cancelUrl = route('book-appointment', ['serviceId' => $serviceId]);
-
-            // Build translated description
-            $depositDescription = $depositPercentage > 0
-                ? __('app.payment.deposit_percent', ['percent' => $depositPercentage])
-                : __('app.payment.free_booking');
-            $paymentDescription = ($paymentType === 'deposit')
-                ? $depositDescription
-                : __('app.payment.full_payment');
-
-            // Create session with automatic payment methods (same as Connect)
-            $sessionParams = [
-                'payment_method_types' => ['card', 'link'],
-                'locale' => app()->getLocale(), // Use current locale for currency formatting
-                'line_items' => [
-                    [
-                        'name' => $serviceName ?: __('app.payment.beauty_service'),
-                        'description' => $paymentDescription,
-                        'amount' => max(50, $amountInCents), // Minimum 50 cents
-                        'currency' => 'eur',
-                        'quantity' => 1,
-                    ]
-                ],
-                'success_url' => $fullSuccessUrl,
-                'cancel_url' => $cancelUrl,
-            ];
-
-            Log::info('Session params', $sessionParams);
-
-            $session = Session::create($sessionParams);
-
-            // Store booking data in session to retrieve after payment success
-            $pendingBookingData = [
-                'bookingData' => $bookingData,
-                'formData' => $formData,
-                'serviceProviderId' => $serviceProviderId,
-                'paymentType' => $paymentType,
-                'serviceName' => $serviceName,
-                'serviceId' => $serviceId,
-                'servicePrice' => $servicePrice,
-                'useStripeConnect' => false,
-            ];
-            session(['pending_booking_' . $session->id => $pendingBookingData]);
-
-            // Return the session ID
-            Log::info('Stripe session created', ['id' => $session->id]);
-            return response()->json(['id' => $session->id]);
+            // Return session ID for redirect
+            return response()->json([
+                'id' => $sessionId,
+                'paymentMode' => $connectData['paymentMode'] ?? 'stripe_connect',
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Payment creation failed', ['error' => $e->getMessage()]);
@@ -497,25 +407,10 @@ class PaymentController extends Controller
         $serviceProviderId = $request->get('serviceProviderId');
         $paymentType = $request->get('paymentType');
 
-        // Check if this is a Stripe Connect payment (from URL parameter or payment intent presence)
-        $isStripeConnectFromUrl = $request->get('stripeConnect') === '1';
-        $isStripeConnect = $isStripeConnectFromUrl || (!empty($paymentIntentIdParam) && empty($sessionId));
-
-        // Set Stripe API key - use Connect key for Connect payments
-        $settings = $this->getPaymentSettings();
-        if ($isStripeConnect || $settings['useStripeConnect']) {
-            $stripeSecretKey = $settings['isStripeConnectLive']
-                ? config('services.stripe.live_connect_secret')
-                : config('services.stripe.test_connect_secret');
-        } else {
-            $stripeSecretKey = $settings['isStripeLive']
-                ? config('services.stripe.live_secret')
-                : config('services.stripe.test_secret');
-        }
+        // Set Stripe API key (always use Connect keys)
+        $stripeSecretKey = $this->getStripeSecretKey();
 
         Log::info('Setting Stripe API key', [
-            'isStripeConnect' => $isStripeConnect,
-            'isStripeConnectFromUrl' => $isStripeConnectFromUrl,
             'keyPresent' => !empty($stripeSecretKey),
         ]);
 
@@ -526,7 +421,8 @@ class PaymentController extends Controller
         $bookingData = $request->has('bookingData') ? json_decode($request->get('bookingData'), true) : [];
 
         try {
-            $identifier = $isStripeConnect && !empty($paymentIntentIdParam) ? $paymentIntentIdParam : $sessionId;
+            // Use session_id as identifier (Connect flow uses Checkout sessions)
+            $identifier = $sessionId ?? $paymentIntentIdParam;
 
             if (empty($identifier)) {
                 throw new \Exception('Payment identifier is missing (session_id or payment_intent_id required).');
@@ -567,7 +463,7 @@ class PaymentController extends Controller
                 }
             }
 
-            Log::info('Payment ID', ['paymentIntentId' => $paymentIntentId, 'isStripeConnect' => $isStripeConnect]);
+            Log::info('Payment ID', ['paymentIntentId' => $paymentIntentId]);
 
             // Retrieve booking data from session (key is based on the identifier)
             $sessionKey = 'pending_booking_' . $identifier;
