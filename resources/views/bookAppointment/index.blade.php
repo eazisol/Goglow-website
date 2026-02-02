@@ -2600,6 +2600,7 @@ document.addEventListener('DOMContentLoaded', function () {
             depositPercentage: depositPercentage,
             address: address,
             amount: amount,
+            bookingOrigin: 'web',
             services: [
                 {
                     serviceId: serviceId,
