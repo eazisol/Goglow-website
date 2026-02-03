@@ -628,11 +628,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function showSlotsLoading() {
         if (isMobileView()) {
             if (mobileTimeSlotsContainer) {
-                mobileTimeSlotsContainer.innerHTML = '<div class="slots-loading" style="text-align: center; padding: 40px; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>Loading available slots...</div>';
+                mobileTimeSlotsContainer.innerHTML = '<div class="slots-loading" style="text-align: center; padding: 40px; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>{{ __('app.booking.loading_available_slots') }}</div>';
                 mobileTimeSlotsContainer.style.display = '';
             }
         } else {
-            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>Loading available slots...</div>';
+            timeSlotGrid.innerHTML = '<div class="col-12 text-center py-3" style="padding: 20px; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i><br>{{ __('app.booking.loading_available_slots') }}</div>';
             if (timeSlotsStrip) {
                 timeSlotsStrip.style.display = '';
                 if (prevTimeSlotBtn) prevTimeSlotBtn.style.display = 'none';

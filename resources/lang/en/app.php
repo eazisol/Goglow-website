@@ -93,6 +93,7 @@ return [
         'free_booking' => 'Free booking',
         'slot_conflict_alert' => 'This service requires :duration minutes. The next available slots are not free. Please select an earlier time or a different slot.',
         'please_accept_terms' => 'Please check this box to proceed.',
+        'loading_available_slots' => 'Loading available slots...',
     ],
 
     // Schedule
