@@ -2425,10 +2425,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error(rescheduleData.message || '{{ __("app.bookings.reschedule_error") ?? "Failed to reschedule booking" }}');
                 }
 
-                // Success - redirect to bookings page
+                // Success - redirect to bookings page with success parameter
                 setButtonLoading(false);
-                alert('{{ __("app.bookings.reschedule_success") ?? "Booking rescheduled successfully" }}');
-                window.location.href = '{{ route("my-bookings") }}';
+                window.location.href = '{{ route("my-bookings") }}?rescheduled=1';
                 return;
             } catch (rescheduleError) {
                 console.error('Error rescheduling booking:', rescheduleError);
