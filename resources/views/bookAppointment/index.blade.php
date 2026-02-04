@@ -2425,10 +2425,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error(rescheduleData.message || '{{ __("app.bookings.reschedule_error") ?? "Failed to reschedule booking" }}');
                 }
 
-                // Success - redirect to bookings page
+                // Success - redirect to bookings page with success parameter
                 setButtonLoading(false);
-                alert('{{ __("app.bookings.reschedule_success") ?? "Booking rescheduled successfully" }}');
-                window.location.href = '{{ route("my-bookings") }}';
+                window.location.href = '{{ route("my-bookings") }}?rescheduled=1';
                 return;
             } catch (rescheduleError) {
                 console.error('Error rescheduling booking:', rescheduleError);
@@ -2663,52 +2662,48 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // Check if this is a free booking (deposit is 0 and payment type is deposit)
             const isFreeBooking = (depositPercentage === 0 && paymentType === 'deposit');
-            
-            if (isFreeBooking) {
-                // For free bookings, skip Stripe and directly submit the booking
-                console.log('Free booking detected, skipping Stripe payment');
 
-                // Add payment information to booking payload (matching mobile app format)
-                const freeBookingTransactionId = 'FREE_' + Date.now();
-                bookingPayload.payment_id = freeBookingTransactionId;
-                bookingPayload.payment_type = 'deposit';
-                bookingPayload.payed = false; // Free booking, no payment made
-                bookingPayload.depositPercentage = 0; // No deposit percentage
-                bookingPayload.depositAmount = 0; // No deposit amount was paid
-                bookingPayload.alreadySubmitted = true; // Flag to prevent double submission
-                
-                // Store booking data in localStorage for success page (same as paid bookings)
-                localStorage.setItem('bookingFormData', JSON.stringify(formDataToStore));
-                localStorage.setItem('bookingPayload', JSON.stringify(bookingPayload));
-                
+            if (isFreeBooking) {
+                // For free bookings, skip Stripe and call bookService Cloud Function directly
+                console.log('Free booking detected, calling bookService Cloud Function');
+
                 try {
-                    // Submit booking directly to API
-                    const bookingResponse = await fetch('https://us-central1-beauty-984c8.cloudfunctions.net/bookService', {
+                    // Generate FREE_ transaction ID (matches mobile app pattern)
+                    const freeTransactionId = 'FREE_' + Date.now();
+
+                    // Add payment info to booking payload
+                    const freeBookingPayload = {
+                        ...bookingPayload,
+                        payment_id: freeTransactionId,
+                        payment_type: paymentType,
+                        payed: false
+                    };
+
+                    // Call bookService Cloud Function directly
+                    const bookingResponse = await fetch('{{ config("services.firebase.cloud_functions_url") }}/bookService', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(bookingPayload)
+                        body: JSON.stringify(freeBookingPayload)
                     });
-                    
+
                     const bookingResponseData = await bookingResponse.json();
-                    console.log('Booking API response:', bookingResponseData);
-                    
-                    if (bookingResponse.ok) {
-                        // Send booking confirmation emails
-                        console.log('Booking successful, sending confirmation emails...');
-                        await sendBookingEmails(bookingPayload);
-                        
+                    console.log('Free booking Cloud Function response:', bookingResponseData);
+
+                    if (bookingResponse.ok && bookingResponseData.booking_id) {
+                        console.log('Free booking created successfully:', bookingResponseData.booking_id);
+
                         // Clear all booking data from localStorage
                         localStorage.removeItem('pendingBookingState');
                         localStorage.removeItem('bookingFormData');
                         localStorage.removeItem('bookingPayload');
-                        
+
                         // Redirect directly to My Bookings page
                         window.location.href = '{{ route("my-bookings") }}';
                     } else {
                         setButtonLoading(false);
-                        alert('Error submitting booking: ' + (bookingResponseData.message || 'Unknown error'));
+                        alert('Error submitting booking: ' + (bookingResponseData.message || bookingResponseData.error || 'Unknown error'));
                         console.error('Error submitting booking:', bookingResponseData);
                     }
                 } catch (bookingError) {

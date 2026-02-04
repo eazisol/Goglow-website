@@ -257,41 +257,43 @@ class BookingApiController extends Controller
                 ], 400);
             }
 
-            // Calculate refund
+            // Calculate refund for Stripe processing
             $refundInfo = $this->calculateRefundInfo($booking);
             $refundAmount = $refundInfo['refundAmount'];
 
-            // Process Stripe refund if applicable
-            if ($refundAmount > 0.01) {
-                $refundSuccess = $this->processStripeRefund($booking, $refundAmount);
-                if (!$refundSuccess) {
+            // Find paymentIntentId (used for Stripe refund and passed to Cloud Function)
+            $paymentIntentId = $this->findPaymentIntentId($booking);
+
+            // Process Stripe refund if applicable (done BEFORE Cloud Function call)
+            $stripeRefundId = null;
+            if ($refundAmount > 0.01 && $paymentIntentId) {
+                $stripeRefundResult = $this->processStripeRefundWithPaymentIntent($booking, $refundAmount, $paymentIntentId);
+                // null means Stripe API failed
+                if ($stripeRefundResult === null) {
                     return response()->json([
                         'success' => false,
                         'message' => __('app.booking.refund_error'),
                     ], 500);
                 }
-
-                // Update commission record (like mobile app does)
-                $this->updateCommissionRecord($id, $refundAmount, $refundInfo['totalPaid']);
+                $stripeRefundId = $stripeRefundResult;
             }
 
-            // Update booking status to cancelled (status: 2) and set cancel_date
-            // Using updateDoc to match mobile app which sets both fields
-            $cancelResponse = Http::timeout(30)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->put($this->getCloudFunctionsUrl() . '/updateDoc', [
-                    'collection' => 'bookings',
-                    'doc' => $id,
-                    'data' => [
-                        'status' => 2,
-                        'cancel_date' => now()->toIso8601String(),
-                    ],
-                ]);
+            // Call cancelBooking Cloud Function (handles atomic Firestore writes)
+            $cancelResponse = Http::timeout(30)->post(
+                $this->getCloudFunctionsUrl() . '/cancelBooking',
+                [
+                    'bookingId' => $id,
+                    'userId' => $userId,
+                    'cancelledBy' => 'customer',
+                    'stripeRefundId' => $stripeRefundId,
+                    'paymentIntentId' => $paymentIntentId,
+                ]
+            );
 
             if (!$cancelResponse->ok()) {
-                Log::error('Failed to update booking status', [
-                    'bookingId' => $id,
-                    'response' => $cancelResponse->body(),
+                Log::error('Cancel booking Cloud Function failed', [
+                    'status' => $cancelResponse->status(),
+                    'body' => $cancelResponse->body(),
                 ]);
                 return response()->json([
                     'success' => false,
@@ -299,13 +301,29 @@ class BookingApiController extends Controller
                 ], 500);
             }
 
+            $cancelData = $cancelResponse->json();
+
+            if (!($cancelData['success'] ?? false)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $cancelData['message'] ?? __('app.booking.cancel_error'),
+                ], 500);
+            }
+
+            Log::info('Booking cancelled successfully via Cloud Function', [
+                'bookingId' => $id,
+                'refundAmount' => $cancelData['refundAmount'] ?? $refundAmount,
+                'stripeRefundId' => $stripeRefundId,
+                'refundTransactionId' => $cancelData['refundTransactionId'] ?? null,
+            ]);
+
             // Send cancellation notification
             $this->sendCancellationNotification($booking, $userId);
 
             return response()->json([
                 'success' => true,
                 'message' => __('app.booking.cancel_success'),
-                'refundAmount' => $refundAmount,
+                'refundAmount' => $cancelData['refundAmount'] ?? $refundAmount,
                 'refundInfo' => $refundInfo,
             ]);
         } catch (\Throwable $e) {
@@ -343,7 +361,7 @@ class BookingApiController extends Controller
         $newAgentName = $request->input('agentName');
 
         try {
-            // Fetch booking using getBookingsByUserId and find the specific booking
+            // Fetch booking to verify ownership and check status
             $booking = $this->fetchBookingForUser($id, $userId);
 
             if (!$booking) {
@@ -351,15 +369,6 @@ class BookingApiController extends Controller
                     'success' => false,
                     'message' => __('app.booking.not_found'),
                 ], 404);
-            }
-
-            // Check if booking can be rescheduled
-            $status = $booking['status'] ?? 0;
-            if (!in_array($status, [0, 1, 4, 9])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => __('app.booking.only_active_reschedule'),
-                ], 400);
             }
 
             // Verify booking is at least 24 hours away
@@ -371,54 +380,43 @@ class BookingApiController extends Controller
                 ], 400);
             }
 
-            // Update services array with new startTime and agent (matching mobile app logic)
-            $updatedServices = $booking['services'] ?? [];
-            foreach ($updatedServices as &$service) {
-                $service['startTime'] = $newBookingTime;
-                // Update agent if provided
-                if ($newAgentId !== null) {
-                    $service['agentId'] = $newAgentId;
-                }
-                if ($newAgentName !== null) {
-                    $service['agentName'] = $newAgentName;
-                }
-            }
-            unset($service); // Break reference
-
-            // Build update data
-            $updateData = [
-                'booking_time' => $newBookingTime,
-                'bookTime' => $newBookTime,
-                'services' => $updatedServices,
-            ];
-
-            // Add agent fields if provided
-            if ($newAgentId !== null) {
-                $updateData['agentId'] = $newAgentId;
-            }
-            if ($newAgentName !== null) {
-                $updateData['agentName'] = $newAgentName;
-            }
-
-            // Update booking using updateDoc Cloud Function
-            $rescheduleResponse = Http::timeout(30)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->put($this->getCloudFunctionsUrl() . '/updateDoc', [
-                    'collection' => 'bookings',
-                    'doc' => $id,
-                    'data' => $updateData,
-                ]);
+            // Call rescheduleBooking Cloud Function
+            $rescheduleResponse = Http::timeout(30)->post(
+                $this->getCloudFunctionsUrl() . '/rescheduleBooking',
+                [
+                    'bookingId' => $id,
+                    'userId' => $userId,
+                    'bookingTime' => $newBookingTime,
+                    'bookTime' => $newBookTime,
+                    'agentId' => $newAgentId,
+                    'agentName' => $newAgentName,
+                ]
+            );
 
             if (!$rescheduleResponse->ok()) {
-                Log::error('Failed to reschedule booking', [
-                    'bookingId' => $id,
-                    'response' => $rescheduleResponse->body(),
+                Log::error('Reschedule booking Cloud Function failed', [
+                    'status' => $rescheduleResponse->status(),
+                    'body' => $rescheduleResponse->body(),
                 ]);
                 return response()->json([
                     'success' => false,
                     'message' => __('app.booking.reschedule_error'),
                 ], 500);
             }
+
+            $rescheduleData = $rescheduleResponse->json();
+
+            if (!($rescheduleData['success'] ?? false)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $rescheduleData['message'] ?? __('app.booking.reschedule_error'),
+                ], 400);
+            }
+
+            Log::info('Booking rescheduled successfully via Cloud Function', [
+                'bookingId' => $id,
+                'newBookingTime' => $newBookingTime,
+            ]);
 
             // Send reschedule notification
             $this->sendRescheduleNotification($booking, $newBookingTime, $userId);
@@ -509,21 +507,58 @@ class BookingApiController extends Controller
     }
 
     /**
-     * Process Stripe refund via Cloud Function
+     * Find payment intent ID from booking data
+     * Checks: paymentIntentId field, transaction_uid (string or array)
+     * Note: Firestore lookup is handled by cancelBooking Cloud Function if needed
      */
-    private function processStripeRefund(array $booking, float $refundAmount): bool
+    private function findPaymentIntentId(array $booking): ?string
+    {
+        $bookingId = $booking['id'] ?? $booking['bookingId'] ?? null;
+
+        // 1. Check paymentIntentId field (website bookings)
+        $paymentIntentId = $booking['paymentIntentId'] ?? null;
+        if ($paymentIntentId && str_starts_with($paymentIntentId, 'pi_')) {
+            Log::info('Found paymentIntentId in booking.paymentIntentId', [
+                'bookingId' => $bookingId,
+                'paymentIntentId' => $paymentIntentId,
+            ]);
+            return $paymentIntentId;
+        }
+
+        // 2. Check transaction_uid field (string format - old website bookings)
+        $transactionUid = $booking['transaction_uid'] ?? null;
+        if (is_string($transactionUid) && str_starts_with($transactionUid, 'pi_')) {
+            Log::info('Found paymentIntentId in booking.transaction_uid (string)', [
+                'bookingId' => $bookingId,
+                'paymentIntentId' => $transactionUid,
+            ]);
+            return $transactionUid;
+        }
+
+        // 3. Check transaction_uid field (array format)
+        if (is_array($transactionUid)) {
+            foreach ($transactionUid as $uid) {
+                if (is_string($uid) && str_starts_with($uid, 'pi_')) {
+                    Log::info('Found paymentIntentId in booking.transaction_uid (array)', [
+                        'bookingId' => $bookingId,
+                        'paymentIntentId' => $uid,
+                    ]);
+                    return $uid;
+                }
+            }
+        }
+
+        Log::info('No Stripe payment intent found in booking data', ['bookingId' => $bookingId]);
+        return null;
+    }
+
+    /**
+     * Process Stripe refund via Cloud Function
+     * Returns Stripe refund ID (re_xxx) on success, null on failure
+     */
+    private function processStripeRefundWithPaymentIntent(array $booking, float $refundAmount, string $paymentIntentId): ?string
     {
         try {
-            // Get payment intent ID from paymentIntentId field (set during booking creation)
-            $paymentIntentId = $booking['paymentIntentId'] ?? null;
-
-            if (!$paymentIntentId || !str_starts_with($paymentIntentId, 'pi_')) {
-                Log::info('No Stripe payment intent found for booking, skipping refund', [
-                    'bookingId' => $booking['id'] ?? $booking['bookingId'],
-                ]);
-                return true; // Not a Stripe payment, proceed with cancellation
-            }
-
             // Get Stripe mode (always using Stripe Connect)
             $settings = $this->getPaymentSettings();
             $isLive = $settings['isStripeConnectLive'];
@@ -558,30 +593,32 @@ class BookingApiController extends Controller
                     'httpStatus' => $refundResponse->status(),
                     'response' => $refundResponse->body(),
                 ]);
-                return false;
+                return null;
             }
 
             $refundData = $refundResponse->json();
             if ($refundData['success'] ?? false) {
+                $stripeRefundId = $refundData['refundId'] ?? null;
                 Log::info('Stripe refund processed successfully', [
                     'bookingId' => $booking['id'] ?? $booking['bookingId'],
-                    'refundId' => $refundData['refundId'] ?? null,
+                    'refundId' => $stripeRefundId,
                     'amount' => $refundAmount,
                 ]);
-                return true;
+                // Return the Stripe refund ID (re_xxx) for transaction record
+                return $stripeRefundId;
             }
 
             Log::error('Stripe refund returned failure', [
                 'bookingId' => $booking['id'] ?? $booking['bookingId'],
                 'response' => $refundData,
             ]);
-            return false;
+            return null;
         } catch (\Throwable $e) {
             Log::error('Error processing Stripe refund', [
                 'error' => $e->getMessage(),
                 'bookingId' => $booking['id'] ?? $booking['bookingId'],
             ]);
-            return false;
+            return null;
         }
     }
 
@@ -660,56 +697,6 @@ class BookingApiController extends Controller
             return null;
         } catch (\Throwable $e) {
             return null;
-        }
-    }
-
-    /**
-     * Update commissions_records collection when a refund occurs
-     * Uses updateDoc with where condition - no separate query needed
-     */
-    private function updateCommissionRecord(string $bookingId, float $refundAmount, float $totalPaid): void
-    {
-        try {
-            $isFullRefund = $refundAmount >= ($totalPaid - 0.01);
-            $refundAmountCents = (int) round($refundAmount * 100);
-            $status = $isFullRefund ? 'refunded' : 'partially_refunded';
-
-            // Update commission record by bookingId using where condition
-            // updateDoc handles finding and updating the matching document
-            $updateResponse = Http::timeout(10)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->put($this->getCloudFunctionsUrl() . '/updateDoc', [
-                    'collection' => 'commissions_records',
-                    'where' => ['field' => 'bookingId', 'operator' => '==', 'value' => $bookingId],
-                    'data' => [
-                        'refundedAt' => now()->toIso8601String(),
-                        'refundAmountCents' => $refundAmountCents,
-                        'status' => $status,
-                        'updatedAt' => now()->toIso8601String(),
-                    ],
-                ]);
-
-            if ($updateResponse->ok()) {
-                $result = $updateResponse->json();
-                $updatedCount = $result['updatedCount'] ?? 0;
-                if ($updatedCount > 0) {
-                    Log::info('Updated commission record for booking', [
-                        'bookingId' => $bookingId,
-                        'refundAmountCents' => $refundAmountCents,
-                        'status' => $status,
-                    ]);
-                } else {
-                    Log::info('No commission record found for booking', ['bookingId' => $bookingId]);
-                }
-            } else {
-                Log::info('No commission record to update for booking', ['bookingId' => $bookingId]);
-            }
-        } catch (\Throwable $e) {
-            // Log error but don't fail the refund - commission record update is secondary
-            Log::warning('Failed to update commission record', [
-                'bookingId' => $bookingId,
-                'error' => $e->getMessage(),
-            ]);
         }
     }
 }

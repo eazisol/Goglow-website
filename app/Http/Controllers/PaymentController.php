@@ -472,40 +472,53 @@ class PaymentController extends Controller
             if ($pendingBooking) {
                 // We have booking data from the session - finalize server-side
                 Log::info('Found pending booking in session', ['sessionKey' => $sessionKey]);
-                
+
                 $bookingPayload = $pendingBooking['bookingData'];
                 if (is_string($bookingPayload)) {
                     $bookingPayload = json_decode($bookingPayload, true);
                 }
-                
+
                 // Update payload with payment info
                 $bookingPayload['payment_id'] = $paymentIntentId;
                 $bookingPayload['paymentIntentId'] = $paymentIntentId; // For refund lookup
                 $bookingPayload['payment_type'] = $pendingBooking['paymentType'] ?? 'full';
-                $bookingPayload['payment_status'] = 'completed';
                 $bookingPayload['payed'] = ($bookingPayload['payment_type'] === 'full');
-                
-                // Call bookService Cloud Function
-                Log::info('Submitting booking to Cloud Function', ['payload_keys' => array_keys($bookingPayload ?? [])]);
-                $bookResponse = Http::post(config('services.firebase.cloud_functions_url') . '/bookService', $bookingPayload);
-                
-                if ($bookResponse->ok()) {
-                    Log::info('Booking created successfully');
-                    
-                    // Send emails
-                    $this->sendBookingEmails($bookingPayload, $pendingBooking);
-                    
-                    // Clear session data
-                    session()->forget($sessionKey);
-                    
-                    // Redirect to My Bookings
-                    return redirect()->route('my-bookings');
-                } else {
-                    Log::error('Booking API failed', ['response' => $bookResponse->body()]);
-                    // Still redirect to my-bookings even if there was an issue
-                    session()->forget($sessionKey);
-                    return redirect()->route('my-bookings');
+                $bookingPayload['bookingOrigin'] = 'website';
+
+                // Create booking via Cloud Function (handles atomic Firestore writes)
+                Log::info('Creating booking via Cloud Function', ['payload_keys' => array_keys($bookingPayload ?? [])]);
+
+                $bookingResponse = Http::timeout(30)->post(
+                    config('services.firebase.cloud_functions_url') . '/bookService',
+                    $bookingPayload
+                );
+
+                if ($bookingResponse->ok()) {
+                    $bookingResult = $bookingResponse->json();
+
+                    if (!empty($bookingResult['booking_id'])) {
+                        Log::info('Booking created successfully via Cloud Function', [
+                            'bookingId' => $bookingResult['booking_id'],
+                        ]);
+
+                        // Send emails (non-critical, done after booking creation)
+                        $this->sendBookingEmails($bookingPayload, $pendingBooking);
+
+                        // Clear session data
+                        session()->forget($sessionKey);
+
+                        // Redirect to My Bookings
+                        return redirect()->route('my-bookings');
+                    }
                 }
+
+                Log::error('Booking creation failed', [
+                    'status' => $bookingResponse->status(),
+                    'response' => $bookingResponse->json(),
+                ]);
+                // Still redirect to my-bookings even if there was an issue
+                session()->forget($sessionKey);
+                return redirect()->route('my-bookings');
             } else {
                 // No session data - fallback to success page (for backwards compatibility)
                 Log::warning('No pending booking data found in session', ['sessionKey' => $sessionKey]);
@@ -522,7 +535,7 @@ class PaymentController extends Controller
             ]);
         }
     }
-    
+
     /**
      * Send booking confirmation emails
      */
