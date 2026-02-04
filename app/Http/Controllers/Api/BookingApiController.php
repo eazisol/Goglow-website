@@ -562,7 +562,6 @@ class BookingApiController extends Controller
             // Get Stripe mode (always using Stripe Connect)
             $settings = $this->getPaymentSettings();
             $isLive = $settings['isStripeConnectLive'];
-            $isLive = false; // for testing
 
             // Build refund payload
             $refundPayload = [

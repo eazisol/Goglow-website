@@ -22,9 +22,6 @@ class PaymentController extends Controller
      */
     private function getPaymentSettings(): array
     {
-                    return [
-                'isStripeConnectLive' => false,
-            ];
         return Cache::remember('payment_settings', self::PAYMENT_SETTINGS_CACHE_TTL, function () {
             try {
                 $response = Http::timeout(10)->get(config('services.firebase.cloud_functions_url') . '/getPaymentStatus');

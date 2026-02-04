@@ -175,6 +175,14 @@ function showToast(message, type = 'success', duration = 3000) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Check for reschedule success parameter and show toast
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('rescheduled') === '1') {
+        showToast(@json(__('app.bookings.reschedule_success') ?? 'Booking rescheduled successfully'), 'success', 4000);
+        // Clean up URL without reloading the page
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     const firebaseUid = @json($firebaseUid ?? null);
     let currentToggleIndex = 0;
     let allBookings = [];
