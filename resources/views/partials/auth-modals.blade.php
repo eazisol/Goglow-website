@@ -118,7 +118,7 @@
                                         <option value="">{{ __('app.auth.select_country') }}</option>
                                     </select>
                                     
-                                    <input type="tel" name="phone" class="form-control-login phone-input" id="signup-phone" placeholder="{{ __('app.auth.phone') }}" required>
+                                    <input type="tel" name="phone" class="form-control-login phone-input" id="signup-phone" placeholder="{{ __('app.auth.phone') }}" required minlength="9" maxlength="9" pattern="[0-9]{9}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
                                 </div>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -217,12 +217,24 @@
                                     }
                                     
                                     // Add countries with flags
+                                    // Add countries with flags
+                                    /* 
                                     countryList.forEach(function(country) {
                                         const option = document.createElement('option');
                                         option.value = country.code;
                                         option.textContent = getCountryFlag(country.code) + ' ' + country.prefix;
                                         select.appendChild(option);
                                     });
+                                    */
+
+                                    // Only France (+33) 
+                                    const frCountry = countryList.find(c => c.code === 'FR');
+                                    if(frCountry) {
+                                         const option = document.createElement('option');
+                                         option.value = frCountry.code;
+                                         option.textContent = getCountryFlag(frCountry.code) + ' ' + frCountry.prefix;
+                                         select.appendChild(option);
+                                    }
                                     
                                     // Set default to France
                                     const frOption = select.querySelector('option[value="FR"]');
