@@ -797,6 +797,7 @@
     window.authTranslations = {
         loginSuccessful: @json(__('app.auth.login_successful')),
         redirecting: @json(__('app.auth.redirecting')),
+        invalidLoginCredentials: @json(__('app.auth.invalid_login_credentials')),
         alreadyLoggedIn: @json(__('app.auth.already_logged_in') ?: 'You are already logged in'),
         loginFailed: @json(__('app.messages.login_error'))
     };

@@ -73,6 +73,7 @@ return [
         'continue_with_apple' => 'Continue with Apple',
         'use_email_password' => 'Email & password',
         'select_country' => 'Select Country',
+        'invalid_login_credentials' => 'Invalid login credentials',
     ],
 
     // Booking

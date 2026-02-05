@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 modalEl.classList.add('show');
                 document.body.classList.add('modal-open');
                 // Dispatch Bootstrap-compatible event for compatibility
-                setTimeout(function() {
+                setTimeout(function () {
                     modalEl.dispatchEvent(new CustomEvent('shown.bs.modal'));
                 }, 150);
             }
@@ -157,18 +157,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Initialize vanilla modals with show/hide methods
         let loginModal = loginModalElement ? {
-            show: function() { showModal(loginModalElement); },
-            hide: function() { hideModal(loginModalElement); }
+            show: function () { showModal(loginModalElement); },
+            hide: function () { hideModal(loginModalElement); }
         } : null;
 
         let signupModal = signupModalElement ? {
-            show: function() { showModal(signupModalElement); },
-            hide: function() { hideModal(signupModalElement); }
+            show: function () { showModal(signupModalElement); },
+            hide: function () { hideModal(signupModalElement); }
         } : null;
 
         // Setup close button handlers
-        document.querySelectorAll('[data-bs-dismiss="modal"], .btn-close').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
+        document.querySelectorAll('[data-bs-dismiss="modal"], .btn-close').forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
                 const modal = e.target.closest('.modal');
                 if (modal) {
                     hideModal(modal);
@@ -177,8 +177,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Close modal when clicking on backdrop
-        document.querySelectorAll('.modal').forEach(function(modal) {
-            modal.addEventListener('click', function(e) {
+        document.querySelectorAll('.modal').forEach(function (modal) {
+            modal.addEventListener('click', function (e) {
                 if (e.target === modal) {
                     hideModal(modal);
                 }
@@ -186,9 +186,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Close modal on Escape key
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
-                document.querySelectorAll('.modal.show').forEach(function(modal) {
+                document.querySelectorAll('.modal.show').forEach(function (modal) {
                     hideModal(modal);
                 });
             }
@@ -653,7 +653,13 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
 
                             // Show error message
-                            errorElement.textContent = data.message || 'Login failed';
+                            let errorMessage = data.message || 'Login failed';
+                            if (data.message === 'INVALID_LOGIN_CREDENTIALS') {
+                                const trans = window.authTranslations || {};
+                                errorMessage = trans.invalidLoginCredentials || 'Invalid login credentials';
+                            }
+
+                            errorElement.textContent = errorMessage;
                             errorElement.classList.remove('d-none');
                         }
                     })

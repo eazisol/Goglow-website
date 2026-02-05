@@ -71,6 +71,7 @@ return [
         'continue_with_apple' => 'Continuer avec Apple',
         'use_email_password' => 'email et mot de passe',
         'select_country' => 'Sélectionner le pays',
+        'invalid_login_credentials' => 'Identifiants de connexion invalides',
     ],
 
     // Booking

@@ -1,5 +1,17 @@
 // Smart Sticky Header - adds visual feedback when scrolled
 (function() {
+    // Dynamic body spacing for fixed header
+    function updateHeaderSpacing() {
+        const header = document.querySelector('.nav-header-section');
+        if (header) {
+            document.body.style.paddingTop = header.offsetHeight + 'px';
+        }
+    }
+    window.addEventListener('load', updateHeaderSpacing);
+    window.addEventListener('resize', updateHeaderSpacing);
+    // Observe DOM changes if needed, or run immediately
+    updateHeaderSpacing();
+
     const navSection = document.querySelector('.nav-header-section');
     if (!navSection) return;
 
