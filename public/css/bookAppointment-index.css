@@ -908,7 +908,7 @@
         overflow-x: auto;
         overflow-y: hidden;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch;
         flex: 1;
