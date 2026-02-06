@@ -127,8 +127,10 @@ return [
         'next_week' => 'Semaine suivante',
         'no_slots' => 'Aucun créneau disponible',
         'at' => 'à',
-        'no_slot_available' => 'Il n’y a plus de créneaux',
+        'no_slot_available' => "Il n'y a plus de créneaux",
         'no_slot' => 'vide',
+        'select_date' => 'Sélectionner une date',
+        'date_and_time' => 'Choix de la date & heure',
     ],
 
     // My Bookings
@@ -525,6 +527,9 @@ return [
         // Agent Page
     'agent_page' => [
         'select_agent' => 'Sélectionnez une prestataire',
+        'choose_with_whom' => 'Choisir avec qui ?',
+        'no_preference' => 'Sans préférence',
+        'more' => 'de plus',
         'schedule' => 'Planification',
         'selected' => 'Choisi',
         'payment_options' => 'Options de paiement',
@@ -532,10 +537,13 @@ return [
         'pay_full_amount_now' => 'Payer le montant total maintenant',
         'book_an_appointment' => 'confirmer le rendez-vous',
         'the_morning' => 'La Matinée',
-        'in_the_afternoon' => 'L’après-midi',
+        'in_the_afternoon' => "L'après-midi",
         'in_the_evening' => 'La Soirée',
         'see_more' => 'Voir plus',
         'no_agent_assigned' => "Aucun agent n'est affecté à ce service",
+        'please_select_day' => "Veuillez d'abord sélectionner un jour",
+        'please_select_agent' => 'Veuillez sélectionner un agent',
+        'please_select_time_slot' => 'Veuillez sélectionner un créneau horaire',
     ],
 
     // I Am Professional Page

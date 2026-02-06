@@ -117,6 +117,8 @@ class BookAppointmentController extends Controller
 
     public function showBySlug(Request $request, $companyUserName, $servicesSlug)
     {
+        $rescheduleBookingId = $request->query('reschedule');
+
         // First, validate that the provider exists
         // try {
         //     $cacheKey = "provider_by_username_{$companyUserName}";
@@ -242,6 +244,7 @@ class BookAppointmentController extends Controller
             'userId' => $firebaseUid,
             'userData' => $userData,
             'whiteLabel' => true, // Enable white-label mode for provider booking pages
+            'rescheduleBookingId' => $rescheduleBookingId,
         ]);
     }
 }
