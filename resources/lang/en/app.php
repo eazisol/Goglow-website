@@ -131,6 +131,8 @@ return [
         'at' => 'at',
         'no_slot_available' => 'There is no slot available',
         'no_slot' => 'No slot',
+        'select_date' => 'Select a date',
+        'date_and_time' => 'Date & Time',
     ],
 
     // My Bookings
@@ -527,6 +529,9 @@ return [
     // Agent Page
     'agent_page' => [
         'select_agent' => 'Select Agent',
+        'choose_with_whom' => 'Choose with whom?',
+        'no_preference' => 'No preference',
+        'more' => 'more',
         'schedule' => 'Schedule',
         'selected' => 'Selected',
         'payment_options' => 'Payment Options',
@@ -538,6 +543,9 @@ return [
         'in_the_evening' => 'In The Evening',
         'see_more' => 'See More',
         'no_agent_assigned' => 'No agent is assigned to this service',
+        'please_select_day' => 'Please select a day first',
+        'please_select_agent' => 'Please select an agent',
+        'please_select_time_slot' => 'Please select a time slot',
     ],
 
     // I Am Professional Page

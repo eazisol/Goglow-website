@@ -542,7 +542,263 @@
         line-height: 1.5;
     }
 
-    /* Agents horizontal avatars */
+    /* Planity-style Agent Selection Grid */
+    .agent-selection-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 12px;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .agent-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        background: #fff;
+        border: 2px solid rgba(213, 190, 198, 0.6);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+
+    .agent-option:hover {
+        border-color: rgba(229, 0, 80, 0.4);
+        background: #fff4f8;
+    }
+
+    .agent-option.active {
+        border-color: rgba(229, 0, 80, 1);
+        background: #fff4f8;
+    }
+
+    .agent-option-radio {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid rgba(213, 190, 198, 1);
+        flex-shrink: 0;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+
+    .agent-option.active .agent-option-radio {
+        border-color: rgba(229, 0, 80, 1);
+    }
+
+    .agent-option.active .agent-option-radio::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(229, 0, 80, 1);
+    }
+
+    .agent-option-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(44, 13, 24, 1);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .agent-option.active .agent-option-label {
+        color: rgba(229, 0, 80, 1);
+        font-weight: 600;
+    }
+
+    .agent-option.agent-hidden {
+        display: none;
+    }
+
+    .agent-option.agent-see-more {
+        border-style: dashed;
+        justify-content: center;
+    }
+
+    .agent-option.agent-see-more .agent-option-label {
+        color: rgba(229, 0, 80, 1);
+        text-decoration: underline;
+    }
+
+    .agent-option.agent-see-more:hover {
+        background: rgba(229, 0, 80, 0.05);
+    }
+
+    /* Accessibility: Focus states */
+    .agent-option:focus-visible {
+        outline: 2px solid rgba(229, 0, 80, 0.8);
+        outline-offset: 2px;
+    }
+
+    .day-column:focus-visible {
+        outline: 2px solid rgba(229, 0, 80, 0.8);
+        outline-offset: 2px;
+    }
+
+    .time-slot:focus-visible,
+    .mobile-time-slot:focus-visible {
+        outline: 2px solid rgba(229, 0, 80, 0.8);
+        outline-offset: 2px;
+    }
+
+    .period-btn:focus-visible {
+        outline: 2px solid rgba(229, 0, 80, 0.8);
+        outline-offset: 2px;
+    }
+
+    .calendar-arrow:focus-visible,
+    .time-slot-arrow:focus-visible {
+        outline: 2px solid rgba(229, 0, 80, 0.8);
+        outline-offset: 2px;
+    }
+
+    /* Desktop/Mobile visibility helpers */
+    .desktop-only {
+        display: block;
+    }
+    .desktop-only.agent-selection-grid {
+        display: grid;
+    }
+    .mobile-only {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .desktop-only {
+            display: none !important;
+        }
+        .mobile-only {
+            display: block !important;
+        }
+
+        .agent-selection-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-width: 100%;
+        }
+
+        .agent-option {
+            padding: 12px 14px;
+        }
+
+        .agent-option-label {
+            font-size: 13px;
+        }
+
+        .agent-option-radio {
+            width: 16px;
+            height: 16px;
+        }
+
+        .agent-option.active .agent-option-radio::after {
+            width: 8px;
+            height: 8px;
+        }
+    }
+
+    /* Mobile Agent Dropdown (Planity-style) */
+    .agent-dropdown-wrapper {
+        margin-bottom: 20px;
+    }
+
+    .agent-dropdown {
+        position: relative;
+        width: 100%;
+    }
+
+    .agent-dropdown-selected {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        background: #fff;
+        border: 1px solid rgba(213, 190, 198, 0.8);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .agent-dropdown-selected:hover {
+        border-color: rgba(229, 0, 80, 0.4);
+    }
+
+    .agent-dropdown.open .agent-dropdown-selected {
+        border-color: rgba(229, 0, 80, 0.6);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .agent-dropdown-text {
+        font-size: 15px;
+        color: rgba(44, 13, 24, 1);
+        font-weight: 500;
+    }
+
+    .agent-dropdown-chevron {
+        color: rgba(44, 13, 24, 0.6);
+        transition: transform 0.2s ease;
+    }
+
+    .agent-dropdown.open .agent-dropdown-chevron {
+        transform: rotate(180deg);
+    }
+
+    .agent-dropdown-options {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid rgba(213, 190, 198, 0.8);
+        border-top: none;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        max-height: 250px;
+        overflow-y: auto;
+        z-index: 100;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .agent-dropdown.open .agent-dropdown-options {
+        display: block;
+    }
+
+    .agent-dropdown-option {
+        padding: 12px 16px;
+        font-size: 15px;
+        color: rgba(44, 13, 24, 0.85);
+        cursor: pointer;
+        transition: background 0.15s ease;
+        border-bottom: 1px solid rgba(213, 190, 198, 0.3);
+    }
+
+    .agent-dropdown-option:last-child {
+        border-bottom: none;
+    }
+
+    .agent-dropdown-option:hover {
+        background: rgba(229, 0, 80, 0.05);
+    }
+
+    .agent-dropdown-option.active {
+        background: rgba(229, 0, 80, 0.08);
+        color: rgba(229, 0, 80, 1);
+        font-weight: 600;
+    }
+
+    /* Legacy agent avatars - keep for backward compatibility */
     .agent-avatars {
         display: flex;
         justify-content: center;
@@ -799,16 +1055,13 @@
     }
 
     @media (max-width: 768px) {
+        /* Hide the old calendar strip on mobile */
         .calendar-strip {
-            width: 100%;
-            gap: 10px;
-            padding: 0 5px;
+            display: none !important;
         }
 
-        .calendar-strip .calendar-arrow {
-            flex-shrink: 0;
-            width: 30px;
-            height: 30px;
+        #weekDisplay {
+            display: none !important;
         }
 
         .days-header {
@@ -844,6 +1097,109 @@
         .days-header .day-column:nth-child(n + 4) {
             display: none;
         }
+    }
+
+    /* Mobile Day Selector (Planity-style) */
+    .mobile-day-selector {
+        display: none;
+        margin-bottom: 16px;
+    }
+
+    @media (max-width: 768px) {
+        .mobile-day-selector {
+            display: block;
+        }
+    }
+
+    .mobile-day-selector-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        background: #fff;
+        border: 1px solid rgba(213, 190, 198, 0.5);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .mobile-day-selector-header:hover {
+        border-color: rgba(229, 0, 80, 0.3);
+    }
+
+    .mobile-day-selector.open .mobile-day-selector-header {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-color: rgba(229, 0, 80, 0.4);
+    }
+
+    .mobile-day-selector-text {
+        font-size: 16px;
+        font-weight: 600;
+        color: rgba(44, 13, 24, 1);
+    }
+
+    .mobile-day-selector-chevron {
+        color: rgba(44, 13, 24, 0.6);
+        transition: transform 0.2s ease;
+    }
+
+    .mobile-day-selector.open .mobile-day-selector-chevron {
+        transform: rotate(180deg);
+    }
+
+    .mobile-day-selector-options {
+        display: none;
+        background: #fff;
+        border: 1px solid rgba(213, 190, 198, 0.5);
+        border-top: none;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .mobile-day-selector.open .mobile-day-selector-options {
+        display: block;
+    }
+
+    .mobile-day-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        font-size: 15px;
+        color: rgba(44, 13, 24, 0.85);
+        cursor: pointer;
+        transition: background 0.15s ease;
+        border-bottom: 1px solid rgba(213, 190, 198, 0.2);
+    }
+
+    .mobile-day-option:last-child {
+        border-bottom: none;
+    }
+
+    .mobile-day-option:hover {
+        background: rgba(229, 0, 80, 0.05);
+    }
+
+    .mobile-day-option.active {
+        background: rgba(229, 0, 80, 0.08);
+        color: rgba(229, 0, 80, 1);
+        font-weight: 600;
+    }
+
+    .mobile-day-option-date {
+        font-weight: 500;
+    }
+
+    .mobile-day-option-slots {
+        font-size: 13px;
+        color: rgba(44, 13, 24, 0.5);
+    }
+
+    .mobile-day-option.active .mobile-day-option-slots {
+        color: rgba(229, 0, 80, 0.7);
     }
     
     /* Time slots strip wrapper with navigation arrows */
@@ -947,6 +1303,45 @@
         height: 0;
     }
 
+    /* 3-Column Grouped Slots Layout (Desktop) */
+    .slots-grouped-container {
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .slots-period-column {
+        flex: 1;
+        max-width: 200px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .slots-period-header {
+        text-align: center;
+        font-weight: 600;
+        font-size: 14px;
+        color: rgba(77, 38, 64, 0.85);
+        padding-bottom: 8px;
+        border-bottom: 2px solid rgba(213, 190, 198, 0.5);
+        margin-bottom: 4px;
+    }
+
+    .slots-period-column .time-slot {
+        min-width: unset;
+        width: 100%;
+    }
+
+    /* Hide grouped container on mobile */
+    @media (max-width: 768px) {
+        .slots-grouped-container {
+            display: none !important;
+        }
+    }
+
     /* Horizontal time slot items */
     .time-slot {
         flex-shrink: 0;
@@ -986,64 +1381,71 @@
         display: none;
     }
     
-    /* Mobile Time Slots Container - 3 Column Layout */
+    /* Mobile Time Slots Container - Planity-style 3 Column Grid */
     .mobile-time-slots-container {
-        margin-top: 12px;
+        margin-top: 16px;
         width: 100%;
         padding: 0;
     }
-    
+
+    /* Simple 3-column grid for all slots (Planity-style) */
+    .mobile-slots-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        width: 100%;
+    }
+
+    /* Legacy columns container - kept for backward compatibility */
     .mobile-slots-columns-container {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
         width: 100%;
     }
-    
+
     .mobile-period-column {
         display: flex;
         flex-direction: column;
         width: 100%;
     }
-    
+
     .mobile-period-slots {
         display: flex;
         flex-direction: column;
         gap: 8px;
         width: 100%;
     }
-    
+
     .mobile-time-slot {
-        padding: 12px 16px;
-        background-color: #fff4f8;
-        border-radius: 6px;
-        font-size: 12px;
+        padding: 14px 8px;
+        background-color: #fff;
+        border-radius: 8px;
+        font-size: 15px;
         cursor: pointer;
         transition: all 0.2s ease;
-        border: 1px solid #d5bec6;
+        border: 1px solid rgba(213, 190, 198, 0.6);
         text-align: center;
         font-weight: 500;
-        color: rgba(77, 38, 64, 0.85);
+        color: rgba(44, 13, 24, 0.85);
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
     }
-    
+
     .mobile-time-slot:hover {
-        background-color: #ffe9f0;
-        border-color: rgba(229, 0, 80, 0.5);
-        transform: translateY(-1px);
+        background-color: #fff4f8;
+        border-color: rgba(229, 0, 80, 0.4);
     }
-    
+
     .mobile-time-slot.selected {
         background-color: rgba(229, 0, 80, 1);
         color: white;
         border-color: rgba(229, 0, 80, 1);
-        transform: translateY(-2px);
         box-shadow: 0 2px 8px rgba(229, 0, 80, 0.3);
     }
-    
+
     .mobile-period-no-slots {
         padding: 12px;
         text-align: center;
@@ -1051,18 +1453,18 @@
         font-size: 14px;
         font-style: italic;
     }
-    
+
     .mobile-no-slots {
         padding: 20px;
         text-align: center;
         color: #666;
         font-size: 14px;
     }
-    
+
     /* See More Button */
     .mobile-see-more-btn {
-        width: 100%;
-        margin-top: 16px;
+        grid-column: 1 / -1;
+        margin-top: 8px;
         padding: 12px;
         background: transparent;
         border: none;
@@ -1074,11 +1476,11 @@
         text-align: center;
         transition: color 0.2s ease;
     }
-    
+
     .mobile-see-more-btn:hover {
         color: rgba(229, 0, 80, 0.8);
     }
-    
+
     .mobile-see-more-btn:active {
         color: rgba(229, 0, 80, 0.6);
     }
