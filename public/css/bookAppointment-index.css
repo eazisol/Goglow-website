@@ -541,6 +541,12 @@
         color: #555;
         line-height: 1.5;
     }
+    .desc-clamped {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 
     /* Planity-style Agent Selection Grid */
     .agent-selection-grid {
@@ -681,7 +687,10 @@
         .mobile-only {
             display: block !important;
         }
+    }
 
+    /* Agent grid — responsive for mobile */
+    @media (max-width: 768px) {
         .agent-selection-grid {
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
@@ -689,7 +698,7 @@
         }
 
         .agent-option {
-            padding: 12px 14px;
+            padding: 10px 12px;
         }
 
         .agent-option-label {
@@ -798,56 +807,66 @@
         font-weight: 600;
     }
 
-    /* Legacy agent avatars - keep for backward compatibility */
+    /* Mobile agent avatars — grid layout (3 columns, ensures 2+ rows) */
     .agent-avatars {
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-        align-items: center;
-        flex-wrap: nowrap;
-        overflow-x: auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px 8px;
+        justify-items: center;
         padding: 10px 0;
         margin-top: 6px;
-        /* Hide scrollbar but keep scrolling functionality */
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-    }
-
-    .agent-avatars::-webkit-scrollbar {
-        display: none;
-        width: 0;
-        height: 0;
     }
     .agent-avatar {
         display: flex;
         flex-direction: column;
         align-items: center;
         cursor: pointer;
-        min-width: 84px;
         user-select: none;
     }
     .agent-avatar .avatar-img {
-        width: 64px;
-        height: 64px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
-        border: 1px solid #e9ecef;
+        border: 2px solid #e9ecef;
         object-fit: cover;
         transition: border-color 0.2s ease, transform 0.2s ease;
     }
     .agent-avatar.active .avatar-img {
-        border-color: #e50050;
+        border: 2.5px solid #e50050;
         transform: translateY(-2px);
     }
     .agent-avatar .agent-name {
-        margin-top: 8px;
-        font-size: 14px;
-        font-weight:500;
+        margin-top: 6px;
+        font-size: 12px;
+        font-weight: 500;
         color: #333;
         text-align: center;
-        max-width: 80px;
+        max-width: 72px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+    .agent-avatar.active .agent-name {
+        color: #e50050;
+        font-weight: 600;
+    }
+    .agent-avatar-hidden {
+        display: none;
+    }
+    .agent-avatars.agent-avatars-expanded .agent-avatar-hidden {
+        display: flex;
+    }
+    .agent-avatars.agent-avatars-expanded .agent-avatar-see-more {
+        display: none;
+    }
+    .avatar-see-more-circle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f0f4;
+        color: #e50050;
+        font-size: 16px;
+        font-weight: 700;
     }
     
     /* Weekly calendar header */
@@ -1055,33 +1074,31 @@
     }
 
     @media (max-width: 768px) {
-        /* Hide the old calendar strip on mobile */
+        /* Show calendar strip on mobile (compact) */
         .calendar-strip {
-            display: none !important;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
-        #weekDisplay {
-            display: none !important;
+        .calendar-arrow {
+            width: 32px;
+            height: 32px;
         }
 
         .days-header {
-            flex: 1;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 8px;
-            padding: 0;
-            overflow: visible;
+            gap: 6px;
         }
 
         .day-column {
             min-width: 0;
             width: auto;
-            padding: 14px 8px 20px;
-            border-radius: 12px;
+            flex: 1;
+            padding: 10px 4px 18px;
+            border-radius: 10px;
         }
 
         .day-column .day-name {
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .day-column .day-date {
@@ -1089,13 +1106,9 @@
         }
 
         .day-column::after {
-            width: 20px;
+            width: 16px;
             height: 3px;
-            bottom: 8px;
-        }
-
-        .days-header .day-column:nth-child(n + 4) {
-            display: none;
+            bottom: 6px;
         }
     }
 

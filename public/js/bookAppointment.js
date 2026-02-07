@@ -77,27 +77,34 @@
     }
 
     // ============================================================
-    // DESCRIPTION TOGGLE (delegated event, no inline onclick needed)
+    // DESCRIPTION TOGGLE (CSS line-clamp based)
     // ============================================================
+    // Show "see more" button only if text is actually clamped
+    const descText = bookingApp.querySelector('.desc-text.desc-clamped');
+    const seeMoreBtn = bookingApp.querySelector('.see-more-desc-btn');
+    if (descText && seeMoreBtn) {
+        requestAnimationFrame(() => {
+            if (descText.scrollHeight > descText.clientHeight) {
+                seeMoreBtn.style.display = 'inline';
+            }
+        });
+    }
+
     bookingApp.addEventListener('click', function(e) {
         const btn = e.target.closest('.see-more-desc-btn');
         if (!btn) return;
         e.preventDefault();
         e.stopPropagation();
 
-        var descId = btn.dataset.descId;
-        var descText = bookingApp.querySelector('.desc-text[data-desc-id="' + descId + '"]');
-        var descFull = bookingApp.querySelector('.desc-full[data-desc-id="' + descId + '"]');
-        if (!descText || !descFull) return;
+        const desc = bookingApp.querySelector('.desc-text');
+        if (!desc) return;
 
-        if (descText.style.display === 'none') {
-            descText.style.display = 'inline';
-            descFull.style.display = 'none';
-            btn.textContent = t('service.see_more', 'See more');
-        } else {
-            descText.style.display = 'none';
-            descFull.style.display = 'inline';
+        if (desc.classList.contains('desc-clamped')) {
+            desc.classList.remove('desc-clamped');
             btn.textContent = t('service.see_less', 'See less');
+        } else {
+            desc.classList.add('desc-clamped');
+            btn.textContent = t('service.see_more', 'See more');
         }
     });
 
@@ -533,34 +540,17 @@
                     col.style.display = hasSlots(col.dataset.date) ? '' : 'none';
                 });
 
-                if (isMobileView()) {
-                    renderMobileDayOptions();
-                    if (mobileDaySelectorOptions) {
-                        mobileDaySelectorOptions.querySelectorAll('.mobile-day-option').forEach(opt => {
-                            opt.style.display = hasSlots(opt.dataset.date) ? '' : 'none';
-                        });
-                    }
-                    const options = mobileDaySelectorOptions?.querySelectorAll('.mobile-day-option');
-                    let target = null;
-                    if (options) {
-                        for (const opt of options) {
-                            if (hasSlots(opt.dataset.date)) { target = opt; break; }
-                        }
-                        if (!target && options.length > 0) target = options[0];
-                    }
-                    if (target) target.click();
-                } else {
-                    const dayColumns = document.querySelectorAll('.day-column');
-                    let target = null;
-                    for (const col of dayColumns) {
-                        if (hasSlots(col.dataset.date)) { target = col; break; }
-                    }
-                    if (!target) {
-                        target = document.querySelector('.day-column.today') ||
-                                 document.querySelector('.day-column');
-                    }
-                    if (target) target.click();
+                // Auto-select first day with slots
+                const dayColumns = document.querySelectorAll('.day-column');
+                let target = null;
+                for (const col of dayColumns) {
+                    if (hasSlots(col.dataset.date)) { target = col; break; }
                 }
+                if (!target) {
+                    target = document.querySelector('.day-column.today') ||
+                             document.querySelector('.day-column');
+                }
+                if (target) target.click();
             });
         }
 
@@ -641,7 +631,7 @@
         }
 
         function getDaysToNavigate() {
-            return isMobileView() ? 3 : 7;
+            return 7;
         }
 
         function isDateInPast(date) {
@@ -716,7 +706,7 @@
         // CALENDAR FUNCTIONS
         // ============================================================
         function updateWeekDisplay() {
-            const daysToShow = isMobileView() ? 3 : 7;
+            const daysToShow = 7;
             const endDate = new Date(currentWeekStart);
             endDate.setDate(endDate.getDate() + (daysToShow - 1));
 
@@ -787,6 +777,11 @@
                 dayCol.className = 'day-column';
                 dayCol.dataset.date = formatDateValue(date);
                 dayCol.dataset.dayIndex = i;
+
+                // Preserve active state across re-renders (e.g. resize)
+                if (selectedDateInput && selectedDateInput.value === formatDateValue(date)) {
+                    dayCol.classList.add('active');
+                }
 
                 const isToday = date.getDate() === todayDate &&
                                date.getMonth() === todayMonth &&
@@ -1282,92 +1277,7 @@
             }
         }
 
-        // ============================================================
-        // MOBILE DAY SELECTOR
-        // ============================================================
-        const mobileDaySelector = document.getElementById('mobileDaySelector');
-        const mobileDaySelectorHeader = document.getElementById('mobileDaySelectorHeader');
-        const mobileDaySelectorOptions = document.getElementById('mobileDaySelectorOptions');
-        const mobileDaySelectorText = document.getElementById('mobileDaySelectorText');
-
-        function renderMobileDayOptions() {
-            if (!mobileDaySelectorOptions) return;
-
-            mobileDaySelectorOptions.innerHTML = '';
-
-            function createDayOption(date) {
-                const dayOption = document.createElement('div');
-                dayOption.className = 'mobile-day-option';
-                dayOption.dataset.date = formatDateValue(date);
-                dayOption.dataset.dayKey = dayKeys[date.getDay()];
-
-                const dayName = date.toLocaleDateString(currentLocale === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'long' });
-                const dayNum = date.getDate();
-                const monthName = date.toLocaleDateString(currentLocale === 'fr' ? 'fr-FR' : 'en-US', { month: 'long' });
-                const formattedDay = dayName.charAt(0).toUpperCase() + dayName.slice(1);
-
-                dayOption.innerHTML = `<span class="mobile-day-option-date">${formattedDay} ${dayNum} ${monthName}</span>`;
-
-                dayOption.addEventListener('click', function() {
-                    mobileDaySelectorText.textContent = `${formattedDay} ${dayNum} ${monthName}`;
-                    mobileDaySelectorOptions.querySelectorAll('.mobile-day-option').forEach(opt => opt.classList.remove('active'));
-                    this.classList.add('active');
-                    mobileDaySelector.classList.remove('open');
-
-                    selectedDayInput.value = this.dataset.dayKey;
-                    selectedDateInput.value = this.dataset.date;
-
-                    renderTimeSlotsMobile(this.dataset.dayKey, this.dataset.date);
-
-                    if (mobileTimeSlotsContainer) {
-                        mobileTimeSlotsContainer.style.display = '';
-                    }
-
-                    if (periodSelector) {
-                        periodSelector.style.display = 'none';
-                    }
-
-                    selectedTimeInput.value = '';
-                    selectedSlotInfo.style.display = 'none';
-
-                    if (paymentOptionsSection) {
-                        paymentOptionsSection.style.display = 'none';
-                    }
-                });
-
-                mobileDaySelectorOptions.appendChild(dayOption);
-            }
-
-            // First pass: only open days
-            for (let i = 0; i < 14; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() + i);
-                if (!isDayOpen(date)) continue;
-                createDayOption(date);
-            }
-
-            // Fallback: if isDayOpen filtered everything, show all 14 days
-            if (mobileDaySelectorOptions.children.length === 0) {
-                log('isDayOpen filtered all dates — showing all 14 days as fallback');
-                for (let i = 0; i < 14; i++) {
-                    const date = new Date(today);
-                    date.setDate(today.getDate() + i);
-                    createDayOption(date);
-                }
-            }
-        }
-
-        if (mobileDaySelector && mobileDaySelectorHeader) {
-            mobileDaySelectorHeader.addEventListener('click', function() {
-                mobileDaySelector.classList.toggle('open');
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!mobileDaySelector.contains(e.target)) {
-                    mobileDaySelector.classList.remove('open');
-                }
-            });
-        }
+        // (Mobile day selector removed — calendar strip now shown on all viewports)
 
         // ============================================================
         // WEEK NAVIGATION
@@ -1544,11 +1454,6 @@
                 renderDaysHeader();
                 updatePrevWeekButtonState();
 
-                // Render mobile day options early (doesn't depend on slot data)
-                if (isMobileView()) {
-                    renderMobileDayOptions();
-                }
-
                 // Helper: check if a date has available slots for the chosen agent
                 const dateHasSlots = (dateStr) => {
                     const slots = cachedWeekSlots[dateStr];
@@ -1557,74 +1462,43 @@
                     return filterSlotsForAgent(slots, agentId).length > 0;
                 };
 
-                // Helper: hide days with no available slots (desktop + mobile)
+                // Helper: hide days with no available slots
                 const hideEmptyDays = () => {
-                    // Desktop: remove day columns with no slots
                     document.querySelectorAll('.day-column').forEach(col => {
                         col.style.display = dateHasSlots(col.dataset.date) ? '' : 'none';
                     });
-                    // Mobile: remove day options with no slots
-                    if (mobileDaySelectorOptions) {
-                        mobileDaySelectorOptions.querySelectorAll('.mobile-day-option').forEach(opt => {
-                            opt.style.display = dateHasSlots(opt.dataset.date) ? '' : 'none';
-                        });
-                    }
                 };
 
-                // Helper: auto-select the first day with available slots (desktop or mobile)
+                // Helper: auto-select the first day with available slots
                 const autoSelectDay = () => {
-                    if (isMobileView()) {
-                        const options = mobileDaySelectorOptions.querySelectorAll('.mobile-day-option');
-                        let targetOption = null;
+                    const dayColumns = document.querySelectorAll('.day-column');
+                    let target = null;
 
-                        // 1. Try previous date if it still has slots
-                        if (previousSelectedDate) {
-                            const prevOpt = mobileDaySelectorOptions.querySelector(
-                                `.mobile-day-option[data-date="${previousSelectedDate}"]`
-                            );
-                            if (prevOpt && dateHasSlots(previousSelectedDate)) {
-                                targetOption = prevOpt;
-                            }
+                    // 1. Try previous date if it still has slots
+                    if (previousSelectedDate) {
+                        const prevCol = document.querySelector(`.day-column[data-date="${previousSelectedDate}"]`);
+                        if (prevCol && dateHasSlots(previousSelectedDate)) {
+                            target = prevCol;
                         }
+                    }
 
-                        // 2. Find first date with available slots
-                        if (!targetOption) {
-                            for (const opt of options) {
-                                if (dateHasSlots(opt.dataset.date)) {
-                                    targetOption = opt;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // 3. Fallback to first option
-                        if (!targetOption && options.length > 0) {
-                            targetOption = options[0];
-                        }
-
-                        if (targetOption) {
-                            targetOption.click();
-                        }
-                    } else {
-                        const dayColumns = document.querySelectorAll('.day-column');
-                        let target = null;
-
-                        // Find first day column with available slots
+                    // 2. Find first day column with available slots
+                    if (!target) {
                         for (const col of dayColumns) {
                             if (dateHasSlots(col.dataset.date)) {
                                 target = col;
                                 break;
                             }
                         }
-
-                        // Fallback: today or first column
-                        if (!target) {
-                            target = document.querySelector('.day-column.today') ||
-                                     document.querySelector('.day-column');
-                        }
-
-                        if (target) target.click();
                     }
+
+                    // 3. Fallback: today or first column
+                    if (!target) {
+                        target = document.querySelector('.day-column.today') ||
+                                 document.querySelector('.day-column');
+                    }
+
+                    if (target) target.click();
                 };
 
                 // Pre-fetch week slots using full week dates (stable cache key across agents)
@@ -1662,56 +1536,6 @@
                     noPreferenceOption.click();
                 }, 300);
             }
-        }
-
-        // ============================================================
-        // AGENT SELECTION (MOBILE DROPDOWN)
-        // ============================================================
-        const agentDropdown = document.getElementById('agentDropdown');
-        const agentDropdownSelected = document.getElementById('agentDropdownSelected');
-        const agentDropdownOptions = document.getElementById('agentDropdownOptions');
-
-        if (agentDropdown && agentDropdownSelected && agentDropdownOptions) {
-            agentDropdownSelected.addEventListener('click', function() {
-                agentDropdown.classList.toggle('open');
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!agentDropdown.contains(e.target)) {
-                    agentDropdown.classList.remove('open');
-                }
-            });
-
-            agentDropdownOptions.addEventListener('click', function(e) {
-                const option = e.target.closest('.agent-dropdown-option');
-                if (!option) return;
-
-                const agentData = JSON.parse(option.dataset.agent);
-                document.querySelector('.agent-dropdown-text').textContent = agentData.name;
-
-                agentDropdownOptions.querySelectorAll('.agent-dropdown-option').forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-
-                agentDropdown.classList.remove('open');
-
-                const isNoPreference = option.dataset.noPreference === 'true';
-                if (isNoPreference) {
-                    const desktopOption = agentList?.querySelector('[data-no-preference="true"]');
-                    if (desktopOption && !desktopOption.classList.contains('active')) {
-                        desktopOption.click();
-                    }
-                } else {
-                    const desktopOptions = agentList?.querySelectorAll('.agent-option:not([data-no-preference])');
-                    desktopOptions?.forEach(opt => {
-                        try {
-                            const optData = JSON.parse(opt.dataset.agent);
-                            if (optData.id === agentData.id && !opt.classList.contains('active')) {
-                                opt.click();
-                            }
-                        } catch (e) {}
-                    });
-                }
-            });
         }
 
         // ============================================================
@@ -1889,7 +1713,7 @@
                         selectedDateObj.setHours(0, 0, 0, 0);
 
                         if (!isNaN(selectedDateObj.getTime()) && selectedDateObj >= today) {
-                            const daysToNavigate = isMobileView() ? 3 : 7;
+                            const daysToNavigate = 7;
                             const daysDiff = Math.floor((selectedDateObj - today) / (1000 * 60 * 60 * 24));
                             const periodsToAdvance = Math.floor(daysDiff / daysToNavigate);
 
@@ -1935,7 +1759,7 @@
                             const targetDate = new Date(sy, sm - 1, sd);
                             targetDate.setHours(0, 0, 0, 0);
 
-                            const daysToNavigate = isMobileView() ? 3 : 7;
+                            const daysToNavigate = 7;
                             let attempts = 0;
                             const maxAttempts = 52;
 
@@ -2766,18 +2590,8 @@
                             const selectedDate = selectedDateInput.value;
 
                             if (currentMobileState) {
-                                // Switching to mobile: show mobile grid, hide grouped container
-                                renderMobileDayOptions();
+                                // Switching to mobile: show mobile time slots, hide grouped container
                                 if (dayKey && selectedDate) {
-                                    // Update dropdown text to show currently selected date
-                                    const selOption = mobileDaySelectorOptions?.querySelector(
-                                        `.mobile-day-option[data-date="${selectedDate}"]`
-                                    );
-                                    if (selOption && mobileDaySelectorText) {
-                                        selOption.classList.add('active');
-                                        mobileDaySelectorText.textContent = selOption.textContent.trim();
-                                    }
-
                                     renderTimeSlotsMobile(dayKey, selectedDate);
                                     if (mobileTimeSlotsContainer) {
                                         mobileTimeSlotsContainer.style.display = '';
