@@ -260,6 +260,9 @@
         let selectedPeriod = null;
         let cachedAvailableSlots = null;
         let cachedSlotsDate = null;
+        let cachedWeekSlots = {}; // { "2024-02-06": [...slots with agents], ... }
+        let cachedWeekTimestamp = 0; // when the cache was fetched
+        const WEEK_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
         let isNoPreferenceMode = true;
         let allAgents = config.agents || [];
 
@@ -338,18 +341,111 @@
         // ============================================================
         // API FUNCTIONS
         // ============================================================
-        async function fetchAvailableSlots(serviceId, agentId, date) {
+
+        /**
+         * Get all dates in the current week (from currentWeekStart, 7 days, skipping past).
+         * Used as a stable cache key that doesn't change when switching agents.
+         */
+        function getFullWeekDates() {
+            const dates = [];
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(currentWeekStart);
+                date.setDate(date.getDate() + i);
+                if (date < today) continue;
+                dates.push(formatDateValue(date));
+            }
+            return dates;
+        }
+
+        /**
+         * Fetch slots for an entire week (ALL agents) and cache them.
+         * Always fetches without agentId so we get all agents' availability.
+         * Client-side filtering handles agent selection.
+         * Cache has a 5-minute TTL.
+         */
+        async function fetchWeekSlots(serviceId, weekDates) {
+            const cacheKey = weekDates.join(',');
+            const now = Date.now();
+            const cacheValid = cachedWeekSlots._cacheKey === cacheKey &&
+                (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+
+            if (cacheValid) {
+                log('Using cached week slots (TTL ok)');
+                return cachedWeekSlots;
+            }
+
             try {
-                log('Fetching slots for:', { serviceId, agentId, date, isNoPreferenceMode });
+                log('Fetching week slots (all agents) for:', { serviceId, dates: weekDates });
+
+                // Always fetch without agentId — get ALL agents' slots
+                const params = new URLSearchParams({
+                    serviceId: serviceId,
+                    dates: JSON.stringify(weekDates)
+                });
+
+                const apiUrl = `${config.firebaseUrl}/getAvailableSlotsForService?${params.toString()}`;
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    warn('Week API call failed');
+                    return null;
+                }
+
+                const data = await response.json();
+                const slotsData = data.dates || data;
+                log('Week API response (all agents):', slotsData);
+
+                // Cache all dates with full agent info
+                cachedWeekSlots = { _cacheKey: cacheKey };
+                for (const dateKey of weekDates) {
+                    const dateSlots = slotsData[dateKey] || [];
+                    cachedWeekSlots[dateKey] = dateSlots.map(slot => ({
+                        time: slot.time,
+                        available: true,
+                        agents: slot.agents || []
+                    }));
+                }
+                cachedWeekTimestamp = now;
+
+                return cachedWeekSlots;
+            } catch (error) {
+                console.error('Error fetching week slots:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Filter cached slots for a specific agent.
+         * If agentId is 'no_preference', returns all slots.
+         * Otherwise, returns only slots where the agent is available.
+         */
+        function filterSlotsForAgent(slots, agentId) {
+            if (!slots) return [];
+            if (!agentId || agentId === 'no_preference') return slots;
+            return slots.filter(slot => slot.agents && slot.agents.includes(agentId));
+        }
+
+        /**
+         * Get slots for a single date + agent. Uses week cache with client-side filtering.
+         */
+        async function fetchAvailableSlots(serviceId, agentId, date) {
+            const now = Date.now();
+            const cacheValid = cachedWeekSlots[date] &&
+                (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+
+            if (cacheValid) {
+                log('Returning cached + filtered slots for date:', date, 'agent:', agentId);
+                return filterSlotsForAgent(cachedWeekSlots[date], agentId);
+            }
+
+            // Fallback: fetch single date (all agents)
+            try {
+                log('Fetching single date slots for:', { serviceId, date });
 
                 const params = new URLSearchParams({
                     serviceId: serviceId,
-                    dates: date
+                    dates: JSON.stringify([date])
                 });
-
-                if (agentId && agentId !== 'no_preference') {
-                    params.append('agentId', agentId);
-                }
 
                 const apiUrl = `${config.firebaseUrl}/getAvailableSlotsForService?${params.toString()}`;
                 const response = await fetch(apiUrl);
@@ -360,17 +456,17 @@
                 }
 
                 const data = await response.json();
-                log('Aggregated API response:', data);
+                const slotsData = data.dates || data;
+                log('Aggregated API response:', slotsData);
 
-                const dateSlots = data[date] || [];
-                const availableSlots = dateSlots.map(slot => ({
+                const dateSlots = slotsData[date] || [];
+                const allSlots = dateSlots.map(slot => ({
                     time: slot.time,
                     available: true,
                     agents: slot.agents || []
                 }));
 
-                log('Available slots (aggregated):', availableSlots);
-                return availableSlots;
+                return filterSlotsForAgent(allSlots, agentId);
             } catch (error) {
                 console.error('Error fetching time slots:', error);
                 return await fetchAvailableSlotsLegacy(serviceId, agentId, date);
@@ -400,6 +496,72 @@
                 console.error('Error fetching time slots (legacy):', error);
                 throw error;
             }
+        }
+
+        /**
+         * Pre-fetch all dates for the current week. Auto-selects first day on desktop.
+         * Uses full week dates (not agent-filtered) so cache stays valid across agent switches.
+         */
+        function prefetchVisibleWeek() {
+            if (!chosenAgent) return;
+
+            const weekDates = getFullWeekDates();
+            if (weekDates.length === 0) return;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const serviceId = config.service?.id || config.serviceId || urlParams.get('serviceId');
+            if (!serviceId) return;
+
+            const cacheKey = weekDates.join(',');
+            const cacheValid = cachedWeekSlots._cacheKey === cacheKey &&
+                (Date.now() - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+
+            if (!cacheValid) {
+                showSlotsLoading();
+            }
+
+            fetchWeekSlots(serviceId, weekDates).then(() => {
+                log('Week slots pre-fetched for dates:', weekDates);
+                const agentId = chosenAgent?.id;
+                const hasSlots = (dateStr) => {
+                    const slots = cachedWeekSlots[dateStr];
+                    return slots && filterSlotsForAgent(slots, agentId).length > 0;
+                };
+
+                // Hide days with no available slots
+                document.querySelectorAll('.day-column').forEach(col => {
+                    col.style.display = hasSlots(col.dataset.date) ? '' : 'none';
+                });
+
+                if (isMobileView()) {
+                    renderMobileDayOptions();
+                    if (mobileDaySelectorOptions) {
+                        mobileDaySelectorOptions.querySelectorAll('.mobile-day-option').forEach(opt => {
+                            opt.style.display = hasSlots(opt.dataset.date) ? '' : 'none';
+                        });
+                    }
+                    const options = mobileDaySelectorOptions?.querySelectorAll('.mobile-day-option');
+                    let target = null;
+                    if (options) {
+                        for (const opt of options) {
+                            if (hasSlots(opt.dataset.date)) { target = opt; break; }
+                        }
+                        if (!target && options.length > 0) target = options[0];
+                    }
+                    if (target) target.click();
+                } else {
+                    const dayColumns = document.querySelectorAll('.day-column');
+                    let target = null;
+                    for (const col of dayColumns) {
+                        if (hasSlots(col.dataset.date)) { target = col; break; }
+                    }
+                    if (!target) {
+                        target = document.querySelector('.day-column.today') ||
+                                 document.querySelector('.day-column');
+                    }
+                    if (target) target.click();
+                }
+            });
         }
 
         async function fetchUserDataFromAPI(userId) {
@@ -544,7 +706,6 @@
             const formattedDate = formatDate(selectedDateObj);
             const formattedTime = formatTimeDisplay(slotElement.dataset.time);
             selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
-            selectedSlotInfo.style.display = '';
 
             if (paymentOptionsSection) {
                 paymentOptionsSection.style.display = '';
@@ -569,6 +730,16 @@
             }
         }
 
+        // Extract numeric seconds from timing value (handles plain number, Firestore Timestamp object, etc.)
+        function getTimingSeconds(val) {
+            if (typeof val === 'number') return val;
+            if (val && typeof val === 'object') {
+                if (typeof val.seconds === 'number') return val.seconds;
+                if (typeof val._seconds === 'number') return val._seconds;
+            }
+            return 0;
+        }
+
         function isDayOpen(date) {
             const dayKey = dayKeys[date.getDay()];
 
@@ -579,8 +750,8 @@
                     if (!agent.timing) return true;
                     const timing = agent.timing;
                     if (timing[dayKey] && Array.isArray(timing[dayKey]) && timing[dayKey].length === 2) {
-                        const openTime = timing[dayKey][0];
-                        const closeTime = timing[dayKey][1];
+                        const openTime = getTimingSeconds(timing[dayKey][0]);
+                        const closeTime = getTimingSeconds(timing[dayKey][1]);
                         return openTime > 0 && closeTime > 0 && closeTime > openTime;
                     }
                     return false;
@@ -593,8 +764,8 @@
 
             const timing = chosenAgent.timing;
             if (timing[dayKey] && Array.isArray(timing[dayKey]) && timing[dayKey].length === 2) {
-                const openTime = timing[dayKey][0];
-                const closeTime = timing[dayKey][1];
+                const openTime = getTimingSeconds(timing[dayKey][0]);
+                const closeTime = getTimingSeconds(timing[dayKey][1]);
                 return openTime > 0 && closeTime > 0 && closeTime > openTime;
             }
 
@@ -1000,7 +1171,12 @@
                 return;
             }
 
-            showSlotsLoading();
+            // Only show loading if data is not cached
+            const now = Date.now();
+            const hasCached = cachedWeekSlots[selectedDate] && (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+            if (!hasCached) {
+                showSlotsLoading();
+            }
 
             try {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -1115,16 +1291,11 @@
         const mobileDaySelectorText = document.getElementById('mobileDaySelectorText');
 
         function renderMobileDayOptions() {
-            if (!mobileDaySelectorOptions || !isMobileView()) return;
+            if (!mobileDaySelectorOptions) return;
 
             mobileDaySelectorOptions.innerHTML = '';
 
-            for (let i = 0; i < 14; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() + i);
-
-                if (!isDayOpen(date)) continue;
-
+            function createDayOption(date) {
                 const dayOption = document.createElement('div');
                 dayOption.className = 'mobile-day-option';
                 dayOption.dataset.date = formatDateValue(date);
@@ -1166,6 +1337,24 @@
 
                 mobileDaySelectorOptions.appendChild(dayOption);
             }
+
+            // First pass: only open days
+            for (let i = 0; i < 14; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                if (!isDayOpen(date)) continue;
+                createDayOption(date);
+            }
+
+            // Fallback: if isDayOpen filtered everything, show all 14 days
+            if (mobileDaySelectorOptions.children.length === 0) {
+                log('isDayOpen filtered all dates — showing all 14 days as fallback');
+                for (let i = 0; i < 14; i++) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() + i);
+                    createDayOption(date);
+                }
+            }
         }
 
         if (mobileDaySelector && mobileDaySelectorHeader) {
@@ -1201,6 +1390,10 @@
                     if (timeSlotsStrip) {
                         timeSlotsStrip.style.display = 'none';
                     }
+                    if (slotsGroupedContainer) {
+                        slotsGroupedContainer.innerHTML = '';
+                        slotsGroupedContainer.style.display = 'none';
+                    }
                     if (mobileTimeSlotsContainer) {
                         mobileTimeSlotsContainer.style.display = 'none';
                         mobileTimeSlotsContainer.innerHTML = '';
@@ -1215,6 +1408,9 @@
                     document.querySelectorAll('.day-column').forEach(col => col.classList.remove('active'));
                     selectedDayInput.value = '';
                     selectedDateInput.value = '';
+
+                    // Pre-fetch slots for new week
+                    prefetchVisibleWeek();
                 }
 
                 updatePrevWeekButtonState();
@@ -1235,6 +1431,10 @@
                 if (timeSlotsStrip) {
                     timeSlotsStrip.style.display = 'none';
                 }
+                if (slotsGroupedContainer) {
+                    slotsGroupedContainer.innerHTML = '';
+                    slotsGroupedContainer.style.display = 'none';
+                }
                 if (mobileTimeSlotsContainer) {
                     mobileTimeSlotsContainer.style.display = 'none';
                     mobileTimeSlotsContainer.innerHTML = '';
@@ -1242,11 +1442,18 @@
                 selectedSlotInfo.style.display = 'none';
                 selectedTimeInput.value = '';
 
+                if (paymentOptionsSection) {
+                    paymentOptionsSection.style.display = 'none';
+                }
+
                 document.querySelectorAll('.day-column').forEach(col => col.classList.remove('active'));
                 selectedDayInput.value = '';
                 selectedDateInput.value = '';
 
                 updatePrevWeekButtonState();
+
+                // Pre-fetch slots for new week
+                prefetchVisibleWeek();
             });
         }
 
@@ -1304,6 +1511,9 @@
 
                 agentSchedule.style.display = '';
 
+                // Save previously selected date before resetting
+                const previousSelectedDate = selectedDateInput.value;
+
                 selectedDayInput.value = '';
                 selectedDateInput.value = '';
                 selectedTimeInput.value = '';
@@ -1314,6 +1524,10 @@
                 timeSlotGrid.innerHTML = '';
                 if (timeSlotsStrip) {
                     timeSlotsStrip.style.display = 'none';
+                }
+                if (slotsGroupedContainer) {
+                    slotsGroupedContainer.innerHTML = '';
+                    slotsGroupedContainer.style.display = 'none';
                 }
                 if (mobileTimeSlotsContainer) {
                     mobileTimeSlotsContainer.style.display = 'none';
@@ -1330,29 +1544,113 @@
                 renderDaysHeader();
                 updatePrevWeekButtonState();
 
+                // Render mobile day options early (doesn't depend on slot data)
                 if (isMobileView()) {
                     renderMobileDayOptions();
-                    if (mobileDaySelectorText) {
-                        mobileDaySelectorText.textContent = t('schedule.select_date', 'Select a date');
-                    }
                 }
 
-                if (!isMobileView()) {
-                    requestAnimationFrame(() => {
-                        setTimeout(() => {
-                            const todayColumn = document.querySelector('.day-column.today');
-                            if (todayColumn) {
-                                log('Auto-selecting today:', todayColumn.dataset.date);
-                                todayColumn.click();
-                            } else {
-                                const firstDayColumn = document.querySelector('.day-column');
-                                if (firstDayColumn) {
-                                    log('Today not found, selecting first available day:', firstDayColumn.dataset.date);
-                                    firstDayColumn.click();
+                // Helper: check if a date has available slots for the chosen agent
+                const dateHasSlots = (dateStr) => {
+                    const slots = cachedWeekSlots[dateStr];
+                    if (!slots || slots.length === 0) return false;
+                    const agentId = chosenAgent?.id;
+                    return filterSlotsForAgent(slots, agentId).length > 0;
+                };
+
+                // Helper: hide days with no available slots (desktop + mobile)
+                const hideEmptyDays = () => {
+                    // Desktop: remove day columns with no slots
+                    document.querySelectorAll('.day-column').forEach(col => {
+                        col.style.display = dateHasSlots(col.dataset.date) ? '' : 'none';
+                    });
+                    // Mobile: remove day options with no slots
+                    if (mobileDaySelectorOptions) {
+                        mobileDaySelectorOptions.querySelectorAll('.mobile-day-option').forEach(opt => {
+                            opt.style.display = dateHasSlots(opt.dataset.date) ? '' : 'none';
+                        });
+                    }
+                };
+
+                // Helper: auto-select the first day with available slots (desktop or mobile)
+                const autoSelectDay = () => {
+                    if (isMobileView()) {
+                        const options = mobileDaySelectorOptions.querySelectorAll('.mobile-day-option');
+                        let targetOption = null;
+
+                        // 1. Try previous date if it still has slots
+                        if (previousSelectedDate) {
+                            const prevOpt = mobileDaySelectorOptions.querySelector(
+                                `.mobile-day-option[data-date="${previousSelectedDate}"]`
+                            );
+                            if (prevOpt && dateHasSlots(previousSelectedDate)) {
+                                targetOption = prevOpt;
+                            }
+                        }
+
+                        // 2. Find first date with available slots
+                        if (!targetOption) {
+                            for (const opt of options) {
+                                if (dateHasSlots(opt.dataset.date)) {
+                                    targetOption = opt;
+                                    break;
                                 }
                             }
-                        }, 150);
-                    });
+                        }
+
+                        // 3. Fallback to first option
+                        if (!targetOption && options.length > 0) {
+                            targetOption = options[0];
+                        }
+
+                        if (targetOption) {
+                            targetOption.click();
+                        }
+                    } else {
+                        const dayColumns = document.querySelectorAll('.day-column');
+                        let target = null;
+
+                        // Find first day column with available slots
+                        for (const col of dayColumns) {
+                            if (dateHasSlots(col.dataset.date)) {
+                                target = col;
+                                break;
+                            }
+                        }
+
+                        // Fallback: today or first column
+                        if (!target) {
+                            target = document.querySelector('.day-column.today') ||
+                                     document.querySelector('.day-column');
+                        }
+
+                        if (target) target.click();
+                    }
+                };
+
+                // Pre-fetch week slots using full week dates (stable cache key across agents)
+                const weekDates = getFullWeekDates();
+                if (weekDates.length > 0 && chosenAgent) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const serviceId = config.service?.id || config.serviceId || urlParams.get('serviceId');
+                    if (serviceId) {
+                        const cacheKey = weekDates.join(',');
+                        const cacheValid = cachedWeekSlots._cacheKey === cacheKey &&
+                            (Date.now() - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+
+                        if (cacheValid) {
+                            // Cache valid — just re-render with new agent filter (instant)
+                            log('Agent changed, re-rendering from cache');
+                            hideEmptyDays();
+                            autoSelectDay();
+                        } else {
+                            showSlotsLoading();
+                            fetchWeekSlots(serviceId, weekDates).then(() => {
+                                log('Week slots pre-fetched for dates:', weekDates);
+                                hideEmptyDays();
+                                autoSelectDay();
+                            });
+                        }
+                    }
                 }
             });
 
@@ -1531,13 +1829,12 @@
                         if (paymentOptionsSection) {
                             paymentOptionsSection.style.display = '';
                         }
-                        if (selectedSlotInfo && selectedDateTimeDisplay) {
+                        if (selectedDateTimeDisplay) {
                             const [yy, mm, dd] = state.selectedDate.split('-').map(Number);
                             const selectedDateObj = new Date(yy, mm - 1, dd);
                             const formattedDate = formatDate(selectedDateObj);
                             const formattedTime = formatTimeDisplay(state.selectedTime);
                             selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
-                            selectedSlotInfo.style.display = '';
                         }
                         if (!timeSlot) {
                             warn('Time slot not found, restored values directly.', isMobile ? '(mobile)' : '(desktop)');
@@ -2198,7 +2495,7 @@
                     depositPercentage: depositPercentage,
                     address: address,
                     amount: amount,
-                    bookingOrigin: 'web',
+                    bookingOrigin: 'website',
                     services: [
                         {
                             serviceId: serviceId,
@@ -2470,7 +2767,17 @@
 
                             if (currentMobileState) {
                                 // Switching to mobile: show mobile grid, hide grouped container
+                                renderMobileDayOptions();
                                 if (dayKey && selectedDate) {
+                                    // Update dropdown text to show currently selected date
+                                    const selOption = mobileDaySelectorOptions?.querySelector(
+                                        `.mobile-day-option[data-date="${selectedDate}"]`
+                                    );
+                                    if (selOption && mobileDaySelectorText) {
+                                        selOption.classList.add('active');
+                                        mobileDaySelectorText.textContent = selOption.textContent.trim();
+                                    }
+
                                     renderTimeSlotsMobile(dayKey, selectedDate);
                                     if (mobileTimeSlotsContainer) {
                                         mobileTimeSlotsContainer.style.display = '';

@@ -24,18 +24,25 @@
                         <button type="button" class="btn-social btn-google" id="google-signin-btn" title="{{ __('app.auth.sign_in_with_google') }}">
                             <i class="fab fa-google"></i>
                         </button>
+                        {{-- Apple sign-in hidden - not working
                         <button type="button" class="btn-social btn-apple" id="apple-signin-btn" title="{{ __('app.auth.sign_in_with_apple') }}">
                             <i class="fab fa-apple"></i>
                         </button>
+                        --}}
+                        <button type="button" class="btn-social btn-phone" id="phone-signin-btn" title="{{ __('app.auth.sign_in_with_phone') }}">
+                            <i class="fas fa-phone"></i>
+                        </button>
                     </div>
-                    
+
                     <div class="text-center mb-3">
                         <span style="color: #999;">{{ __('app.auth.or') }}</span>
                     </div>
-                    
+
                     <div class="alert alert-danger d-none" id="login-error"></div>
                     <div class="alert alert-success d-none" id="login-success"></div>
-                    
+
+                    <!-- Login form content (hidden when phone flow is active) -->
+                    <div id="login-form-content">
                     <form id="loginForm" method="POST" data-toggle="validator">
                         @csrf
                         <input type="hidden" name="redirect" id="login-redirect" value="">
@@ -44,7 +51,7 @@
                                 <input type="email" name="email" class="form-control-login" id="login-email" placeholder="{{ __('app.auth.email') }}" required>
                                 <div class="help-block with-errors"></div>
                             </div>
-                            
+
                             <div class="form-group col-md-12 mb-4">
                                 <div class="input-group" >
                                     <input type="password" name="password" class="form-control-login" id="login-password" placeholder="{{ __('app.auth.password') }}" required>
@@ -63,11 +70,73 @@
                                     </span>
                                 </button>
                                 <div id="msgSubmit" class="h3 hidden"></div>
-                                
+
                                 <p class="mt-3 mb-0" style="text-align: center;">{{ __('app.auth.dont_have_account') }} <a href="#" id="show-signup-modal">{{ __('app.auth.create_one') }}</a></p>
                             </div>
                         </div>
                     </form>
+                    </div>
+
+                    <!-- Phone Entry Step (shared between login and signup modals) -->
+                    <div id="phone-entry-step" style="display: none;">
+                        <div class="text-center mb-3">
+                            <h4 style="font-weight: 600; color: #333; margin-bottom: 8px;">{{ __('app.auth.enter_phone_number') }}</h4>
+                            <p style="color: #666; font-size: 14px;">{{ __('app.auth.we_will_send_code') }}</p>
+                        </div>
+                        <div class="alert alert-danger d-none" id="phone-entry-error"></div>
+                        <div class="form-group mb-4">
+                            <div class="phone-input-group">
+                                <span style="display: flex; align-items: center; padding: 8px 12px; background: #f8f9fa; border-right: 1px solid #ddd; font-size: 14px; color: #333; flex-shrink: 0;">+33</span>
+                                <input type="tel" id="phone-auth-number" class="phone-input" placeholder="6 12 34 56 78" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                            </div>
+                        </div>
+                        <button type="button" class="btn-default" id="phone-send-otp-btn" style="width: 100%;">
+                            <span class="btn-text">{{ __('app.auth.send_verification_code') }}</span>
+                            <span class="btn-loader" style="display: none;"><i class="fa fa-spinner fa-spin"></i> {{ __('app.auth.sending') }}</span>
+                        </button>
+                        <p class="mt-3 mb-0" style="text-align: center;">
+                            <a href="#" id="phone-back-btn" style="color: #666; text-decoration: none;"><i class="fa fa-arrow-left"></i> {{ __('app.auth.back_to_login') }}</a>
+                        </p>
+                    </div>
+
+                    <!-- OTP Verification Step -->
+                    <div id="phone-otp-step" style="display: none;">
+                        <div class="text-center mb-3">
+                            <h4 style="font-weight: 600; color: #333; margin-bottom: 8px;">{{ __('app.auth.enter_verification_code') }}</h4>
+                            <p style="color: #666; font-size: 14px;">{{ __('app.auth.code_sent_to') }} <strong id="phone-otp-display"></strong></p>
+                        </div>
+                        <div class="alert alert-danger d-none" id="phone-otp-error"></div>
+                        <div class="form-group mb-4">
+                            <input type="text" id="phone-otp-code" class="form-control-login" placeholder="{{ __('app.auth.enter_6_digit_code') }}" maxlength="6" style="text-align: center; font-size: 20px; letter-spacing: 8px;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);">
+                        </div>
+                        <button type="button" class="btn-default" id="phone-verify-otp-btn" style="width: 100%;">
+                            <span class="btn-text">{{ __('app.auth.verify') }}</span>
+                            <span class="btn-loader" style="display: none;"><i class="fa fa-spinner fa-spin"></i> {{ __('app.auth.verifying') }}</span>
+                        </button>
+                        <div class="text-center mt-3">
+                            <span id="phone-otp-countdown" style="color: #999; font-size: 13px;"></span>
+                            <a href="#" id="phone-resend-otp-btn" style="display: none; color: var(--primary-color, #e50050); font-size: 13px;">{{ __('app.auth.resend_code') }}</a>
+                        </div>
+                        <p class="mt-3 mb-0" style="text-align: center;">
+                            <a href="#" id="phone-otp-back-btn" style="color: #666; text-decoration: none;"><i class="fa fa-arrow-left"></i> {{ __('app.auth.change_phone_number') }}</a>
+                        </p>
+                    </div>
+
+                    <!-- Profile Completion Step (new users only) -->
+                    <div id="phone-profile-step" style="display: none;">
+                        <div class="text-center mb-3">
+                            <h4 style="font-weight: 600; color: #333; margin-bottom: 8px;">{{ __('app.auth.complete_your_profile') }}</h4>
+                            <p style="color: #666; font-size: 14px;">{{ __('app.auth.one_more_step') }}</p>
+                        </div>
+                        <div class="alert alert-danger d-none" id="phone-profile-error"></div>
+                        <div class="form-group mb-4">
+                            <input type="text" id="phone-profile-name" class="form-control-login" placeholder="{{ __('app.auth.full_name') }}" maxlength="255" required>
+                        </div>
+                        <button type="button" class="btn-default" id="phone-profile-submit-btn" style="width: 100%;">
+                            <span class="btn-text">{{ __('app.auth.get_started') }}</span>
+                            <span class="btn-loader" style="display: none;"><i class="fa fa-spinner fa-spin"></i> {{ __('app.auth.creating_profile') }}</span>
+                        </button>
+                    </div>
                 </div>
                 <!-- Login Form End -->
             </div>
@@ -93,7 +162,9 @@
                     
                     <div class="alert alert-danger d-none" id="signup-error"></div>
                     <div class="alert alert-success d-none" id="signup-success"></div>
-                    
+
+                    <!-- Signup form content (hidden when phone flow is active) -->
+                    <div id="signup-form-content">
                     <form id="signupForm" method="POST" data-toggle="validator">
                         @csrf
                         <div class="row">
@@ -325,8 +396,13 @@
                                     <button type="button" class="btn-social btn-google" id="google-signup-btn" title="{{ __('app.auth.sign_up_with_google') }}">
                                         <i class="fab fa-google"></i>
                                     </button>
+                                    {{-- Apple sign-up hidden - not working
                                     <button type="button" class="btn-social btn-apple" id="apple-signup-btn" title="{{ __('app.auth.sign_up_with_apple') }}">
                                         <i class="fab fa-apple"></i>
+                                    </button>
+                                    --}}
+                                    <button type="button" class="btn-social btn-phone" id="phone-signup-btn" title="{{ __('app.auth.sign_up_with_phone') }}">
+                                        <i class="fas fa-phone"></i>
                                     </button>
                                 </div>
                                 
@@ -334,6 +410,8 @@
                             </div>
                         </div>
                     </form>
+                    </div>
+                    <!-- End signup-form-content -->
                 </div>
                 <!-- Signup Form End -->
             </div>
@@ -791,6 +869,22 @@
      }
  });
  </script>
+
+<!-- Phone Auth Translations for JavaScript -->
+<script>
+    window.phoneAuthTranslations = {
+        invalidPhone: @json(__('app.auth.invalid_phone_number')),
+        sendFailed: @json(__('app.auth.send_failed')),
+        tooManyAttempts: @json(__('app.auth.too_many_attempts')),
+        serviceUnavailable: @json(__('app.auth.service_unavailable')),
+        enterCode: @json(__('app.auth.enter_6_digit_code')),
+        invalidCode: @json(__('app.auth.invalid_verification_code')),
+        codeExpired: @json(__('app.auth.code_expired')),
+        enterName: @json(__('app.auth.please_enter_name')),
+        resendFailed: @json(__('app.auth.resend_failed')),
+        genericError: @json(__('app.auth.generic_error'))
+    };
+</script>
 
 <!-- Auth Translations for JavaScript -->
 <script>

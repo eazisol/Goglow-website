@@ -282,6 +282,127 @@ class AuthController extends Controller
     }
     
     /**
+     * Verify phone auth: validate Firebase ID token and check if user profile exists.
+     */
+    public function phoneAuthVerify(Request $request, FirebaseAuth $auth)
+    {
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
+        $validated = $request->validate([
+            'idToken' => ['required', 'string'],
+        ]);
+
+        try {
+            $verifiedToken = $auth->verifyIdToken($validated['idToken']);
+            $uid = $verifiedToken->claims()->get('sub');
+
+            // Check if user profile exists in Firestore
+            $firestore = app('firebase.firestore')->database();
+            $userDoc = $firestore->collection('userProfile')->document($uid)->snapshot();
+            $userExists = $userDoc->exists();
+
+            // Store in session (firebase_email empty for phone users, kept for consistency)
+            session([
+                'firebase_uid' => $uid,
+                'firebase_email' => '',
+                'firebase_id_token' => $validated['idToken'],
+            ]);
+
+            // Determine redirect
+            $redirect = session('last_book_appointment_url') ?: route('search');
+            session()->forget('last_book_appointment_url');
+
+            return response()->json([
+                'success' => true,
+                'isNewUser' => !$userExists,
+                'redirect' => $redirect,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Phone auth verification failed', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Phone verification failed: ' . $e->getMessage()
+            ], 422);
+        }
+    }
+
+    /**
+     * Complete profile for new phone auth users: create userProfile in Firestore.
+     */
+    public function phoneAuthCompleteProfile(Request $request, FirebaseAuth $auth)
+    {
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
+        $uid = session('firebase_uid');
+        if (!$uid) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Not authenticated'
+            ], 401);
+        }
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        try {
+            $firestore = app('firebase.firestore')->database();
+            $phoneNumber = $auth->getUser($uid)->phoneNumber ?? '';
+
+            $firestore->collection('userProfile')->document($uid)->set([
+                'id' => $uid,
+                'name' => $validated['name'],
+                'email' => '',
+                'phone' => $phoneNumber,
+                'loginType' => 'phone',
+                'linkedProviders' => ['phone'],
+                'userRole' => 0,
+                'enable' => true,
+                'createdAt' => time(),
+                'profileImg' => '',
+                'available' => true,
+                'days' => [1, 2, 3, 4, 5],
+                'bookmarks' => [],
+                'blockedUsers' => [],
+                'followers' => [],
+                'following' => [],
+                'searchParameter' => $this->generateSearchArray($validated['name']),
+            ]);
+
+            $redirect = session('last_book_appointment_url') ?: route('search');
+            session()->forget('last_book_appointment_url');
+
+            return response()->json([
+                'success' => true,
+                'redirect' => $redirect,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Phone profile completion failed', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Profile creation failed: ' . $e->getMessage()
+            ], 422);
+        }
+    }
+
+    /**
+     * Generate search array for name (matching mobile app's generateArray function).
+     */
+    private function generateSearchArray(string $name): array
+    {
+        $name = strtolower($name);
+        $result = [];
+        for ($i = 0; $i < strlen($name); $i++) {
+            $result[] = substr($name, 0, $i + 1);
+        }
+        return $result;
+    }
+
+    /**
      * Get prefix to country code mapping
      * @return array
      */

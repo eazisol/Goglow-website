@@ -132,6 +132,7 @@
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/header.js') }}" defer></script>
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-fetch.js') }}" defer></script>
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-modals.js') }}" defer></script>
+    <script src="{{ \App\Helpers\AssetHelper::versioned('js/phone-auth.js') }}" defer></script>
     <script src="{{ \App\Helpers\AssetHelper::versioned('js/book-appointment-auth.js') }}" defer></script>
 
   {{-- External scripts - Moved to bottom and deferred for better performance --}}
