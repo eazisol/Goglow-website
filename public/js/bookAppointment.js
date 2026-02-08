@@ -2417,6 +2417,11 @@
                     // Paid bookings - Stripe checkout
                     const checkoutUrl = config.checkoutUrl;
 
+                    // Deterministic idempotency key to prevent duplicate payments on retry/double-click
+                    const amountCents = Math.round(servicePrice * 100);
+                    const idempotencyKey = 'web_' + serviceProviderId + '_' + (config.userId || '') + '_' + serviceId
+                        + '_' + selectedDateInput.value + '_' + selectedTimeInput.value + '_' + amountCents;
+
                     const response = await (window.authFetch || fetch)(checkoutUrl, {
                         method: 'POST',
                         headers: {
@@ -2430,6 +2435,7 @@
                             servicePrice,
                             paymentType,
                             depositPercentage,
+                            idempotencyKey,
                             serviceData: config.service || null,
                             formData: formDataToStore,
                             bookingData: bookingPayload

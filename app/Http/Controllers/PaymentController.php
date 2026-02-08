@@ -117,7 +117,7 @@ class PaymentController extends Controller
             'customerPhone' => $params['customerPhone'] ?? null,
             'bookingId' => $params['bookingId'] ?? null,
             'isStripeLive' => $settings['isStripeConnectLive'],
-            'idempotencyKey' => \Illuminate\Support\Str::uuid()->toString(),
+            'idempotencyKey' => $params['idempotencyKey'] ?? \Illuminate\Support\Str::uuid()->toString(),
             // Use Stripe Checkout instead of Payment Element
             'useCheckout' => $params['useCheckout'] ?? true,
             'successUrl' => $params['successUrl'] ?? null,
@@ -338,6 +338,7 @@ class PaymentController extends Controller
                     'customerEmail' => $customerEmail,
                     'customerName' => $customerName,
                     'customerPhone' => $customerPhone,
+                    'idempotencyKey' => $request->input('idempotencyKey'),
                     // Checkout-specific parameters
                     'useCheckout' => true,
                     'successUrl' => $fullSuccessUrl,
