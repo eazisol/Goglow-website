@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Auth as FirebaseAuth;
 use Kreait\Firebase\Exception\AuthException;
@@ -298,10 +299,10 @@ class AuthController extends Controller
             $verifiedToken = $auth->verifyIdToken($validated['idToken']);
             $uid = $verifiedToken->claims()->get('sub');
 
-            // Check if user profile exists in Firestore
-            $firestore = app('firebase.firestore')->database();
-            $userDoc = $firestore->collection('userProfile')->document($uid)->snapshot();
-            $userExists = $userDoc->exists();
+            // Check if user profile exists via Cloud Function
+            $cfUrl = config('services.firebase.cloud_functions_url') . '/getCurrentUserData';
+            $cfResponse = Http::timeout(10)->get($cfUrl, ['UserId' => $uid]);
+            $userExists = $cfResponse->ok();
 
             // Store in session (firebase_email empty for phone users, kept for consistency)
             session([
@@ -329,9 +330,9 @@ class AuthController extends Controller
     }
 
     /**
-     * Complete profile for new phone auth users: create userProfile in Firestore.
+     * Complete profile for new phone auth users: create userProfile via Cloud Function.
      */
-    public function phoneAuthCompleteProfile(Request $request, FirebaseAuth $auth)
+    public function phoneAuthCompleteProfile(Request $request)
     {
         if (ob_get_level()) {
             ob_clean();
@@ -347,31 +348,31 @@ class AuthController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string'],
+            'countryCode' => ['nullable', 'string'],
         ]);
 
         try {
-            $firestore = app('firebase.firestore')->database();
-            $phoneNumber = $auth->getUser($uid)->phoneNumber ?? '';
-
-            $firestore->collection('userProfile')->document($uid)->set([
+            $cfUrl = config('services.firebase.cloud_functions_url') . '/createUserProfile';
+            $cfResponse = Http::timeout(15)->post($cfUrl, [
                 'id' => $uid,
                 'name' => $validated['name'],
                 'email' => '',
-                'phone' => $phoneNumber,
+                'phone' => $validated['phone'] ?? '',
+                'countryCode' => $validated['countryCode'] ?? '',
                 'loginType' => 'phone',
-                'linkedProviders' => ['phone'],
                 'userRole' => 0,
-                'enable' => true,
-                'createdAt' => time(),
-                'profileImg' => '',
-                'available' => true,
-                'days' => [1, 2, 3, 4, 5],
-                'bookmarks' => [],
-                'blockedUsers' => [],
-                'followers' => [],
-                'following' => [],
-                'searchParameter' => $this->generateSearchArray($validated['name']),
+                'platform' => 'web',
             ]);
+
+            if (!$cfResponse->ok()) {
+                $errorData = $cfResponse->json();
+                Log::error('Phone profile creation CF failed', ['response' => $errorData]);
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorData['message'] ?? 'Profile creation failed',
+                ], 422);
+            }
 
             $redirect = session('last_book_appointment_url') ?: route('search');
             session()->forget('last_book_appointment_url');

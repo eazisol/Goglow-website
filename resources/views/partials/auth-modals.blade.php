@@ -87,7 +87,7 @@
                         <div class="form-group mb-4">
                             <div class="phone-input-group">
                                 <span style="display: flex; align-items: center; padding: 8px 12px; background: #f8f9fa; border-right: 1px solid #ddd; font-size: 14px; color: #333; flex-shrink: 0;">+33</span>
-                                <input type="tel" id="phone-auth-number" class="phone-input" placeholder="6 12 34 56 78" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                                <input type="tel" id="phone-auth-number" class="phone-input" placeholder="6 12 34 56 78" maxlength="9" pattern="[0-9]{9}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^0+/, '').slice(0, 9);">
                             </div>
                         </div>
                         <button type="button" class="btn-default" id="phone-send-otp-btn" style="width: 100%;">
@@ -107,7 +107,7 @@
                         </div>
                         <div class="alert alert-danger d-none" id="phone-otp-error"></div>
                         <div class="form-group mb-4">
-                            <input type="text" id="phone-otp-code" class="form-control-login" placeholder="{{ __('app.auth.enter_6_digit_code') }}" maxlength="6" style="text-align: center; font-size: 20px; letter-spacing: 8px;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);">
+                            <input type="text" id="phone-otp-code" class="form-control-login" placeholder="{{ __('app.auth.enter_6_digit_code') }}" maxlength="6" style="text-align: center; font-size: 20px;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6); this.style.letterSpacing = this.value ? '8px' : '0';" onfocus="this.style.letterSpacing = this.value ? '8px' : '0';" onblur="this.style.letterSpacing = this.value ? '8px' : '0';">
                         </div>
                         <button type="button" class="btn-default" id="phone-verify-otp-btn" style="width: 100%;">
                             <span class="btn-text">{{ __('app.auth.verify') }}</span>
@@ -189,7 +189,7 @@
                                         <option value="">{{ __('app.auth.select_country') }}</option>
                                     </select>
                                     
-                                    <input type="tel" name="phone" class="form-control-login phone-input" id="signup-phone" placeholder="{{ __('app.auth.phone') }}" required minlength="9" maxlength="9" pattern="[0-9]{9}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
+                                    <input type="tel" name="phone" class="form-control-login phone-input" id="signup-phone" placeholder="{{ __('app.auth.phone') }}" required minlength="9" maxlength="9" pattern="[0-9]{9}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^0+/, '').slice(0, 9);">
                                 </div>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -870,10 +870,18 @@
  });
  </script>
 
+<!-- Phone Auth Config -->
+<script>
+    window.phoneAuthConfig = {
+        cloudFunctionsUrl: @json(config('services.firebase.cloud_functions_url'))
+    };
+</script>
+
 <!-- Phone Auth Translations for JavaScript -->
 <script>
     window.phoneAuthTranslations = {
         invalidPhone: @json(__('app.auth.invalid_phone_number')),
+        phoneMustBe9Digits: @json(__('app.auth.phone_must_be_9_digits')),
         sendFailed: @json(__('app.auth.send_failed')),
         tooManyAttempts: @json(__('app.auth.too_many_attempts')),
         serviceUnavailable: @json(__('app.auth.service_unavailable')),
@@ -882,6 +890,7 @@
         codeExpired: @json(__('app.auth.code_expired')),
         enterName: @json(__('app.auth.please_enter_name')),
         resendFailed: @json(__('app.auth.resend_failed')),
+        recaptchaError: @json(__('app.auth.recaptcha_error')),
         genericError: @json(__('app.auth.generic_error'))
     };
 </script>
