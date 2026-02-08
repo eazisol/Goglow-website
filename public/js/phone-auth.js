@@ -117,6 +117,7 @@
     var profileError = document.getElementById('phone-profile-error');
 
     var currentPhoneNumber = '';
+    var currentRawPhone = '';
     var countdownTimer = null;
     var activeContext = 'login'; // 'login' or 'signup'
 
@@ -251,9 +252,22 @@
     }
 
     // Phone button clicks (signup modal)
+    // Phone steps live in the login modal, so close signup and open login with phone flow
     if (phoneSignupBtn) {
       phoneSignupBtn.addEventListener('click', function (e) {
         e.preventDefault();
+        var signupModalEl = document.getElementById('signupModal');
+        var loginModalEl = document.getElementById('loginModal');
+
+        // Hide signup, show login (keep body modal-open class)
+        if (signupModalEl) {
+          signupModalEl.classList.remove('show');
+        }
+        if (loginModalEl) {
+          loginModalEl.classList.add('show');
+          document.body.classList.add('modal-open');
+        }
+
         activeContext = 'signup';
         PhoneAuthManager.init();
         PhoneAuthManager.resetRecaptcha();
@@ -267,7 +281,20 @@
       phoneBackBtn.addEventListener('click', function (e) {
         e.preventDefault();
         PhoneAuthManager.resetRecaptcha();
-        showStep(activeContext);
+
+        // If we came from signup modal, switch back to it
+        if (activeContext === 'signup') {
+          var loginModalEl = document.getElementById('loginModal');
+          var signupModalEl = document.getElementById('signupModal');
+          if (loginModalEl) loginModalEl.classList.remove('show');
+          if (signupModalEl) signupModalEl.classList.add('show');
+          // Restore both form contents
+          if (loginFormContent) loginFormContent.style.display = 'block';
+          if (signupFormContent) signupFormContent.style.display = 'block';
+          if (phoneStep) phoneStep.style.display = 'none';
+        } else {
+          showStep(activeContext);
+        }
       });
     }
 
@@ -276,6 +303,7 @@
       otpBackBtn.addEventListener('click', function (e) {
         e.preventDefault();
         if (countdownTimer) clearInterval(countdownTimer);
+        PhoneAuthManager.resetRecaptcha();
         showStep('phone');
       });
     }
@@ -289,15 +317,25 @@
         var rawPhone = phoneInput ? phoneInput.value.replace(/\D/g, '') : '';
         // Strip leading zero (French numbers: 0612... -> 612...)
         rawPhone = rawPhone.replace(/^0/, '');
-        if (!rawPhone || rawPhone.length < 6) {
-          showError(phoneError, window.phoneAuthTranslations ? window.phoneAuthTranslations.invalidPhone : 'Please enter a valid phone number');
+        var t = window.phoneAuthTranslations || {};
+        if (!rawPhone) {
+          showError(phoneError, t.invalidPhone || 'Please enter a valid phone number');
+          return;
+        }
+        if (rawPhone.length !== 9) {
+          showError(phoneError, t.phoneMustBe9Digits || 'Phone number must be 9 digits.');
           return;
         }
 
+        currentRawPhone = rawPhone;
         currentPhoneNumber = '+33' + rawPhone;
         if (otpPhoneDisplay) otpPhoneDisplay.textContent = currentPhoneNumber;
 
         setLoading(sendOtpBtn, true);
+
+        // Always reset and reinit reCAPTCHA before sending (prevents "already rendered" error)
+        PhoneAuthManager.resetRecaptcha();
+        PhoneAuthManager.initRecaptcha('phone-send-otp-btn');
 
         PhoneAuthManager.sendOtp(currentPhoneNumber)
           .then(function () {
@@ -318,6 +356,8 @@
               msg = t.tooManyAttempts || 'Too many attempts. Please try again later.';
             } else if (error.code === 'auth/quota-exceeded') {
               msg = t.serviceUnavailable || 'Service temporarily unavailable. Please try again later.';
+            } else if (error.message && error.message.indexOf('reCAPTCHA') !== -1) {
+              msg = t.recaptchaError || 'Verification error. Please try again.';
             } else if (error.message) {
               msg = error.message;
             }
@@ -369,30 +409,74 @@
 
         PhoneAuthManager.verifyOtp(code)
           .then(function (result) {
-            // Send ID token to server for verification
-            return fetch('/ajax/phone-auth-verify', {
+            // Call Cloud Function to check for existing profile with same phone
+            var cloudFunctionsUrl = (window.phoneAuthConfig && window.phoneAuthConfig.cloudFunctionsUrl) || 'https://us-central1-beauty-984c8.cloudfunctions.net';
+            return fetch(cloudFunctionsUrl + '/reconcilePhoneAuth', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
+                'Authorization': 'Bearer ' + result.idToken
               },
-              body: JSON.stringify({ idToken: result.idToken })
+              body: JSON.stringify({})
             })
               .then(function (response) { return response.json(); })
-              .then(function (data) {
-                setLoading(verifyOtpBtn, false);
-                if (data.success) {
-                  if (data.isNewUser) {
-                    // Show profile completion step
-                    showStep('profile');
-                    if (profileNameInput) profileNameInput.focus();
-                  } else {
-                    // Existing user -- redirect
-                    handleSuccess(data);
-                  }
+              .then(function (reconcileData) {
+                if (reconcileData.reconciled) {
+                  // Existing account found — sign in with custom token, then verify with server
+                  console.log('Phone auth reconciled with existing account:', reconcileData.existingUid);
+                  return firebase.auth().signInWithCustomToken(reconcileData.customToken)
+                    .then(function (userCredential) {
+                      return userCredential.user.getIdToken();
+                    })
+                    .then(function (newIdToken) {
+                      // Verify the reconciled token with the server (sets session)
+                      return fetch('/ajax/phone-auth-verify', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': csrfToken,
+                          'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ idToken: newIdToken })
+                      })
+                        .then(function (response) { return response.json(); })
+                        .then(function (data) {
+                          setLoading(verifyOtpBtn, false);
+                          if (data.success) {
+                            // Reconciled user is never new — redirect directly
+                            handleSuccess(data);
+                          } else {
+                            showError(otpError, data.message || 'Verification failed');
+                          }
+                        });
+                    });
                 } else {
-                  showError(otpError, data.message || 'Verification failed');
+                  // No reconciliation needed — continue with original flow
+                  return fetch('/ajax/phone-auth-verify', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRF-TOKEN': csrfToken,
+                      'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ idToken: result.idToken })
+                  })
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                      setLoading(verifyOtpBtn, false);
+                      if (data.success) {
+                        if (data.isNewUser) {
+                          // Show profile completion step
+                          showStep('profile');
+                          if (profileNameInput) profileNameInput.focus();
+                        } else {
+                          // Existing user -- redirect
+                          handleSuccess(data);
+                        }
+                      } else {
+                        showError(otpError, data.message || 'Verification failed');
+                      }
+                    });
                 }
               });
           })
@@ -435,7 +519,11 @@
             'X-CSRF-TOKEN': csrfToken,
             'Accept': 'application/json'
           },
-          body: JSON.stringify({ name: name })
+          body: JSON.stringify({
+            name: name,
+            phone: currentRawPhone,
+            countryCode: '+33'
+          })
         })
           .then(function (response) { return response.json(); })
           .then(function (data) {
@@ -454,8 +542,14 @@
       });
     }
 
-    // Allow Enter key in OTP input
+    // Auto-submit OTP when 6 digits entered + Enter key support
     if (otpInput) {
+      otpInput.addEventListener('input', function () {
+        var code = otpInput.value.replace(/\D/g, '');
+        if (code.length === 6 && verifyOtpBtn && !verifyOtpBtn.disabled) {
+          verifyOtpBtn.click();
+        }
+      });
       otpInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -532,6 +626,13 @@
     document.querySelectorAll('.btn-close').forEach(function (btn) {
       btn.addEventListener('click', onModalClose);
     });
+
+    // Reset signup form when signup modal is opened (ensures form is visible after phone flow)
+    if (signupModalEl) {
+      signupModalEl.addEventListener('shown.bs.modal', function () {
+        if (signupFormContent) signupFormContent.style.display = 'block';
+      });
+    }
 
     // Backdrop click: clicking the modal overlay (not the dialog content) closes it
     [loginModalEl, signupModalEl].forEach(function (modal) {

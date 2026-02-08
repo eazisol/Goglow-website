@@ -310,9 +310,9 @@ class PaymentController extends Controller
                 $customerPhone = $userInfo['phone'] ?? $formDataArray['phone'] ?? null;
                 $customerId = $userInfo['userId'] ?? $bookingDataArray['userId'] ?? session('firebase_uid');
 
-                if (empty($customerEmail)) {
-                    Log::error('Stripe Connect requires customer email');
-                    return response()->json(['error' => 'Customer email is required for payment'], 400);
+                if (empty($customerEmail) && empty($customerPhone)) {
+                    Log::error('Stripe Connect requires customer email or phone');
+                    return response()->json(['error' => 'Customer email or phone is required for payment'], 400);
                 }
 
                 // Build success/cancel URLs for Checkout
