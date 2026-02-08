@@ -560,6 +560,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     return {
+                        name: data.name || null,
                         phone: data.phone || null,
                         countryCode: data.countryCode || null
                     };
@@ -567,7 +568,7 @@
             } catch (error) {
                 console.error('Error fetching user data from API:', error);
             }
-            return { phone: null, countryCode: null };
+            return { name: null, phone: null, countryCode: null };
         }
 
         // ============================================================
@@ -2046,7 +2047,7 @@
                     log('API user data fetched:', apiUserData);
                 }
 
-                const name = (userData.name && userData.name.trim()) ? userData.name.trim() : null;
+                const name = (userData.name && userData.name.trim()) ? userData.name.trim() : (apiUserData.name || null);
                 const email = (userData.email && userData.email.trim()) ? userData.email.trim() : null;
                 const phone = apiUserData.phone || ((userData.phone && userData.phone.trim()) ? userData.phone.trim() : null);
 
