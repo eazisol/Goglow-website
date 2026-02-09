@@ -2418,9 +2418,13 @@
                     const checkoutUrl = config.checkoutUrl;
 
                     // Deterministic idempotency key to prevent duplicate payments on retry/double-click
-                    const amountCents = Math.round(servicePrice * 100);
+                    const depositPct = Number(depositPercentage) || 0;
+                    const amountToCharge = paymentType === 'deposit'
+                        ? (depositPct > 0 ? (servicePrice * (depositPct / 100)) : 0)
+                        : servicePrice;
+                    const amountCents = Math.round(amountToCharge * 100);
                     const idempotencyKey = 'web_' + serviceProviderId + '_' + (config.userId || '') + '_' + serviceId
-                        + '_' + selectedDateInput.value + '_' + selectedTimeInput.value + '_' + amountCents;
+                        + '_' + paymentType + '_' + selectedDateInput.value + '_' + selectedTimeInput.value + '_' + amountCents;
 
                     const response = await (window.authFetch || fetch)(checkoutUrl, {
                         method: 'POST',
