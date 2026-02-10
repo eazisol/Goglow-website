@@ -58,10 +58,9 @@
                             @if(!empty($selectedService['service_details']))
                                 @php
                                     $description = $selectedService['service_details'];
-                                    $wordLimit = 8;
-                                    $words = preg_split('/\s+/', trim($description), -1, PREG_SPLIT_NO_EMPTY);
-                                    $needsTruncation = count($words) > $wordLimit;
-                                    $truncatedDescription = implode(' ', array_slice($words, 0, $wordLimit)) . '...';
+                                    $charLimit = 300;
+                                    $needsTruncation = mb_strlen($description) > $charLimit;
+                                    $truncatedDescription = $needsTruncation ? mb_substr($description, 0, $charLimit) . '...' : $description;
                                     $descId = 'desc-' . uniqid();
                                 @endphp
                                 
