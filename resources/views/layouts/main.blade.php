@@ -215,8 +215,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ \App\Helpers\AssetHelper::versioned('js/professional-form.js') }}"></script>
   {{-- Firebase JS SDK for OAuth and Phone Auth --}}
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" onerror="console.error('Failed to load firebase-app-compat.js')"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" onerror="console.error('Failed to load firebase-auth-compat.js')"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.3.0/firebase-app-compat.js" onerror="console.error('Failed to load firebase-app-compat.js')"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.3.0/firebase-auth-compat.js" onerror="console.error('Failed to load firebase-auth-compat.js')"></script>
   <script>
     // Initialize Firebase
     if (typeof firebase === 'undefined') {
