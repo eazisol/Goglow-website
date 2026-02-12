@@ -350,8 +350,22 @@
         // ============================================================
 
         /**
-         * Get all dates in the current week (from currentWeekStart, 7 days, skipping past).
-         * Used as a stable cache key that doesn't change when switching agents.
+         * Get visible dates (from currentWeekStart, 3 days, skipping past).
+         */
+        function getVisibleDates() {
+            const dates = [];
+            for (let i = 0; i < 3; i++) {
+                const date = new Date(currentWeekStart);
+                date.setDate(date.getDate() + i);
+                if (date < today) continue;
+                dates.push(formatDateValue(date));
+            }
+            return dates;
+        }
+
+        /**
+         * Get all dates to fetch from API (7 days from currentWeekStart, skipping past).
+         * Fetches more than displayed so next/prev navigation can use cache.
          */
         function getFullWeekDates() {
             const dates = [];
@@ -365,29 +379,32 @@
         }
 
         /**
-         * Fetch slots for an entire week (ALL agents) and cache them.
-         * Always fetches without agentId so we get all agents' availability.
+         * Fetch slots for dates (ALL agents) and merge into cache.
+         * Only fetches dates not already cached (within TTL).
          * Client-side filtering handles agent selection.
          * Cache has a 5-minute TTL.
          */
         async function fetchWeekSlots(serviceId, weekDates) {
-            const cacheKey = weekDates.join(',');
             const now = Date.now();
-            const cacheValid = cachedWeekSlots._cacheKey === cacheKey &&
-                (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+            const cacheStillFresh = (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
 
-            if (cacheValid) {
-                log('Using cached week slots (TTL ok)');
+            // Find which dates we still need to fetch
+            const datesToFetch = cacheStillFresh
+                ? weekDates.filter(d => !(d in cachedWeekSlots))
+                : weekDates;
+
+            if (datesToFetch.length === 0) {
+                log('All dates already cached (TTL ok)');
                 return cachedWeekSlots;
             }
 
             try {
-                log('Fetching week slots (all agents) for:', { serviceId, dates: weekDates });
+                log('Fetching slots (all agents) for:', { serviceId, dates: datesToFetch });
 
                 // Always fetch without agentId — get ALL agents' slots
                 const params = new URLSearchParams({
                     serviceId: serviceId,
-                    dates: JSON.stringify(weekDates)
+                    dates: JSON.stringify(datesToFetch)
                 });
 
                 const apiUrl = `${config.firebaseUrl}/getAvailableSlotsForService?${params.toString()}`;
@@ -402,9 +419,11 @@
                 const slotsData = data.dates || data;
                 log('Week API response (all agents):', slotsData);
 
-                // Cache all dates with full agent info
-                cachedWeekSlots = { _cacheKey: cacheKey };
-                for (const dateKey of weekDates) {
+                // If cache expired, reset it; otherwise merge into existing
+                if (!cacheStillFresh) {
+                    cachedWeekSlots = {};
+                }
+                for (const dateKey of datesToFetch) {
                     const dateSlots = slotsData[dateKey] || [];
                     cachedWeekSlots[dateKey] = dateSlots.map(slot => ({
                         time: slot.time,
@@ -512,35 +531,25 @@
         function prefetchVisibleWeek() {
             if (!chosenAgent) return;
 
-            const weekDates = getFullWeekDates();
-            if (weekDates.length === 0) return;
+            const visibleDates = getVisibleDates();
+            if (visibleDates.length === 0) return;
 
             const urlParams = new URLSearchParams(window.location.search);
             const serviceId = config.service?.id || config.serviceId || urlParams.get('serviceId');
             if (!serviceId) return;
 
-            const cacheKey = weekDates.join(',');
-            const cacheValid = cachedWeekSlots._cacheKey === cacheKey &&
-                (Date.now() - cachedWeekTimestamp) < WEEK_CACHE_TTL;
-
-            if (!cacheValid) {
-                showSlotsLoading();
-            }
-
-            fetchWeekSlots(serviceId, weekDates).then(() => {
-                log('Week slots pre-fetched for dates:', weekDates);
+            // Render helper: hide empty days + auto-select first day with slots
+            const renderFromCache = () => {
                 const agentId = chosenAgent?.id;
                 const hasSlots = (dateStr) => {
                     const slots = cachedWeekSlots[dateStr];
                     return slots && filterSlotsForAgent(slots, agentId).length > 0;
                 };
 
-                // Hide days with no available slots
                 document.querySelectorAll('.day-column').forEach(col => {
                     col.style.display = hasSlots(col.dataset.date) ? '' : 'none';
                 });
 
-                // Auto-select first day with slots
                 const dayColumns = document.querySelectorAll('.day-column');
                 let target = null;
                 for (const col of dayColumns) {
@@ -551,6 +560,27 @@
                              document.querySelector('.day-column');
                 }
                 if (target) target.click();
+            };
+
+            // Check if all visible dates are already in cache
+            const now = Date.now();
+            const cacheStillFresh = (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+            const allVisibleCached = cacheStillFresh && visibleDates.every(d => d in cachedWeekSlots);
+
+            if (allVisibleCached) {
+                // All visible dates cached — render instantly, no API call
+                log('All visible dates cached, rendering from cache');
+                renderFromCache();
+                return;
+            }
+
+            // Need to fetch — grab 7 days to pre-fill cache for next navigations
+            const weekDates = getFullWeekDates();
+            showSlotsLoading();
+
+            fetchWeekSlots(serviceId, weekDates).then(() => {
+                log('Week slots fetched for dates:', weekDates);
+                renderFromCache();
             });
         }
 
@@ -632,7 +662,7 @@
         }
 
         function getDaysToNavigate() {
-            return 7;
+            return 3;
         }
 
         function isDateInPast(date) {
@@ -707,7 +737,7 @@
         // CALENDAR FUNCTIONS
         // ============================================================
         function updateWeekDisplay() {
-            const daysToShow = 7;
+            const daysToShow = 3;
             const endDate = new Date(currentWeekStart);
             endDate.setDate(endDate.getDate() + (daysToShow - 1));
 
@@ -765,7 +795,7 @@
 
         function renderDaysHeader() {
             daysHeader.innerHTML = '';
-            const daysToShow = 7;
+            const daysToShow = 3;
 
             for (let i = 0; i < daysToShow; i++) {
                 const date = new Date(currentWeekStart);
@@ -794,7 +824,7 @@
 
                 const dayName = document.createElement('span');
                 dayName.className = 'day-name';
-                dayName.textContent = shortDayNames[(date.getDay() + 7) % 7];
+                dayName.textContent = shortDayNames[(date.getDay() + 7) % 7] + ' ';
 
                 const dayDate = document.createElement('span');
                 dayDate.className = 'day-date';
@@ -816,7 +846,7 @@
                     periodSelector.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
 
                     if (isMobileView()) {
-                        periodSelector.style.display = '';
+                        periodSelector.style.display = 'none';
                         renderTimeSlotsMobile(dayKey, formatDateValue(date));
                         if (mobileTimeSlotsContainer) {
                             mobileTimeSlotsContainer.style.display = '';
@@ -1108,10 +1138,7 @@
                 const column = document.createElement('div');
                 column.className = 'slots-period-column';
 
-                const header = document.createElement('div');
-                header.className = 'slots-period-header';
-                header.textContent = periodDef.label;
-                column.appendChild(header);
+                // Period header removed — slots are self-explanatory by time
 
                 periodSlots.forEach(slot => {
                     const timeSlot = document.createElement('div');
@@ -1508,11 +1535,11 @@
                     const urlParams = new URLSearchParams(window.location.search);
                     const serviceId = config.service?.id || config.serviceId || urlParams.get('serviceId');
                     if (serviceId) {
-                        const cacheKey = weekDates.join(',');
-                        const cacheValid = cachedWeekSlots._cacheKey === cacheKey &&
-                            (Date.now() - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+                        const now = Date.now();
+                        const cacheStillFresh = (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+                        const allCached = cacheStillFresh && weekDates.every(d => d in cachedWeekSlots);
 
-                        if (cacheValid) {
+                        if (allCached) {
                             // Cache valid — just re-render with new agent filter (instant)
                             log('Agent changed, re-rendering from cache');
                             hideEmptyDays();
@@ -1714,12 +1741,12 @@
                         selectedDateObj.setHours(0, 0, 0, 0);
 
                         if (!isNaN(selectedDateObj.getTime()) && selectedDateObj >= today) {
-                            const daysToNavigate = 7;
+                            const daysToNav = getDaysToNavigate();
                             const daysDiff = Math.floor((selectedDateObj - today) / (1000 * 60 * 60 * 24));
-                            const periodsToAdvance = Math.floor(daysDiff / daysToNavigate);
+                            const periodsToAdvance = Math.floor(daysDiff / daysToNav);
 
                             currentWeekStart = new Date(today);
-                            currentWeekStart.setDate(today.getDate() + (periodsToAdvance * daysToNavigate));
+                            currentWeekStart.setDate(today.getDate() + (periodsToAdvance * daysToNav));
                             log('Calculated week start from selected date:', currentWeekStart);
                         }
                     }
@@ -1760,13 +1787,13 @@
                             const targetDate = new Date(sy, sm - 1, sd);
                             targetDate.setHours(0, 0, 0, 0);
 
-                            const daysToNavigate = 7;
+                            const daysToNav2 = getDaysToNavigate();
                             let attempts = 0;
-                            const maxAttempts = 52;
+                            const maxAttempts = 120;
 
                             while (!dayColumn && attempts < maxAttempts) {
                                 const periodEnd = new Date(currentWeekStart);
-                                periodEnd.setDate(periodEnd.getDate() + (daysToNavigate - 1));
+                                periodEnd.setDate(periodEnd.getDate() + (daysToNav2 - 1));
 
                                 if (targetDate >= currentWeekStart && targetDate <= periodEnd) {
                                     updateWeekDisplay();
@@ -1776,7 +1803,7 @@
                                     break;
                                 }
 
-                                currentWeekStart.setDate(currentWeekStart.getDate() + daysToNavigate);
+                                currentWeekStart.setDate(currentWeekStart.getDate() + daysToNav2);
                                 updateWeekDisplay();
                                 renderDaysHeader();
                                 updatePrevWeekButtonState();
@@ -2614,7 +2641,7 @@
                                         slotsGroupedContainer.style.display = 'none';
                                     }
                                     if (periodSelector) {
-                                        periodSelector.style.display = '';
+                                        periodSelector.style.display = 'none';
                                     }
                                 }
                             } else {
