@@ -214,10 +214,43 @@
 <!-- Add before closing body tag -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ \App\Helpers\AssetHelper::versioned('js/professional-form.js') }}"></script>
+  {{-- Firebase JS SDK for OAuth and Phone Auth --}}
+  <script src="https://www.gstatic.com/firebasejs/11.3.0/firebase-app-compat.js" onerror="console.error('Failed to load firebase-app-compat.js')"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.3.0/firebase-auth-compat.js" onerror="console.error('Failed to load firebase-auth-compat.js')"></script>
+  <script>
+    // Initialize Firebase
+    if (typeof firebase === 'undefined') {
+      console.error('Firebase SDK not loaded!');
+    } else {
+      const apiKey = '{{ config("services.firebase.web_api_key") }}';
+      const authDomain = '{{ config("services.firebase.auth_domain") }}';
+      const projectId = '{{ config("services.firebase.project_id") }}';
+
+      if (!apiKey || !authDomain || !projectId) {
+        console.error('Firebase config values are missing!');
+      } else {
+        const firebaseConfig = {
+          apiKey: apiKey,
+          authDomain: authDomain,
+          projectId: projectId,
+        };
+
+        try {
+          if (firebase.apps.length === 0) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          window.firebaseAuth = firebase.auth();
+        } catch (error) {
+          console.error('Firebase initialization error:', error);
+        }
+      }
+    }
+  </script>
+
   @yield('scripts')
-  
+
   @include('partials.auth-modals')
-  
+
   <!-- Country codes script must be loaded before auth-modals.js -->
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/country-codes.js') }}" onload="console.log('country-codes.js loaded successfully')" onerror="console.error('Failed to load country-codes.js')"></script>
 
@@ -229,7 +262,10 @@
 
   <!-- Auth modals script must be loaded after Bootstrap and modals are in the DOM -->
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-modals.js') }}"></script>
-  
+
+  <!-- Phone auth script -->
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/phone-auth.js') }}"></script>
+
   <!-- Book appointment auth script -->
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/book-appointment-auth.js') }}"></script>
 </body>

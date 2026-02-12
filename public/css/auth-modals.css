@@ -362,7 +362,8 @@ body.modal-open {
 }
 
 .btn-social {
-    width: 215px;
+    flex: 1;
+    max-width: 180px;
     height: 50px;
     padding: 0;
     border: 1px solid #ddd;
@@ -374,7 +375,6 @@ body.modal-open {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
 }
 
 .btn-social:hover {
@@ -405,6 +405,16 @@ body.modal-open {
 
 .btn-apple:hover {
     background: #000;
+    color: white;
+}
+
+.btn-phone {
+    border-color: #0095f6;
+    color: #0095f6;
+}
+
+.btn-phone:hover {
+    background: #0095f6;
     color: white;
 }
 
@@ -701,7 +711,7 @@ body.modal-open {
         font-size: 14px;
     }
     .btn-social{
-        width: 150px;
+        max-width: 130px;
     }
 }
 

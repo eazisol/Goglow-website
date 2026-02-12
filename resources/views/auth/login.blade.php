@@ -83,6 +83,17 @@
                                 <div class="col-md-12">
                                     <button type="submit" class="btn-default"><span>{{ __('app.auth.sign_in') }}</span></button>
                                     <div id="msgSubmit" class="h3 hidden"></div>
+
+                                    <div class="text-center my-3">
+                                        <span style="color: #999;">{{ __('app.auth.or') }}</span>
+                                    </div>
+
+                                    <div class="social-login-buttons" style="justify-content: center;">
+                                        <button type="button" class="btn-social btn-phone" id="standalone-phone-signin-btn" title="{{ __('app.auth.sign_in_with_phone') }}">
+                                            <i class="fas fa-phone"></i>
+                                        </button>
+                                    </div>
+
                                     <p class="mt-3 mb-0">{{ __('app.auth.dont_have_account') }} <a href="{{ route('signup') }}">{{ __('app.auth.create_one') }}</a></p>
                                 </div>
                             </div>

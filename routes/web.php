@@ -76,6 +76,8 @@ Route::post('/ajax/login', [\App\Http\Controllers\AuthController::class, 'login'
 Route::post('/ajax/signup', [\App\Http\Controllers\AuthController::class, 'register'])->name('ajax.signup');
 Route::post('/ajax/oauth-login', [\App\Http\Controllers\AuthController::class, 'oauthLogin'])->name('ajax.oauth.login');
 Route::post('/ajax/refresh-token', [\App\Http\Controllers\AuthController::class, 'refreshToken'])->name('ajax.refresh.token');
+Route::post('/ajax/phone-auth-verify', [\App\Http\Controllers\AuthController::class, 'phoneAuthVerify'])->name('ajax.phone.verify');
+Route::post('/ajax/phone-auth-complete-profile', [\App\Http\Controllers\AuthController::class, 'phoneAuthCompleteProfile'])->name('ajax.phone.complete.profile');
 
 // Language switching routes
 Route::get('/language/{locale}', [\App\Http\Controllers\LanguageController::class, 'switchLanguage'])->name('language.switch');

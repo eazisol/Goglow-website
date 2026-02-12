@@ -117,7 +117,7 @@ class PaymentController extends Controller
             'customerPhone' => $params['customerPhone'] ?? null,
             'bookingId' => $params['bookingId'] ?? null,
             'isStripeLive' => $settings['isStripeConnectLive'],
-            'idempotencyKey' => \Illuminate\Support\Str::uuid()->toString(),
+            'idempotencyKey' => $params['idempotencyKey'] ?? \Illuminate\Support\Str::uuid()->toString(),
             // Use Stripe Checkout instead of Payment Element
             'useCheckout' => $params['useCheckout'] ?? true,
             'successUrl' => $params['successUrl'] ?? null,
@@ -310,9 +310,9 @@ class PaymentController extends Controller
                 $customerPhone = $userInfo['phone'] ?? $formDataArray['phone'] ?? null;
                 $customerId = $userInfo['userId'] ?? $bookingDataArray['userId'] ?? session('firebase_uid');
 
-                if (empty($customerEmail)) {
-                    Log::error('Stripe Connect requires customer email');
-                    return response()->json(['error' => 'Customer email is required for payment'], 400);
+                if (empty($customerEmail) && empty($customerPhone)) {
+                    Log::error('Stripe Connect requires customer email or phone');
+                    return response()->json(['error' => 'Customer email or phone is required for payment'], 400);
                 }
 
                 // Build success/cancel URLs for Checkout
@@ -338,6 +338,7 @@ class PaymentController extends Controller
                     'customerEmail' => $customerEmail,
                     'customerName' => $customerName,
                     'customerPhone' => $customerPhone,
+                    'idempotencyKey' => $request->input('idempotencyKey'),
                     // Checkout-specific parameters
                     'useCheckout' => true,
                     'successUrl' => $fullSuccessUrl,
