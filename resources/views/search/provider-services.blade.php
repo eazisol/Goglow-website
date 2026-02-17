@@ -1574,7 +1574,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 emptyEl.style.display = 'block';
                 // Update empty message temporarily for search
                 const originalEmptyMsg = emptyEl.querySelector('h5').textContent;
-                emptyEl.querySelector('h5').textContent = `{{ __('search.no_results_found') ?? 'No results found for' }} "${query}"`;
+                emptyEl.querySelector('h5').textContent = `{{ __('app.search.no_results_found') ?? 'No results found for' }} "${query}"`;
                 
                 // Store original message to restore later if needed (optional)
                 emptyEl.setAttribute('data-original-msg', originalEmptyMsg);
