@@ -521,6 +521,7 @@ return [
         'see_more' => 'Voir plus',
         'see_less' => 'Voir moins',
         'service_list' => 'Liste des services',
+        'search_services' => 'Rechercher des services...',
     ],
         // Agent Page
     'agent_page' => [
@@ -693,5 +694,8 @@ return [
         'free_booking' => 'Réservation gratuite',
         'full_payment' => 'Paiement intégral',
         'beauty_service' => 'Service beauté',
+    ],
+        'search' => [
+        'no_results_found' => 'Aucun résultat n\'est trouvé', 
     ],
 ];
