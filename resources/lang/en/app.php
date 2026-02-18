@@ -555,6 +555,7 @@ return [
         'see_more' => 'See More',
         'see_less' => 'See Less',
         'service_list' => 'Service List',
+        'search_services' => 'Search services...',
     ],
     // Agent Page
     'agent_page' => [
@@ -731,5 +732,8 @@ return [
         'free_booking' => 'Free Booking',
         'full_payment' => 'Full Payment',
         'beauty_service' => 'Beauty Service',
+    ],
+    'search' => [
+        'no_results_found' => 'No Result is Found', 
     ],
 ];

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Services\PaymentSettingsService;
 
 class BookingApiController extends Controller
 {
@@ -15,32 +16,6 @@ class BookingApiController extends Controller
     private function getCloudFunctionsUrl(): string
     {
         return config('services.firebase.cloud_functions_url');
-    }
-
-    /**
-     * Get payment settings (reusing pattern from PaymentController)
-     * Returns: isStripeConnectLive
-     */
-    private function getPaymentSettings(): array
-    {
-        try {
-            $response = Http::timeout(10)->get($this->getCloudFunctionsUrl() . '/getPaymentStatus');
-
-            if ($response->ok()) {
-                $data = $response->json();
-                $settings = $data['data'] ?? [];
-
-                return [
-                    'isStripeConnectLive' => $settings['isStripeConnectLive'] ?? false,
-                ];
-            }
-        } catch (\Throwable $e) {
-            Log::error('Error fetching payment settings', ['error' => $e->getMessage()]);
-        }
-
-        return [
-            'isStripeConnectLive' => false,
-        ];
     }
 
     /**
@@ -560,7 +535,7 @@ class BookingApiController extends Controller
     {
         try {
             // Get Stripe mode (always using Stripe Connect)
-            $settings = $this->getPaymentSettings();
+            $settings = PaymentSettingsService::get();
             $isLive = $settings['isStripeConnectLive'];
 
             // Build refund payload

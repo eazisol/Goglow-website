@@ -57,6 +57,7 @@
         .view-type-tabs {
             width: 100%;
             justify-content: flex-start;
+            margin: 10px 0;
         }
         
         .view-tab {

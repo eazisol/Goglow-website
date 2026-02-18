@@ -165,30 +165,50 @@
                                 <h3 class="wow fadeInUp">24/7 - Free - Payment on site - Immediate confirmation</h3>
                             </div> --}}
                             {{-- Category filter pills - will be populated by JavaScript --}}
-                            <div class="service-filter-pills" role="tablist" aria-label="Service categories" style="margin-bottom:0!important;">
+
+
+    <!-- View Type Tabs Section Start -->
+    <div class="view-type-tabs-container">
+        <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div class="view-type-tabs">
+                <button type="button" class="view-tab active" id="listTabBtn" data-view="list">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M2.5 2.5H5.83333V5H2.5V2.5Z" fill="currentColor"/>
+                    </svg>
+                    <span>{{ __('app.service.service_list') }}</span>
+                </button>
+            </div>
+            
+
+        </div>
+    </div>
+                            <div class="service-filter-pills" role="tablist" aria-label="Service categories">
                                 <button type="button" class="filter-pill active" data-category="all" aria-current="true">{{ __('app.provider.filter_all') }}</button>
                                 {{-- Categories will be added here by JavaScript --}}
                             </div>
-
-    <!-- View Type Tabs Section Start -->
-    <div class="view-type-tabs-container" style="margin-top: 20px;">
-        <div class="view-type-tabs">
-            <button type="button" class="view-tab active" id="listTabBtn" data-view="list">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M2.5 2.5H5.83333V5H2.5V2.5Z" fill="currentColor"/>
-                </svg>
-                <span>{{ __('app.service.service_list') }}</span>
-            </button>
-            {{-- <button type="button" class="view-tab" id="videosTabBtn" data-view="videos">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2.5" y="4.16667" width="15" height="11.6667" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M8.33333 7.5L13.3333 10L8.33333 12.5V7.5Z" fill="currentColor"/>
-                </svg>
-                <span>Service Videos</span>
-            </button> --}}
-        </div>
-    </div>
+            <div class="service-search-box" style="flex-grow: 1; max-width: 450px; position: relative;">
+                <div style="position: relative; width: 100%;">
+                    <input type="text" 
+                           id="serviceSearchInput" 
+                           placeholder="{{ __('app.service.search_services') }}" 
+                           style="width: 100%; padding: 12px 20px 12px 45px; border: 1px solid #eee; border-radius: 50px; outline: none; transition: all 0.3s ease; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.03); font-size: 14px;"
+                           onfocus="this.style.borderColor = 'rgba(229, 0, 80, 0.5)'; this.style.boxShadow = '0 4px 10px rgba(229, 0, 80, 0.1)';"
+                           onblur="this.style.borderColor = '#eee'; this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.03)';">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #888; pointer-events: none;">
+                        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <button id="clearSearchBtn" 
+                            onclick="document.getElementById('serviceSearchInput').value=''; document.getElementById('serviceSearchInput').dispatchEvent(new Event('input'))" 
+                            style="display: none; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #f0f0f0; border: none; cursor: pointer; color: #666; border-radius: 50%; width: 22px; height: 22px; align-items: center; justify-content: center; padding: 0;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
     <!-- View Type Tabs Section End -->
 
     <!-- Tab Content Panels -->
@@ -555,6 +575,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Track existing categories for smart append
     let existingCategories = new Set();
+    
+    // Map to store category names by ID for search results
+    let categoryIdToNameMap = {};
     
     // Category-specific placeholder images
     const categoryImages = {
@@ -1484,6 +1507,104 @@ document.addEventListener('DOMContentLoaded', function() {
     // Attach infinite scroll listener
     window.addEventListener('scroll', handleInfiniteScroll);
     
+    // Search functionality
+    const searchInput = document.getElementById('serviceSearchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(function(e) {
+            const query = e.target.value.trim();
+            handleServiceSearch(query);
+            
+            // Toggle clear button
+            if (clearSearchBtn) {
+                clearSearchBtn.style.display = query ? 'block' : 'none';
+            }
+        }, 500));
+    }
+    
+    async function handleServiceSearch(query) {
+        const loadingEl = document.getElementById('servicesLoading');
+        const emptyEl = document.getElementById('servicesEmpty');
+        const containerEl = document.getElementById('servicesContainer');
+        const errorEl = document.getElementById('servicesError');
+        const paginationLoadingEl = document.getElementById('paginationLoading');
+        
+        // Disable pagination during search
+        if (query.length > 0) {
+            paginationState.hasMore = false; // Disable infinite scroll during search
+            if (paginationLoadingEl) paginationLoadingEl.style.display = 'none';
+        } else {
+            // Reset to initial state if query is empty
+            if (providerData && providerData.id) {
+                paginationState.hasMore = false; // Reset pagination
+                paginationState.lastDocId = null;
+                fetchProviderServices(providerData.id);
+            }
+            return;
+        }
+        
+        loadingEl.style.display = 'flex';
+        containerEl.innerHTML = ''; // Clear current list immediately
+        emptyEl.style.display = 'none';
+        errorEl.style.display = 'none';
+        
+        try {
+            const providerId = (providerData && providerData.id) ? providerData.id : '{{ $providerId ?? "" }}';
+            
+            if (!providerId) {
+                console.error('Provider ID not found for search');
+                loadingEl.style.display = 'none';
+                return;
+            }
+            
+            const apiUrl = `https://us-central1-beauty-984c8.cloudfunctions.net/searchServicesByProvider?name=${encodeURIComponent(query)}&spId=${encodeURIComponent(providerId)}`;
+            
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error('Search failed');
+            }
+            
+            const results = await response.json();
+            
+            loadingEl.style.display = 'none';
+            
+            if (!Array.isArray(results) || results.length === 0) {
+                emptyEl.style.display = 'block';
+                // Update empty message temporarily for search
+                const originalEmptyMsg = emptyEl.querySelector('h5').textContent;
+                emptyEl.querySelector('h5').textContent = `{{ __('app.search.no_results_found') ?? 'No results found for' }} "${query}"`;
+                
+                // Store original message to restore later if needed (optional)
+                emptyEl.setAttribute('data-original-msg', originalEmptyMsg);
+                return;
+            }
+            
+            // Map results to include category names from our constructed map
+            const mappedServices = results.map(service => {
+                // Search results might not have category object, so we mock it using our map
+                const catId = service.category_id || service.categoryId;
+                const catName = categoryIdToNameMap[catId] || 'Other';
+                
+                return {
+                    ...service,
+                    category: {
+                        name: catName,
+                        id: catId
+                    }
+                };
+            });
+            
+            renderServices(mappedServices);
+            
+        } catch (error) {
+            console.error('Search error:', error);
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'block';
+        }
+    }
+    
     function renderServices(services) {
         // Group services by category, then by subcategory
         const groupedServices = {};  // { categoryName: { subcategoryName: [services] } }
@@ -1504,6 +1625,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 groupedServices[categoryName][subKey] = [];
             }
             groupedServices[categoryName][subKey].push(service);
+            
+            // Populate category map
+            if (service.category?.id && categoryName) {
+                categoryIdToNameMap[service.category.id] = categoryName;
+            } else if (service.category_id && categoryName) {
+                categoryIdToNameMap[service.category_id] = categoryName;
+            }
         });
         
         // Use categories in order of appearance (no sorting)
