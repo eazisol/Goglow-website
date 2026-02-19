@@ -149,6 +149,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/professional-form.js') }}" defer></script>
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-fetch.js') }}" defer></script>
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/auth-modals.js') }}" defer></script>
+  <script src="{{ \App\Helpers\AssetHelper::versioned('js/phone-auth.js') }}" defer></script>
   <script src="{{ \App\Helpers\AssetHelper::versioned('js/book-appointment-auth.js') }}" defer></script>
 
   {{-- External scripts - Moved to bottom and deferred for better performance --}}
@@ -157,8 +158,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
 
   {{-- Firebase JS SDK for OAuth --}}
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" onerror="console.error('Failed to load firebase-app-compat.js')"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" onerror="console.error('Failed to load firebase-auth-compat.js')"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.3.0/firebase-app-compat.js" onerror="console.error('Failed to load firebase-app-compat.js')"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.3.0/firebase-auth-compat.js" onerror="console.error('Failed to load firebase-auth-compat.js')"></script>
 <script>
   // Initialize Firebase
   if (typeof firebase === 'undefined') {

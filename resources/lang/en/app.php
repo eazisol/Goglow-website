@@ -74,6 +74,36 @@ return [
         'use_email_password' => 'Email & password',
         'select_country' => 'Select Country',
         'invalid_login_credentials' => 'Invalid login credentials',
+        // Phone auth
+        'sign_in_with_phone' => 'Sign in with Phone',
+        'sign_up_with_phone' => 'Sign up with Phone',
+        'enter_phone_number' => 'Enter your phone number',
+        'we_will_send_code' => "We'll send you a verification code",
+        'send_verification_code' => 'Send verification code',
+        'sending' => 'Sending...',
+        'back_to_login' => 'Back to login',
+        'enter_verification_code' => 'Enter verification code',
+        'code_sent_to' => 'Code sent to',
+        'enter_6_digit_code' => 'Enter 6-digit code',
+        'verify' => 'Verify',
+        'verifying' => 'Verifying...',
+        'resend_code' => 'Resend code',
+        'change_phone_number' => 'Change phone number',
+        'complete_your_profile' => 'Complete your profile',
+        'one_more_step' => 'Just one more step to get started',
+        'get_started' => 'Get started',
+        'creating_profile' => 'Creating profile...',
+        'please_enter_name' => 'Please enter your name',
+        'invalid_phone_number' => 'Invalid phone number. Please check and try again.',
+        'phone_must_be_9_digits' => 'Phone number must be 9 digits.',
+        'send_failed' => 'Failed to send verification code.',
+        'too_many_attempts' => 'Too many attempts. Please try again later.',
+        'service_unavailable' => 'Service temporarily unavailable. Please try again later.',
+        'invalid_verification_code' => 'Invalid code. Please check and try again.',
+        'code_expired' => 'Code has expired. Please request a new one.',
+        'resend_failed' => 'Failed to resend code. Please try again.',
+        'recaptcha_error' => 'Verification error. Please try again.',
+        'generic_error' => 'An error occurred. Please try again.',
     ],
 
     // Booking
@@ -131,6 +161,8 @@ return [
         'at' => 'at',
         'no_slot_available' => 'There is no slot available',
         'no_slot' => 'No slot',
+        'select_date' => 'Select a date',
+        'date_and_time' => 'Date & Time',
     ],
 
     // My Bookings
@@ -510,6 +542,7 @@ return [
         'open' => 'Open',
         'until' => 'until',
         'hours_of_operation' => 'Hours of operation',
+        'no_services_available' => 'No services available from this provider.',
         'back_to_search_page' => 'Back to Search Results',
         'reviews' => 'Reviews',
         'monday' => 'Monday',
@@ -527,6 +560,9 @@ return [
     // Agent Page
     'agent_page' => [
         'select_agent' => 'Select Agent',
+        'choose_with_whom' => 'Choose with whom?',
+        'no_preference' => 'No preference',
+        'more' => 'more',
         'schedule' => 'Schedule',
         'selected' => 'Selected',
         'payment_options' => 'Payment Options',
@@ -538,6 +574,9 @@ return [
         'in_the_evening' => 'In The Evening',
         'see_more' => 'See More',
         'no_agent_assigned' => 'No agent is assigned to this service',
+        'please_select_day' => 'Please select a day first',
+        'please_select_agent' => 'Please select an agent',
+        'please_select_time_slot' => 'Please select a time slot',
     ],
 
     // I Am Professional Page

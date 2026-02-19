@@ -241,7 +241,7 @@
                 {{-- Empty state --}}
                 <div id="servicesEmpty" class="custom-service-list" style="display: none;">
                     <div class="services-text-center services-py-4">
-                        <h5>No services available from this provider.</h5>
+                        <h5>{{ __('app.service.no_services_available') }}</h5>
                     </div>
                 </div>
 
@@ -1026,8 +1026,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (timing[todayKey] && Array.isArray(timing[todayKey]) && timing[todayKey].length === 2) {
             const openTime = new Date(timing[todayKey][0] * 1000);
             const closeTime = new Date(timing[todayKey][1] * 1000);
-            const openTimeStr = openTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-            const closeTimeStr = closeTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            const openTimeStr = openTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false });
+            const closeTimeStr = closeTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false });
             
             if (openTimeStr !== closeTimeStr && openTime < closeTime) {
                 openUntil = closeTimeStr;

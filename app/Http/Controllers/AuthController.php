@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Auth as FirebaseAuth;
 use Kreait\Firebase\Exception\AuthException;
@@ -281,6 +282,127 @@ class AuthController extends Controller
         }
     }
     
+    /**
+     * Verify phone auth: validate Firebase ID token and check if user profile exists.
+     */
+    public function phoneAuthVerify(Request $request, FirebaseAuth $auth)
+    {
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
+        $validated = $request->validate([
+            'idToken' => ['required', 'string'],
+        ]);
+
+        try {
+            $verifiedToken = $auth->verifyIdToken($validated['idToken']);
+            $uid = $verifiedToken->claims()->get('sub');
+
+            // Check if user profile exists via Cloud Function
+            $cfUrl = config('services.firebase.cloud_functions_url') . '/getCurrentUserData';
+            $cfResponse = Http::timeout(10)->get($cfUrl, ['UserId' => $uid]);
+            $userExists = $cfResponse->ok();
+
+            // Store in session (firebase_email empty for phone users, kept for consistency)
+            session([
+                'firebase_uid' => $uid,
+                'firebase_email' => '',
+                'firebase_id_token' => $validated['idToken'],
+            ]);
+
+            // Determine redirect
+            $redirect = session('last_book_appointment_url') ?: route('search');
+            session()->forget('last_book_appointment_url');
+
+            return response()->json([
+                'success' => true,
+                'isNewUser' => !$userExists,
+                'redirect' => $redirect,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Phone auth verification failed', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Phone verification failed: ' . $e->getMessage()
+            ], 422);
+        }
+    }
+
+    /**
+     * Complete profile for new phone auth users: create userProfile via Cloud Function.
+     */
+    public function phoneAuthCompleteProfile(Request $request)
+    {
+        if (ob_get_level()) {
+            ob_clean();
+        }
+
+        $uid = session('firebase_uid');
+        if (!$uid) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Not authenticated'
+            ], 401);
+        }
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string'],
+            'countryCode' => ['nullable', 'string'],
+        ]);
+
+        try {
+            $cfUrl = config('services.firebase.cloud_functions_url') . '/createUserProfile';
+            $cfResponse = Http::timeout(15)->post($cfUrl, [
+                'id' => $uid,
+                'name' => $validated['name'],
+                'email' => '',
+                'phone' => $validated['phone'] ?? '',
+                'countryCode' => $validated['countryCode'] ?? '',
+                'loginType' => 'phone',
+                'userRole' => 0,
+                'platform' => 'web',
+            ]);
+
+            if (!$cfResponse->ok()) {
+                $errorData = $cfResponse->json();
+                Log::error('Phone profile creation CF failed', ['response' => $errorData]);
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorData['message'] ?? 'Profile creation failed',
+                ], 422);
+            }
+
+            $redirect = session('last_book_appointment_url') ?: route('search');
+            session()->forget('last_book_appointment_url');
+
+            return response()->json([
+                'success' => true,
+                'redirect' => $redirect,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Phone profile completion failed', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Profile creation failed: ' . $e->getMessage()
+            ], 422);
+        }
+    }
+
+    /**
+     * Generate search array for name (matching mobile app's generateArray function).
+     */
+    private function generateSearchArray(string $name): array
+    {
+        $name = strtolower($name);
+        $result = [];
+        for ($i = 0; $i < strlen($name); $i++) {
+            $result[] = substr($name, 0, $i + 1);
+        }
+        return $result;
+    }
+
     /**
      * Get prefix to country code mapping
      * @return array
