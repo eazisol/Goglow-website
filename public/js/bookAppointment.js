@@ -1549,7 +1549,10 @@
                             fetchWeekSlots(serviceId, weekDates).then(() => {
                                 log('Week slots pre-fetched for dates:', weekDates);
                                 hideEmptyDays();
-                                autoSelectDay();
+                                // Skip auto-select if a day was already chosen (e.g. by state restoration)
+                                if (!selectedDateInput.value) {
+                                    autoSelectDay();
+                                }
                             });
                         }
                     }
@@ -1557,9 +1560,14 @@
             });
 
             // Auto-trigger "Sans preference" selection on page load
+            // Skip if state restoration is handling a pending booking (user just logged in)
             const noPreferenceOption = agentList.querySelector('[data-no-preference="true"]');
             if (noPreferenceOption) {
                 setTimeout(() => {
+                    if (config.userId && localStorage.getItem('pendingBookingState')) {
+                        log('Pending booking state found, skipping auto-trigger (state restoration will handle agent selection)');
+                        return;
+                    }
                     log('Auto-triggering Sans preference selection');
                     noPreferenceOption.click();
                 }, 300);
