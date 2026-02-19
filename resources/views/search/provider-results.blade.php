@@ -58,6 +58,23 @@
                                         </button>
                                     </div>
                                 </form>
+                            <script>
+                                // Meta Pixel: Search event on form submit
+                                (function() {
+                                    const searchForm = document.querySelector('.search-section form');
+                                    if (searchForm) {
+                                        searchForm.addEventListener('submit', function() {
+                                            if (typeof fbq !== 'undefined') {
+                                                const searchInput = searchForm.querySelector('#searchInput');
+                                                fbq('track', 'Search', {
+                                                    search_string: searchInput ? searchInput.value.trim() : '',
+                                                    content_category: 'services'
+                                                });
+                                            }
+                                        });
+                                    }
+                                })();
+                            </script>
                             </div>
                 {{-- </div>
             </section> --}}

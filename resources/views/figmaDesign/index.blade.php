@@ -1097,6 +1097,13 @@ function updateDots() {
       const searchForm = searchInput.closest('form');
       if (searchForm) {
         searchForm.addEventListener('submit', () => {
+          // Meta Pixel: Search event
+          if (typeof fbq !== 'undefined') {
+              fbq('track', 'Search', {
+                  search_string: searchInput.value.trim(),
+                  content_category: 'services'
+              });
+          }
           hideSuggestions();
         });
       }

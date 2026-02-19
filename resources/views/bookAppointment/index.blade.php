@@ -481,6 +481,17 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('ownerId:', bookingBootstrap.service.ownerId);
         console.log('All service keys:', Object.keys(bookingBootstrap.service));
         console.log('=====================================');
+
+        // Meta Pixel: ViewContent event (user is viewing a service to book)
+        if (typeof fbq !== 'undefined') {
+            fbq('track', 'ViewContent', {
+                content_name: bookingBootstrap.service.service_name || 'Service',
+                content_ids: [bookingBootstrap.service.id || bookingBootstrap.serviceId || ''],
+                content_type: 'product',
+                value: parseFloat(bookingBootstrap.service.discounted_price ?? bookingBootstrap.service.service_price ?? 0) || 0,
+                currency: 'EUR'
+            });
+        }
     }
     
     const dayButtons = document.querySelectorAll('.day-btn');
@@ -2269,6 +2280,18 @@ document.addEventListener('DOMContentLoaded', function () {
         // Show loading state after validation passes
         setButtonLoading(true);
 
+        // Meta Pixel: InitiateCheckout event
+        if (typeof fbq !== 'undefined') {
+            fbq('track', 'InitiateCheckout', {
+                content_name: bookingBootstrap.service?.service_name || 'Service',
+                content_ids: [bookingBootstrap.service?.id || bookingBootstrap.serviceId || ''],
+                content_type: 'product',
+                value: parseFloat(bookingBootstrap.service?.discounted_price ?? bookingBootstrap.service?.service_price ?? 0) || 0,
+                currency: 'EUR',
+                num_items: 1
+            });
+        }
+
         // Get user data from bookingBootstrap
         const userData = bookingBootstrap.userData || {};
         
@@ -2692,6 +2715,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     if (bookingResponse.ok && bookingResponseData.booking_id) {
                         console.log('Free booking created successfully:', bookingResponseData.booking_id);
+
+                        // Meta Pixel: Purchase event (free booking completed)
+                        if (typeof fbq !== 'undefined') {
+                            fbq('track', 'Purchase', {
+                                content_name: serviceName,
+                                content_ids: [serviceId],
+                                content_type: 'product',
+                                value: 0,
+                                currency: 'EUR',
+                                num_items: 1
+                            });
+                        }
 
                         // Clear all booking data from localStorage
                         localStorage.removeItem('pendingBookingState');

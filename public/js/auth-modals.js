@@ -825,6 +825,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
 
                         if (data.success) {
+                            // Meta Pixel: CompleteRegistration event (Email Signup)
+                            if (typeof fbq !== 'undefined') {
+                                fbq('track', 'CompleteRegistration', {
+                                    content_name: 'Email Signup',
+                                    status: true,
+                                    registration_method: 'email'
+                                });
+                            }
+
                             // Update UI to show we are creating the profile
                             if (btnLoader) {
                                 const loaderText = btnLoader.childNodes[1]; // The text node after the spinner
@@ -1019,6 +1028,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const data = await response.json();
 
                 if (data.success) {
+                    // Meta Pixel: CompleteRegistration event (OAuth Signup)
+                    if (typeof fbq !== 'undefined' && isSignup) {
+                        fbq('track', 'CompleteRegistration', {
+                            content_name: 'OAuth Signup',
+                            status: true,
+                            registration_method: 'social'
+                        });
+                    }
+
                     // Update authentication status
                     window.isAuthenticated = true;
 

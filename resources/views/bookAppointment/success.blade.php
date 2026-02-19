@@ -602,6 +602,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('apiResponseStatus').innerHTML = 
                     '<strong class="text-success">' + successTranslations.booking_confirmed_server + '</strong>';
                 
+                // Meta Pixel: Purchase event (paid booking completed via Stripe)
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'Purchase', {
+                        content_name: payload.services?.[0]?.serviceName || 'Service',
+                        content_ids: [payload.services?.[0]?.serviceId || ''],
+                        content_type: 'product',
+                        value: parseFloat(payload.services?.[0]?.servicePrice || payload.amount || 0) || 0,
+                        currency: 'EUR',
+                        num_items: 1
+                    });
+                }
+                
                 // Send booking emails after successful booking
                 await sendBookingEmails(payload);
                 
