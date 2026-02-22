@@ -58,28 +58,22 @@
                     @endphp
 
                     @if($depositPercentage == 0)
-                        {{-- Free Booking UI --}}
-                        <label class="form-label" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">{{ __('app.booking.booking_payment_detail') }}</label>
-                        <div class="payment-details-container" style="max-width: 100%;">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span style="font-size: 16px; color: #333;">{{ __('app.booking.service_amount') }}</span>
-                                <span style="font-size: 16px; font-weight: 600;">{{ number_format($servicePrice, 2) }}€</span>
+                        {{-- Free Booking UI: same radio style as paid bookings --}}
+                        <label class="form-label">{{ __('app.agent_page.payment_options') }}</label>
+                        <div class="payment-options">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="paymentType" id="payDeposit" value="deposit" checked>
+                                <label class="form-check-label" for="payDeposit" id="payDepositLabel">
+                                    {{ __('app.booking.book_on_site') }}
+                                </label>
+                                <input type="hidden" id="depositPercentage" value="{{ $depositPercentage }}">
                             </div>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span style="font-size: 16px; color: #333;">{{ __('app.booking.deposit_amount') }}</span>
-                                <span style="font-size: 16px; font-weight: 600;">0.00€</span>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentType" id="payFull" value="full">
+                                <label class="form-check-label" for="payFull">
+                                    {{ __('app.booking.pay_now') }} ({{ number_format($servicePrice, 2) }}€)
+                                </label>
                             </div>
-                            <hr style="margin: 15px 0; border-top: 1px solid #ddd;">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span style="font-size: 16px; color: #333;">{{ __('app.booking.total_remaining') }}</span>
-                                <span style="font-size: 18px; font-weight: 700;">{{ number_format($servicePrice, 2) }}€</span>
-                            </div>
-
-                            {{-- Hidden input for JS compatibility --}}
-                            <input type="radio" name="paymentType" id="payDeposit" value="deposit" checked style="display:none;">
-                            <input type="hidden" id="depositPercentage" value="{{ $depositPercentage }}">
-                            {{-- Hidden label for deposit logic referencing --}}
-                            <span id="payDepositLabel" style="display:none;">{{ $depositLabel }} ({{ number_format($depositAmount, 2) }}€)</span>
                         </div>
                     @else
                         {{-- Paid Booking UI --}}
