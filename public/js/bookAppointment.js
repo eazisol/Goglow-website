@@ -266,9 +266,14 @@
         // Note: chosenAgentSlots was unused. Use cachedAvailableSlots for slot data.
         let selectedPeriod = null;
         let cachedAvailableSlots = null;
+        let cachedAvailableSlotsTimestamp = 0;
         let cachedSlotsDate = null;
         let cachedWeekSlots = {}; // { "2024-02-06": [...slots with agents], ... }
         let cachedWeekTimestamp = 0; // when the cache was fetched
+        let cachedWeekKey = '';
+        let cachedWeekDates = [];
+        let inFlightWeekRequest = null;
+        let inFlightWeekRequestKey = '';
         const WEEK_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
         let isNoPreferenceMode = true;
         let allAgents = config.agents || [];
@@ -386,58 +391,79 @@
          */
         async function fetchWeekSlots(serviceId, weekDates) {
             const now = Date.now();
+            const cacheKey = weekDates.join(',');
             const cacheStillFresh = (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+            const cacheMatches = cacheStillFresh && cachedWeekKey === cacheKey;
 
-            // Find which dates we still need to fetch
-            const datesToFetch = cacheStillFresh
-                ? weekDates.filter(d => !(d in cachedWeekSlots))
-                : weekDates;
-
-            if (datesToFetch.length === 0) {
-                log('All dates already cached (TTL ok)');
-                return cachedWeekSlots;
+            if (inFlightWeekRequest && inFlightWeekRequestKey === cacheKey) {
+                return await inFlightWeekRequest;
             }
 
-            try {
-                log('Fetching slots (all agents) for:', { serviceId, dates: datesToFetch });
+            // If cache is fresh and for the same week, only fetch missing dates
+            let datesToFetch = weekDates;
+            if (cacheMatches) {
+                datesToFetch = weekDates.filter(d => !(d in cachedWeekSlots));
+                if (datesToFetch.length === 0) {
+                    log('All dates already cached (TTL ok)');
+                    return cachedWeekSlots;
+                }
+            } else {
+                cachedWeekSlots = {};
+                cachedWeekKey = '';
+                cachedWeekDates = [];
+                cachedWeekTimestamp = 0;
+            }
 
-                // Always fetch without agentId — get ALL agents' slots
-                const params = new URLSearchParams({
-                    serviceId: serviceId,
-                    dates: JSON.stringify(datesToFetch)
-                });
+            const request = (async () => {
+                try {
+                    log('Fetching slots (all agents) for:', { serviceId, dates: datesToFetch });
 
-                const apiUrl = `${config.firebaseUrl}/getAvailableSlotsForService?${params.toString()}`;
-                const response = await fetch(apiUrl);
+                    // Always fetch without agentId — get ALL agents' slots
+                    const params = new URLSearchParams({
+                        serviceId: serviceId,
+                        dates: JSON.stringify(datesToFetch)
+                    });
 
-                if (!response.ok) {
-                    warn('Week API call failed');
+                    const apiUrl = `${config.firebaseUrl}/getAvailableSlotsForService?${params.toString()}`;
+                    const response = await fetch(apiUrl);
+
+                    if (!response.ok) {
+                        warn('Week API call failed');
+                        return null;
+                    }
+
+                    const data = await response.json();
+                    const slotsData = data.dates || data;
+                    log('Week API response (all agents):', slotsData);
+
+                    for (const dateKey of datesToFetch) {
+                        const dateSlots = slotsData[dateKey] || [];
+                        cachedWeekSlots[dateKey] = dateSlots.map(slot => ({
+                            time: slot.time,
+                            available: true,
+                            agents: slot.agents || []
+                        }));
+                    }
+                    cachedWeekTimestamp = now;
+                    cachedWeekKey = cacheKey;
+                    cachedWeekDates = [...weekDates];
+
+                    return cachedWeekSlots;
+                } catch (error) {
+                    console.error('Error fetching week slots:', error);
                     return null;
                 }
+            })();
 
-                const data = await response.json();
-                const slotsData = data.dates || data;
-                log('Week API response (all agents):', slotsData);
+            inFlightWeekRequestKey = cacheKey;
+            inFlightWeekRequest = request;
 
-                // If cache expired, reset it; otherwise merge into existing
-                if (!cacheStillFresh) {
-                    cachedWeekSlots = {};
-                }
-                for (const dateKey of datesToFetch) {
-                    const dateSlots = slotsData[dateKey] || [];
-                    cachedWeekSlots[dateKey] = dateSlots.map(slot => ({
-                        time: slot.time,
-                        available: true,
-                        agents: slot.agents || []
-                    }));
-                }
-                cachedWeekTimestamp = now;
-
-                return cachedWeekSlots;
-            } catch (error) {
-                console.error('Error fetching week slots:', error);
-                return null;
+            const result = await request;
+            if (inFlightWeekRequestKey === cacheKey) {
+                inFlightWeekRequest = null;
+                inFlightWeekRequestKey = '';
             }
+            return result;
         }
 
         /**
@@ -457,6 +483,7 @@
         async function fetchAvailableSlots(serviceId, agentId, date) {
             const now = Date.now();
             const cacheValid = cachedWeekSlots[date] &&
+                cachedWeekDates.includes(date) &&
                 (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
 
             if (cacheValid) {
@@ -524,6 +551,45 @@
             }
         }
 
+        function isWeekCacheFreshForDate(dateStr) {
+            const now = Date.now();
+            return cachedWeekDates.includes(dateStr) &&
+                (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+        }
+
+        async function ensureFreshSlotsForBooking(selectedDate, agentId) {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const serviceId = config.service?.id || config.serviceId || urlParams.get('serviceId');
+                if (!serviceId) return null;
+
+                const cacheFreshForDate = isWeekCacheFreshForDate(selectedDate);
+                if (!cacheFreshForDate) {
+                    const weekDates = getFullWeekDates();
+                    if (weekDates.length > 0) {
+                        await fetchWeekSlots(serviceId, weekDates);
+                    }
+                }
+
+                const now = Date.now();
+                const cacheMatchesDate = cachedSlotsDate === selectedDate &&
+                    cachedAvailableSlots &&
+                    (now - cachedAvailableSlotsTimestamp) < WEEK_CACHE_TTL;
+
+                if (!cacheMatchesDate) {
+                    const refreshed = await fetchAvailableSlots(serviceId, agentId, selectedDate);
+                    cachedAvailableSlots = refreshed;
+                    cachedAvailableSlotsTimestamp = Date.now();
+                    cachedSlotsDate = selectedDate;
+                }
+
+                return cachedAvailableSlots;
+            } catch (error) {
+                console.error('Error refreshing slots for booking:', error);
+                return null;
+            }
+        }
+
         /**
          * Pre-fetch all dates for the current week. Auto-selects first day on desktop.
          * Uses full week dates (not agent-filtered) so cache stays valid across agent switches.
@@ -564,7 +630,9 @@
 
             // Check if all visible dates are already in cache
             const now = Date.now();
-            const cacheStillFresh = (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+            const weekDates = getFullWeekDates();
+            const cacheKey = weekDates.join(',');
+            const cacheStillFresh = (now - cachedWeekTimestamp) < WEEK_CACHE_TTL && cachedWeekKey === cacheKey;
             const allVisibleCached = cacheStillFresh && visibleDates.every(d => d in cachedWeekSlots);
 
             if (allVisibleCached) {
@@ -575,7 +643,6 @@
             }
 
             // Need to fetch — grab 7 days to pre-fill cache for next navigations
-            const weekDates = getFullWeekDates();
             showSlotsLoading();
 
             fetchWeekSlots(serviceId, weekDates).then(() => {
@@ -860,6 +927,7 @@
                     } else {
                         const selectedDate = formatDateValue(date);
                         cachedAvailableSlots = null;
+                        cachedAvailableSlotsTimestamp = 0;
                         cachedSlotsDate = selectedDate;
                         timeSlotGrid.innerHTML = '';
                         if (timeSlotsStrip) {
@@ -880,6 +948,7 @@
                                 }
 
                                 cachedAvailableSlots = await fetchAvailableSlots(serviceId, chosenAgent.id, selectedDate);
+                                cachedAvailableSlotsTimestamp = Date.now();
                                 log('Cached slots for desktop:', cachedAvailableSlots);
 
                                 // Check for saved time from pending state
@@ -1196,7 +1265,9 @@
 
             // Only show loading if data is not cached
             const now = Date.now();
-            const hasCached = cachedWeekSlots[selectedDate] && (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+            const hasCached = cachedWeekSlots[selectedDate] &&
+                cachedWeekDates.includes(selectedDate) &&
+                (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
             if (!hasCached) {
                 showSlotsLoading();
             }
@@ -1211,6 +1282,7 @@
 
                 const availableSlots = await fetchAvailableSlots(serviceId, chosenAgent.id, selectedDate);
                 cachedAvailableSlots = availableSlots;
+                cachedAvailableSlotsTimestamp = Date.now();
                 cachedSlotsDate = selectedDate;
 
                 if (!availableSlots || availableSlots.length === 0) {
@@ -1536,7 +1608,8 @@
                     const serviceId = config.service?.id || config.serviceId || urlParams.get('serviceId');
                     if (serviceId) {
                         const now = Date.now();
-                        const cacheStillFresh = (now - cachedWeekTimestamp) < WEEK_CACHE_TTL;
+                        const cacheKey = weekDates.join(',');
+                        const cacheStillFresh = (now - cachedWeekTimestamp) < WEEK_CACHE_TTL && cachedWeekKey === cacheKey;
                         const allCached = cacheStillFresh && weekDates.every(d => d in cachedWeekSlots);
 
                         if (allCached) {
@@ -2072,6 +2145,21 @@
                 }
 
                 setButtonLoading(true);
+
+                const selectedDate = selectedDateInput.value;
+                const selectedTime = selectedTimeInput.value;
+                const refreshedSlots = await ensureFreshSlotsForBooking(selectedDate, chosenAgent.id);
+                if (!refreshedSlots || refreshedSlots.length === 0) {
+                    setButtonLoading(false);
+                    alert(t('booking.slot_no_longer_available', 'This time slot is no longer available. Please choose another time.'));
+                    return;
+                }
+                const slotStillAvailable = refreshedSlots.some(slot => slot.time === selectedTime);
+                if (!slotStillAvailable) {
+                    setButtonLoading(false);
+                    alert(t('booking.slot_no_longer_available', 'This time slot is no longer available. Please choose another time.'));
+                    return;
+                }
 
                 const userData = config.userData || {};
                 const userId = config.userId || userData.id || null;

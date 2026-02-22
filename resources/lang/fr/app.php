@@ -123,6 +123,7 @@ return [
         'slot_conflict_alert' => 'Ce service dure :duration minutes. Les créneaux suivants ne sont pas libres. Veuillez sélectionner une heure plus tôt ou un autre créneau.',
         'please_accept_terms' => 'Veuillez cocher cette case pour continuer.',
         'loading_available_slots' => 'Chargement des créneaux disponibles...',
+        'slot_no_longer_available' => "Ce créneau n'est plus disponible. Veuillez choisir un autre horaire.",
     ],
 
     // Schedule

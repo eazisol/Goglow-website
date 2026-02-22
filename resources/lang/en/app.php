@@ -125,6 +125,7 @@ return [
         'slot_conflict_alert' => 'This service requires :duration minutes. The next available slots are not free. Please select an earlier time or a different slot.',
         'please_accept_terms' => 'Please check this box to proceed.',
         'loading_available_slots' => 'Loading available slots...',
+        'slot_no_longer_available' => 'This time slot is no longer available. Please choose another time.',
     ],
 
     // Schedule
