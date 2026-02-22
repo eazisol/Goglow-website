@@ -277,6 +277,7 @@
         const WEEK_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
         let isNoPreferenceMode = true;
         let allAgents = config.agents || [];
+        let _bookingAutoSubmitActive = false;
 
         // Date references
         const today = new Date();
@@ -1637,8 +1638,8 @@
             const noPreferenceOption = agentList.querySelector('[data-no-preference="true"]');
             if (noPreferenceOption) {
                 setTimeout(() => {
-                    if (config.userId && localStorage.getItem('pendingBookingState')) {
-                        log('Pending booking state found, skipping auto-trigger (state restoration will handle agent selection)');
+                    if (_bookingAutoSubmitActive || (config.userId && localStorage.getItem('pendingBookingState'))) {
+                        log('Booking auto-submit in progress, skipping auto-trigger');
                         return;
                     }
                     log('Auto-triggering Sans preference selection');
@@ -1714,85 +1715,10 @@
         // ============================================================
         // BOOKING STATE RESTORATION
         // ============================================================
-        function restoreTimeSlotAndPayment(state) {
-            requestAnimationFrame(() => {
-                if (state.selectedDate && state.selectedTime && selectedDateInput && selectedTimeInput) {
-                    const isMobile = isMobileView();
-                    const slotSelector = isMobile
-                        ? `.mobile-time-slot[data-date="${state.selectedDate}"][data-time="${state.selectedTime}"]`
-                        : `.time-slot[data-date="${state.selectedDate}"][data-time="${state.selectedTime}"]`;
-
-                    let timeSlot = document.querySelector(slotSelector);
-
-                    if (!timeSlot && isMobile && state.selectedPeriod) {
-                        const periodContainer = document.querySelector(`.mobile-period-slots[data-period="${state.selectedPeriod}"]`);
-                        if (periodContainer && periodContainer.dataset.hasMore === 'true') {
-                            try {
-                                const remainingSlots = JSON.parse(periodContainer.dataset.remainingSlots || '[]');
-                                const slotExists = remainingSlots.some(slot => slot.time === state.selectedTime);
-
-                                if (slotExists) {
-                                    const seeMoreBtn = document.querySelector('.mobile-see-more-btn');
-                                    if (seeMoreBtn) {
-                                        seeMoreBtn.click();
-                                        (async () => {
-                                            const expandedSlot = await waitForElement(slotSelector, 300, 20);
-                                            if (expandedSlot) {
-                                                expandedSlot.click();
-                                                log('Restored mobile time slot selection (after expand):', state.selectedDate, state.selectedTime);
-                                            }
-                                        })();
-                                    }
-                                }
-                            } catch (e) {
-                                warn('Error checking remaining slots:', e);
-                            }
-                        }
-                    }
-
-                    if (timeSlot && !timeSlot.classList.contains('unavailable')) {
-                        timeSlot.click();
-                        log('Restored time slot selection:', state.selectedDate, state.selectedTime, isMobile ? '(mobile)' : '(desktop)');
-                    } else {
-                        selectedDateInput.value = state.selectedDate;
-                        selectedTimeInput.value = state.selectedTime;
-                        if (state.selectedDay) {
-                            selectedDayInput.value = state.selectedDay;
-                        }
-                        if (paymentOptionsSection) {
-                            paymentOptionsSection.style.display = '';
-                        }
-                        if (selectedDateTimeDisplay) {
-                            const [yy, mm, dd] = state.selectedDate.split('-').map(Number);
-                            const selectedDateObj = new Date(yy, mm - 1, dd);
-                            const formattedDate = formatDate(selectedDateObj);
-                            const formattedTime = formatTimeDisplay(state.selectedTime);
-                            selectedDateTimeDisplay.textContent = `${formattedDate} ${dateTimeAt} ${formattedTime}`;
-                        }
-                        if (!timeSlot) {
-                            warn('Time slot not found, restored values directly.', isMobile ? '(mobile)' : '(desktop)');
-                        } else {
-                            warn('Time slot is unavailable, restored values directly.');
-                        }
-                    }
-                }
-
-                if (state.paymentType) {
-                    const paymentRadio = document.querySelector(`input[name="paymentType"][value="${state.paymentType}"]`);
-                    if (paymentRadio) {
-                        paymentRadio.checked = true;
-                        log('Restored payment type:', state.paymentType);
-                    }
-                }
-
-                if (state.termsChecked && termsCheckbox) {
-                    termsCheckbox.checked = true;
-                    log('Restored terms checkbox');
-                }
-
-                localStorage.removeItem('pendingBookingState');
-                log('Booking state restored successfully');
-            });
+        function removeBookingRestoreOverlay() {
+            const el = document.getElementById('bookingRestoreOverlay');
+            if (el) el.remove();
+            _bookingAutoSubmitActive = false;
         }
 
         function restorePendingBookingState() {
@@ -1808,148 +1734,81 @@
                     return;
                 }
 
-                if (state.currentWeekStartDate) {
-                    const [yy, mm, dd] = state.currentWeekStartDate.split('-').map(Number);
-                    const savedWeekStart = new Date(yy, mm - 1, dd);
-                    savedWeekStart.setHours(0, 0, 0, 0);
-
-                    if (!isNaN(savedWeekStart.getTime()) && savedWeekStart >= today) {
-                        currentWeekStart = savedWeekStart;
-                        log('Restored week start to:', currentWeekStart);
-                    } else if (state.selectedDate) {
-                        const [sy, sm, sd] = state.selectedDate.split('-').map(Number);
-                        const selectedDateObj = new Date(sy, sm - 1, sd);
-                        selectedDateObj.setHours(0, 0, 0, 0);
-
-                        if (!isNaN(selectedDateObj.getTime()) && selectedDateObj >= today) {
-                            const daysToNav = getDaysToNavigate();
-                            const daysDiff = Math.floor((selectedDateObj - today) / (1000 * 60 * 60 * 24));
-                            const periodsToAdvance = Math.floor(daysDiff / daysToNav);
-
-                            currentWeekStart = new Date(today);
-                            currentWeekStart.setDate(today.getDate() + (periodsToAdvance * daysToNav));
-                            log('Calculated week start from selected date:', currentWeekStart);
-                        }
-                    }
+                // Full-screen overlay so the user never sees the calendar during auto-submit.
+                const overlay = document.createElement('div');
+                overlay.id = 'bookingRestoreOverlay';
+                overlay.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;';
+                overlay.innerHTML = '<div style="text-align:center;color:#888;font-size:15px;"><div style="width:32px;height:32px;border:3px solid #f0c;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;"></div>Chargement…</div>';
+                if (!document.getElementById('bookingRestoreOverlayCss')) {
+                    const style = document.createElement('style');
+                    style.id = 'bookingRestoreOverlayCss';
+                    style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+                    document.head.appendChild(style);
                 }
+                document.body.appendChild(overlay);
 
-                let agentFound = false;
-                if (state.agentId && agentList) {
+                // ── Fast path ──────────────────────────────────────────────
+                // Set JS variables + hidden inputs directly from saved state.
+                // No async slot fetching, no day/slot clicking — submit immediately.
+
+                // Restore chosenAgent (full object was persisted in state.agent)
+                if (state.agent) {
+                    chosenAgent = state.agent;
+                    isNoPreferenceMode = (state.agentId === 'no_preference');
+                } else if (state.agentId && agentList) {
                     const agentOptions = agentList.querySelectorAll('.agent-option');
                     for (const option of agentOptions) {
                         try {
                             const agent = JSON.parse(option.dataset.agent);
                             if (agent.id === state.agentId) {
-                                agentFound = true;
-                                option.click();
-                                log('Restored agent selection:', agent.name);
+                                chosenAgent = agent;
+                                isNoPreferenceMode = option.dataset.noPreference === 'true';
                                 break;
                             }
-                        } catch (e) {
-                            warn('Error parsing agent data:', e);
-                        }
+                        } catch (e) {}
                     }
                 }
 
-                if (!agentFound && state.agentId) {
-                    warn('Agent not found in list, cannot restore booking state');
+                if (!chosenAgent) {
+                    warn('Could not restore agent, aborting auto-submit');
                     localStorage.removeItem('pendingBookingState');
+                    overlay.remove();
                     return;
                 }
 
-                setTimeout(() => {
-                    if (state.selectedDate && selectedDateInput) {
-                        let dayColumn = document.querySelector(`.day-column[data-date="${state.selectedDate}"]`);
+                // Set hidden form inputs
+                if (state.selectedDate && selectedDateInput) selectedDateInput.value = state.selectedDate;
+                if (state.selectedTime && selectedTimeInput) selectedTimeInput.value = state.selectedTime;
+                if (state.selectedDay && selectedDayInput) selectedDayInput.value = state.selectedDay;
+                if (paymentOptionsSection) paymentOptionsSection.style.display = '';
 
-                        if (!dayColumn) {
-                            log('Day column not found in current view, attempting to navigate to correct week...');
+                // Restore payment type
+                if (state.paymentType) {
+                    const radio = document.querySelector(`input[name="paymentType"][value="${state.paymentType}"]`);
+                    if (radio) radio.checked = true;
+                }
 
-                            const [sy, sm, sd] = state.selectedDate.split('-').map(Number);
-                            const targetDate = new Date(sy, sm - 1, sd);
-                            targetDate.setHours(0, 0, 0, 0);
+                // Restore terms
+                if (state.termsChecked && termsCheckbox) termsCheckbox.checked = true;
 
-                            const daysToNav2 = getDaysToNavigate();
-                            let attempts = 0;
-                            const maxAttempts = 120;
+                localStorage.removeItem('pendingBookingState');
+                _bookingAutoSubmitActive = true;
+                log('Booking state restored (fast path), auto-submitting...');
 
-                            while (!dayColumn && attempts < maxAttempts) {
-                                const periodEnd = new Date(currentWeekStart);
-                                periodEnd.setDate(periodEnd.getDate() + (daysToNav2 - 1));
-
-                                if (targetDate >= currentWeekStart && targetDate <= periodEnd) {
-                                    updateWeekDisplay();
-                                    renderDaysHeader();
-                                    updatePrevWeekButtonState();
-                                    dayColumn = document.querySelector(`.day-column[data-date="${state.selectedDate}"]`);
-                                    break;
-                                }
-
-                                currentWeekStart.setDate(currentWeekStart.getDate() + daysToNav2);
-                                updateWeekDisplay();
-                                renderDaysHeader();
-                                updatePrevWeekButtonState();
-
-                                dayColumn = document.querySelector(`.day-column[data-date="${state.selectedDate}"]`);
-                                attempts++;
-                            }
-
-                            if (dayColumn) {
-                                log('Found day column after navigating', attempts, 'periods');
-                            }
-                        }
-
-                        if (dayColumn) {
-                            dayColumn.click();
-                            log('Restored day selection:', state.selectedDate);
-
-                            const isMobile = isMobileView();
-
-                            (async () => {
-                                if (isMobile) {
-                                    await new Promise(r => requestAnimationFrame(r));
-
-                                    if (state.selectedPeriod && periodSelector) {
-                                        selectedPeriod = state.selectedPeriod;
-                                        const periodBtn = periodSelector.querySelector(`[data-period="${state.selectedPeriod}"]`);
-                                        if (periodBtn) {
-                                            periodBtn.classList.add('active');
-                                            log('Restored period selection (mobile):', state.selectedPeriod);
-                                        }
-                                    }
-                                    restoreTimeSlotAndPayment(state, false);
-                                } else {
-                                    // Desktop: grouped view is rendered by day click handler
-                                    // Just set the period internally and wait for grouped slots to render
-                                    if (state.selectedPeriod) {
-                                        selectedPeriod = state.selectedPeriod;
-                                        log('Restored period internally (desktop grouped):', state.selectedPeriod);
-                                    }
-
-                                    // Wait for the grouped container to have time slots rendered
-                                    const slotSelector = `.slots-grouped-container .time-slot[data-date="${state.selectedDate}"][data-time="${state.selectedTime}"]`;
-                                    await waitForElement(slotSelector, 800, 30);
-
-                                    restoreTimeSlotAndPayment(state);
-                                }
-                            })();
-                        } else {
-                            warn('Day column not found for date:', state.selectedDate);
-                            if (state.selectedDay) {
-                                selectedDayInput.value = state.selectedDay;
-                            }
-                            if (state.selectedDate) {
-                                selectedDateInput.value = state.selectedDate;
-                            }
-                            restoreTimeSlotAndPayment(state, true);
-                        }
+                // Submit immediately — overlay stays visible until redirect (Stripe / confirmation page).
+                requestAnimationFrame(() => {
+                    const submitBtn = document.getElementById('bookAppointmentBtn');
+                    if (submitBtn && !submitBtn.disabled) {
+                        log('Auto-submitting booking after login redirect');
+                        submitBtn.click();
                     } else {
-                        warn('No selected date in saved state');
-                        restoreTimeSlotAndPayment(state, true);
+                        removeBookingRestoreOverlay();
                     }
-                }, 100);
+                });
             } catch (error) {
                 console.error('Error restoring pending booking state:', error);
                 localStorage.removeItem('pendingBookingState');
+                removeBookingRestoreOverlay();
             }
         }
 
@@ -2094,10 +1953,12 @@
                 e.preventDefault();
 
                 if (!chosenAgent) {
+                    removeBookingRestoreOverlay();
                     alert(t('agent_page.please_select_agent', 'Please select an agent'));
                     return;
                 }
                 if (!selectedDateInput?.value || !selectedTimeInput?.value) {
+                    removeBookingRestoreOverlay();
                     alert(t('agent_page.please_select_time_slot', 'Please select a time slot'));
                     return;
                 }
@@ -2126,6 +1987,7 @@
                 const termsCheckboxEl = document.getElementById('termsConditions');
                 const termsErrorEl = document.getElementById('termsError');
                 if (!termsCheckboxEl || !termsCheckboxEl.checked) {
+                    removeBookingRestoreOverlay();
                     if (termsErrorEl) {
                         termsErrorEl.style.display = 'block';
                     }
@@ -2151,12 +2013,14 @@
                 const refreshedSlots = await ensureFreshSlotsForBooking(selectedDate, chosenAgent.id);
                 if (!refreshedSlots || refreshedSlots.length === 0) {
                     setButtonLoading(false);
+                    removeBookingRestoreOverlay();
                     alert(t('booking.slot_no_longer_available', 'This time slot is no longer available. Please choose another time.'));
                     return;
                 }
                 const slotStillAvailable = refreshedSlots.some(slot => slot.time === selectedTime);
                 if (!slotStillAvailable) {
                     setButtonLoading(false);
+                    removeBookingRestoreOverlay();
                     alert(t('booking.slot_no_longer_available', 'This time slot is no longer available. Please choose another time.'));
                     return;
                 }
